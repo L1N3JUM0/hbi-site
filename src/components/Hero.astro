@@ -1,0 +1,282 @@
+---
+import playerSrc from "../assets/player/pose-4-tir-reference.svg?url";
+---
+
+<section class="hero">
+	<div class="hero-stage">
+		<div class="court-line"></div>
+
+		<div class="speedlines">
+			<div class="line"></div>
+			<div class="line"></div>
+			<div class="line"></div>
+			<div class="line"></div>
+		</div>
+
+		<div class="player">
+			<img src={playerSrc} alt="" class="player-svg" />
+		</div>
+
+		<div class="impact"></div>
+
+		<div class="motto">
+			<p class="line1">Je ne perds jamais</p>
+			<p class="line2">soit je gagne,</p>
+			<p class="line3">soit j&rsquo;apprends.</p>
+		</div>
+	</div>
+</section>
+
+<style>
+	.hero {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+		background: var(--color-navy-deep);
+		padding: 2rem 1rem;
+	}
+
+	.hero-stage {
+		--stage-w: 800px;
+		--stage-h: 500px;
+		--player-w: 200px;
+		--player-h: 280px;
+		--player-bottom: 100px;
+		--court-bottom: 110px;
+		--speed-bottom: 130px;
+		--speed-w: 260px;
+		--speed-h: 220px;
+		--speed-move: 90px;
+		--run-start: -260px;
+		--run-mid: 290px;
+		--run-land: 340px;
+		--run-bounce: 330px;
+		--run-settle: 335px;
+		--impact-bottom: 96px;
+		--impact-left: 400px;
+		--impact-size: 70px;
+		--impact-border: 3px;
+		--motto-right: 40px;
+		--motto-bottom: 180px;
+		--motto-maxw: 260px;
+		--motto-font: 1.5rem;
+
+		position: relative;
+		width: min(var(--stage-w), 100%);
+		height: var(--stage-h);
+	}
+
+	.court-line {
+		position: absolute;
+		bottom: var(--court-bottom);
+		left: 0;
+		right: 0;
+		height: 2px;
+		background: rgba(255, 255, 255, 0.12);
+	}
+
+	/* speed lines behind the runner */
+	.speedlines {
+		position: absolute;
+		left: 0;
+		bottom: var(--speed-bottom);
+		width: var(--speed-w);
+		height: var(--speed-h);
+		opacity: 0;
+		animation: speedfade 3.2s infinite;
+	}
+	.speedlines .line {
+		position: absolute;
+		height: 4px;
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5));
+		border-radius: 2px;
+		animation: speedmove 3.2s infinite;
+	}
+	.speedlines .line:nth-child(1) {
+		top: 9.1%;
+		width: 46.2%;
+		animation-delay: 0s;
+	}
+	.speedlines .line:nth-child(2) {
+		top: 31.8%;
+		width: 65.4%;
+		animation-delay: 0.08s;
+	}
+	.speedlines .line:nth-child(3) {
+		top: 54.5%;
+		width: 38.5%;
+		animation-delay: 0.15s;
+	}
+	.speedlines .line:nth-child(4) {
+		top: 75%;
+		width: 57.7%;
+		animation-delay: 0.05s;
+	}
+
+	@keyframes speedfade {
+		0% { opacity: 0; }
+		6% { opacity: 1; }
+		30% { opacity: 1; }
+		38% { opacity: 0; }
+		100% { opacity: 0; }
+	}
+	@keyframes speedmove {
+		0% { transform: translateX(0); }
+		100% { transform: translateX(var(--speed-move)); }
+	}
+
+	.player {
+		position: absolute;
+		bottom: var(--player-bottom);
+		left: var(--run-start);
+		width: var(--player-w);
+		height: var(--player-h);
+		animation: run-in 3.2s infinite;
+	}
+	.player-svg {
+		width: 100%;
+		height: 100%;
+		display: block;
+		filter: blur(0px);
+	}
+
+	@keyframes run-in {
+		0% {
+			left: var(--run-start);
+			transform: scale(0.85) rotate(-4deg);
+			filter: blur(3px);
+		}
+		30% {
+			left: var(--run-mid);
+			transform: scale(0.98) rotate(-1deg);
+			filter: blur(1.5px);
+		}
+		38% {
+			left: var(--run-land);
+			transform: scale(1.06, 0.94) rotate(0deg);
+			filter: blur(0px);
+		}
+		44% {
+			left: var(--run-bounce);
+			transform: scale(0.97, 1.04) rotate(0deg);
+		}
+		50%, 88% {
+			left: var(--run-settle);
+			transform: scale(1) rotate(0deg);
+			filter: blur(0px);
+		}
+		100% {
+			left: var(--run-settle);
+			transform: scale(1) rotate(0deg);
+			filter: blur(0px);
+		}
+	}
+
+	/* impact burst on landing */
+	.impact {
+		position: absolute;
+		bottom: var(--impact-bottom);
+		left: var(--impact-left);
+		width: var(--impact-size);
+		height: var(--impact-size);
+		border-radius: 50%;
+		border: var(--impact-border) solid var(--color-crimson);
+		opacity: 0;
+		animation: impact-burst 3.2s infinite;
+	}
+	@keyframes impact-burst {
+		0%, 36% { opacity: 0; transform: scale(0.3); }
+		38% { opacity: 0.9; transform: scale(0.5); }
+		46% { opacity: 0; transform: scale(1.6); }
+		100% { opacity: 0; }
+	}
+
+	.motto {
+		position: absolute;
+		right: var(--motto-right);
+		bottom: var(--motto-bottom);
+		max-width: var(--motto-maxw);
+		text-align: right;
+	}
+	.motto p {
+		color: var(--color-white);
+		font-size: var(--motto-font);
+		font-weight: 800;
+		line-height: 1.15;
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		margin: 0 0 0.15rem;
+		opacity: 0;
+	}
+	.motto .line1 { animation: line1-in 3.2s infinite; }
+	.motto .line2 { animation: line2-in 3.2s infinite; }
+	.motto .line3 { animation: line3-in 3.2s infinite; }
+
+	@keyframes line1-in {
+		0%, 42% { opacity: 0; transform: translateX(14px); }
+		50% { opacity: 1; transform: translateX(0); }
+		92% { opacity: 1; }
+		100% { opacity: 0; }
+	}
+	@keyframes line2-in {
+		0%, 54% { opacity: 0; transform: translateX(14px); }
+		62% { opacity: 1; transform: translateX(0); }
+		92% { opacity: 1; }
+		100% { opacity: 0; }
+	}
+	@keyframes line3-in {
+		0%, 66% { opacity: 0; transform: translateX(14px); }
+		74% { opacity: 1; transform: translateX(0); }
+		92% { opacity: 1; }
+		100% { opacity: 0; }
+	}
+
+	/* Mobile: the whole stage scales down (factor ~0.45) so every element
+	   keeps its desktop proportions -- shorter absolute run-in distance,
+	   same relative layout (no overlap between the runner and the motto),
+	   same keyframe percentages/duration. */
+	@media (max-width: 640px) {
+		.hero-stage {
+			--stage-w: 360px;
+			--stage-h: 225px;
+			--player-w: 90px;
+			--player-h: 126px;
+			--player-bottom: 45px;
+			--court-bottom: 50px;
+			--speed-bottom: 59px;
+			--speed-w: 117px;
+			--speed-h: 99px;
+			--speed-move: 40px;
+			--run-start: -117px;
+			--run-mid: 130px;
+			--run-land: 153px;
+			--run-bounce: 148px;
+			--run-settle: 151px;
+			--impact-bottom: 43px;
+			--impact-left: 180px;
+			--impact-size: 32px;
+			--impact-border: 2px;
+			--motto-right: 18px;
+			--motto-bottom: 81px;
+			--motto-maxw: 130px;
+			--motto-font: 0.95rem;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.player, .speedlines, .impact {
+			animation: none !important;
+		}
+		.player {
+			left: var(--run-settle);
+		}
+		.motto .line1, .motto .line2, .motto .line3 {
+			animation: none !important;
+			opacity: 1;
+			transform: none;
+		}
+		.speedlines, .impact {
+			opacity: 0;
+		}
+	}
+</style>
