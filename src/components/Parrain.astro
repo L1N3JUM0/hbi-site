@@ -1,0 +1,98 @@
+---
+import photoSrc from "../assets/hugo-brouzet-stage.jpg?url";
+---
+
+<section class="parrain">
+	<div class="wrap">
+		<div class="photo">
+			<img src={photoSrc} alt="Hugo Brouzet" loading="lazy" />
+		</div>
+		<div class="content">
+			<span class="kicker">Notre parrain</span>
+			<h2>Hugo Brouzet</h2>
+			<p>
+				Hugo Brouzet est le parrain officiel du Handball Islois. Pivot
+				professionnel au PAUC (Pays d&rsquo;Aix Université Club Handball), il
+				évolue au plus haut niveau, en LNH Division&nbsp;1 / Starligue.
+			</p>
+			<p>Son soutien est une vraie fierté pour tout le club, des plus jeunes aux seniors.</p>
+			<a class="cta" href="/le-club">Découvrir le club →</a>
+		</div>
+	</div>
+</section>
+
+<style>
+	.parrain {
+		background: var(--color-white);
+		padding: 3.5rem 1.5rem;
+	}
+	.wrap {
+		max-width: 900px;
+		margin: 0 auto;
+		display: grid;
+		grid-template-columns: minmax(180px, 260px) 1fr;
+		gap: 2.5rem;
+		align-items: center;
+	}
+	.photo {
+		aspect-ratio: 4 / 5;
+		border-radius: 16px;
+		overflow: hidden;
+		background: var(--color-navy);
+	}
+	.photo img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+	.kicker {
+		display: inline-block;
+		color: var(--color-crimson);
+		font-weight: 800;
+		font-size: 0.8rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		margin-bottom: 0.5rem;
+	}
+	h2 {
+		color: var(--color-navy-deep);
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		font-weight: 800;
+		font-size: clamp(1.6rem, 4vw, 2.1rem);
+		margin: 0 0 0.9rem;
+	}
+	.content p {
+		color: var(--color-navy-deep);
+		font-size: 1.02rem;
+		line-height: 1.6;
+		margin: 0 0 0.85rem;
+	}
+	.cta {
+		display: inline-block;
+		margin-top: 0.5rem;
+		color: var(--color-blue);
+		font-weight: 800;
+		text-decoration: none;
+		border-bottom: 2px solid var(--color-crimson);
+		padding-bottom: 0.15rem;
+	}
+	.cta:hover {
+		color: var(--color-crimson);
+	}
+
+	@media (max-width: 640px) {
+		.wrap {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+			text-align: center;
+		}
+		.photo {
+			max-width: 220px;
+			margin: 0 auto;
+		}
+		.cta {
+			border-bottom: none;
+		}
+	}
+</style>

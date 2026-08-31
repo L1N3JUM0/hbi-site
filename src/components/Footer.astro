@@ -1,0 +1,65 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+	<div class="wrap">
+		<div class="col">
+			<p class="club-name">Handball Islois</p>
+			<p>COSEC Émile Avy</p>
+			<p>Avenue Jean Bouin, 84800 L&rsquo;Isle-sur-la-Sorgue</p>
+		</div>
+
+		<div class="col">
+			<p><a href="tel:0626621544">06 26 62 15 44</a></p>
+			<p><a href="mailto:6384006@sud.ffhandball.net">6384006@sud.ffhandball.net</a></p>
+		</div>
+
+		<div class="col">
+			<p>Facebook&nbsp;: Handball Islois</p>
+			<p><a href="https://www.instagram.com/handball_islois/" target="_blank" rel="noopener noreferrer">Instagram&nbsp;: @handball_islois</a></p>
+		</div>
+	</div>
+
+	<p class="copy">&copy; {year} Handball Islois</p>
+</footer>
+
+<style>
+	.site-footer {
+		background: var(--color-navy-deep);
+		padding: 3rem 1.5rem 1.5rem;
+	}
+	.wrap {
+		max-width: 900px;
+		margin: 0 auto;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: 2rem;
+		text-align: center;
+	}
+	.col p {
+		color: rgba(255, 255, 255, 0.75);
+		font-size: 1rem;
+		line-height: 1.6;
+		margin: 0 0 0.3rem;
+	}
+	.club-name {
+		color: var(--color-white) !important;
+		font-weight: 800;
+		font-size: 1.05rem !important;
+		margin-bottom: 0.5rem !important;
+	}
+	.col a {
+		color: rgba(255, 255, 255, 0.75);
+		text-decoration: none;
+	}
+	.col a:hover {
+		color: var(--color-crimson);
+	}
+	.copy {
+		text-align: center;
+		color: rgba(255, 255, 255, 0.4);
+		font-size: 0.8rem;
+		margin: 2.5rem 0 0;
+	}
+</style>

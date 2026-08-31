@@ -10,9 +10,23 @@ Priorités : 1) image/notoriété, 2) infos pratiques, 3) recrutement,
 - Présidente : Sonia Saux (depuis 2015-2016)
 - Devise : « je ne perds jamais : soit je gagne, soit j'apprends »
 - Valeurs : esprit de famille, solidarité, respect, convivialité
-- 12 équipes officielles + créneau Handensemble (handball adapté) et un
-  créneau transversal étirements/renforcement/spé gardien
+- Effectif complet saison 2026-2027 (14 lignes, pas "12 équipes" à
+  proprement parler) : Baby hand (4-6 ans, samedi 9h-10h, DÉCOUVERTE),
+  U9 mixtes, U11 mixtes, U13 féminines, U13 masculins, U15 féminines,
+  U15 masculins, U17 féminines, U18 masculins, Seniors féminines,
+  Seniors masculins, Loisirs, Handensemble (handball adapté/inclusif,
+  mercredi 18h-19h, DÉCOUVERTE/INCLUSION), et le créneau transversal
+  étirements/renforcement/spé gardien (U15 à Seniors).
+  Baby hand et Handensemble ne sont PAS des équipes de compétition —
+  toujours les présenter à part (ton "découverte"/"ouvert à tous"),
+  jamais mélangées sans distinction dans une liste de "12 équipes".
+- Parrain officiel : Hugo Brouzet, pivot professionnel au PAUC (Pays
+  d'Aix Université Club Handball), évoluant en LNH Division 1 /
+  Starligue. Photo réelle fournie séparément par le club — en attendant,
+  placeholder src/assets/hugo-brouzet-stage.jpg à remplacer.
 - Lieu d'entraînement OFFICIEL UNIQUE : COSEC Émile Avy.
+  Adresse : Avenue Jean Bouin, 84800 L'Isle-sur-la-Sorgue (pas de numéro
+  de rue).
   Ne jamais afficher le Gymnase Jean Garcin comme lieu du club : c'est un
   arrangement inter-clubs temporaire pour la seule saison en cours,
   concernant certains créneaux U15/U17 féminines. Ne pas l'indiquer sur le

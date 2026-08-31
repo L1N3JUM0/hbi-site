@@ -1,6 +1,11 @@
 ---
 import "../styles/tokens.css";
 import Hero from "../components/Hero.astro";
+import Histoire from "../components/Histoire.astro";
+import Equipes from "../components/Equipes.astro";
+import Parrain from "../components/Parrain.astro";
+import Recrutement from "../components/Recrutement.astro";
+import Footer from "../components/Footer.astro";
 ---
 
 <html lang="fr">
@@ -10,10 +15,34 @@ import Hero from "../components/Hero.astro";
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Handball Islois</title>
+		<title>Handball Islois — L&rsquo;Isle-sur-la-Sorgue</title>
+		<meta
+			name="description"
+			content="Le Handball Islois : club de handball familial à L'Isle-sur-la-Sorgue, du baby hand aux seniors, handball adapté inclus."
+		/>
 	</head>
 	<body>
 		<Hero />
+		<Histoire />
+		<Equipes />
+		<Parrain />
+		<Recrutement />
+		<Footer />
 	</body>
 </html>
+
+<style is:global>
+	* {
+		box-sizing: border-box;
+	}
+	html,
+	body {
+		margin: 0;
+		padding: 0;
+	}
+	body {
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		background: var(--color-navy-deep);
+	}
+</style>
 
