@@ -22,8 +22,9 @@ Priorités : 1) image/notoriété, 2) infos pratiques, 3) recrutement,
   jamais mélangées sans distinction dans une liste de "12 équipes".
 - Parrain officiel : Hugo Brouzet, pivot professionnel au PAUC (Pays
   d'Aix Université Club Handball), évoluant en LNH Division 1 /
-  Starligue. Photo réelle fournie séparément par le club — en attendant,
-  placeholder src/assets/hugo-brouzet-stage.jpg à remplacer.
+  Starligue. Photo réelle en place dans src/assets/hugo-brouzet-stage.jpg
+  (photo de stage avec des jeunes du club, autorisation parentale
+  confirmée par le club).
 - Lieu d'entraînement OFFICIEL UNIQUE : COSEC Émile Avy.
   Adresse : Avenue Jean Bouin, 84800 L'Isle-sur-la-Sorgue (pas de numéro
   de rue).

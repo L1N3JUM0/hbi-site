@@ -1,0 +1,132 @@
+---
+import { Image } from "astro:assets";
+import logoSrc from "../assets/logo-transparent-blanc.png";
+
+const links = [
+	{ href: "/le-club", label: "Le club" },
+	{ href: "/equipes", label: "Équipes" },
+	{ href: "/agenda", label: "Agenda" },
+	{ href: "/rejoindre", label: "Rejoindre" },
+];
+---
+
+<header class="site-header">
+	<div class="wrap">
+		<a href="/" class="logo">
+			<Image src={logoSrc} alt="Handball Islois" width={160} height={160} format="webp" />
+		</a>
+
+		<button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Ouvrir le menu">
+			<span></span>
+			<span></span>
+			<span></span>
+		</button>
+
+		<nav id="nav-menu" class="nav">
+			{links.map((l) => <a href={l.href}>{l.label}</a>)}
+		</nav>
+	</div>
+</header>
+
+<script>
+	const toggle = document.querySelector<HTMLButtonElement>(".nav-toggle");
+	const nav = document.querySelector<HTMLElement>(".nav");
+
+	toggle?.addEventListener("click", () => {
+		const expanded = toggle.getAttribute("aria-expanded") === "true";
+		toggle.setAttribute("aria-expanded", String(!expanded));
+		nav?.classList.toggle("is-open");
+	});
+</script>
+
+<style>
+	.site-header {
+		position: sticky;
+		top: 0;
+		z-index: 50;
+		background: var(--color-navy-deep);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	}
+	.wrap {
+		max-width: 1100px;
+		margin: 0 auto;
+		padding: 0.6rem 1.5rem;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.logo {
+		display: block;
+		line-height: 0;
+	}
+	.logo :global(img) {
+		height: 44px;
+		width: auto;
+		display: block;
+	}
+
+	.nav {
+		display: flex;
+		gap: 1.75rem;
+	}
+	.nav a {
+		color: var(--color-white);
+		text-decoration: none;
+		font-weight: 700;
+		font-size: 0.95rem;
+		letter-spacing: 0.02em;
+		padding: 0.5rem 0;
+		border-bottom: 2px solid transparent;
+	}
+	.nav a:hover {
+		border-bottom-color: var(--color-crimson);
+	}
+
+	.nav-toggle {
+		display: none;
+		flex-direction: column;
+		justify-content: center;
+		gap: 5px;
+		width: 44px;
+		height: 44px;
+		background: transparent;
+		border: 0;
+		cursor: pointer;
+		padding: 0;
+	}
+	.nav-toggle span {
+		display: block;
+		height: 2px;
+		background: var(--color-white);
+		border-radius: 1px;
+	}
+
+	@media (max-width: 720px) {
+		.nav-toggle {
+			display: flex;
+		}
+		.nav {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			right: 0;
+			flex-direction: column;
+			gap: 0;
+			background: var(--color-navy-deep);
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+			max-height: 0;
+			overflow: hidden;
+			transition: max-height 0.25s ease;
+		}
+		.nav.is-open {
+			max-height: 320px;
+		}
+		.nav a {
+			padding: 1rem 1.5rem;
+			min-height: 44px;
+			display: flex;
+			align-items: center;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+		}
+	}
+</style>

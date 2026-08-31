@@ -1,0 +1,66 @@
+---
+import { Image } from "astro:assets";
+import vieClub1 from "../assets/vie-club-1.jpg";
+import vieClub2 from "../assets/vie-club-2.jpg";
+import action1 from "../assets/action-1.jpg";
+import match1 from "../assets/match-1.jpg";
+
+const photos = [
+	{ src: vieClub1, alt: "Moment de vie du club au HBI" },
+	{ src: action1, alt: "Action de jeu lors d'un entraînement du HBI" },
+	{ src: match1, alt: "Match du Handball Islois" },
+	{ src: vieClub2, alt: "Ambiance au bord du terrain au HBI" },
+];
+---
+
+<section class="photo-band">
+	<p class="kicker">La vie du club, en images</p>
+	<div class="band">
+		{
+			photos.map((p) => (
+				<div class="tile">
+					<Image src={p.src} alt={p.alt} width={440} height={440} format="webp" loading="lazy" />
+				</div>
+			))
+		}
+	</div>
+</section>
+
+<style>
+	.photo-band {
+		background: var(--color-navy-deep);
+		padding: 0 0 1.5rem;
+	}
+	.kicker {
+		color: var(--color-white);
+		text-align: center;
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-size: 0.85rem;
+		margin: 0 0 0.9rem;
+	}
+	.band {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 3px;
+		background: var(--color-crimson);
+	}
+	.tile {
+		aspect-ratio: 1 / 1;
+		overflow: hidden;
+		background: var(--color-navy);
+	}
+	.tile :global(img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	@media (max-width: 640px) {
+		.band {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+</style>

@@ -1,32 +1,41 @@
 ---
-const featured = [
+import { Image } from "astro:assets";
+import action1 from "../assets/action-1.jpg";
+import action2 from "../assets/action-2.jpg";
+
+const teams = [
+	{ name: "U9 mixtes" },
+	{ name: "U11 mixtes" },
+	{ name: "U13 féminines" },
+	{ name: "U13 masculins" },
+	{ name: "U15 féminines" },
+	{ name: "U15 masculins" },
+	{ name: "U17 féminines" },
+	{ name: "U18 masculins" },
+	{
+		name: "Seniors féminines",
+		photo: action2,
+		alt: "Les seniors féminines du HBI en action",
+	},
+	{
+		name: "Seniors masculins",
+		photo: action1,
+		alt: "Les seniors masculins du HBI en action",
+	},
+	{ name: "Loisirs" },
+];
+
+const decouverte = [
 	{
 		name: "Baby Hand",
 		meta: "4-6 ans · samedi 9h-10h",
 		tag: "Découverte",
-		blurb: "Les premiers pas avec le ballon, dans la bonne humeur.",
 	},
 	{
 		name: "Handensemble",
 		meta: "Handball adapté · mercredi 18h-19h",
 		tag: "Inclusion",
-		blurb:
-			"Le handball adapté et inclusif, ouvert à tous. Un vrai différenciateur du club, encore rare chez les clubs amateurs.",
 	},
-];
-
-const teams = [
-	"U9 mixtes",
-	"U11 mixtes",
-	"U13 féminines",
-	"U13 masculins",
-	"U15 féminines",
-	"U15 masculins",
-	"U17 féminines",
-	"U18 masculins",
-	"Seniors féminines",
-	"Seniors masculins",
-	"Loisirs",
 ];
 ---
 
@@ -38,31 +47,33 @@ const teams = [
 			HBI a une place pour chaque âge et chaque envie.
 		</p>
 
-		<div class="featured-grid">
+		<div class="teams-board">
 			{
-				featured.map((f) => (
-					<div class="featured-card">
-						<span class="tag">{f.tag}</span>
-						<h3>{f.name}</h3>
-						<p class="meta">{f.meta}</p>
-						<p class="blurb">{f.blurb}</p>
-					</div>
-				))
+				teams.map((t) =>
+					t.photo ? (
+						<div class="team-cell team-cell--photo">
+							<Image src={t.photo} alt={t.alt} width={440} height={440} format="webp" loading="lazy" />
+							<span class="team-cell__name">{t.name}</span>
+						</div>
+					) : (
+						<div class="team-cell">
+							<span class="team-cell__name">{t.name}</span>
+						</div>
+					),
+				)
 			}
 		</div>
 
-		<div class="teams-grid">
+		<div class="decouverte-row">
 			{
-				teams.map((t) => (
-					<div class="team-card">
-						<span>{t}</span>
+				decouverte.map((f) => (
+					<div class="decouverte-card">
+						<span class="tag">{f.tag}</span>
+						<h3>{f.name}</h3>
+						<p class="meta">{f.meta}</p>
 					</div>
 				))
 			}
-			<div class="team-card team-card--transversal">
-				<span>Étirements, renforcement &amp; spé gardien</span>
-				<span class="team-card__note">Créneau transversal · U15 à Seniors</span>
-			</div>
 		</div>
 
 		<a class="see-all" href="/equipes">Voir toutes les équipes →</a>
@@ -90,86 +101,110 @@ const teams = [
 		color: rgba(255, 255, 255, 0.75);
 		text-align: center;
 		max-width: 560px;
-		margin: 0 auto 2.5rem;
+		margin: 0 auto 2rem;
 		line-height: 1.6;
 	}
 
-	.featured-grid {
+	/* "Team board" grid: squared cells separated by thin lines (the section
+	   background showing through the gap) rather than rounded cards with
+	   shadows -- echoes the court-line motif from the hero. */
+	.teams-board {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-		gap: 1.25rem;
-		margin-bottom: 2.5rem;
+		grid-template-columns: repeat(4, 1fr);
+		grid-auto-rows: 84px;
+		grid-auto-flow: dense;
+		gap: 3px;
+		margin-bottom: 1.75rem;
 	}
-	.featured-card {
-		background: var(--color-white);
-		border-radius: 16px;
-		padding: 1.75rem;
-		position: relative;
-	}
-	.featured-card .tag {
-		display: inline-block;
-		background: var(--color-crimson);
-		color: var(--color-white);
-		font-weight: 800;
-		font-size: 0.75rem;
-		letter-spacing: 0.05em;
-		text-transform: uppercase;
-		padding: 0.3rem 0.7rem;
-		border-radius: 999px;
-		margin-bottom: 0.9rem;
-	}
-	.featured-card h3 {
-		color: var(--color-navy-deep);
-		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-		font-weight: 800;
-		font-size: 1.35rem;
-		margin: 0 0 0.35rem;
-	}
-	.featured-card .meta {
-		color: var(--color-blue);
-		font-weight: 700;
-		font-size: 1rem;
-		margin: 0 0 0.75rem;
-	}
-	.featured-card .blurb {
-		color: var(--color-navy-deep);
-		font-size: 1rem;
-		line-height: 1.5;
-		margin: 0;
-	}
-
-	.teams-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-		gap: 0.75rem;
-		margin-bottom: 2rem;
-	}
-	.team-card {
+	.team-cell {
 		background: var(--color-blue);
-		border-radius: 10px;
-		padding: 1rem 0.9rem;
-		min-height: 64px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		text-align: center;
+		padding: 0.5rem;
+		position: relative;
 	}
-	.team-card span {
-		color: var(--color-white);
-		font-weight: 700;
-		font-size: 1rem;
-		line-height: 1.3;
-	}
-	.team-card--transversal {
-		grid-column: 1 / -1;
-		flex-direction: column;
-		gap: 0.2rem;
+	.team-cell:nth-child(3n) {
 		background: var(--color-navy);
 	}
-	.team-card__note {
-		font-weight: 500 !important;
-		font-size: 0.9rem !important;
-		color: rgba(255, 255, 255, 0.7) !important;
+	.team-cell__name {
+		color: var(--color-white);
+		font-weight: 800;
+		font-size: 0.95rem;
+		text-transform: uppercase;
+		letter-spacing: 0.02em;
+		line-height: 1.25;
+	}
+	.team-cell--photo {
+		grid-column: span 2;
+		grid-row: span 2;
+		justify-content: flex-end;
+		align-items: flex-start;
+		overflow: hidden;
+		background: var(--color-navy);
+	}
+	.team-cell--photo :global(img) {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.team-cell--photo::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			to top,
+			rgba(0, 23, 73, 0.9) 0%,
+			rgba(0, 23, 73, 0.15) 55%,
+			transparent 75%
+		);
+	}
+	.team-cell--photo .team-cell__name {
+		position: relative;
+		z-index: 1;
+		align-self: flex-end;
+		text-align: left;
+		font-size: 1.15rem;
+		padding: 0 0.15rem 0.15rem;
+	}
+
+	/* Baby Hand / Handensemble: real differentiators, but deliberately
+	   secondary -- an accent-bordered strip, not another white card. */
+	.decouverte-row {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+		gap: 0.75rem;
+		margin-bottom: 2.25rem;
+	}
+	.decouverte-card {
+		border-left: 3px solid var(--color-crimson);
+		padding: 0.6rem 0 0.6rem 0.9rem;
+	}
+	.decouverte-card .tag {
+		display: inline-block;
+		background: var(--color-crimson);
+		color: var(--color-white);
+		font-weight: 800;
+		font-size: 0.7rem;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		padding: 0.2rem 0.55rem;
+		margin-bottom: 0.4rem;
+	}
+	.decouverte-card h3 {
+		color: var(--color-white);
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		font-weight: 800;
+		font-size: 1.05rem;
+		margin: 0 0 0.2rem;
+	}
+	.decouverte-card .meta {
+		color: rgba(255, 255, 255, 0.65);
+		font-size: 0.85rem;
+		margin: 0;
 	}
 
 	.see-all {
@@ -184,5 +219,16 @@ const teams = [
 	}
 	.see-all:hover {
 		color: var(--color-crimson);
+	}
+
+	@media (max-width: 640px) {
+		.teams-board {
+			grid-template-columns: repeat(2, 1fr);
+			grid-auto-rows: 76px;
+		}
+		.team-cell--photo {
+			grid-column: span 2;
+			grid-row: span 2;
+		}
 	}
 </style>

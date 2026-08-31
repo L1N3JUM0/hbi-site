@@ -1,6 +1,8 @@
 ---
 import "../styles/tokens.css";
+import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
+import PhotoBand from "../components/PhotoBand.astro";
 import Histoire from "../components/Histoire.astro";
 import Equipes from "../components/Equipes.astro";
 import Parrain from "../components/Parrain.astro";
@@ -22,9 +24,11 @@ import Footer from "../components/Footer.astro";
 		/>
 	</head>
 	<body>
+		<Header />
 		<Hero />
-		<Histoire />
+		<PhotoBand />
 		<Equipes />
+		<Histoire />
 		<Parrain />
 		<Recrutement />
 		<Footer />
