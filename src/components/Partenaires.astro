@@ -1,0 +1,82 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+
+const partenaires = await getCollection("partenaires");
+---
+
+{
+	partenaires.length > 0 && (
+		<section class="partenaires">
+			<div class="wrap">
+				<p class="kicker">Nos partenaires</p>
+				<ul class="logos">
+					{partenaires.map((p) => (
+						<li>
+							<a href={p.data.url} target="_blank" rel="noopener noreferrer" aria-label={p.data.nom}>
+								<Image src={p.data.logo} alt={p.data.nom} width={160} height={80} />
+							</a>
+						</li>
+					))}
+				</ul>
+			</div>
+		</section>
+	)
+}
+
+<style>
+	.partenaires {
+		background: var(--color-white);
+		padding: 2.5rem 1.5rem;
+	}
+	.wrap {
+		max-width: 900px;
+		margin: 0 auto;
+		text-align: center;
+	}
+	.kicker {
+		color: var(--color-navy-deep);
+		opacity: 0.55;
+		font-weight: 700;
+		font-size: 0.75rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		margin: 0 0 1.5rem;
+	}
+	.logos {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: center;
+		gap: 2rem 2.5rem;
+	}
+	.logos a {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 120px;
+		height: 64px;
+	}
+	.logos :global(img) {
+		max-width: 100%;
+		max-height: 100%;
+		width: auto;
+		height: auto;
+		object-fit: contain;
+		filter: grayscale(1);
+		opacity: 0.6;
+		transition: filter 0.2s ease, opacity 0.2s ease;
+	}
+	.logos a:hover :global(img),
+	.logos a:focus-visible :global(img) {
+		filter: grayscale(0);
+		opacity: 1;
+	}
+	.logos a:focus-visible {
+		outline: 2px solid var(--color-blue);
+		outline-offset: 4px;
+	}
+</style>

@@ -56,4 +56,23 @@ const articles = defineCollection({
 		}),
 });
 
-export const collections = { equipes, articles };
+/**
+ * Un partenaire/sponsor du club, affiché sur la homepage. Un fichier par
+ * partenaire, comme les autres collections -- prêt pour un futur back-office
+ * Sveltia CMS.
+ */
+const partenaires = defineCollection({
+	loader: glob({ pattern: "*.md", base: "./src/content/partenaires" }),
+	schema: ({ image }) =>
+		z.object({
+			nom: z.string(),
+			logo: image(),
+			/** Site du partenaire -- le logo y renvoie en lien externe. */
+			url: z.string().url(),
+			/** Optionnelle : pas affichée pour l'instant (la section reste
+			 * volontairement sobre, logos seuls), disponible si besoin plus tard. */
+			description: z.string().optional(),
+		}),
+});
+
+export const collections = { equipes, articles, partenaires };
