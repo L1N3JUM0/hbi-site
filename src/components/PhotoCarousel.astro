@@ -177,6 +177,9 @@ const { photos, ariaLabel, lightbox = false, variant = "band" } = Astro.props;
 		display: block;
 	}
 
+	.photo-carousel--band .slide {
+		height: 160px;
+	}
 	.photo-carousel--card .slide {
 		flex-basis: 90%;
 		height: 160px;
@@ -215,7 +218,7 @@ const { photos, ariaLabel, lightbox = false, variant = "band" } = Astro.props;
 	@media (min-width: 641px) {
 		.photo-carousel--band .slide {
 			flex-basis: calc((100% - 3px * 2) / 3);
-			height: 340px;
+			height: 220px;
 		}
 		.photo-carousel--card .slide {
 			flex-basis: calc((100% - 3px) / 2);

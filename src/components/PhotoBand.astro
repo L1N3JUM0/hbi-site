@@ -14,16 +14,21 @@ const photos = [
 ---
 
 <section class="photo-band">
-	<p class="kicker">La vie du club, en images</p>
-	<div class="wrap">
-		<PhotoCarousel photos={photos} ariaLabel="Photos du club, faites défiler avec les flèches du clavier" variant="band" />
+	<div class="kicker-wrap">
+		<p class="kicker">La vie du club, en images</p>
 	</div>
+	<PhotoCarousel photos={photos} ariaLabel="Photos du club, faites défiler avec les flèches du clavier" variant="band" />
 </section>
 
 <style>
 	.photo-band {
 		background: var(--color-navy-deep);
 		padding: 1.5rem 0;
+	}
+	.kicker-wrap {
+		max-width: 1100px;
+		margin: 0 auto;
+		padding: 0 1.5rem;
 	}
 	.kicker {
 		color: var(--color-white);
@@ -33,9 +38,5 @@ const photos = [
 		letter-spacing: 0.08em;
 		font-size: 0.85rem;
 		margin: 0 0 0.9rem;
-	}
-	.wrap {
-		max-width: 1100px;
-		margin: 0 auto;
 	}
 </style>
