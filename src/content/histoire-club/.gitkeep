@@ -1,0 +1,5 @@
+Dossier volontairement vide au départ (voir README.md, section
+"Moments marquants & figures du club"). Ce fichier ne doit pas être
+supprimé : sans lui, Git ne garde pas trace de ce dossier vide, et le
+build affiche un avertissement "does not exist" au lieu du message
+attendu "aucune entrée" tant qu'aucun moment n'a été ajouté.

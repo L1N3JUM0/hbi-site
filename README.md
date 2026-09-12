@@ -162,9 +162,15 @@ au moins une entrée existe (sinon la section n'apparaît pas du tout — pas
 de bloc vide sur le site). Éditable depuis Sveltia CMS ("Moments marquants
 & figures du club"), création/suppression libres.
 
-Tant que le dossier est vide, `astro build` affiche un avertissement
-`The collection "histoireClub" does not exist or is empty` : c'est normal
-et sans conséquence, il disparaît dès la première entrée ajoutée.
+Tant que le dossier est vide, `astro build` affiche deux avertissements
+bénins (`No files found matching "*.md"...` et `The collection
+"histoireClub" does not exist or is empty...`) : c'est le comportement
+normal du loader de content collection d'Astro pour une collection vide par
+design, ça ne casse rien, et les deux disparaissent dès la première entrée
+ajoutée. Un fichier `.gitkeep` maintient le dossier `histoire-club/`
+présent dans le dépôt (Git ne suit pas les dossiers vides) : sans lui, le
+premier avertissement serait plus alarmant (`does not exist` plutôt que
+`no files found`) sur un environnement fraîchement cloné (CI, autre poste).
 
 ## Agenda des matchs (calendriers FFHandball)
 
@@ -267,13 +273,17 @@ branche directement sur les content collections ci-dessus via
     en chemin relatif `../../assets` pour rester compatible avec le schéma
     `image()` d'Astro) : une photo uploadée une fois est réutilisable depuis
     n'importe quel champ image de n'importe quelle collection. Ce chemin
-    relatif doit être déclaré sur **chaque champ image pris individuellement**
+    relatif est déclaré sur **chaque champ image pris individuellement**
     (y compris ceux imbriqués dans un widget `list`, comme `galerie`) : le
-    réglage au niveau de la collection ne se propage pas automatiquement aux
-    champs imbriqués (constaté en test — un champ `list > image` sans son
-    propre `media_folder` récupère le dossier média global et écrit un
-    chemin absolu du style `/src/assets/x.jpg`, incompatible avec le schéma
-    `image()` d'Astro qui attend un chemin relatif au fichier `.md`).
+    réglage au niveau de la collection ne se propage pas toujours aux champs
+    imbriqués. **Constaté en usage réel que même un champ correctement
+    configuré peut malgré tout recevoir un chemin dans un autre format**
+    (`/src/assets/x.jpg`, voire `src/assets/x.jpg` sans aucun préfixe) —
+    vraisemblablement selon que l'image est glissée-déposée directement ou
+    réutilisée depuis la médiathèque partagée. Plutôt que de courir après ce
+    comportement de Sveltia CMS, la robustesse est assurée côté schéma (voir
+    ci-dessous) : peu importe ce que le CMS écrit, tant que le fichier existe
+    quelque part dans `src/assets/`, le site se construit correctement.
   - **Le flux de calendrier FFHandball n'est pas dans ce CMS** : il vit dans
     `src/data/agenda-teams.config.ts` (fichier TypeScript, pas une content
     collection), avec une relation un-flux-vers-plusieurs-équipes (ex :
@@ -304,3 +314,35 @@ branche directement sur les content collections ci-dessus via
   modifications s'écrivent alors directement dans les fichiers locaux (à
   committer vous-même avec Git) — pratique pour vérifier un champ sans
   toucher au dépôt distant.
+
+### Robustesse face aux chemins d'image écrits par le CMS
+
+Le 13/09/2026, un chemin d'image écrit sans aucun préfixe par le CMS
+(`src/assets/x.png` au lieu de `../../assets/x.png`) a fait planter
+**tout le build en production** (erreur `[ImageNotFound]` d'Astro), pas
+seulement la page concernée. Deux filets de sécurité corrigent ça
+durablement, à deux niveaux :
+
+1. **`src/content.config.ts`** : chaque champ image de chaque collection
+   passe par `safeImage(image)` plutôt que `image()` seul.
+   `normalizeImagePath()` corrige automatiquement un chemin "nu" (sans `./`,
+   `/` ni protocole) en le préfixant de `../../assets/` avant de le confier
+   au schéma `image()` d'Astro — peu importe le format exact écrit par le
+   CMS, tant que le fichier existe réellement dans `src/assets/`, le build
+   ne casse plus pour ça. Les chemins déjà valides (relatifs, commençant par
+   `/`, ou des URLs) ne sont pas modifiés.
+2. **`scripts/check-content-images.mjs`** (lancé automatiquement avant
+   chaque build via le script npm `prebuild`) : vérifie que chaque image
+   référencée dans `src/content/` correspond à un fichier qui existe
+   vraiment dans `src/assets/`. Si une référence est cassée (mauvais nom de
+   fichier, faute de frappe...), le build échoue **avant** même de lancer
+   Astro, avec un message clair listant tous les problèmes d'un coup — au
+   lieu de la stack trace peu explicite d'Astro sur la première erreur
+   rencontrée. Peut aussi être lancé seul :
+   `node scripts/check-content-images.mjs`.
+
+Ces deux filets ne remplacent pas une image réellement manquante (un nom de
+fichier qui n'existe nulle part fera toujours échouer le build, à raison —
+impossible d'afficher une image qui n'existe pas) ; ils éliminent la classe
+de bug observée (un format de chemin inhabituel pour un fichier qui, lui,
+existe bel et bien).
