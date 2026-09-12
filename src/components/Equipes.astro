@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import action1 from "../assets/action-1.jpg";
 import action2 from "../assets/action-2.jpg";
+import { withBase } from "../utils/links";
 
 const teams = [
 	{ name: "U9 mixtes" },
@@ -76,7 +77,7 @@ const decouverte = [
 			}
 		</div>
 
-		<a class="see-all" href="/equipes">Voir toutes les équipes →</a>
+		<a class="see-all" href={withBase("/equipes")}>Voir toutes les équipes →</a>
 	</div>
 </section>
 

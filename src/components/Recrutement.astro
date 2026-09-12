@@ -1,3 +1,7 @@
+---
+import { withBase } from "../utils/links";
+---
+
 <section class="recrutement">
 	<div class="wrap">
 		<h2>Envie de rejoindre l&rsquo;aventure&nbsp;?</h2>
@@ -5,7 +9,7 @@
 			Petit ou grand, débutant ou confirmé&nbsp;: viens essayer le handball
 			islois. Le premier entraînement d&rsquo;essai est gratuit.
 		</p>
-		<a class="cta" href="/rejoindre">Essai gratuit →</a>
+		<a class="cta" href={withBase("/rejoindre")}>Essai gratuit →</a>
 	</div>
 </section>
 

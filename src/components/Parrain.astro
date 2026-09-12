@@ -1,5 +1,6 @@
 ---
 import photoSrc from "../assets/hugo-brouzet-stage.jpg?url";
+import { withBase } from "../utils/links";
 ---
 
 <section class="parrain">
@@ -16,7 +17,7 @@ import photoSrc from "../assets/hugo-brouzet-stage.jpg?url";
 				évolue au plus haut niveau, en LNH Division&nbsp;1 / Starligue.
 			</p>
 			<p>Son soutien est une vraie fierté pour tout le club, des plus jeunes aux seniors.</p>
-			<a class="cta" href="/le-club">Découvrir le club →</a>
+			<a class="cta" href={withBase("/le-club")}>Découvrir le club →</a>
 		</div>
 	</div>
 </section>
