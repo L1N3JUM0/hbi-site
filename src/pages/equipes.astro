@@ -3,7 +3,18 @@ import "../styles/tokens.css";
 import Header from "../components/Header.astro";
 import PageBanner from "../components/PageBanner.astro";
 import Footer from "../components/Footer.astro";
+import AjouterAgendaButton from "../components/AjouterAgendaButton.astro";
 import { withBase } from "../utils/links";
+import { agendaTeams } from "../data/agenda-teams.config";
+
+/** Équipes de agenda-teams.config.ts dont le nom d'affichage commence par le
+ * nom de cette catégorie -- une catégorie peut couvrir plusieurs équipes
+ * engagées séparément (ex: "Seniors masculins" -> équipes 1 et 2). Une
+ * nouvelle équipe ajoutée à la config apparaît ici automatiquement. */
+function agendaTeamsFor(categoryName: string) {
+	const needle = categoryName.trim().toLowerCase();
+	return agendaTeams.filter((t) => t.nomAffiche.trim().toLowerCase().startsWith(needle));
+}
 
 const competition = [
 	{ name: "U9 mixtes", horaires: "Mercredi 14h-15h30", encadrants: "Lydie et Teddy", tarif: "170 €" },
@@ -72,25 +83,41 @@ const transversal = {
 				<h2>Équipes de compétition</h2>
 				<div class="grid">
 					{
-						competition.map((t) => (
-							<div class="card">
-								<h3>{t.name}</h3>
-								<dl>
-									<div class="row">
-										<dt>Jours &amp; horaires</dt>
-										<dd>{t.horaires}</dd>
-									</div>
-									<div class="row">
-										<dt>Encadrant(s)</dt>
-										<dd>{t.encadrants}</dd>
-									</div>
-									<div class="row">
-										<dt>Tarif licence</dt>
-										<dd>{t.tarif}</dd>
-									</div>
-								</dl>
-							</div>
-						))
+						competition.map((t) => {
+							const teams = agendaTeamsFor(t.name);
+							return (
+								<div class="card">
+									<h3>{t.name}</h3>
+									<dl>
+										<div class="row">
+											<dt>Jours &amp; horaires</dt>
+											<dd>{t.horaires}</dd>
+										</div>
+										<div class="row">
+											<dt>Encadrant(s)</dt>
+											<dd>{t.encadrants}</dd>
+										</div>
+										<div class="row">
+											<dt>Tarif licence</dt>
+											<dd>{t.tarif}</dd>
+										</div>
+									</dl>
+									{teams.length > 0 && (
+										<div class="card-agenda">
+											{teams.map((at) => (
+												<AjouterAgendaButton
+													href={at.urlIcs}
+													label={teams.length > 1 ? `Agenda ${at.nomAffiche.replace(t.name, "").trim()}` : "Ajouter à mon agenda"}
+												/>
+											))}
+											<a class="agenda-link" href={withBase("/agenda")}>
+												Voir l&rsquo;agenda →
+											</a>
+										</div>
+									)}
+								</div>
+							);
+						})
 					}
 				</div>
 			</div>
@@ -255,6 +282,27 @@ const transversal = {
 		font-size: 0.95rem;
 		line-height: 1.4;
 		margin: 0;
+	}
+
+	.card-agenda {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.6rem;
+		margin-top: 1rem;
+		padding-top: 1rem;
+		border-top: 1px solid rgba(255, 255, 255, 0.15);
+	}
+	.agenda-link {
+		color: rgba(255, 255, 255, 0.85);
+		font-weight: 700;
+		font-size: 0.85rem;
+		text-decoration: none;
+		border-bottom: 2px solid var(--color-crimson);
+		padding-bottom: 0.1rem;
+	}
+	.agenda-link:hover {
+		color: var(--color-crimson);
 	}
 
 	/* Découverte / inclusion: accent-bordered, visually distinct but not

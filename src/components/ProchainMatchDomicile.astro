@@ -1,0 +1,81 @@
+---
+import { getNextHomeMatch, formatMatchDate, formatMatchTime } from "../lib/agenda";
+import AjouterAgendaButton from "./AjouterAgendaButton.astro";
+import { withBase } from "../utils/links";
+
+const match = await getNextHomeMatch();
+---
+
+{
+	match && (
+		<section class="prochain-match">
+			<div class="wrap">
+				<span class="kicker">Prochain match à domicile</span>
+				<p class="teams">
+					{match.isDerby ? match.teamLabel : `${match.teamLabel} vs ${match.opponent}`}
+				</p>
+				<p class="details">
+					{formatMatchDate(match.start)} à {formatMatchTime(match.start)} · COSEC Émile Avy
+				</p>
+				<div class="actions">
+					<AjouterAgendaButton href={match.icsUrl} />
+					<a class="see-all" href={withBase("/agenda")}>
+						Voir tous les matchs →
+					</a>
+				</div>
+			</div>
+		</section>
+	)
+}
+
+<style>
+	.prochain-match {
+		background: var(--color-crimson);
+		padding: 2.25rem 1.5rem;
+		text-align: center;
+	}
+	.wrap {
+		max-width: 640px;
+		margin: 0 auto;
+	}
+	.kicker {
+		display: inline-block;
+		color: var(--color-white);
+		font-weight: 800;
+		font-size: 0.8rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		opacity: 0.9;
+		margin-bottom: 0.6rem;
+	}
+	.teams {
+		color: var(--color-white);
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		font-weight: 800;
+		font-size: clamp(1.3rem, 4vw, 1.7rem);
+		margin: 0 0 0.4rem;
+	}
+	.details {
+		color: rgba(255, 255, 255, 0.9);
+		font-size: 1rem;
+		margin: 0 0 1.25rem;
+	}
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		gap: 1rem;
+	}
+	.see-all {
+		color: var(--color-white);
+		font-weight: 800;
+		text-decoration: none;
+		border-bottom: 2px solid var(--color-white);
+		padding-bottom: 0.15rem;
+	}
+	.see-all:hover {
+		border-bottom-color: var(--color-navy-deep);
+		color: var(--color-navy-deep);
+	}
+</style>
