@@ -1,0 +1,228 @@
+---
+import "../styles/tokens.css";
+import Header from "../components/Header.astro";
+import PageBanner from "../components/PageBanner.astro";
+import Footer from "../components/Footer.astro";
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import { withBase } from "../utils/links";
+import { formatArticleDate } from "../utils/format";
+
+const articles = (await getCollection("articles")).sort(
+	(a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+---
+
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href={withBase("/favicon.svg")} />
+		<link rel="icon" href={withBase("/favicon.ico")} />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Vie du club — Handball Islois</title>
+		<meta
+			name="description"
+			content="Les actualités et moments partagés du Handball Islois : tournois, événements conviviaux, et toute la vie du club à L'Isle-sur-la-Sorgue."
+		/>
+	</head>
+	<body>
+		<Header />
+		<PageBanner
+			title="Vie du club"
+			subtitle="Tournois, moments conviviaux, événements en famille : tout ce qui fait vivre le HBI en dehors des terrains."
+		/>
+
+		<section class="articles">
+			<div class="wrap">
+				{
+					articles.length === 0 ? (
+						<p class="empty">Aucun article pour le moment, revenez bientôt !</p>
+					) : (
+						<div class="grid">
+							{articles.map((a) => (
+								<a class="card" href={withBase(`/vie-du-club/${a.data.slug}`)}>
+									<div class="card-photo">
+										<Image src={a.data.couverture} alt="" width={480} height={320} format="webp" loading="lazy" />
+									</div>
+									<div class="card-body">
+										<p class="date">{formatArticleDate(a.data.date)}</p>
+										<h3>{a.data.titre}</h3>
+										<p class="excerpt">{a.data.extrait}</p>
+										<span class="read-more">Lire l&rsquo;article →</span>
+									</div>
+								</a>
+							))}
+						</div>
+					)
+				}
+			</div>
+		</section>
+
+		<section class="instagram">
+			<div class="wrap">
+				<div class="instagram-card">
+					<span class="kicker">Sur les réseaux</span>
+					<h2>Suivez-nous sur Instagram</h2>
+					<p>
+						Les entraînements, les coulisses des matchs et les petits moments
+						du quotidien du club, c&rsquo;est par là que ça se passe.
+					</p>
+					<a
+						class="cta"
+						href="https://www.instagram.com/handball.islois/"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						@handball_islois →
+					</a>
+				</div>
+			</div>
+		</section>
+
+		<Footer />
+	</body>
+</html>
+
+<style is:global>
+	* {
+		box-sizing: border-box;
+	}
+	html,
+	body {
+		margin: 0;
+		padding: 0;
+	}
+	body {
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		background: var(--color-navy-deep);
+	}
+</style>
+
+<style>
+	.articles {
+		background: var(--color-navy-deep);
+		padding: 3.5rem 1.5rem;
+	}
+	.wrap {
+		max-width: 1000px;
+		margin: 0 auto;
+	}
+	.empty {
+		color: rgba(255, 255, 255, 0.7);
+		text-align: center;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 1.5rem;
+	}
+	.card {
+		display: flex;
+		flex-direction: column;
+		background: var(--color-blue);
+		text-decoration: none;
+		overflow: hidden;
+	}
+	.card-photo {
+		aspect-ratio: 3 / 2;
+		overflow: hidden;
+		background: var(--color-navy);
+	}
+	.card-photo :global(img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+		transition: transform 0.25s ease;
+	}
+	.card:hover .card-photo :global(img) {
+		transform: scale(1.04);
+	}
+	.card-body {
+		padding: 1.25rem 1.4rem 1.5rem;
+	}
+	.date {
+		color: rgba(255, 255, 255, 0.65);
+		font-size: 0.8rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		font-weight: 700;
+		margin: 0 0 0.5rem;
+	}
+	.card h3 {
+		color: var(--color-white);
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		font-weight: 800;
+		font-size: 1.15rem;
+		line-height: 1.3;
+		margin: 0 0 0.6rem;
+	}
+	.excerpt {
+		color: rgba(255, 255, 255, 0.85);
+		font-size: 0.95rem;
+		line-height: 1.5;
+		margin: 0 0 0.9rem;
+	}
+	.read-more {
+		color: var(--color-white);
+		font-weight: 800;
+		font-size: 0.9rem;
+		border-bottom: 2px solid var(--color-crimson);
+		padding-bottom: 0.1rem;
+	}
+	.card:hover .read-more {
+		color: var(--color-crimson);
+	}
+
+	.instagram {
+		background: var(--color-navy);
+		padding: 0 1.5rem 4rem;
+	}
+	.instagram-card {
+		max-width: 640px;
+		margin: 0 auto;
+		text-align: center;
+		background: var(--color-navy-deep);
+		border: 2px solid var(--color-crimson);
+		border-radius: 16px;
+		padding: 2.5rem 2rem;
+	}
+	.instagram .kicker {
+		display: inline-block;
+		color: var(--color-crimson);
+		font-weight: 800;
+		font-size: 0.8rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		margin-bottom: 0.5rem;
+	}
+	.instagram h2 {
+		color: var(--color-white);
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		font-weight: 800;
+		font-size: clamp(1.4rem, 4vw, 1.8rem);
+		margin: 0 0 0.9rem;
+	}
+	.instagram p {
+		color: rgba(255, 255, 255, 0.8);
+		font-size: 1rem;
+		line-height: 1.6;
+		margin: 0 0 1.5rem;
+	}
+	.instagram .cta {
+		display: inline-block;
+		background: var(--color-crimson);
+		color: var(--color-white);
+		font-weight: 800;
+		font-size: 1.02rem;
+		text-decoration: none;
+		padding: 0.8rem 1.75rem;
+		border-radius: 999px;
+		transition: transform 0.15s ease;
+	}
+	.instagram .cta:hover {
+		transform: translateY(-2px);
+	}
+</style>

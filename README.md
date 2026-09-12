@@ -83,6 +83,45 @@ Elle apparaît automatiquement sur la homepage et `/equipes`, triée par
 `ordre` au sein de son `type`. Pour lui associer un flux de calendrier, voir
 la section suivante.
 
+## Vie du club (articles)
+
+Même principe que les équipes : chaque article est un fichier Markdown
+indépendant dans **`src/content/articles/`**, défini par le schéma de
+`src/content.config.ts`. Contrairement aux équipes, le corps du fichier
+Markdown (sous le frontmatter) EST le contenu de l'article — pas de champ
+séparé à remplir, on écrit le texte normalement.
+
+Champs du frontmatter :
+
+| Champ        | Rôle                                                      |
+| :----------- | :---------------------------------------------------------- |
+| `titre`      | Titre de l'article                                          |
+| `date`       | Date de publication (`AAAA-MM-JJ`) — détermine l'ordre d'affichage (le plus récent en premier) |
+| `couverture` | Photo de couverture (même mécanique que `photos` des équipes : chemin relatif vers `src/assets/`, ex. `"../../assets/ma-photo.jpg"`) |
+| `extrait`    | 1-2 phrases affichées dans la liste `/vie-du-club`          |
+| `slug`       | Identifiant stable : URL `/vie-du-club/<slug>`               |
+
+### Publier un nouvel article
+
+Créez un fichier `src/content/articles/<slug>.md` avec ce frontmatter, puis
+écrivez le texte de l'article en dessous (Markdown normal : paragraphes,
+gras, liens...). Il apparaît automatiquement dans `/vie-du-club`, trié par
+date, avec sa propre page `/vie-du-club/<slug>`.
+
+Deux articles d'exemple (`tournoi-halloween.md`, `moment-en-famille.md`)
+sont fournis avec les photos déjà présentes dans le projet, à remplacer par
+de vraies actualités dès que le club en aura (un commentaire au-dessus de
+`couverture` le rappelle dans chaque fichier).
+
+### Instagram
+
+La carte "Suivez-nous sur Instagram" de `/vie-du-club` est un simple lien
+externe pour l'instant (pas d'intégration technique du flux) : le compte du
+club doit d'abord passer en compte professionnel pour permettre une
+intégration propre et conforme RGPD (récupération côté build, pas d'embed
+tiers — voir les contraintes du projet). Une fois que ce sera fait, cette
+carte est l'endroit où brancher un vrai aperçu des dernières publications.
+
 ## Agenda des matchs (calendriers FFHandball)
 
 L'agenda (`/agenda`, bandeau "prochain match à domicile" sur la homepage,

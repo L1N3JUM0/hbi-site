@@ -1,0 +1,130 @@
+---
+import "../../styles/tokens.css";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { Image } from "astro:assets";
+import { getCollection, render } from "astro:content";
+import { withBase } from "../../utils/links";
+import { formatArticleDate } from "../../utils/format";
+
+export async function getStaticPaths() {
+	const articles = await getCollection("articles");
+	return articles.map((article) => ({
+		params: { slug: article.data.slug },
+		props: { article },
+	}));
+}
+
+const { article } = Astro.props;
+const { Content } = await render(article);
+---
+
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href={withBase("/favicon.svg")} />
+		<link rel="icon" href={withBase("/favicon.ico")} />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{article.data.titre} — Handball Islois</title>
+		<meta name="description" content={article.data.extrait} />
+	</head>
+	<body>
+		<Header />
+
+		<article class="post">
+			<div class="cover">
+				<Image src={article.data.couverture} alt="" width={1200} height={500} format="webp" loading="eager" />
+			</div>
+			<div class="wrap">
+				<a class="back" href={withBase("/vie-du-club")}>← Tous les articles</a>
+				<p class="date">{formatArticleDate(article.data.date)}</p>
+				<h1>{article.data.titre}</h1>
+				<div class="content">
+					<Content />
+				</div>
+				<a class="back back--bottom" href={withBase("/vie-du-club")}>← Tous les articles</a>
+			</div>
+		</article>
+
+		<Footer />
+	</body>
+</html>
+
+<style is:global>
+	* {
+		box-sizing: border-box;
+	}
+	html,
+	body {
+		margin: 0;
+		padding: 0;
+	}
+	body {
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		background: var(--color-navy-deep);
+	}
+</style>
+
+<style>
+	.post {
+		background: var(--color-navy-deep);
+		padding-bottom: 3.5rem;
+	}
+	.cover {
+		aspect-ratio: 16 / 7;
+		max-height: 420px;
+		overflow: hidden;
+		background: var(--color-navy);
+	}
+	.cover :global(img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+	.wrap {
+		max-width: 720px;
+		margin: 0 auto;
+		padding: 2rem 1.5rem 0;
+	}
+	.back {
+		display: inline-block;
+		color: rgba(255, 255, 255, 0.75);
+		font-weight: 700;
+		font-size: 0.9rem;
+		text-decoration: none;
+		margin-bottom: 1.5rem;
+	}
+	.back:hover {
+		color: var(--color-crimson);
+	}
+	.back--bottom {
+		margin-top: 2rem;
+		margin-bottom: 0;
+	}
+	.date {
+		color: rgba(255, 255, 255, 0.65);
+		font-size: 0.85rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		font-weight: 700;
+		margin: 0 0 0.6rem;
+	}
+	h1 {
+		color: var(--color-white);
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		font-weight: 800;
+		font-size: clamp(1.8rem, 5vw, 2.4rem);
+		line-height: 1.2;
+		margin: 0 0 1.75rem;
+	}
+	.content {
+		color: rgba(255, 255, 255, 0.9);
+		font-size: 1.08rem;
+		line-height: 1.7;
+	}
+	.content :global(p) {
+		margin: 0 0 1.25rem;
+	}
+</style>

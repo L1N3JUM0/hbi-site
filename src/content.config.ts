@@ -36,4 +36,24 @@ const equipes = defineCollection({
 		}),
 });
 
-export const collections = { equipes };
+/**
+ * Un article "Vie du club" (tournois, moments conviviaux, etc). Contenu
+ * Markdown classique : le corps du fichier EST le contenu de l'article
+ * (pas de champ "contenu" séparé) -- pratique pour un futur éditeur
+ * Sveltia CMS (widget Markdown standard).
+ */
+const articles = defineCollection({
+	loader: glob({ pattern: "*.md", base: "./src/content/articles" }),
+	schema: ({ image }) =>
+		z.object({
+			titre: z.string(),
+			date: z.coerce.date(),
+			couverture: image(),
+			/** 1-2 phrases affichées dans la liste /vie-du-club. */
+			extrait: z.string(),
+			/** Identifiant stable : URL /vie-du-club/slug. */
+			slug: z.string(),
+		}),
+});
+
+export const collections = { equipes, articles };
