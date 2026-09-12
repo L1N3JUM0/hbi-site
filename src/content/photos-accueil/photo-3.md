@@ -1,5 +1,5 @@
 ---
-image: "../../assets/match-1.jpg"
-alt: "Match du Handball Islois"
+image: ../../assets/Tir.jpg
+alt: Match du Handball Islois
 ordre: 3
 ---
