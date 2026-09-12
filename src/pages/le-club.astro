@@ -1,0 +1,284 @@
+---
+import "../styles/tokens.css";
+import Header from "../components/Header.astro";
+import PageBanner from "../components/PageBanner.astro";
+import Footer from "../components/Footer.astro";
+import photoSrc from "../assets/hugo-brouzet-stage.jpg?url";
+---
+
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Le club — Handball Islois</title>
+		<meta
+			name="description"
+			content="L'histoire du Handball Islois, sa présidente, sa devise, son parrain Hugo Brouzet, et toutes les infos pratiques du club à L'Isle-sur-la-Sorgue."
+		/>
+	</head>
+	<body>
+		<Header />
+		<PageBanner
+			title="Le club"
+			subtitle="Depuis 1977, le handball islois se construit dans l'esprit de famille."
+		/>
+
+		<section class="histoire">
+			<div class="wrap">
+				<h2>Notre histoire</h2>
+				<p>
+					Le Handball Islois voit le jour le 8&nbsp;novembre&nbsp;1977, fondé
+					par Jean&nbsp;Guillen. Plus de 45&nbsp;ans plus tard, le club n&rsquo;a
+					jamais dévié de son projet d&rsquo;origine&nbsp;: faire du handball un
+					sport accessible à L&rsquo;Isle-sur-la-Sorgue, du premier
+					entraînement de baby hand jusqu&rsquo;aux seniors, sans jamais
+					perdre son esprit de famille.
+				</p>
+				<p>
+					Depuis 2015-2016, c&rsquo;est Sonia&nbsp;Saux qui préside le club et
+					porte cette histoire au quotidien, avec une équipe de bénévoles et
+					d&rsquo;éducateurs attachée à trois valeurs&nbsp;: la solidarité, le
+					respect et la convivialité. Elles infusent chaque entraînement, chaque
+					match et chaque moment partagé au bord du terrain.
+				</p>
+				<p>
+					Ces valeurs se résument dans la devise du club, répétée aux jeunes
+					comme aux plus expérimentés&nbsp;:
+				</p>
+				<p class="devise">
+					« Je ne perds jamais&nbsp;: soit je gagne, soit j&rsquo;apprends. »
+				</p>
+				<p>
+					Une philosophie qui pousse à progresser sans jamais craindre l&rsquo;échec,
+					et qui fait du HBI un club où l&rsquo;on vient autant pour la
+					compétition que pour le plaisir de jouer ensemble.
+				</p>
+			</div>
+		</section>
+
+		<section class="parrain">
+			<div class="wrap">
+				<div class="photo">
+					<img src={photoSrc} alt="Hugo Brouzet lors d'un stage avec les jeunes du HBI" loading="lazy" />
+				</div>
+				<div class="content">
+					<span class="kicker">Notre parrain</span>
+					<h2>Hugo Brouzet</h2>
+					<p>
+						Hugo Brouzet est le parrain officiel du Handball Islois. Pivot
+						professionnel au PAUC (Pays d&rsquo;Aix Université Club
+						Handball), il évolue au plus haut niveau français, en LNH
+						Division&nbsp;1&nbsp;/ Starligue.
+					</p>
+					<p>
+						Malgré un emploi du temps de sportif de haut niveau, il reste
+						fidèle à ses racines islaises et vient régulièrement à la
+						rencontre des jeunes du club, comme lors de ce stage partagé avec
+						les licenciés du HBI.
+					</p>
+					<p>
+						Son parcours est une source d&rsquo;inspiration pour tous les
+						jeunes joueurs et joueuses du club&nbsp;: la preuve qu&rsquo;on
+						peut partir d&rsquo;un club familial comme le HBI et viser le plus
+						haut niveau.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="pratique">
+			<div class="wrap">
+				<h2>Infos pratiques</h2>
+				<div class="grid">
+					<div class="card">
+						<h3>Lieu d&rsquo;entraînement</h3>
+						<p>COSEC Émile Avy</p>
+						<p>Avenue Jean Bouin, 84800 L&rsquo;Isle-sur-la-Sorgue</p>
+					</div>
+					<div class="card">
+						<h3>Contact</h3>
+						<p><a href="tel:0626621544">06 26 62 15 44</a></p>
+						<p><a href="mailto:6384006@sud.ffhandball.net">6384006@sud.ffhandball.net</a></p>
+					</div>
+					<div class="card">
+						<h3>Réseaux</h3>
+						<p>
+							<a href="https://www.instagram.com/handball.islois/" target="_blank" rel="noopener noreferrer">Instagram&nbsp;: @handball_islois</a>
+						</p>
+						<p>
+							<a href="https://www.facebook.com/handballislois84" target="_blank" rel="noopener noreferrer">Facebook&nbsp;: Handball Islois</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<Footer />
+	</body>
+</html>
+
+<style is:global>
+	* {
+		box-sizing: border-box;
+	}
+	html,
+	body {
+		margin: 0;
+		padding: 0;
+	}
+	body {
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		background: var(--color-navy-deep);
+	}
+</style>
+
+<style>
+	h2 {
+		color: var(--color-navy-deep);
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		font-weight: 800;
+		font-size: clamp(1.6rem, 4vw, 2.2rem);
+		margin: 0 0 1.25rem;
+	}
+	h2::after {
+		content: "";
+		display: block;
+		width: 56px;
+		height: 4px;
+		margin: 0.75rem auto 0;
+		background: var(--color-crimson);
+		border-radius: 2px;
+	}
+
+	.histoire {
+		background: var(--color-white);
+		padding: 3.5rem 1.5rem;
+	}
+	.histoire .wrap {
+		max-width: 680px;
+		margin: 0 auto;
+		text-align: center;
+	}
+	.histoire p {
+		color: var(--color-navy-deep);
+		font-size: 1.05rem;
+		line-height: 1.6;
+		margin: 0 0 1rem;
+	}
+	.histoire .devise {
+		font-weight: 800;
+		font-style: italic;
+		color: var(--color-blue);
+		font-size: 1.15rem;
+	}
+
+	.parrain {
+		background: var(--color-navy);
+		padding: 3.5rem 1.5rem;
+	}
+	.parrain .wrap {
+		max-width: 900px;
+		margin: 0 auto;
+		display: grid;
+		grid-template-columns: minmax(180px, 260px) 1fr;
+		gap: 2.5rem;
+		align-items: center;
+	}
+	.parrain .photo {
+		aspect-ratio: 4 / 5;
+		border-radius: 16px;
+		overflow: hidden;
+		background: var(--color-navy-deep);
+	}
+	.parrain .photo img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+	.parrain .kicker {
+		display: inline-block;
+		color: var(--color-crimson);
+		font-weight: 800;
+		font-size: 0.8rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		margin-bottom: 0.5rem;
+	}
+	.parrain h2 {
+		color: var(--color-white);
+		text-align: left;
+	}
+	.parrain h2::after {
+		margin-left: 0;
+	}
+	.parrain .content p {
+		color: rgba(255, 255, 255, 0.85);
+		font-size: 1.02rem;
+		line-height: 1.6;
+		margin: 0 0 0.85rem;
+	}
+
+	.pratique {
+		background: var(--color-white);
+		padding: 3.5rem 1.5rem;
+	}
+	.pratique .wrap {
+		max-width: 1000px;
+		margin: 0 auto;
+		text-align: center;
+	}
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+		gap: 1.5rem;
+		margin-top: 2rem;
+		text-align: left;
+	}
+	.card {
+		background: var(--color-navy-deep);
+		padding: 1.5rem;
+		border-top: 3px solid var(--color-crimson);
+	}
+	.card h3 {
+		color: var(--color-white);
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		font-weight: 800;
+		font-size: 1.05rem;
+		margin: 0 0 0.75rem;
+	}
+	.card p {
+		color: rgba(255, 255, 255, 0.8);
+		font-size: 1rem;
+		line-height: 1.6;
+		margin: 0 0 0.3rem;
+	}
+	.card a {
+		color: rgba(255, 255, 255, 0.8);
+		text-decoration: none;
+	}
+	.card a:hover {
+		color: var(--color-crimson);
+	}
+
+	@media (max-width: 640px) {
+		.parrain .wrap {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+			text-align: center;
+		}
+		.parrain .photo {
+			max-width: 220px;
+			margin: 0 auto;
+		}
+		.parrain h2 {
+			text-align: center;
+		}
+		.parrain h2::after {
+			margin: 0.75rem auto 0;
+		}
+	}
+</style>

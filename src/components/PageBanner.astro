@@ -1,0 +1,48 @@
+---
+interface Props {
+	title: string;
+	subtitle?: string;
+}
+const { title, subtitle } = Astro.props;
+---
+
+<section class="page-banner">
+	<div class="wrap">
+		<h1>{title}</h1>
+		{subtitle && <p>{subtitle}</p>}
+	</div>
+</section>
+
+<style>
+	.page-banner {
+		background: var(--color-navy-deep);
+		padding: 3rem 1.5rem 2.5rem;
+	}
+	.wrap {
+		max-width: 900px;
+		margin: 0 auto;
+		text-align: center;
+	}
+	h1 {
+		color: var(--color-white);
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		font-weight: 800;
+		font-size: clamp(2rem, 6vw, 2.8rem);
+		margin: 0 0 0.75rem;
+	}
+	h1::after {
+		content: "";
+		display: block;
+		width: 56px;
+		height: 4px;
+		margin: 0.75rem auto 0;
+		background: var(--color-crimson);
+		border-radius: 2px;
+	}
+	p {
+		color: rgba(255, 255, 255, 0.75);
+		font-size: 1.05rem;
+		line-height: 1.6;
+		margin: 0;
+	}
+</style>

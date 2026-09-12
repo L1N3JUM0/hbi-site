@@ -1,0 +1,298 @@
+---
+import "../styles/tokens.css";
+import Header from "../components/Header.astro";
+import PageBanner from "../components/PageBanner.astro";
+import Footer from "../components/Footer.astro";
+
+const competition = [
+	{ name: "U9 mixtes", horaires: "Mercredi 14h-15h30", encadrants: "Lydie et Teddy", tarif: "170 €" },
+	{ name: "U11 mixtes", horaires: "Lundi 17h-18h30 / mercredi 15h-16h30", encadrants: "Teddy", tarif: "180 €" },
+	{ name: "U13 féminines", horaires: "Mercredi 16h30-18h / vendredi 17h30-19h", encadrants: "Cécile et Aurore", tarif: "190 €" },
+	{ name: "U13 masculins", horaires: "Mardi et jeudi 17h30-19h", encadrants: "Teddy et Laurent", tarif: "190 €" },
+	{ name: "U15 féminines", horaires: "Mercredi 16h30-18h / vendredi 18h-19h30", encadrants: "Aurore", tarif: "200 €" },
+	{ name: "U15 masculins", horaires: "Mardi et jeudi 19h-20h30", encadrants: "Bruno et Teddy", tarif: "200 €" },
+	{ name: "U17 féminines", horaires: "Mercredi 18h30-20h / vendredi 19h-20h30", encadrants: "Léa et Caroline", tarif: "210 €" },
+	{ name: "U18 masculins", horaires: "Mercredi et vendredi 19h-20h30", encadrants: "Jérôme et Cyril", tarif: "210 €" },
+	{ name: "Seniors féminines", horaires: "Mercredi et vendredi 20h30-22h30", encadrants: "Cyril et Thierry", tarif: "220 €" },
+	{ name: "Seniors masculins", horaires: "Mardi et jeudi 20h30-22h30", encadrants: "Christophe", tarif: "220 €" },
+	{ name: "Loisirs", horaires: "Lundi 20h-22h30", encadrants: "David", tarif: "160 €" },
+];
+
+const decouverte = [
+	{
+		name: "Baby Hand",
+		tag: "Découverte",
+		meta: "4-6 ans",
+		horaires: "Samedi 9h-10h",
+		encadrants: "Teddy et Lena",
+		tarif: "120 €",
+	},
+	{
+		name: "Handensemble",
+		tag: "Inclusion",
+		meta: "Handball adapté, ouvert à tous",
+		horaires: "Mercredi 18h-19h",
+		encadrants: "Lydie",
+		tarif: "100 €",
+	},
+];
+
+const transversal = {
+	name: "Étirements, renforcement & spé gardien",
+	meta: "Ouvert de U15 à seniors",
+	horaires: "Lundi 18h30-20h",
+	encadrants: "Coachs du HBI",
+	tarif: "Compris dans la licence",
+};
+---
+
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Nos équipes — Handball Islois</title>
+		<meta
+			name="description"
+			content="L'effectif complet du Handball Islois : jours, horaires, encadrants et tarifs, du baby hand aux seniors, ainsi que Handensemble et le créneau étirements/renforcement."
+		/>
+	</head>
+	<body>
+		<Header />
+		<PageBanner
+			title="Nos équipes"
+			subtitle="Du baby hand aux seniors, en passant par le handball adapté : l'effectif complet du HBI pour la saison 2026-2027, entraînements au COSEC Émile Avy."
+		/>
+
+		<section class="teams">
+			<div class="wrap">
+				<h2>Équipes de compétition</h2>
+				<div class="grid">
+					{
+						competition.map((t) => (
+							<div class="card">
+								<h3>{t.name}</h3>
+								<dl>
+									<div class="row">
+										<dt>Jours &amp; horaires</dt>
+										<dd>{t.horaires}</dd>
+									</div>
+									<div class="row">
+										<dt>Encadrant(s)</dt>
+										<dd>{t.encadrants}</dd>
+									</div>
+									<div class="row">
+										<dt>Tarif licence</dt>
+										<dd>{t.tarif}</dd>
+									</div>
+								</dl>
+							</div>
+						))
+					}
+				</div>
+			</div>
+		</section>
+
+		<section class="decouverte">
+			<div class="wrap">
+				<h2>Découverte &amp; inclusion</h2>
+				<p class="intro">
+					Deux créneaux ouverts à tous, pensés pour découvrir le handball sans
+					enjeu de compétition.
+				</p>
+				<div class="grid grid--decouverte">
+					{
+						decouverte.map((t) => (
+							<div class="card card--decouverte">
+								<span class="tag">{t.tag}</span>
+								<h3>{t.name}</h3>
+								<p class="meta">{t.meta}</p>
+								<dl>
+									<div class="row">
+										<dt>Jours &amp; horaires</dt>
+										<dd>{t.horaires}</dd>
+									</div>
+									<div class="row">
+										<dt>Encadrant(s)</dt>
+										<dd>{t.encadrants}</dd>
+									</div>
+									<div class="row">
+										<dt>Tarif licence</dt>
+										<dd>{t.tarif}</dd>
+									</div>
+								</dl>
+							</div>
+						))
+					}
+				</div>
+			</div>
+		</section>
+
+		<section class="transversal">
+			<div class="wrap">
+				<h2>Créneau transversal</h2>
+				<div class="card card--transversal">
+					<h3>{transversal.name}</h3>
+					<p class="meta">{transversal.meta}</p>
+					<dl>
+						<div class="row">
+							<dt>Jours &amp; horaires</dt>
+							<dd>{transversal.horaires}</dd>
+						</div>
+						<div class="row">
+							<dt>Encadrant(s)</dt>
+							<dd>{transversal.encadrants}</dd>
+						</div>
+						<div class="row">
+							<dt>Tarif</dt>
+							<dd>{transversal.tarif}</dd>
+						</div>
+					</dl>
+				</div>
+			</div>
+		</section>
+
+		<Footer />
+	</body>
+</html>
+
+<style is:global>
+	* {
+		box-sizing: border-box;
+	}
+	html,
+	body {
+		margin: 0;
+		padding: 0;
+	}
+	body {
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		background: var(--color-navy-deep);
+	}
+</style>
+
+<style>
+	h2 {
+		color: var(--color-white);
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		font-weight: 800;
+		font-size: clamp(1.6rem, 4vw, 2.2rem);
+		text-align: center;
+		margin: 0 0 0.75rem;
+	}
+	.intro {
+		color: rgba(255, 255, 255, 0.75);
+		text-align: center;
+		max-width: 560px;
+		margin: 0 auto 2rem;
+		line-height: 1.6;
+	}
+
+	.teams {
+		background: var(--color-navy-deep);
+		padding: 3.5rem 1.5rem;
+	}
+	.decouverte {
+		background: var(--color-navy);
+		padding: 3.5rem 1.5rem;
+	}
+	.transversal {
+		background: var(--color-navy-deep);
+		padding: 3.5rem 1.5rem 4rem;
+	}
+
+	.wrap {
+		max-width: 1000px;
+		margin: 0 auto;
+	}
+
+	.teams h2 {
+		margin-bottom: 2rem;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+		gap: 1.25rem;
+	}
+
+	.card {
+		background: var(--color-blue);
+		padding: 1.25rem 1.4rem;
+	}
+	.card h3 {
+		color: var(--color-white);
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		font-weight: 800;
+		font-size: 1.1rem;
+		text-transform: uppercase;
+		letter-spacing: 0.02em;
+		margin: 0 0 0.9rem;
+	}
+	.card dl {
+		margin: 0;
+	}
+	.card .row {
+		padding: 0.5rem 0;
+		border-top: 1px solid rgba(255, 255, 255, 0.15);
+	}
+	.card .row:first-child {
+		border-top: none;
+	}
+	.card dt {
+		color: rgba(255, 255, 255, 0.6);
+		font-size: 0.75rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		font-weight: 700;
+		margin: 0 0 0.15rem;
+	}
+	.card dd {
+		color: var(--color-white);
+		font-size: 0.95rem;
+		line-height: 1.4;
+		margin: 0;
+	}
+
+	/* Découverte / inclusion: accent-bordered, visually distinct but not
+	   dominant compared to the competition grid above. */
+	.card--decouverte {
+		background: var(--color-navy-deep);
+		border-left: 3px solid var(--color-crimson);
+	}
+	.tag {
+		display: inline-block;
+		background: var(--color-crimson);
+		color: var(--color-white);
+		font-weight: 800;
+		font-size: 0.7rem;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		padding: 0.2rem 0.55rem;
+		margin-bottom: 0.6rem;
+	}
+	.card--decouverte .meta,
+	.card--transversal .meta {
+		color: rgba(255, 255, 255, 0.65);
+		font-size: 0.85rem;
+		margin: 0 0 0.9rem;
+	}
+
+	.transversal h2 {
+		margin-bottom: 2rem;
+	}
+	.card--transversal {
+		background: var(--color-navy);
+		border-left: 3px solid var(--color-crimson);
+		max-width: 480px;
+		margin: 0 auto;
+	}
+
+	@media (max-width: 640px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
