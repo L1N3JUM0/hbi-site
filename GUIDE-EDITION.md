@@ -15,6 +15,15 @@ code, via l'interface d'administration.
 > Seules les personnes ajoutées comme collaborateurs du dépôt GitHub peuvent
 > se connecter (voir "Donner accès à une nouvelle personne" en bas de page).
 
+## Une seule médiathèque pour toutes les photos
+
+Toutes les photos, quel que soit l'endroit où vous les avez ajoutées
+(équipe, article, partenaire...), atterrissent dans la **même bibliothèque
+partagée**. Quand vous cliquez sur un champ photo, vous pouvez donc soit en
+glisser-déposer une nouvelle, soit en choisir une déjà présente — même si
+elle a été ajoutée depuis une autre rubrique. Pas besoin de retéléverser
+deux fois la même image.
+
 ## Ajouter/retirer une photo du carrousel de la page d'accueil
 
 1. Cliquez sur **Photos de la page d'accueil**.

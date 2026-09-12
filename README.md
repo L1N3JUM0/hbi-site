@@ -269,21 +269,23 @@ branche directement sur les content collections ci-dessus via
     texte libre (nécessaire pour l'URL d'un nouvel article) mais validé par
     un motif (minuscules/chiffres/tirets uniquement) et accompagné d'un
     avertissement.
-  - Toutes les collections partagent le même dossier média (`src/assets`,
-    en chemin relatif `../../assets` pour rester compatible avec le schéma
-    `image()` d'Astro) : une photo uploadée une fois est réutilisable depuis
-    n'importe quel champ image de n'importe quelle collection. Ce chemin
-    relatif est déclaré sur **chaque champ image pris individuellement**
-    (y compris ceux imbriqués dans un widget `list`, comme `galerie`) : le
-    réglage au niveau de la collection ne se propage pas toujours aux champs
-    imbriqués. **Constaté en usage réel que même un champ correctement
-    configuré peut malgré tout recevoir un chemin dans un autre format**
-    (`/src/assets/x.jpg`, voire `src/assets/x.jpg` sans aucun préfixe) —
-    vraisemblablement selon que l'image est glissée-déposée directement ou
-    réutilisée depuis la médiathèque partagée. Plutôt que de courir après ce
-    comportement de Sveltia CMS, la robustesse est assurée côté schéma (voir
-    ci-dessous) : peu importe ce que le CMS écrit, tant que le fichier existe
-    quelque part dans `src/assets/`, le site se construit correctement.
+  - **Un seul dossier média pour tout le CMS** : `media_folder`/
+    `public_folder` ne sont déclarés qu'une fois, en haut de `config.yml`
+    (`src/assets` / `/src/assets`), et nulle part ailleurs. Une première
+    version déclarait aussi ces deux clés sur chaque collection et chaque
+    champ image (en chemin relatif `../../assets`, pour correspondre au
+    format attendu par le schéma `image()` d'Astro) : ça pointait déjà vers
+    le même dossier physique sur disque, mais Sveltia CMS traite chaque
+    déclaration de `media_folder` comme une bibliothèque de médias
+    distincte dans son interface -- une photo envoyée depuis le champ d'une
+    collection n'apparaissait alors pas dans le sélecteur d'une autre,
+    malgré l'intention de médiathèque partagée. Une seule déclaration,
+    globale, résout ça : toute photo envoyée depuis n'importe quel champ
+    est proposée dans le sélecteur de n'importe quel autre champ. Ça
+    reproduit aussi, systématiquement, le format `/src/assets/x.jpg`
+    (chemin absolu depuis la racine du projet) plutôt que le chemin relatif
+    `../../assets/x.jpg` -- les deux fonctionnent avec le schéma `image()`
+    d'Astro (voir plus bas), donc sans conséquence.
   - **Le flux de calendrier FFHandball n'est pas dans ce CMS** : il vit dans
     `src/data/agenda-teams.config.ts` (fichier TypeScript, pas une content
     collection), avec une relation un-flux-vers-plusieurs-équipes (ex :
