@@ -43,7 +43,7 @@ const articles = (await getCollection("articles")).sort(
 							{articles.map((a) => (
 								<a class="card" href={withBase(`/vie-du-club/${a.data.slug}`)}>
 									<div class="card-photo">
-										<Image src={a.data.couverture} alt="" width={480} height={320} format="webp" loading="lazy" />
+										<Image src={a.data.couverture} alt="" width={480} format="webp" loading="lazy" />
 									</div>
 									<div class="card-body">
 										<p class="date">{formatArticleDate(a.data.date)}</p>
@@ -129,11 +129,16 @@ const articles = (await getCollection("articles")).sort(
 		aspect-ratio: 3 / 2;
 		overflow: hidden;
 		background: var(--color-navy);
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 	.card-photo :global(img) {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
+		width: auto;
+		height: auto;
+		max-width: 100%;
+		max-height: 100%;
+		object-fit: contain;
 		display: block;
 		transition: transform 0.25s ease;
 	}
