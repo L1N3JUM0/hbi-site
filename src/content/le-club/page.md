@@ -11,7 +11,7 @@ histoireIntro: |-
   porte cette histoire au quotidien, avec une équipe de bénévoles et
   d’éducateurs attachée à trois valeurs : la solidarité, le
   respect et la convivialité. Elles infusent chaque entraînement, chaque
-  match et chaque moment partagé au bord du terrain.
+  match et chaque moment partagé au bord du terrain. Au cosec.
 
   Ces valeurs se résument dans la devise du club, répétée aux jeunes
   comme aux plus expérimentés :
@@ -19,7 +19,7 @@ devise: 'Je ne perds jamais : soit je gagne, soit j’apprends.'
 histoireConclusion: |-
   Une philosophie qui pousse à progresser sans jamais craindre l’échec,
   et qui fait du HBI un club où l’on vient autant pour la
-  compétition que pour le plaisir de jouer ensemble. Au cosec.
+  compétition que pour le plaisir de jouer ensemble.
 parrainNom: Hugo Brouzet
 parrainPhoto: ../../assets/hugo-brouzet-stage.jpg
 parrainPhotoAlt: Hugo Brouzet lors d'un stage avec les jeunes du HBI
