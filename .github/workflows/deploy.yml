@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    # 4h00 UTC = 5h00 (hiver) ou 6h00 (été) heure de Paris.
+    # Rebuild quotidien pour garder l'agenda des matchs (flux iCal
+    # FFHandball, récupérés au moment du build) à jour même sans commit.
+    - cron: "0 4 * * *"
 
 permissions:
   contents: read
