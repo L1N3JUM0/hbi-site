@@ -5,6 +5,7 @@ import PageBanner from "../components/PageBanner.astro";
 import Footer from "../components/Footer.astro";
 import AjouterAgendaButton from "../components/AjouterAgendaButton.astro";
 import PhotoCarousel from "../components/PhotoCarousel.astro";
+import Favicon from "../components/Favicon.astro";
 import { withBase } from "../utils/links";
 import { getCollection, type CollectionEntry } from "astro:content";
 import { agendaTeams } from "../data/agenda-teams.config";
@@ -39,8 +40,7 @@ function photosFor(team: CollectionEntry<"equipes">) {
 <html lang="fr">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href={withBase("/favicon.svg")} />
-		<link rel="icon" href={withBase("/favicon.ico")} />
+		<Favicon />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Nos équipes — Handball Islois</title>

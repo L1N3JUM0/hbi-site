@@ -9,14 +9,14 @@ import Equipes from "../components/Equipes.astro";
 import Parrain from "../components/Parrain.astro";
 import Recrutement from "../components/Recrutement.astro";
 import Footer from "../components/Footer.astro";
+import Favicon from "../components/Favicon.astro";
 import { withBase } from "../utils/links";
 ---
 
 <html lang="fr">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href={withBase("/favicon.svg")} />
-		<link rel="icon" href={withBase("/favicon.ico")} />
+		<Favicon />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Handball Islois — L&rsquo;Isle-sur-la-Sorgue</title>
