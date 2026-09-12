@@ -2,10 +2,10 @@ backend:
   name: github
   repo: L1N3JUM0/hbi-site
   branch: main
-  # URL du petit service d'authentification GitHub (Cloudflare Worker).
-  # À remplacer par l'URL réelle une fois ce service déployé -- voir
-  # GUIDE-EDITION.md / les instructions données par Claude Code.
-  base_url: https://REMPLACER-PAR-VOTRE-WORKER.workers.dev
+  # Service d'authentification GitHub (Cloudflare Worker, dépôt
+  # sveltia-cms-auth). Déployé manuellement en CLI (pas depuis ce dépôt) :
+  # voir le Worker "sveltia-cms-auth" sur le compte Cloudflare du club.
+  base_url: https://sveltia-cms-auth.hbi-hand84.workers.dev
 
 # Les modifications passent par une étape de relecture avant publication
 # (utile même à deux personnes, pour éviter une publication accidentelle).
