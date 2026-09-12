@@ -4,58 +4,36 @@ import Header from "../components/Header.astro";
 import PageBanner from "../components/PageBanner.astro";
 import Footer from "../components/Footer.astro";
 import AjouterAgendaButton from "../components/AjouterAgendaButton.astro";
+import PhotoCarousel from "../components/PhotoCarousel.astro";
 import { withBase } from "../utils/links";
+import { getCollection, type CollectionEntry } from "astro:content";
 import { agendaTeams } from "../data/agenda-teams.config";
+import { getMatchesForEquipe, hasAgendaFeed, formatMatchDate, formatMatchTime } from "../lib/agenda";
 
-/** Équipes de agenda-teams.config.ts dont le nom d'affichage commence par le
- * nom de cette catégorie -- une catégorie peut couvrir plusieurs équipes
- * engagées séparément (ex: "Seniors masculins" -> équipes 1 et 2). Une
- * nouvelle équipe ajoutée à la config apparaît ici automatiquement. */
-function agendaTeamsFor(categoryName: string) {
-	const needle = categoryName.trim().toLowerCase();
-	return agendaTeams.filter((t) => t.nomAffiche.trim().toLowerCase().startsWith(needle));
+const allTeams = (await getCollection("equipes")).sort((a, b) => a.data.ordre - b.data.ordre);
+const competition = allTeams.filter((t) => t.data.type === "competition");
+const decouverte = allTeams.filter((t) => t.data.type === "decouverte" || t.data.type === "inclusion");
+const transversal = allTeams.find((t) => t.data.type === "transversal");
+
+const typeLabel: Record<string, string> = {
+	decouverte: "Découverte",
+	inclusion: "Inclusion",
+};
+
+function agendaButtonsFor(slug: string) {
+	return agendaTeams.filter((t) => t.equipeSlug === slug);
 }
 
-const competition = [
-	{ name: "U9 mixtes", horaires: "Mercredi 14h-15h30", encadrants: "Lydie et Teddy", tarif: "170 €" },
-	{ name: "U11 mixtes", horaires: "Lundi 17h-18h30 / mercredi 15h-16h30", encadrants: "Teddy", tarif: "180 €" },
-	{ name: "U13 féminines", horaires: "Mercredi 16h30-18h / vendredi 17h30-19h", encadrants: "Cécile et Aurore", tarif: "190 €" },
-	{ name: "U13 masculins", horaires: "Mardi et jeudi 17h30-19h", encadrants: "Teddy et Laurent", tarif: "190 €" },
-	{ name: "U15 féminines", horaires: "Mercredi 16h30-18h / vendredi 18h-19h30", encadrants: "Aurore", tarif: "200 €" },
-	{ name: "U15 masculins", horaires: "Mardi et jeudi 19h-20h30", encadrants: "Bruno et Teddy", tarif: "200 €" },
-	{ name: "U17 féminines", horaires: "Mercredi 18h30-20h / vendredi 19h-20h30", encadrants: "Léa et Caroline", tarif: "210 €" },
-	{ name: "U18 masculins", horaires: "Mercredi et vendredi 19h-20h30", encadrants: "Jérôme et Cyril", tarif: "210 €" },
-	{ name: "Seniors féminines", horaires: "Mercredi et vendredi 20h30-22h30", encadrants: "Cyril et Thierry", tarif: "220 €" },
-	{ name: "Seniors masculins", horaires: "Mardi et jeudi 20h30-22h30", encadrants: "Christophe", tarif: "220 €" },
-	{ name: "Loisirs", horaires: "Lundi 20h-22h30", encadrants: "David", tarif: "160 €" },
-];
+/** Prochains matchs à afficher sur la section de cette équipe (vide si pas
+ * de flux configuré, ou pas de match à venir pour l'instant). */
+async function nextMatchesFor(slug: string) {
+	if (!hasAgendaFeed(slug)) return [];
+	return getMatchesForEquipe(slug, 3);
+}
 
-const decouverte = [
-	{
-		name: "Baby Hand",
-		tag: "Découverte",
-		meta: "4-6 ans",
-		horaires: "Samedi 9h-10h",
-		encadrants: "Teddy et Lena",
-		tarif: "120 €",
-	},
-	{
-		name: "Handensemble",
-		tag: "Inclusion",
-		meta: "Handball adapté, ouvert à tous",
-		horaires: "Mercredi 18h-19h",
-		encadrants: "Lydie",
-		tarif: "100 €",
-	},
-];
-
-const transversal = {
-	name: "Étirements, renforcement & spé gardien",
-	meta: "Ouvert de U15 à seniors",
-	horaires: "Lundi 18h30-20h",
-	encadrants: "Coachs du HBI",
-	tarif: "Compris dans la licence",
-};
+function photosFor(team: CollectionEntry<"equipes">) {
+	return team.data.photos.map((src, i) => ({ src, alt: `${team.data.nom} — photo ${i + 1}` }));
+}
 ---
 
 <html lang="fr">
@@ -83,31 +61,51 @@ const transversal = {
 				<h2>Équipes de compétition</h2>
 				<div class="grid">
 					{
-						competition.map((t) => {
-							const teams = agendaTeamsFor(t.name);
+						competition.map(async (t) => {
+							const buttons = agendaButtonsFor(t.data.slug);
+							const matches = await nextMatchesFor(t.data.slug);
 							return (
-								<div class="card">
-									<h3>{t.name}</h3>
+								<div class="card" id={t.data.slug}>
+									<h3>{t.data.nom}</h3>
+									<PhotoCarousel photos={photosFor(t)} ariaLabel={`Photos de ${t.data.nom}`} lightbox variant="card" />
+									<p class="description">{t.data.description}</p>
 									<dl>
 										<div class="row">
 											<dt>Jours &amp; horaires</dt>
-											<dd>{t.horaires}</dd>
+											<dd>{t.data.horaires}</dd>
 										</div>
 										<div class="row">
 											<dt>Encadrant(s)</dt>
-											<dd>{t.encadrants}</dd>
+											<dd>{t.data.encadrants}</dd>
 										</div>
 										<div class="row">
 											<dt>Tarif licence</dt>
-											<dd>{t.tarif}</dd>
+											<dd>{t.data.tarif}</dd>
 										</div>
 									</dl>
-									{teams.length > 0 && (
+									{matches.length > 0 && (
+										<div class="next-matches">
+											<p class="next-matches__title">Prochains matchs</p>
+											<ul>
+												{matches.map((m) => (
+													<li>
+														<span class={`badge ${m.isHome ? "badge--home" : "badge--away"}`}>
+															{m.isHome ? "D" : "E"}
+														</span>
+														<span class="next-matches__text">
+															{m.isDerby ? m.teamLabel : `vs ${m.opponent}`} — {formatMatchDate(m.start)} à {formatMatchTime(m.start)}
+														</span>
+													</li>
+												))}
+											</ul>
+										</div>
+									)}
+									{buttons.length > 0 && (
 										<div class="card-agenda">
-											{teams.map((at) => (
+											{buttons.map((at) => (
 												<AjouterAgendaButton
 													href={at.urlIcs}
-													label={teams.length > 1 ? `Agenda ${at.nomAffiche.replace(t.name, "").trim()}` : "Ajouter à mon agenda"}
+													label={buttons.length > 1 ? `Agenda ${at.nomAffiche.replace(t.data.nom, "").trim()}` : "Ajouter à mon agenda"}
 												/>
 											))}
 											<a class="agenda-link" href={withBase("/agenda")}>
@@ -133,22 +131,23 @@ const transversal = {
 				<div class="grid grid--decouverte">
 					{
 						decouverte.map((t) => (
-							<div class="card card--decouverte">
-								<span class="tag">{t.tag}</span>
-								<h3>{t.name}</h3>
-								<p class="meta">{t.meta}</p>
+							<div class="card card--decouverte" id={t.data.slug}>
+								<span class="tag">{typeLabel[t.data.type]}</span>
+								<h3>{t.data.nom}</h3>
+								<PhotoCarousel photos={photosFor(t)} ariaLabel={`Photos de ${t.data.nom}`} lightbox variant="card" />
+								<p class="description">{t.data.description}</p>
 								<dl>
 									<div class="row">
 										<dt>Jours &amp; horaires</dt>
-										<dd>{t.horaires}</dd>
+										<dd>{t.data.horaires}</dd>
 									</div>
 									<div class="row">
 										<dt>Encadrant(s)</dt>
-										<dd>{t.encadrants}</dd>
+										<dd>{t.data.encadrants}</dd>
 									</div>
 									<div class="row">
 										<dt>Tarif licence</dt>
-										<dd>{t.tarif}</dd>
+										<dd>{t.data.tarif}</dd>
 									</div>
 								</dl>
 							</div>
@@ -158,33 +157,56 @@ const transversal = {
 			</div>
 		</section>
 
-		<section class="transversal">
-			<div class="wrap">
-				<h2>Créneau transversal</h2>
-				<div class="card card--transversal">
-					<h3>{transversal.name}</h3>
-					<p class="meta">{transversal.meta}</p>
-					<dl>
-						<div class="row">
-							<dt>Jours &amp; horaires</dt>
-							<dd>{transversal.horaires}</dd>
+		{
+			transversal && (
+				<section class="transversal">
+					<div class="wrap">
+						<h2>Créneau transversal</h2>
+						<div class="card card--transversal" id={transversal.data.slug}>
+							<h3>{transversal.data.nom}</h3>
+							<PhotoCarousel
+								photos={photosFor(transversal)}
+								ariaLabel={`Photos de ${transversal.data.nom}`}
+								lightbox
+								variant="card"
+							/>
+							<p class="description">{transversal.data.description}</p>
+							<dl>
+								<div class="row">
+									<dt>Jours &amp; horaires</dt>
+									<dd>{transversal.data.horaires}</dd>
+								</div>
+								<div class="row">
+									<dt>Encadrant(s)</dt>
+									<dd>{transversal.data.encadrants}</dd>
+								</div>
+								<div class="row">
+									<dt>Tarif</dt>
+									<dd>{transversal.data.tarif}</dd>
+								</div>
+							</dl>
 						</div>
-						<div class="row">
-							<dt>Encadrant(s)</dt>
-							<dd>{transversal.encadrants}</dd>
-						</div>
-						<div class="row">
-							<dt>Tarif</dt>
-							<dd>{transversal.tarif}</dd>
-						</div>
-					</dl>
-				</div>
-			</div>
-		</section>
+					</div>
+				</section>
+			)
+		}
 
 		<Footer />
 	</body>
 </html>
+
+<script>
+	// Léger défilement/mise en évidence quand on arrive via une ancre
+	// (#slug) depuis la homepage.
+	const id = window.location.hash.replace("#", "");
+	if (id) {
+		const target = document.getElementById(id);
+		if (target) {
+			target.classList.add("just-arrived");
+			target.addEventListener("animationend", () => target.classList.remove("just-arrived"), { once: true });
+		}
+	}
+</script>
 
 <style is:global>
 	* {
@@ -198,6 +220,11 @@ const transversal = {
 	body {
 		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
 		background: var(--color-navy-deep);
+	}
+	@media (prefers-reduced-motion: no-preference) {
+		html {
+			scroll-behavior: smooth;
+		}
 	}
 </style>
 
@@ -242,13 +269,15 @@ const transversal = {
 
 	.grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
 		gap: 1.25rem;
 	}
 
 	.card {
 		background: var(--color-blue);
 		padding: 1.25rem 1.4rem;
+		scroll-margin-top: 5rem;
+		border-radius: 4px;
 	}
 	.card h3 {
 		color: var(--color-white);
@@ -257,6 +286,15 @@ const transversal = {
 		font-size: 1.1rem;
 		text-transform: uppercase;
 		letter-spacing: 0.02em;
+		margin: 0 0 0.75rem;
+	}
+	.card :global(.photo-carousel) {
+		margin: 0 0 0.9rem;
+	}
+	.card .description {
+		color: rgba(255, 255, 255, 0.9);
+		font-size: 0.92rem;
+		line-height: 1.5;
 		margin: 0 0 0.9rem;
 	}
 	.card dl {
@@ -284,6 +322,55 @@ const transversal = {
 		margin: 0;
 	}
 
+	.next-matches {
+		margin-top: 1rem;
+		padding-top: 1rem;
+		border-top: 1px solid rgba(255, 255, 255, 0.15);
+	}
+	.next-matches__title {
+		color: rgba(255, 255, 255, 0.6);
+		font-size: 0.75rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		font-weight: 700;
+		margin: 0 0 0.5rem;
+	}
+	.next-matches ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.4rem;
+	}
+	.next-matches li {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 1.3rem;
+		height: 1.3rem;
+		border-radius: 999px;
+		font-weight: 800;
+		font-size: 0.7rem;
+		flex-shrink: 0;
+	}
+	.badge--home {
+		background: var(--color-crimson);
+		color: var(--color-white);
+	}
+	.badge--away {
+		background: rgba(255, 255, 255, 0.2);
+		color: var(--color-white);
+	}
+	.next-matches__text {
+		color: var(--color-white);
+		font-size: 0.85rem;
+	}
+
 	.card-agenda {
 		display: flex;
 		flex-wrap: wrap;
@@ -305,8 +392,6 @@ const transversal = {
 		color: var(--color-crimson);
 	}
 
-	/* Découverte / inclusion: accent-bordered, visually distinct but not
-	   dominant compared to the competition grid above. */
 	.card--decouverte {
 		background: var(--color-navy-deep);
 		border-left: 3px solid var(--color-crimson);
@@ -322,12 +407,6 @@ const transversal = {
 		padding: 0.2rem 0.55rem;
 		margin-bottom: 0.6rem;
 	}
-	.card--decouverte .meta,
-	.card--transversal .meta {
-		color: rgba(255, 255, 255, 0.65);
-		font-size: 0.85rem;
-		margin: 0 0 0.9rem;
-	}
 
 	.transversal h2 {
 		margin-bottom: 2rem;
@@ -342,6 +421,20 @@ const transversal = {
 	@media (max-width: 640px) {
 		.grid {
 			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.just-arrived {
+			animation: arrived-pulse 1.4s ease;
+		}
+	}
+	@keyframes arrived-pulse {
+		0% {
+			box-shadow: 0 0 0 3px var(--color-crimson);
+		}
+		100% {
+			box-shadow: 0 0 0 3px transparent;
 		}
 	}
 </style>

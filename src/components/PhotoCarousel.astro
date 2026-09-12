@@ -1,0 +1,293 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Photo {
+	src: ImageMetadata;
+	alt: string;
+}
+
+interface Props {
+	photos: Photo[];
+	ariaLabel: string;
+	/** Ouvre une visionneuse plein écran au clic sur une photo. */
+	lightbox?: boolean;
+	/** Gabarit de hauteur des slides. "band" = grande bande (homepage),
+	 * "card" = carrousel compact dans une carte équipe. */
+	variant?: "band" | "card";
+}
+
+const { photos, ariaLabel, lightbox = false, variant = "band" } = Astro.props;
+---
+
+<div class={`photo-carousel photo-carousel--${variant}`} data-lightbox={lightbox ? "true" : "false"}>
+	<button type="button" class="nav-btn prev" aria-label="Photo précédente" data-dir="-1">
+		<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+	</button>
+
+	<div class="track" tabindex="0" role="group" aria-label={ariaLabel}>
+		{
+			photos.map((p) => (
+				<div class="slide">
+					<Image src={p.src} alt={p.alt} width={640} height={420} format="webp" loading="lazy" />
+				</div>
+			))
+		}
+	</div>
+
+	<button type="button" class="nav-btn next" aria-label="Photo suivante" data-dir="1">
+		<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 18l6-6-6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+	</button>
+
+	{
+		lightbox && (
+			<div class="lightbox" hidden>
+				<button type="button" class="lightbox-close" aria-label="Fermer la photo">×</button>
+				<button type="button" class="lightbox-nav lightbox-prev" aria-label="Photo précédente">
+					<svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+				</button>
+				<img class="lightbox-img" alt="" />
+				<button type="button" class="lightbox-nav lightbox-next" aria-label="Photo suivante">
+					<svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M9 18l6-6-6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+				</button>
+			</div>
+		)
+	}
+</div>
+
+<script>
+	document.querySelectorAll<HTMLElement>(".photo-carousel").forEach((carousel) => {
+		const track = carousel.querySelector<HTMLElement>(".track");
+		if (!track) return;
+
+		const step = (dir: number) => {
+			const slide = track.querySelector<HTMLElement>(".slide");
+			if (!slide) return;
+			const gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap || "0");
+			track.scrollBy({ left: dir * (slide.getBoundingClientRect().width + gap), behavior: "smooth" });
+		};
+
+		carousel.querySelectorAll<HTMLButtonElement>(":scope > .nav-btn").forEach((btn) => {
+			btn.addEventListener("click", () => step(Number(btn.dataset.dir)));
+		});
+
+		track.addEventListener("keydown", (e) => {
+			if (e.key === "ArrowRight") {
+				e.preventDefault();
+				step(1);
+			} else if (e.key === "ArrowLeft") {
+				e.preventDefault();
+				step(-1);
+			}
+		});
+
+		if (carousel.dataset.lightbox !== "true") return;
+
+		const lightbox = carousel.querySelector<HTMLElement>(".lightbox");
+		const lightboxImg = lightbox?.querySelector<HTMLImageElement>(".lightbox-img");
+		if (!lightbox || !lightboxImg) return;
+
+		const images = Array.from(track.querySelectorAll<HTMLImageElement>("img"));
+		let currentIndex = 0;
+
+		const show = (index: number) => {
+			currentIndex = (index + images.length) % images.length;
+			const source = images[currentIndex];
+			lightboxImg.src = source.currentSrc || source.src;
+			lightboxImg.alt = source.alt;
+		};
+
+		const open = (index: number) => {
+			show(index);
+			lightbox.hidden = false;
+			document.body.style.overflow = "hidden";
+			lightbox.querySelector<HTMLButtonElement>(".lightbox-close")?.focus();
+		};
+
+		const close = () => {
+			lightbox.hidden = true;
+			document.body.style.overflow = "";
+		};
+
+		images.forEach((img, index) => {
+			img.style.cursor = "zoom-in";
+			img.addEventListener("click", () => open(index));
+		});
+
+		lightbox.querySelector(".lightbox-close")?.addEventListener("click", close);
+		lightbox.querySelector(".lightbox-prev")?.addEventListener("click", () => show(currentIndex - 1));
+		lightbox.querySelector(".lightbox-next")?.addEventListener("click", () => show(currentIndex + 1));
+
+		lightbox.addEventListener("click", (e) => {
+			if (e.target === lightbox) close();
+		});
+
+		document.addEventListener("keydown", (e) => {
+			if (lightbox.hidden) return;
+			if (e.key === "Escape") close();
+			else if (e.key === "ArrowRight") show(currentIndex + 1);
+			else if (e.key === "ArrowLeft") show(currentIndex - 1);
+		});
+
+		let touchStartX = 0;
+		lightbox.addEventListener("touchstart", (e) => {
+			touchStartX = e.changedTouches[0].clientX;
+		});
+		lightbox.addEventListener("touchend", (e) => {
+			const delta = e.changedTouches[0].clientX - touchStartX;
+			if (Math.abs(delta) > 40) show(currentIndex + (delta < 0 ? 1 : -1));
+		});
+	});
+</script>
+
+<style>
+	.photo-carousel {
+		position: relative;
+	}
+
+	.track {
+		display: flex;
+		gap: 3px;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+		background: var(--color-crimson);
+	}
+	.track::-webkit-scrollbar {
+		display: none;
+	}
+	.track:focus-visible {
+		outline: 3px solid var(--color-white);
+		outline-offset: -3px;
+	}
+
+	.slide {
+		flex: 0 0 80%;
+		scroll-snap-align: center;
+		height: 240px;
+		overflow: hidden;
+		background: var(--color-navy);
+	}
+	.slide :global(img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	.photo-carousel--card .slide {
+		flex-basis: 90%;
+		height: 160px;
+	}
+
+	.nav-btn {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		z-index: 2;
+		width: 44px;
+		height: 44px;
+		border-radius: 999px;
+		border: none;
+		background: rgba(0, 23, 73, 0.65);
+		color: var(--color-white);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+	}
+	.nav-btn:hover {
+		background: var(--color-crimson);
+	}
+	.nav-btn.prev {
+		left: 0.5rem;
+	}
+	.nav-btn.next {
+		right: 0.5rem;
+	}
+	.photo-carousel--card .nav-btn {
+		width: 36px;
+		height: 36px;
+	}
+
+	@media (min-width: 641px) {
+		.photo-carousel--band .slide {
+			flex-basis: calc((100% - 3px * 2) / 3);
+			height: 340px;
+		}
+		.photo-carousel--card .slide {
+			flex-basis: calc((100% - 3px) / 2);
+			height: 180px;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.track {
+			scroll-behavior: auto;
+		}
+	}
+
+	/* Lightbox plein écran */
+	.lightbox {
+		display: none;
+	}
+	.lightbox:not([hidden]) {
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+		background: rgba(0, 10, 30, 0.92);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 2.5rem 1rem;
+	}
+	.lightbox-img {
+		max-width: 100%;
+		max-height: 100%;
+		object-fit: contain;
+		display: block;
+	}
+	.lightbox-close {
+		position: absolute;
+		top: 1rem;
+		right: 1rem;
+		width: 44px;
+		height: 44px;
+		border-radius: 999px;
+		border: none;
+		background: rgba(255, 255, 255, 0.15);
+		color: var(--color-white);
+		font-size: 1.5rem;
+		line-height: 1;
+		cursor: pointer;
+	}
+	.lightbox-close:hover {
+		background: var(--color-crimson);
+	}
+	.lightbox-nav {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 48px;
+		height: 48px;
+		border-radius: 999px;
+		border: none;
+		background: rgba(255, 255, 255, 0.15);
+		color: var(--color-white);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+	}
+	.lightbox-nav:hover {
+		background: var(--color-crimson);
+	}
+	.lightbox-prev {
+		left: 1rem;
+	}
+	.lightbox-next {
+		right: 1rem;
+	}
+</style>

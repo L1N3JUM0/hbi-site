@@ -20,8 +20,68 @@ Le déploiement se fait automatiquement sur GitHub Pages via
 - `src/pages/` — une page par route (`index.astro`, `le-club.astro`, `equipes.astro`, `agenda.astro`)
 - `src/components/` — composants réutilisables (Header, Footer, cartes, etc.)
 - `src/styles/tokens.css` — la seule source de couleurs du site
-- `src/data/` — fichiers de configuration de contenu (ex : équipes/agenda)
+- `src/content/equipes/` — un fichier par équipe (collection de contenu Astro)
+- `src/content.config.ts` — schéma de cette collection
+- `src/data/` — fichiers de configuration (ex : liaison agenda/équipe)
 - `src/lib/` — logique de récupération de données (ex : parsing iCal)
+
+## Équipes (collection de contenu)
+
+Chaque équipe/catégorie est un fichier Markdown indépendant dans
+**`src/content/equipes/`** (un fichier = une équipe), défini par le schéma de
+**`src/content.config.ts`**. C'est une vraie content collection Astro,
+conçue pour qu'un futur back-office Sveltia CMS puisse être branché dessus
+sans aucune restructuration : il suffira de pointer la config de Sveltia sur
+`src/content/equipes/` avec les mêmes champs.
+
+Champs de chaque fichier :
+
+| Champ         | Rôle                                                                 |
+| :------------ | :-------------------------------------------------------------------- |
+| `nom`         | Nom affiché (homepage, `/equipes`)                                    |
+| `type`        | `competition` \| `decouverte` \| `inclusion` \| `transversal`         |
+| `slug`        | Identifiant stable : ancre `/equipes#slug` **et** clé de liaison avec `agendaTeams[].equipeSlug` (voir plus bas) — ne jamais le changer une fois publié |
+| `ordre`       | Ordre d'affichage au sein de son `type`                               |
+| `horaires`    | Jour(s) et horaires d'entraînement                                    |
+| `encadrants`  | Encadrant(s)                                                          |
+| `tarif`       | Tarif de licence                                                      |
+| `description` | 1-2 phrases : survol de la carte sur la homepage ET texte sur `/equipes` |
+| `photos`      | Liste de chemins d'images (voir "Remplacer une photo" ci-dessous)     |
+
+### Remplacer une photo (ou en ajouter une vraie)
+
+Les photos de la plupart des équipes sont des **placeholders temporaires**
+(images génériques du club, réutilisées sur plusieurs équipes) — chaque
+fichier contient un commentaire `# Photos temporaires...` au-dessus du champ
+`photos` pour le rappeler. Pour remplacer une photo par une vraie photo de
+l'équipe :
+
+1. Déposez le fichier image dans `src/assets/` (ex : `src/assets/u9-mixtes-1.jpg`).
+   Compressez-le d'abord si besoin (< 200 Ko, cf. contraintes du projet).
+2. Dans `src/content/equipes/<équipe>.md`, remplacez le chemin correspondant
+   dans `photos:` par `"../../assets/u9-mixtes-1.jpg"` (chemin relatif au
+   fichier `.md`, donc toujours préfixé par `../../assets/`).
+3. Supprimez le commentaire "Photos temporaires" une fois toutes les photos
+   d'une équipe remplacées par de vraies photos.
+
+`photos[0]` est utilisée sur la homepage ; la liste complète alimente le
+carrousel + la visionneuse plein écran sur `/equipes`. Chaque équipe peut
+avoir autant de photos que voulu (au moins 1).
+
+Astro optimise automatiquement ces images au build (AVIF/WebP, tailles
+responsives) grâce au champ `image()` du schéma — c'est pour ça que le
+chemin doit pointer vers `src/assets/` (traité par Astro) et non vers
+`public/` (fichiers bruts, non optimisés). Si Sveltia CMS est configuré plus
+tard pour uploader des médias, pointez son `media_folder` vers un
+sous-dossier relatif à `src/content/equipes/` (ex : `../../assets`) pour
+rester compatible avec ce même schéma.
+
+### Ajouter une nouvelle équipe
+
+Créez un fichier `src/content/equipes/<slug>.md` avec les champs ci-dessus.
+Elle apparaît automatiquement sur la homepage et `/equipes`, triée par
+`ordre` au sein de son `type`. Pour lui associer un flux de calendrier, voir
+la section suivante.
 
 ## Agenda des matchs (calendriers FFHandball)
 
@@ -38,16 +98,19 @@ logique à toucher. Ajoutez une entrée au tableau `agendaTeams` :
 ```ts
 {
   nomAffiche: "U18 masculins",      // nom affiché sur le site
+  equipeSlug: "u18-masculins",      // doit correspondre au `slug` du fichier dans src/content/equipes/
   urlIcs: "https://competition-calendar.ffhandball.fr/c-XXXXX/s-XXXX.ics",
   matchLabel: "Handball Islois",    // tel qu'écrit dans le flux (voir plus bas)
 },
 ```
 
-- **`nomAffiche`** : le nom de la catégorie tel qu'il doit apparaître sur le
-  site. Pour qu'un bouton "Ajouter à mon agenda" apparaisse automatiquement
-  sur la carte correspondante de `/equipes`, `nomAffiche` doit commencer par
-  le même texte que le nom de la catégorie dans `equipes.astro` (ex :
-  `"Seniors masculins 1"` matche la carte `"Seniors masculins"`).
+- **`nomAffiche`** : le nom de l'équipe tel qu'il doit apparaître sur le site.
+- **`equipeSlug`** : identifiant explicite qui doit être **strictement égal**
+  au champ `slug` d'un fichier de `src/content/equipes/` — c'est ce qui relie
+  de façon fiable une équipe à son flux (aucune correspondance approximative
+  sur le nom). Plusieurs entrées peuvent partager le même `equipeSlug` quand
+  plusieurs équipes du club sont rattachées à la même catégorie/carte (ex :
+  Seniors masculins 1 et 2 pointent toutes les deux vers `"seniors-masculins"`).
 - **`urlIcs`** : l'URL du flux iCal FFHandball de la compétition. Récupérable
   depuis l'espace club FFHandball ou la page de la compétition.
 - **`matchLabel`** : le texte exact (insensible à la casse) utilisé dans le
@@ -65,8 +128,9 @@ logique à toucher. Ajoutez une entrée au tableau `agendaTeams` :
 
 Une fois l'entrée ajoutée :
 - elle apparaît automatiquement dans la liste des prochains matchs de `/agenda`,
-- son bouton "Ajouter à mon agenda" apparaît sur `/agenda` et, si le nom
-  matche, sur la carte correspondante de `/equipes`,
+- son bouton "Ajouter à mon agenda" apparaît sur `/agenda` et, grâce à
+  `equipeSlug`, sur la section correspondante de `/equipes`,
+- ses 3 prochains matchs s'affichent directement dans sa section sur `/equipes`,
 - son lien de classement apparaît en bas de `/agenda`,
 - elle peut faire remonter le bandeau "prochain match à domicile" de la
   homepage si son prochain match est à domicile.
@@ -81,11 +145,9 @@ concernée est simplement absente de l'affichage (un avertissement est
 seulement écrit dans les logs du build). Voir `fetchFeed()` dans
 `src/lib/agenda.ts`.
 
-### Limite connue
+### Fraîcheur des données
 
-Le site étant 100 % statique, l'agenda n'est à jour qu'au moment du build
-(à chaque déploiement, donc à chaque push sur `main`). Un flux FFHandball
-qui change entre deux déploiements ne sera visible qu'au déploiement
-suivant. Si besoin d'un agenda toujours à jour sans repasser par un push,
-on peut ajouter un déclenchement planifié (`schedule:` cron) dans
-`.github/workflows/deploy.yml` pour rebuilder périodiquement.
+Le site étant 100 % statique, l'agenda n'est à jour qu'au moment du build.
+En plus du build à chaque push sur `main`, `.github/workflows/deploy.yml`
+déclenche un rebuild automatique chaque jour (`schedule: cron`) pour que les
+matchs à venir restent à jour même sans nouveau commit.

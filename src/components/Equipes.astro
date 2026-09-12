@@ -1,43 +1,16 @@
 ---
 import { Image } from "astro:assets";
-import action1 from "../assets/action-1.jpg";
-import action2 from "../assets/action-2.jpg";
+import { getCollection } from "astro:content";
 import { withBase } from "../utils/links";
 
-const teams = [
-	{ name: "U9 mixtes" },
-	{ name: "U11 mixtes" },
-	{ name: "U13 féminines" },
-	{ name: "U13 masculins" },
-	{ name: "U15 féminines" },
-	{ name: "U15 masculins" },
-	{ name: "U17 féminines" },
-	{ name: "U18 masculins" },
-	{
-		name: "Seniors féminines",
-		photo: action2,
-		alt: "Les seniors féminines du HBI en action",
-	},
-	{
-		name: "Seniors masculins",
-		photo: action1,
-		alt: "Les seniors masculins du HBI en action",
-	},
-	{ name: "Loisirs" },
-];
+const allTeams = (await getCollection("equipes")).sort((a, b) => a.data.ordre - b.data.ordre);
+const competition = allTeams.filter((t) => t.data.type === "competition");
+const decouverte = allTeams.filter((t) => t.data.type === "decouverte" || t.data.type === "inclusion");
 
-const decouverte = [
-	{
-		name: "Baby Hand",
-		meta: "4-6 ans · samedi 9h-10h",
-		tag: "Découverte",
-	},
-	{
-		name: "Handensemble",
-		meta: "Handball adapté · mercredi 18h-19h",
-		tag: "Inclusion",
-	},
-];
+const typeLabel: Record<string, string> = {
+	decouverte: "Découverte",
+	inclusion: "Inclusion",
+};
 ---
 
 <section class="equipes">
@@ -50,29 +23,29 @@ const decouverte = [
 
 		<div class="teams-board">
 			{
-				teams.map((t) =>
-					t.photo ? (
-						<div class="team-cell team-cell--photo">
-							<Image src={t.photo} alt={t.alt} width={440} height={440} format="webp" loading="lazy" />
-							<span class="team-cell__name">{t.name}</span>
-						</div>
-					) : (
-						<div class="team-cell">
-							<span class="team-cell__name">{t.name}</span>
-						</div>
-					),
-				)
+				competition.map((t) => (
+					<a class="team-cell" href={withBase(`/equipes#${t.data.slug}`)}>
+						<Image src={t.data.photos[0]} alt="" width={440} height={440} format="webp" loading="lazy" />
+						<span class="team-cell__overlay">
+							<span class="team-cell__name">{t.data.nom}</span>
+							<span class="team-cell__desc">{t.data.description}</span>
+						</span>
+					</a>
+				))
 			}
 		</div>
 
 		<div class="decouverte-row">
 			{
-				decouverte.map((f) => (
-					<div class="decouverte-card">
-						<span class="tag">{f.tag}</span>
-						<h3>{f.name}</h3>
-						<p class="meta">{f.meta}</p>
-					</div>
+				decouverte.map((t) => (
+					<a class="decouverte-card" href={withBase(`/equipes#${t.data.slug}`)}>
+						<Image src={t.data.photos[0]} alt="" width={160} height={160} format="webp" loading="lazy" />
+						<span class="decouverte-card__body">
+							<span class="tag">{typeLabel[t.data.type]}</span>
+							<span class="decouverte-card__name">{t.data.nom}</span>
+							<span class="decouverte-card__desc">{t.data.description}</span>
+						</span>
+					</a>
 				))
 			}
 		</div>
@@ -80,6 +53,24 @@ const decouverte = [
 		<a class="see-all" href={withBase("/equipes")}>Voir toutes les équipes →</a>
 	</div>
 </section>
+
+<script>
+	// Sur écran tactile, :hover ne se déclenche pas -- le premier tap révèle
+	// la description (au lieu de suivre le lien), le second tap navigue.
+	if (window.matchMedia("(hover: none)").matches) {
+		document.querySelectorAll<HTMLAnchorElement>(".team-cell, .decouverte-card").forEach((card) => {
+			card.addEventListener("click", (e) => {
+				if (!card.classList.contains("is-active")) {
+					e.preventDefault();
+					document
+						.querySelectorAll(".team-cell.is-active, .decouverte-card.is-active")
+						.forEach((c) => c.classList.remove("is-active"));
+					card.classList.add("is-active");
+				}
+			});
+		});
+	}
+</script>
 
 <style>
 	.equipes {
@@ -106,28 +97,35 @@ const decouverte = [
 		line-height: 1.6;
 	}
 
-	/* "Team board" grid: squared cells separated by thin lines (the section
-	   background showing through the gap) rather than rounded cards with
-	   shadows -- echoes the court-line motif from the hero. */
 	.teams-board {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
-		grid-auto-rows: 84px;
-		grid-auto-flow: dense;
+		grid-auto-rows: 110px;
 		gap: 3px;
 		margin-bottom: 1.75rem;
 	}
 	.team-cell {
-		background: var(--color-blue);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		text-align: center;
-		padding: 0.5rem;
 		position: relative;
-	}
-	.team-cell:nth-child(3n) {
+		display: block;
+		overflow: hidden;
 		background: var(--color-navy);
+		text-decoration: none;
+	}
+	.team-cell :global(img) {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.team-cell__overlay {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		padding: 0.5rem 0.6rem;
+		background: linear-gradient(to top, rgba(0, 23, 73, 0.92) 0%, rgba(0, 23, 73, 0.25) 55%, transparent 80%);
 	}
 	.team-cell__name {
 		color: var(--color-white);
@@ -137,52 +135,52 @@ const decouverte = [
 		letter-spacing: 0.02em;
 		line-height: 1.25;
 	}
-	.team-cell--photo {
-		grid-column: span 2;
-		grid-row: span 2;
-		justify-content: flex-end;
-		align-items: flex-start;
+	.team-cell__desc {
+		color: rgba(255, 255, 255, 0.9);
+		font-size: 0.8rem;
+		line-height: 1.35;
+		margin-top: 0.35rem;
+		max-height: 0;
+		opacity: 0;
 		overflow: hidden;
-		background: var(--color-navy);
+		transition: max-height 0.2s ease, opacity 0.2s ease;
 	}
-	.team-cell--photo :global(img) {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
+	.team-cell:hover .team-cell__desc,
+	.team-cell:focus-visible .team-cell__desc,
+	.team-cell.is-active .team-cell__desc {
+		max-height: 5rem;
+		opacity: 1;
 	}
-	.team-cell--photo::after {
-		content: "";
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(
-			to top,
-			rgba(0, 23, 73, 0.9) 0%,
-			rgba(0, 23, 73, 0.15) 55%,
-			transparent 75%
-		);
-	}
-	.team-cell--photo .team-cell__name {
-		position: relative;
-		z-index: 1;
-		align-self: flex-end;
-		text-align: left;
-		font-size: 1.15rem;
-		padding: 0 0.15rem 0.15rem;
+	.team-cell:focus-visible {
+		outline: 3px solid var(--color-white);
+		outline-offset: -3px;
 	}
 
-	/* Baby Hand / Handensemble: real differentiators, but deliberately
-	   secondary -- an accent-bordered strip, not another white card. */
 	.decouverte-row {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 		gap: 0.75rem;
 		margin-bottom: 2.25rem;
 	}
 	.decouverte-card {
+		position: relative;
+		display: flex;
+		align-items: center;
+		gap: 0.9rem;
 		border-left: 3px solid var(--color-crimson);
-		padding: 0.6rem 0 0.6rem 0.9rem;
+		padding: 0.6rem 0.9rem;
+		text-decoration: none;
+		background: rgba(255, 255, 255, 0.03);
+	}
+	.decouverte-card :global(img) {
+		width: 56px;
+		height: 56px;
+		object-fit: cover;
+		flex-shrink: 0;
+	}
+	.decouverte-card__body {
+		display: flex;
+		flex-direction: column;
 	}
 	.decouverte-card .tag {
 		display: inline-block;
@@ -194,18 +192,33 @@ const decouverte = [
 		text-transform: uppercase;
 		padding: 0.2rem 0.55rem;
 		margin-bottom: 0.4rem;
+		width: fit-content;
 	}
-	.decouverte-card h3 {
+	.decouverte-card__name {
 		color: var(--color-white);
 		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
 		font-weight: 800;
 		font-size: 1.05rem;
 		margin: 0 0 0.2rem;
 	}
-	.decouverte-card .meta {
+	.decouverte-card__desc {
 		color: rgba(255, 255, 255, 0.65);
-		font-size: 0.85rem;
-		margin: 0;
+		font-size: 0.8rem;
+		line-height: 1.3;
+		max-height: 0;
+		opacity: 0;
+		overflow: hidden;
+		transition: max-height 0.2s ease, opacity 0.2s ease;
+	}
+	.decouverte-card:hover .decouverte-card__desc,
+	.decouverte-card:focus-visible .decouverte-card__desc,
+	.decouverte-card.is-active .decouverte-card__desc {
+		max-height: 5rem;
+		opacity: 1;
+	}
+	.decouverte-card:focus-visible {
+		outline: 2px solid var(--color-white);
+		outline-offset: 2px;
 	}
 
 	.see-all {
@@ -225,11 +238,14 @@ const decouverte = [
 	@media (max-width: 640px) {
 		.teams-board {
 			grid-template-columns: repeat(2, 1fr);
-			grid-auto-rows: 76px;
+			grid-auto-rows: 130px;
 		}
-		.team-cell--photo {
-			grid-column: span 2;
-			grid-row: span 2;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.team-cell__desc,
+		.decouverte-card__desc {
+			transition: none;
 		}
 	}
 </style>

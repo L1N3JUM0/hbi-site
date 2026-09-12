@@ -1,9 +1,9 @@
 ---
-import { Image } from "astro:assets";
 import vieClub1 from "../assets/vie-club-1.jpg";
 import vieClub2 from "../assets/vie-club-2.jpg";
 import action1 from "../assets/action-1.jpg";
 import match1 from "../assets/match-1.jpg";
+import PhotoCarousel from "./PhotoCarousel.astro";
 
 const photos = [
 	{ src: vieClub1, alt: "Moment de vie du club au HBI" },
@@ -15,54 +15,10 @@ const photos = [
 
 <section class="photo-band">
 	<p class="kicker">La vie du club, en images</p>
-	<div class="carousel">
-		<button type="button" class="nav-btn prev" aria-label="Photo précédente" data-dir="-1">
-			<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-		</button>
-
-		<div class="track" tabindex="0" role="group" aria-label="Photos du club, faites défiler avec les flèches du clavier">
-			{
-				photos.map((p) => (
-					<div class="slide">
-						<Image src={p.src} alt={p.alt} width={640} height={420} format="webp" loading="lazy" />
-					</div>
-				))
-			}
-		</div>
-
-		<button type="button" class="nav-btn next" aria-label="Photo suivante" data-dir="1">
-			<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 18l6-6-6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-		</button>
+	<div class="wrap">
+		<PhotoCarousel photos={photos} ariaLabel="Photos du club, faites défiler avec les flèches du clavier" variant="band" />
 	</div>
 </section>
-
-<script>
-	document.querySelectorAll<HTMLElement>(".carousel").forEach((carousel) => {
-		const track = carousel.querySelector<HTMLElement>(".track");
-		if (!track) return;
-
-		const step = (dir: number) => {
-			const slide = track.querySelector<HTMLElement>(".slide");
-			if (!slide) return;
-			const gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap || "0");
-			track.scrollBy({ left: dir * (slide.getBoundingClientRect().width + gap), behavior: "smooth" });
-		};
-
-		carousel.querySelectorAll<HTMLButtonElement>(".nav-btn").forEach((btn) => {
-			btn.addEventListener("click", () => step(Number(btn.dataset.dir)));
-		});
-
-		track.addEventListener("keydown", (e) => {
-			if (e.key === "ArrowRight") {
-				e.preventDefault();
-				step(1);
-			} else if (e.key === "ArrowLeft") {
-				e.preventDefault();
-				step(-1);
-			}
-		});
-	});
-</script>
 
 <style>
 	.photo-band {
@@ -78,81 +34,8 @@ const photos = [
 		font-size: 0.85rem;
 		margin: 0 0 0.9rem;
 	}
-
-	.carousel {
-		position: relative;
+	.wrap {
 		max-width: 1100px;
 		margin: 0 auto;
-	}
-
-	.track {
-		display: flex;
-		gap: 3px;
-		overflow-x: auto;
-		scroll-snap-type: x mandatory;
-		-webkit-overflow-scrolling: touch;
-		scrollbar-width: none;
-		-ms-overflow-style: none;
-		background: var(--color-crimson);
-	}
-	.track::-webkit-scrollbar {
-		display: none;
-	}
-	.track:focus-visible {
-		outline: 3px solid var(--color-white);
-		outline-offset: -3px;
-	}
-
-	.slide {
-		flex: 0 0 80%;
-		scroll-snap-align: center;
-		height: 240px;
-		overflow: hidden;
-		background: var(--color-navy);
-	}
-	.slide :global(img) {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		display: block;
-	}
-
-	.nav-btn {
-		position: absolute;
-		top: 50%;
-		transform: translateY(-50%);
-		z-index: 2;
-		width: 44px;
-		height: 44px;
-		border-radius: 999px;
-		border: none;
-		background: rgba(0, 23, 73, 0.65);
-		color: var(--color-white);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
-	}
-	.nav-btn:hover {
-		background: var(--color-crimson);
-	}
-	.nav-btn.prev {
-		left: 0.5rem;
-	}
-	.nav-btn.next {
-		right: 0.5rem;
-	}
-
-	@media (min-width: 641px) {
-		.slide {
-			flex-basis: calc((100% - 3px * 2) / 3);
-			height: 340px;
-		}
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.track {
-			scroll-behavior: auto;
-		}
 	}
 </style>

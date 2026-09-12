@@ -4,6 +4,9 @@ import { agendaTeams, type AgendaTeamConfig } from "../data/agenda-teams.config"
 
 export interface AgendaMatch {
 	id: string;
+	/** equipeSlug(s) impliqué(s) dans ce match (deux en cas de derby interne
+	 * au club). Sert à filtrer les matchs d'une équipe précise. */
+	equipeSlugs: string[];
 	/** Nom d'affichage de l'équipe HBI concernée, ou "Équipe A vs Équipe B"
 	 * quand deux équipes du club se rencontrent (derby interne). */
 	teamLabel: string;
@@ -149,15 +152,30 @@ export async function getAgendaMatches(): Promise<AgendaMatch[]> {
 			if (matchedA && matchedB) {
 				matches.push({
 					...base,
+					equipeSlugs: [matchedA.equipeSlug, matchedB.equipeSlug],
 					teamLabel: `${matchedA.nomAffiche} vs ${matchedB.nomAffiche}`,
 					opponent: null,
 					isDerby: true,
 					isHome: HOME_LOCATION_PATTERN.test(event.location),
 				});
 			} else if (matchedA) {
-				matches.push({ ...base, teamLabel: matchedA.nomAffiche, opponent: sideB, isDerby: false, isHome: true });
+				matches.push({
+					...base,
+					equipeSlugs: [matchedA.equipeSlug],
+					teamLabel: matchedA.nomAffiche,
+					opponent: sideB,
+					isDerby: false,
+					isHome: true,
+				});
 			} else if (matchedB) {
-				matches.push({ ...base, teamLabel: matchedB.nomAffiche, opponent: sideA, isDerby: false, isHome: false });
+				matches.push({
+					...base,
+					equipeSlugs: [matchedB.equipeSlug],
+					teamLabel: matchedB.nomAffiche,
+					opponent: sideA,
+					isDerby: false,
+					isHome: false,
+				});
 			}
 			// Sinon : variante d'équipe présente dans le flux mais pas encore
 			// déclarée dans agenda-teams.config.ts (ex: future 3e équipe) -- ignorée.
@@ -171,6 +189,21 @@ export async function getAgendaMatches(): Promise<AgendaMatch[]> {
 export async function getNextHomeMatch(): Promise<AgendaMatch | undefined> {
 	const matches = await getAgendaMatches();
 	return matches.find((m) => m.isHome);
+}
+
+/** Les prochains matchs d'une équipe précise (identifiée par son
+ * `equipeSlug`), limités à `limit` résultats. Renvoie [] si cette équipe n'a
+ * pas de flux configuré -- à l'appelant de ne rien afficher dans ce cas. */
+export async function getMatchesForEquipe(equipeSlug: string, limit = 3): Promise<AgendaMatch[]> {
+	const matches = await getAgendaMatches();
+	return matches.filter((m) => m.equipeSlugs.includes(equipeSlug)).slice(0, limit);
+}
+
+/** true si au moins une équipe d'agenda-teams.config.ts pointe vers ce
+ * equipeSlug -- pour savoir si l'on doit afficher un bloc "prochains
+ * matchs" sur cette section, même quand la liste peut être vide. */
+export function hasAgendaFeed(equipeSlug: string): boolean {
+	return agendaTeams.some((t) => t.equipeSlug === equipeSlug);
 }
 
 /** Un lien de classement par compétition (flux), pas par équipe. */
