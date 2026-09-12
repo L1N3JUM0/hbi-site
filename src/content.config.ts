@@ -95,4 +95,55 @@ const photosAccueil = defineCollection({
 		}),
 });
 
-export const collections = { equipes, articles, partenaires, photosAccueil };
+/**
+ * Le contenu de la page unique /le-club : histoire, parrain, infos
+ * pratiques. Un seul fichier (id "page"), sur le même principe de "page
+ * singleton" que les autres collections -- éditable depuis Sveltia CMS via
+ * une collection "fichier" (pas de création/suppression, un seul enregistrement).
+ */
+const leClub = defineCollection({
+	loader: glob({ pattern: "*.md", base: "./src/content/le-club" }),
+	schema: ({ image }) =>
+		z.object({
+			/** Paragraphes avant la devise (séparés par une ligne vide). */
+			histoireIntro: z.string(),
+			/** Citation mise en avant, affichée entre guillemets. */
+			devise: z.string(),
+			/** Paragraphe(s) après la devise. */
+			histoireConclusion: z.string(),
+			parrainNom: z.string(),
+			parrainPhoto: image(),
+			parrainPhotoAlt: z.string(),
+			/** Paragraphes de présentation du parrain (séparés par une ligne vide). */
+			parrainTexte: z.string(),
+			lieuNom: z.string(),
+			lieuAdresse: z.string(),
+			telephone: z.string(),
+			email: z.string(),
+			instagramUrl: z.string().url(),
+			facebookUrl: z.string().url(),
+		}),
+});
+
+/**
+ * Un moment marquant ou une figure de l'histoire du club, affiché sur
+ * /le-club. Collection vide pour l'instant (prête à être remplie) -- un
+ * fichier par entrée, comme les autres collections.
+ */
+const histoireClub = defineCollection({
+	loader: glob({ pattern: "*.md", base: "./src/content/histoire-club" }),
+	schema: ({ image }) =>
+		z.object({
+			titre: z.string(),
+			/** Texte libre : une date, une saison, une période ("1977",
+			 * "Saison 2010-2011", "Années 1990"...). */
+			periode: z.string(),
+			texte: z.string(),
+			photo: image().optional(),
+			photoAlt: z.string().optional(),
+			/** Ordre d'affichage (chronologique ou autre, au choix). */
+			ordre: z.number(),
+		}),
+});
+
+export const collections = { equipes, articles, partenaires, photosAccueil, leClub, histoireClub };

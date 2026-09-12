@@ -25,6 +25,125 @@ media_folder: "src/assets"
 public_folder: "/src/assets"
 
 collections:
+  - name: "leClub"
+    label: "Page « Le club »"
+    description: "Le contenu de la page /le-club : histoire, parrain, infos pratiques. Page unique : pas de création ni de suppression possible ici."
+    files:
+      - name: "page"
+        label: "Contenu de la page « Le club »"
+        file: "src/content/le-club/page.md"
+        fields:
+          - label: "Histoire (avant la citation)"
+            name: "histoireIntro"
+            widget: "text"
+            hint: "Le texte affiché avant la citation mise en avant. Laissez une ligne vide entre deux paragraphes."
+
+          - label: "Citation mise en avant"
+            name: "devise"
+            widget: "string"
+            hint: "Affichée automatiquement entre guillemets. N'ajoutez pas les guillemets vous-même."
+
+          - label: "Histoire (après la citation)"
+            name: "histoireConclusion"
+            widget: "text"
+            hint: "Le texte affiché après la citation. Laissez une ligne vide entre deux paragraphes."
+
+          - label: "Nom du parrain"
+            name: "parrainNom"
+            widget: "string"
+
+          - label: "Photo du parrain"
+            name: "parrainPhoto"
+            widget: "image"
+            hint: "Glissez-déposez une image, ou choisissez-en une déjà présente dans la médiathèque."
+            choose_url: false
+            media_folder: "../../assets"
+            public_folder: "../../assets"
+
+          - label: "Description de la photo du parrain"
+            name: "parrainPhotoAlt"
+            widget: "string"
+            hint: "Décrit la photo pour les personnes malvoyantes qui utilisent un lecteur d'écran."
+
+          - label: "Présentation du parrain"
+            name: "parrainTexte"
+            widget: "text"
+            hint: "Laissez une ligne vide entre deux paragraphes."
+
+          - label: "Nom du lieu d'entraînement"
+            name: "lieuNom"
+            widget: "string"
+
+          - label: "Adresse du lieu d'entraînement"
+            name: "lieuAdresse"
+            widget: "string"
+
+          - label: "Téléphone"
+            name: "telephone"
+            widget: "string"
+
+          - label: "E-mail"
+            name: "email"
+            widget: "string"
+
+          - label: "Lien Instagram"
+            name: "instagramUrl"
+            widget: "string"
+
+          - label: "Lien Facebook"
+            name: "facebookUrl"
+            widget: "string"
+
+  - name: "histoireClub"
+    label: "Moments marquants & figures du club"
+    label_singular: "Moment ou figure"
+    description: "L'histoire du club racontée par étapes, affichée sur /le-club sous la section parrain : un tournoi mémorable, une personne qui a compté, une saison marquante... Vide au départ, à compléter au fil du temps."
+    folder: "src/content/histoire-club"
+    create: true
+    delete: true
+    extension: "md"
+    format: "frontmatter"
+    identifier_field: "titre"
+    summary: "{{periode}} — {{titre}}"
+    media_folder: "../../assets"
+    public_folder: "../../assets"
+    fields:
+      - label: "Titre"
+        name: "titre"
+        widget: "string"
+        hint: "Exemple : « La montée en Nationale 3 », ou le nom d'une personne."
+
+      - label: "Période"
+        name: "periode"
+        widget: "string"
+        hint: "Une date, une saison ou une période, au choix. Exemple : 1977, Saison 2010-2011, Années 1990."
+
+      - label: "Texte"
+        name: "texte"
+        widget: "text"
+        hint: "Quelques phrases racontant ce moment ou cette personne."
+
+      - label: "Photo (optionnelle)"
+        name: "photo"
+        widget: "image"
+        required: false
+        hint: "Portrait, carrée ou paysage : la photo s'affichera entière, sans recadrage. Glissez-déposez une image, ou choisissez-en une déjà présente dans la médiathèque."
+        choose_url: false
+        media_folder: "../../assets"
+        public_folder: "../../assets"
+
+      - label: "Description de la photo"
+        name: "photoAlt"
+        widget: "string"
+        required: false
+        hint: "Décrit la photo pour les personnes malvoyantes qui utilisent un lecteur d'écran (uniquement si une photo est ajoutée)."
+
+      - label: "Ordre d'affichage"
+        name: "ordre"
+        widget: "number"
+        value_type: "int"
+        hint: "Détermine l'ordre d'apparition (1 = en premier), par exemple du plus ancien au plus récent."
+
   - name: "photosAccueil"
     label: "Photos de la page d'accueil"
     label_singular: "Photo"

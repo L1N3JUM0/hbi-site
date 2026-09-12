@@ -3,9 +3,19 @@ import "../styles/tokens.css";
 import Header from "../components/Header.astro";
 import PageBanner from "../components/PageBanner.astro";
 import Footer from "../components/Footer.astro";
-import photoSrc from "../assets/hugo-brouzet-stage.jpg?url";
+import { Image } from "astro:assets";
+import { getCollection, getEntry } from "astro:content";
 import Favicon from "../components/Favicon.astro";
-import { withBase } from "../utils/links";
+
+const page = await getEntry("leClub", "page");
+const { data } = page!;
+
+const histoireIntroParagraphes = data.histoireIntro.trim().split(/\n\s*\n/);
+const histoireConclusionParagraphes = data.histoireConclusion.trim().split(/\n\s*\n/);
+const parrainParagraphes = data.parrainTexte.trim().split(/\n\s*\n/);
+
+const moments = (await getCollection("histoireClub")).sort((a, b) => a.data.ordre - b.data.ordre);
+const telephoneHref = `tel:${data.telephone.replace(/\s+/g, "")}`;
 ---
 
 <html lang="fr">
@@ -30,65 +40,50 @@ import { withBase } from "../utils/links";
 		<section class="histoire">
 			<div class="wrap">
 				<h2>Notre histoire</h2>
-				<p>
-					Le Handball Islois voit le jour le 8&nbsp;novembre&nbsp;1977, fondé
-					par Jean&nbsp;Guillen. Plus de 45&nbsp;ans plus tard, le club n&rsquo;a
-					jamais dévié de son projet d&rsquo;origine&nbsp;: faire du handball un
-					sport accessible à L&rsquo;Isle-sur-la-Sorgue, du premier
-					entraînement de baby hand jusqu&rsquo;aux seniors, sans jamais
-					perdre son esprit de famille.
-				</p>
-				<p>
-					Depuis 2015-2016, c&rsquo;est Sonia&nbsp;Saux qui préside le club et
-					porte cette histoire au quotidien, avec une équipe de bénévoles et
-					d&rsquo;éducateurs attachée à trois valeurs&nbsp;: la solidarité, le
-					respect et la convivialité. Elles infusent chaque entraînement, chaque
-					match et chaque moment partagé au bord du terrain.
-				</p>
-				<p>
-					Ces valeurs se résument dans la devise du club, répétée aux jeunes
-					comme aux plus expérimentés&nbsp;:
-				</p>
-				<p class="devise">
-					« Je ne perds jamais&nbsp;: soit je gagne, soit j&rsquo;apprends. »
-				</p>
-				<p>
-					Une philosophie qui pousse à progresser sans jamais craindre l&rsquo;échec,
-					et qui fait du HBI un club où l&rsquo;on vient autant pour la
-					compétition que pour le plaisir de jouer ensemble.
-				</p>
+				{histoireIntroParagraphes.map((paragraphe) => <p>{paragraphe}</p>)}
+				<p class="devise">« {data.devise} »</p>
+				{histoireConclusionParagraphes.map((paragraphe) => <p>{paragraphe}</p>)}
 			</div>
 		</section>
 
 		<section class="parrain">
 			<div class="wrap">
 				<div class="photo">
-					<img src={photoSrc} alt="Hugo Brouzet lors d'un stage avec les jeunes du HBI" loading="lazy" />
+					<Image src={data.parrainPhoto} alt={data.parrainPhotoAlt} width={400} loading="lazy" />
 				</div>
 				<div class="content">
 					<span class="kicker">Notre parrain</span>
-					<h2>Hugo Brouzet</h2>
-					<p>
-						Hugo Brouzet est le parrain officiel du Handball Islois. Pivot
-						professionnel au PAUC (Pays d&rsquo;Aix Université Club
-						Handball), il évolue au plus haut niveau français, en LNH
-						Division&nbsp;1&nbsp;/ Starligue.
-					</p>
-					<p>
-						Malgré un emploi du temps de sportif de haut niveau, il reste
-						fidèle à ses racines islaises et vient régulièrement à la
-						rencontre des jeunes du club, comme lors de ce stage partagé avec
-						les licenciés du HBI.
-					</p>
-					<p>
-						Son parcours est une source d&rsquo;inspiration pour tous les
-						jeunes joueurs et joueuses du club&nbsp;: la preuve qu&rsquo;on
-						peut partir d&rsquo;un club familial comme le HBI et viser le plus
-						haut niveau.
-					</p>
+					<h2>{data.parrainNom}</h2>
+					{parrainParagraphes.map((paragraphe) => <p>{paragraphe}</p>)}
 				</div>
 			</div>
 		</section>
+
+		{
+			moments.length > 0 && (
+				<section class="moments">
+					<div class="wrap">
+						<h2>Ils ont marqué le club</h2>
+						<div class="moments-list">
+							{moments.map((moment) => (
+								<article class="moment">
+									{moment.data.photo && (
+										<div class="moment-photo">
+											<Image src={moment.data.photo} alt={moment.data.photoAlt ?? ""} width={300} loading="lazy" />
+										</div>
+									)}
+									<div class="moment-body">
+										<p class="periode">{moment.data.periode}</p>
+										<h3>{moment.data.titre}</h3>
+										<p>{moment.data.texte}</p>
+									</div>
+								</article>
+							))}
+						</div>
+					</div>
+				</section>
+			)
+		}
 
 		<section class="pratique">
 			<div class="wrap">
@@ -96,21 +91,21 @@ import { withBase } from "../utils/links";
 				<div class="grid">
 					<div class="card">
 						<h3>Lieu d&rsquo;entraînement</h3>
-						<p>COSEC Émile Avy</p>
-						<p>Avenue Jean Bouin, 84800 L&rsquo;Isle-sur-la-Sorgue</p>
+						<p>{data.lieuNom}</p>
+						<p>{data.lieuAdresse}</p>
 					</div>
 					<div class="card">
 						<h3>Contact</h3>
-						<p><a href="tel:0626621544">06 26 62 15 44</a></p>
-						<p><a href="mailto:6384006@sud.ffhandball.net">6384006@sud.ffhandball.net</a></p>
+						<p><a href={telephoneHref}>{data.telephone}</a></p>
+						<p><a href={`mailto:${data.email}`}>{data.email}</a></p>
 					</div>
 					<div class="card">
 						<h3>Réseaux</h3>
 						<p>
-							<a href="https://www.instagram.com/handball.islois/" target="_blank" rel="noopener noreferrer">Instagram&nbsp;: @handball_islois</a>
+							<a href={data.instagramUrl} target="_blank" rel="noopener noreferrer">Instagram&nbsp;: @handball_islois</a>
 						</p>
 						<p>
-							<a href="https://www.facebook.com/handballislois84" target="_blank" rel="noopener noreferrer">Facebook&nbsp;: Handball Islois</a>
+							<a href={data.facebookUrl} target="_blank" rel="noopener noreferrer">Facebook&nbsp;: Handball Islois</a>
 						</p>
 					</div>
 				</div>
@@ -194,7 +189,7 @@ import { withBase } from "../utils/links";
 		overflow: hidden;
 		background: var(--color-navy-deep);
 	}
-	.parrain .photo img {
+	.parrain .photo :global(img) {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
@@ -221,6 +216,68 @@ import { withBase } from "../utils/links";
 		font-size: 1.02rem;
 		line-height: 1.6;
 		margin: 0 0 0.85rem;
+	}
+
+	.moments {
+		background: var(--color-navy-deep);
+		padding: 3.5rem 1.5rem;
+	}
+	.moments h2 {
+		color: var(--color-white);
+		text-align: center;
+	}
+	.moments h2::after {
+		margin: 0.75rem auto 0;
+	}
+	.moments-list {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+		gap: 1.5rem;
+		margin-top: 2rem;
+	}
+	.moment {
+		background: var(--color-navy);
+		border-top: 3px solid var(--color-crimson);
+	}
+	.moment-photo {
+		max-height: 260px;
+		overflow: hidden;
+		background: var(--color-navy-deep);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.moment-photo :global(img) {
+		display: block;
+		width: auto;
+		height: auto;
+		max-width: 100%;
+		max-height: 260px;
+		object-fit: contain;
+	}
+	.moment-body {
+		padding: 1.25rem 1.4rem 1.5rem;
+	}
+	.moment .periode {
+		color: var(--color-crimson);
+		font-weight: 800;
+		font-size: 0.8rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		margin: 0 0 0.4rem;
+	}
+	.moment h3 {
+		color: var(--color-white);
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		font-weight: 800;
+		font-size: 1.1rem;
+		margin: 0 0 0.6rem;
+	}
+	.moment p:not(.periode) {
+		color: rgba(255, 255, 255, 0.85);
+		font-size: 0.95rem;
+		line-height: 1.55;
+		margin: 0;
 	}
 
 	.pratique {

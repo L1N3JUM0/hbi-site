@@ -8,8 +8,9 @@ code, via l'interface d'administration.
 1. Allez sur **`https://l1n3jum0.github.io/hbi-site/admin/`**.
 2. Cliquez sur **« Se connecter avec GitHub »**.
 3. Autorisez l'application si GitHub vous le demande. Vous arrivez sur le
-   tableau de bord, avec quatre rubriques à gauche : **Photos de la page
-   d'accueil**, **Équipes**, **Vie du club** et **Partenaires**.
+   tableau de bord, avec ces rubriques à gauche : **Page « Le club »**,
+   **Moments marquants & figures du club**, **Photos de la page d'accueil**,
+   **Équipes**, **Vie du club** et **Partenaires**.
 
 > Seules les personnes ajoutées comme collaborateurs du dépôt GitHub peuvent
 > se connecter (voir "Donner accès à une nouvelle personne" en bas de page).
@@ -25,6 +26,30 @@ code, via l'interface d'administration.
    page.
 4. **Enregistrer** : le changement part directement en ligne (voir
    "Publication" ci-dessous).
+
+## Modifier la page « Le club »
+
+1. Cliquez sur **Page « Le club »** puis **Contenu de la page « Le club »**.
+2. Modifiez l'histoire, la citation, la présentation du parrain (texte et
+   photo) ou les infos pratiques (adresse, téléphone, e-mail, réseaux).
+   Pour un texte en plusieurs paragraphes, laissez une ligne complètement
+   vide entre deux paragraphes.
+3. **Enregistrer** : le changement part directement en ligne.
+
+Vous ne pouvez pas créer ou supprimer cette page : c'est une page unique.
+
+## Ajouter un moment marquant ou une figure du club
+
+1. Cliquez sur **Moments marquants & figures du club** puis **Nouveau**.
+2. Renseignez un titre, une période (une date ou une saison, au choix
+   libre), un texte, et une photo si vous en avez une (facultatif — toute
+   photo, même verticale ou carrée, s'affichera entière, sans être coupée).
+3. Donnez-lui un **« Ordre d'affichage »** (1 = en premier) pour choisir où
+   il apparaît par rapport aux autres.
+4. **Enregistrer** : il apparaît sur `/le-club`, sous la section du parrain.
+
+Tant qu'aucun moment n'a été ajouté, cette section n'apparaît pas du tout
+sur le site — rien à faire de particulier pour ça.
 
 ## Modifier une équipe
 

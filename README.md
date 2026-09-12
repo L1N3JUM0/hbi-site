@@ -21,8 +21,10 @@ Le déploiement se fait automatiquement sur GitHub Pages via
 - `src/components/` — composants réutilisables (Header, Footer, cartes, etc.)
 - `src/styles/tokens.css` — la seule source de couleurs du site
 - `src/content/equipes/`, `src/content/articles/`, `src/content/partenaires/`,
-  `src/content/photos-accueil/` — content collections Astro (un fichier par
-  équipe/article/partenaire/photo)
+  `src/content/photos-accueil/`, `src/content/histoire-club/` — content
+  collections Astro (un fichier par équipe/article/partenaire/photo/moment)
+- `src/content/le-club/page.md` — page unique (histoire, parrain, infos
+  pratiques), même principe mais un seul fichier
 - `src/content.config.ts` — schéma de ces collections
 - `src/data/` — fichiers de configuration (ex : liaison agenda/équipe)
 - `src/lib/` — logique de récupération de données (ex : parsing iCal)
@@ -136,6 +138,34 @@ fichier Markdown par photo, avec trois champs : `image` (chemin relatif vers
 passage dans le carrousel). Éditable depuis Sveltia CMS (rubrique "Photos de
 la page d'accueil") : on peut y ajouter ou retirer une photo librement.
 
+## Le club (page unique)
+
+La page `/le-club` (histoire, devise, parrain, infos pratiques) est éditable
+depuis Sveltia CMS ("Page « Le club »") sans toucher au code. Contrairement
+aux autres collections, c'est un **seul fichier** —
+**`src/content/le-club/page.md`** — configuré côté CMS comme une collection
+"fichier" (`files:`, pas `folder:`) : pas de création ni de suppression
+possible, uniquement une édition de ses champs. Les textes longs
+(`histoireIntro`, `histoireConclusion`, `parrainTexte`) sont de simples
+chaînes multi-paragraphes : une ligne vide sépare deux paragraphes,
+affichés comme des `<p>` distincts par `le-club.astro`.
+
+### Moments marquants & figures du club
+
+**`src/content/histoire-club/`** est une collection classique (un fichier
+par entrée), **vide au départ**, prête à accueillir l'histoire du club par
+étapes : un tournoi mémorable, une personne qui a compté, une saison
+marquante... Champs : `titre`, `periode` (texte libre : "1977", "Saison
+2010-2011"...), `texte`, `photo` (optionnelle) et `ordre`. Affichée sur
+`/le-club` entre la section parrain et les infos pratiques, uniquement si
+au moins une entrée existe (sinon la section n'apparaît pas du tout — pas
+de bloc vide sur le site). Éditable depuis Sveltia CMS ("Moments marquants
+& figures du club"), création/suppression libres.
+
+Tant que le dossier est vide, `astro build` affiche un avertissement
+`The collection "histoireClub" does not exist or is empty` : c'est normal
+et sans conséquence, il disparaît dès la première entrée ajoutée.
+
 ## Agenda des matchs (calendriers FFHandball)
 
 L'agenda (`/agenda`, bandeau "prochain match à domicile" sur la homepage,
@@ -218,18 +248,20 @@ branche directement sur les content collections ci-dessus via
   amont ne change l'interface sans prévenir. Pour monter de version,
   changez le numéro dans les deux endroits (`@sveltia/cms@X.Y.Z`) après
   avoir vérifié le changelog.
-- **`public/admin/config.yml`** définit les 4 collections éditables
-  (`photosAccueil`, `equipes`, `articles`, `partenaires`) avec des libellés
-  en français, et restreint volontairement certains champs pour un public
-  non technique :
+- **`public/admin/config.yml`** définit les 6 collections éditables
+  (`leClub`, `histoireClub`, `photosAccueil`, `equipes`, `articles`,
+  `partenaires`) avec des libellés en français, et restreint volontairement
+  certains champs pour un public non technique :
   - `equipes` : création/suppression désactivées (l'effectif de la saison
     est fixé) ; les champs `slug` et `ordre` sont en `widget: hidden` (non
     éditables depuis l'interface, car les changer casserait des liens ou le
     tri) ; `type` est un menu déroulant fermé (pas de texte libre).
-  - `articles`/`partenaires`/`photosAccueil` : création/suppression
-    activées ; le champ `slug` des articles reste un texte libre (nécessaire
-    pour l'URL d'un nouvel article) mais validé par un motif
-    (minuscules/chiffres/tirets uniquement) et accompagné d'un
+  - `leClub` : collection "fichier" (`files:`), pas de création/suppression
+    possible — un seul enregistrement, un seul fichier.
+  - `articles`/`partenaires`/`photosAccueil`/`histoireClub` :
+    création/suppression activées ; le champ `slug` des articles reste un
+    texte libre (nécessaire pour l'URL d'un nouvel article) mais validé par
+    un motif (minuscules/chiffres/tirets uniquement) et accompagné d'un
     avertissement.
   - Toutes les collections partagent le même dossier média (`src/assets`,
     en chemin relatif `../../assets` pour rester compatible avec le schéma
