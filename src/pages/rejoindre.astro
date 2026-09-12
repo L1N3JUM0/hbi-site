@@ -1,0 +1,348 @@
+---
+import "../styles/tokens.css";
+import Header from "../components/Header.astro";
+import PageBanner from "../components/PageBanner.astro";
+import Footer from "../components/Footer.astro";
+import { withBase } from "../utils/links";
+import { getCollection } from "astro:content";
+
+const categories = (await getCollection("equipes"))
+	.filter((t) => t.data.type !== "transversal")
+	.sort((a, b) => a.data.ordre - b.data.ordre);
+
+const merciUrl = `${Astro.site?.origin ?? ""}${withBase("/merci")}`;
+---
+
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href={withBase("/favicon.svg")} />
+		<link rel="icon" href={withBase("/favicon.ico")} />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Rejoindre le club — Handball Islois</title>
+		<meta
+			name="description"
+			content="Viens essayer le handball islois gratuitement : infos pratiques, aides possibles, et formulaire de pré-inscription."
+		/>
+	</head>
+	<body>
+		<Header />
+		<PageBanner
+			title="Rejoindre l'aventure"
+			subtitle="Petit ou grand, débutant ou confirmé : le premier entraînement d'essai est gratuit, sans engagement."
+		/>
+
+		<section class="intro">
+			<div class="wrap">
+				<h2>Viens essayer, ça ne coûte rien</h2>
+				<p>
+					Tu hésites encore&nbsp;? Le meilleur moyen de savoir si le handball
+					est fait pour toi (ou pour ton enfant), c&rsquo;est encore de venir
+					taper dans le ballon avec nous. Le premier entraînement d&rsquo;essai
+					est gratuit et sans engagement, dans la catégorie qui correspond à
+					ton âge.
+				</p>
+
+				<h3>Ce qu&rsquo;il faut apporter</h3>
+				<ul class="checklist">
+					<li>Une tenue de sport (basket en salle, pas de crampons)</li>
+					<li>Une bouteille d&rsquo;eau</li>
+					<li>De la motivation, et le sourire&nbsp;!</li>
+				</ul>
+
+				<p class="more-info">
+					Pour connaître les jours, horaires et tarifs de chaque catégorie,
+					direction la page <a href={withBase("/equipes")}>Nos équipes</a>.
+				</p>
+			</div>
+		</section>
+
+		<section class="aides">
+			<div class="wrap">
+				<h2>Des aides pour financer la licence</h2>
+				<p>
+					Plusieurs dispositifs peuvent réduire le coût de l&rsquo;adhésion
+					selon votre situation. Les montants et conditions changent chaque
+					année&nbsp;: vérifiez votre éligibilité directement sur les sites
+					officiels.
+				</p>
+				<div class="aides-grid">
+					<a class="aide-card" href="https://www.pass.sports.gouv.fr/" target="_blank" rel="noopener noreferrer">
+						<span class="aide-name">Pass&rsquo;Sport</span>
+						<span class="aide-desc">Aide de l&rsquo;État pour les jeunes et certains publics éligibles.</span>
+						<span class="aide-link">Vérifier son éligibilité →</span>
+					</a>
+					<a class="aide-card" href="https://www.ancv.com/le-coupon-sport" target="_blank" rel="noopener noreferrer">
+						<span class="aide-name">Coupons Sport ANCV</span>
+						<span class="aide-desc">Dispositif de l&rsquo;Agence Nationale des Chèques-Vacances.</span>
+						<span class="aide-link">En savoir plus →</span>
+					</a>
+				</div>
+			</div>
+		</section>
+
+		<section class="form-section">
+			<div class="wrap">
+				<h2>Pré-inscription</h2>
+				<p class="intro-form">
+					Ce formulaire ne réserve rien et ne vous engage à rien&nbsp;: il
+					nous permet juste de vous recontacter pour organiser votre venue.
+				</p>
+
+				<form action="https://formspree.io/f/moeqzory" method="POST" class="reg-form">
+					<input type="hidden" name="_next" value={merciUrl} />
+					<input type="hidden" name="_subject" value="Nouvelle pré-inscription HBI" />
+
+					<!--
+						Honeypot anti-spam : positionné hors écran (pas display:none ni
+						visibility:hidden, que beaucoup de bots savent détecter et
+						ignorer). Un humain ne le voit jamais et ne peut pas y accéder au
+						clavier (tabindex="-1", aria-hidden) ; un bot qui remplit tous les
+						champs du DOM le remplira, et Formspree rejette silencieusement
+						tout envoi où "_gotcha" n'est pas vide.
+					-->
+					<div class="hp-field" aria-hidden="true">
+						<label for="site-web">Laissez ce champ vide</label>
+						<input type="text" id="site-web" name="_gotcha" tabindex="-1" autocomplete="off" />
+					</div>
+
+					<div class="field">
+						<label for="nom-contact">Votre nom (parent ou participant)</label>
+						<input type="text" id="nom-contact" name="nom_contact" required />
+					</div>
+
+					<div class="field">
+						<label for="nom-participant">Nom du participant (enfant, ou vous-même)</label>
+						<input type="text" id="nom-participant" name="nom_participant" required />
+					</div>
+
+					<div class="field">
+						<label for="age">Âge (indiquez « Adulte » si vous vous inscrivez vous-même)</label>
+						<input type="text" id="age" name="age" required />
+					</div>
+
+					<div class="field">
+						<label for="contact">Téléphone ou e-mail</label>
+						<input type="text" id="contact" name="contact" required />
+					</div>
+
+					<div class="field">
+						<label for="categorie">Catégorie souhaitée</label>
+						<select id="categorie" name="categorie" required>
+							<option value="" selected disabled>Choisissez une catégorie</option>
+							{categories.map((c) => <option value={c.data.nom}>{c.data.nom}</option>)}
+						</select>
+					</div>
+
+					<div class="field">
+						<label for="message">Message (optionnel)</label>
+						<textarea id="message" name="message" rows="4"></textarea>
+					</div>
+
+					<button type="submit" class="submit-btn">Envoyer ma pré-inscription</button>
+				</form>
+			</div>
+		</section>
+
+		<Footer />
+	</body>
+</html>
+
+<style is:global>
+	* {
+		box-sizing: border-box;
+	}
+	html,
+	body {
+		margin: 0;
+		padding: 0;
+	}
+	body {
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		background: var(--color-navy-deep);
+	}
+</style>
+
+<style>
+	h2 {
+		color: var(--color-white);
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		font-weight: 800;
+		font-size: clamp(1.5rem, 4vw, 2rem);
+		margin: 0 0 1rem;
+	}
+	h3 {
+		color: var(--color-white);
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		font-weight: 800;
+		font-size: 1.1rem;
+		margin: 1.75rem 0 0.75rem;
+	}
+	.wrap {
+		max-width: 680px;
+		margin: 0 auto;
+	}
+
+	.intro {
+		background: var(--color-navy-deep);
+		padding: 3.5rem 1.5rem;
+	}
+	.intro p {
+		color: rgba(255, 255, 255, 0.85);
+		font-size: 1.05rem;
+		line-height: 1.65;
+		margin: 0 0 1rem;
+	}
+	.checklist {
+		margin: 0 0 1.5rem;
+		padding-left: 1.25rem;
+		color: rgba(255, 255, 255, 0.85);
+		font-size: 1rem;
+		line-height: 1.8;
+	}
+	.more-info {
+		border-left: 3px solid var(--color-crimson);
+		padding-left: 1rem;
+	}
+	.more-info a {
+		color: var(--color-white);
+		font-weight: 800;
+		text-decoration: none;
+		border-bottom: 2px solid var(--color-crimson);
+		padding-bottom: 0.1rem;
+	}
+	.more-info a:hover {
+		color: var(--color-crimson);
+	}
+
+	.aides {
+		background: var(--color-navy);
+		padding: 3rem 1.5rem;
+	}
+	.aides > .wrap > p {
+		color: rgba(255, 255, 255, 0.8);
+		font-size: 1rem;
+		line-height: 1.6;
+		margin: 0 0 1.5rem;
+	}
+	.aides-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+		gap: 1rem;
+	}
+	.aide-card {
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+		background: var(--color-navy-deep);
+		border-top: 3px solid var(--color-crimson);
+		padding: 1.25rem 1.4rem;
+		text-decoration: none;
+	}
+	.aide-name {
+		color: var(--color-white);
+		font-weight: 800;
+		font-size: 1.05rem;
+	}
+	.aide-desc {
+		color: rgba(255, 255, 255, 0.75);
+		font-size: 0.9rem;
+		line-height: 1.4;
+	}
+	.aide-link {
+		color: var(--color-white);
+		font-weight: 700;
+		font-size: 0.9rem;
+		margin-top: 0.3rem;
+	}
+	.aide-card:hover .aide-link {
+		color: var(--color-crimson);
+	}
+
+	.form-section {
+		background: var(--color-white);
+		padding: 3.5rem 1.5rem 4rem;
+	}
+	.form-section h2 {
+		color: var(--color-navy-deep);
+	}
+	.intro-form {
+		color: var(--color-navy-deep);
+		opacity: 0.75;
+		font-size: 0.95rem;
+		margin: 0 0 2rem;
+	}
+
+	.reg-form {
+		display: grid;
+		gap: 1.25rem;
+	}
+	.field {
+		display: grid;
+		gap: 0.4rem;
+	}
+	.field label {
+		color: var(--color-navy-deep);
+		font-weight: 700;
+		font-size: 0.95rem;
+	}
+	.field input,
+	.field select,
+	.field textarea {
+		font-family: inherit;
+		font-size: 1rem;
+		padding: 0.75rem 0.9rem;
+		border: 2px solid rgba(1, 40, 145, 0.2);
+		border-radius: 6px;
+		background: var(--color-white);
+		color: var(--color-navy-deep);
+		min-height: 44px;
+	}
+	.field textarea {
+		min-height: 100px;
+		resize: vertical;
+	}
+	.field input:focus,
+	.field select:focus,
+	.field textarea:focus {
+		outline: none;
+		border-color: var(--color-blue);
+	}
+
+	/* Honeypot : jamais display:none / visibility:hidden (trop facilement
+	   détecté par les bots), mais bien positionné hors de l'écran et hors
+	   navigation clavier. */
+	.hp-field {
+		position: absolute;
+		left: -9999px;
+		top: -9999px;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+	}
+
+	.submit-btn {
+		justify-self: start;
+		background: var(--color-crimson);
+		color: var(--color-white);
+		font-weight: 800;
+		font-size: 1.05rem;
+		border: none;
+		text-decoration: none;
+		padding: 0.9rem 2rem;
+		border-radius: 999px;
+		cursor: pointer;
+		transition: transform 0.15s ease;
+		min-height: 44px;
+	}
+	.submit-btn:hover {
+		transform: translateY(-2px);
+	}
+
+	@media (max-width: 640px) {
+		.submit-btn {
+			justify-self: stretch;
+		}
+	}
+</style>

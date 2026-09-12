@@ -1,0 +1,100 @@
+---
+import "../styles/tokens.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { withBase } from "../utils/links";
+---
+
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href={withBase("/favicon.svg")} />
+		<link rel="icon" href={withBase("/favicon.ico")} />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Merci ! — Handball Islois</title>
+		<meta name="description" content="Votre pré-inscription au Handball Islois a bien été envoyée." />
+	</head>
+	<body>
+		<Header />
+
+		<section class="merci">
+			<div class="wrap">
+				<span class="emoji" aria-hidden="true">🤾</span>
+				<h1>Merci&nbsp;!</h1>
+				<p>
+					Votre demande de pré-inscription a bien été envoyée. Un membre du
+					club va revenir vers vous très vite pour organiser votre venue.
+				</p>
+				<p class="signature">À très bientôt sur le parquet&nbsp;!</p>
+				<a class="cta" href={withBase("/")}>Retour à l&rsquo;accueil</a>
+			</div>
+		</section>
+
+		<Footer />
+	</body>
+</html>
+
+<style is:global>
+	* {
+		box-sizing: border-box;
+	}
+	html,
+	body {
+		margin: 0;
+		padding: 0;
+	}
+	body {
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		background: var(--color-navy-deep);
+	}
+</style>
+
+<style>
+	.merci {
+		background: var(--color-navy-deep);
+		padding: 5rem 1.5rem;
+		text-align: center;
+	}
+	.wrap {
+		max-width: 480px;
+		margin: 0 auto;
+	}
+	.emoji {
+		font-size: 3rem;
+		display: block;
+		margin-bottom: 1rem;
+	}
+	h1 {
+		color: var(--color-white);
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		font-weight: 800;
+		font-size: clamp(2rem, 6vw, 2.6rem);
+		margin: 0 0 1.25rem;
+	}
+	p {
+		color: rgba(255, 255, 255, 0.85);
+		font-size: 1.1rem;
+		line-height: 1.6;
+		margin: 0 0 0.75rem;
+	}
+	.signature {
+		font-weight: 700;
+		color: var(--color-white);
+		margin-bottom: 2rem;
+	}
+	.cta {
+		display: inline-block;
+		background: var(--color-crimson);
+		color: var(--color-white);
+		font-weight: 800;
+		font-size: 1.02rem;
+		text-decoration: none;
+		padding: 0.85rem 2rem;
+		border-radius: 999px;
+		transition: transform 0.15s ease;
+	}
+	.cta:hover {
+		transform: translateY(-2px);
+	}
+</style>
