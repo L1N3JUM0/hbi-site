@@ -25,7 +25,7 @@ const typeLabel: Record<string, string> = {
 			{
 				competition.map((t) => (
 					<a class="team-cell" href={withBase(`/equipes#${t.data.slug}`)}>
-						<Image src={t.data.photos[0]} alt="" width={440} height={440} format="webp" loading="lazy" />
+						<Image src={t.data.photoProfil} alt="" width={440} height={440} format="webp" loading="lazy" />
 						<span class="team-cell__overlay">
 							<span class="team-cell__name">{t.data.nom}</span>
 							<span class="team-cell__desc">{t.data.description}</span>
@@ -39,7 +39,7 @@ const typeLabel: Record<string, string> = {
 			{
 				decouverte.map((t) => (
 					<a class="decouverte-card" href={withBase(`/equipes#${t.data.slug}`)}>
-						<Image src={t.data.photos[0]} alt="" width={160} height={160} format="webp" loading="lazy" />
+						<Image src={t.data.photoProfil} alt="" width={160} height={160} format="webp" loading="lazy" />
 						<span class="decouverte-card__body">
 							<span class="tag">{typeLabel[t.data.type]}</span>
 							<span class="decouverte-card__name">{t.data.nom}</span>

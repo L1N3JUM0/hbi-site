@@ -9,7 +9,8 @@ tarif: "180 €"
 description: "Entraînements le lundi de 17h à 18h30 et le mercredi de 15h à 16h30, encadrés par Teddy."
 # Photos temporaires (placeholders) en attendant de vraies photos de cette
 # équipe -- voir le README pour la procédure de remplacement.
-photos:
+photoProfil: "../../assets/match-1.jpg"
+galerie:
   - "../../assets/match-1.jpg"
   - "../../assets/vie-club-1.jpg"
 ---

@@ -46,35 +46,38 @@ Champs de chaque fichier :
 | `encadrants`  | Encadrant(s)                                                          |
 | `tarif`       | Tarif de licence                                                      |
 | `description` | 1-2 phrases : survol de la carte sur la homepage ET texte sur `/equipes` |
-| `photos`      | Liste de chemins d'images (voir "Remplacer une photo" ci-dessous)     |
+| `photoProfil` | Photo utilisée sur la carte homepage ET en tête de la page équipe (voir "Remplacer une photo" ci-dessous) |
+| `galerie`     | Liste de photos du carrousel sur `/equipes` (peut inclure ou non `photoProfil`) |
 
 ### Remplacer une photo (ou en ajouter une vraie)
 
 Les photos de la plupart des équipes sont des **placeholders temporaires**
 (images génériques du club, réutilisées sur plusieurs équipes) — chaque
 fichier contient un commentaire `# Photos temporaires...` au-dessus du champ
-`photos` pour le rappeler. Pour remplacer une photo par une vraie photo de
-l'équipe :
+`photoProfil` pour le rappeler. Pour remplacer une photo par une vraie photo
+de l'équipe (à la main ; via Sveltia CMS il suffit de glisser-déposer, voir
+`GUIDE-EDITION.md`) :
 
 1. Déposez le fichier image dans `src/assets/` (ex : `src/assets/u9-mixtes-1.jpg`).
    Compressez-le d'abord si besoin (< 200 Ko, cf. contraintes du projet).
 2. Dans `src/content/equipes/<équipe>.md`, remplacez le chemin correspondant
-   dans `photos:` par `"../../assets/u9-mixtes-1.jpg"` (chemin relatif au
-   fichier `.md`, donc toujours préfixé par `../../assets/`).
+   dans `photoProfil:` et/ou dans la liste `galerie:` par
+   `"../../assets/u9-mixtes-1.jpg"` (chemin relatif au fichier `.md`, donc
+   toujours préfixé par `../../assets/`).
 3. Supprimez le commentaire "Photos temporaires" une fois toutes les photos
    d'une équipe remplacées par de vraies photos.
 
-`photos[0]` est utilisée sur la homepage ; la liste complète alimente le
-carrousel + la visionneuse plein écran sur `/equipes`. Chaque équipe peut
-avoir autant de photos que voulu (au moins 1).
+`photoProfil` est utilisée sur la homepage et en tête de la page équipe ;
+`galerie` alimente le carrousel + la visionneuse plein écran sur `/equipes`.
+Chaque équipe peut avoir autant de photos que voulu dans `galerie` (au moins
+1), qu'elle reprenne ou non la photo de `photoProfil`.
 
 Astro optimise automatiquement ces images au build (AVIF/WebP, tailles
 responsives) grâce au champ `image()` du schéma — c'est pour ça que le
 chemin doit pointer vers `src/assets/` (traité par Astro) et non vers
-`public/` (fichiers bruts, non optimisés). Si Sveltia CMS est configuré plus
-tard pour uploader des médias, pointez son `media_folder` vers un
-sous-dossier relatif à `src/content/equipes/` (ex : `../../assets`) pour
-rester compatible avec ce même schéma.
+`public/` (fichiers bruts, non optimisés). Sveltia CMS (voir plus bas) est
+configuré pour respecter cette même contrainte : son sélecteur d'image
+écrit toujours un chemin relatif vers `src/assets/`.
 
 ### Ajouter une nouvelle équipe
 
@@ -97,7 +100,7 @@ Champs du frontmatter :
 | :----------- | :---------------------------------------------------------- |
 | `titre`      | Titre de l'article                                          |
 | `date`       | Date de publication (`AAAA-MM-JJ`) — détermine l'ordre d'affichage (le plus récent en premier) |
-| `couverture` | Photo de couverture (même mécanique que `photos` des équipes : chemin relatif vers `src/assets/`, ex. `"../../assets/ma-photo.jpg"`) |
+| `couverture` | Photo de couverture (même mécanique que `photoProfil` des équipes : chemin relatif vers `src/assets/`, ex. `"../../assets/ma-photo.jpg"`) |
 | `extrait`    | 1-2 phrases affichées dans la liste `/vie-du-club`          |
 | `slug`       | Identifiant stable : URL `/vie-du-club/<slug>`               |
 
@@ -190,3 +193,54 @@ Le site étant 100 % statique, l'agenda n'est à jour qu'au moment du build.
 En plus du build à chaque push sur `main`, `.github/workflows/deploy.yml`
 déclenche un rebuild automatique chaque jour (`schedule: cron`) pour que les
 matchs à venir restent à jour même sans nouveau commit.
+
+## Back-office (Sveltia CMS)
+
+`public/admin/` contient l'interface d'édition à destination des bénévoles
+non-techniques (voir `GUIDE-EDITION.md` pour le mode d'emploi). Elle est
+servie telle quelle par Astro (fichiers statiques, aucune génération) et se
+branche directement sur les content collections ci-dessus via
+`public/admin/config.yml` — mêmes champs, aucune restructuration.
+
+- **`public/admin/index.html`** charge le bundle de Sveltia CMS depuis un
+  CDN (`unpkg`), version figée volontairement pour éviter qu'une mise à jour
+  amont ne change l'interface sans prévenir. Pour monter de version,
+  changez le numéro dans les deux endroits (`@sveltia/cms@X.Y.Z`) après
+  avoir vérifié le changelog.
+- **`public/admin/config.yml`** définit les 3 collections éditables
+  (`equipes`, `articles`, `partenaires`) avec des libellés en français, et
+  restreint volontairement certains champs pour un public non technique :
+  - `equipes` : création/suppression désactivées (l'effectif de la saison
+    est fixé) ; les champs `slug` et `ordre` sont en `widget: hidden` (non
+    éditables depuis l'interface, car les changer casserait des liens ou le
+    tri) ; `type` est un menu déroulant fermé (pas de texte libre).
+  - `articles`/`partenaires` : création/suppression activées ; le champ
+    `slug` des articles reste un texte libre (nécessaire pour l'URL d'un
+    nouvel article) mais validé par un motif (minuscules/chiffres/tirets
+    uniquement) et accompagné d'un avertissement.
+  - Toutes les collections partagent le même dossier média
+    (`src/assets`, en chemin relatif `../../assets` pour rester compatible
+    avec le schéma `image()` d'Astro) : une photo uploadée une fois est
+    réutilisable depuis n'importe quel champ image de n'importe quelle
+    collection.
+  - **Le flux de calendrier FFHandball n'est pas dans ce CMS** : il vit dans
+    `src/data/agenda-teams.config.ts` (fichier TypeScript, pas une content
+    collection), avec une relation un-flux-vers-plusieurs-équipes (ex :
+    Seniors masculins 1 et 2). L'y exposer aurait demandé de restructurer
+    cette donnée, hors périmètre de cette tâche — ça reste une modification
+    de développeur (voir la section Agenda ci-dessus).
+- **Authentification** : GitHub natif, en `publish_mode: editorial_workflow`
+  (les modifications passent par une étape de relecture avant publication).
+  Comme le site est hébergé sur GitHub Pages (pas de fonction serveur),
+  l'échange OAuth passe par un petit relais externe (voir
+  `backend.base_url` dans `config.yml`) — typiquement le Cloudflare Worker
+  [sveltia-cms-auth](https://github.com/sveltia/sveltia-cms-auth), à
+  déployer une fois avec un compte Cloudflare et une OAuth App GitHub.
+  Seuls les collaborateurs du dépôt GitHub peuvent se connecter ; pour en
+  ajouter un, voir la fin de `GUIDE-EDITION.md`.
+- **Tester en local** sans configurer l'authentification : lancez
+  `npm run dev`, ouvrez `/admin/index.html`, cliquez sur **« Travailler avec
+  un dépôt local »** et choisissez le dossier racine du projet. Les
+  modifications s'écrivent alors directement dans les fichiers locaux (à
+  committer vous-même avec Git) — pratique pour vérifier un champ sans
+  toucher au dépôt distant.

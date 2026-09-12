@@ -1,0 +1,178 @@
+backend:
+  name: github
+  repo: L1N3JUM0/hbi-site
+  branch: main
+  # URL du petit service d'authentification GitHub (Cloudflare Worker).
+  # À remplacer par l'URL réelle une fois ce service déployé -- voir
+  # GUIDE-EDITION.md / les instructions données par Claude Code.
+  base_url: https://REMPLACER-PAR-VOTRE-WORKER.workers.dev
+
+# Les modifications passent par une étape de relecture avant publication
+# (utile même à deux personnes, pour éviter une publication accidentelle).
+publish_mode: editorial_workflow
+
+site_url: https://l1n3jum0.github.io/hbi-site
+show_preview_links: false
+
+# Dossier où sont stockées les images uploadées (celui déjà utilisé par le
+# site). Sert de médiathèque globale, partagée par toutes les collections
+# ci-dessous : une image uploadée une fois depuis n'importe quel champ photo
+# est ensuite proposée dans le sélecteur de n'importe quel autre champ photo.
+media_folder: "src/assets"
+public_folder: "/src/assets"
+
+collections:
+  - name: "equipes"
+    label: "Équipes"
+    label_singular: "Équipe"
+    description: "Les informations et photos de chaque équipe/créneau du club. La liste des équipes est fixée pour la saison : on ne peut qu'en modifier le contenu, pas en ajouter ou en supprimer ici."
+    folder: "src/content/equipes"
+    create: false
+    delete: false
+    extension: "md"
+    format: "frontmatter"
+    identifier_field: "nom"
+    summary: "{{nom}}"
+    media_folder: "../../assets"
+    public_folder: "../../assets"
+    fields:
+      - label: "Nom de l'équipe"
+        name: "nom"
+        widget: "string"
+
+      - label: "Catégorie"
+        name: "type"
+        widget: "select"
+        hint: "À ne changer que si la nature réelle du créneau évolue : cela déplace l'équipe d'une section à l'autre du site."
+        options:
+          - { label: "Équipe de compétition", value: "competition" }
+          - { label: "Créneau découverte (ouvert à tous, sans compétition)", value: "decouverte" }
+          - { label: "Créneau inclusion (handball adapté)", value: "inclusion" }
+          - { label: "Créneau transversal (plusieurs catégories)", value: "transversal" }
+
+      - label: "Identifiant technique"
+        name: "slug"
+        widget: "hidden"
+
+      - label: "Ordre d'affichage"
+        name: "ordre"
+        widget: "hidden"
+
+      - label: "Jours et horaires d'entraînement"
+        name: "horaires"
+        widget: "string"
+        hint: "Exemple : Mercredi et vendredi 20h30-22h30"
+
+      - label: "Encadrant(s)"
+        name: "encadrants"
+        widget: "string"
+
+      - label: "Tarif de la licence"
+        name: "tarif"
+        widget: "string"
+        hint: "Exemple : 220 €"
+
+      - label: "Description courte"
+        name: "description"
+        widget: "text"
+        hint: "1 à 2 phrases. Affichée sur la page d'accueil et sur la page Équipes."
+
+      - label: "Photo de l'équipe"
+        name: "photoProfil"
+        widget: "image"
+        hint: "C'est LA photo affichée sur la page d'accueil et en haut de la fiche équipe sur /equipes. Glissez-déposez une image, ou choisissez-en une déjà présente dans la médiathèque."
+        choose_url: false
+
+      - label: "Galerie de photos"
+        name: "galerie"
+        widget: "list"
+        hint: "Toutes les photos qui défilent dans le carrousel de la page Équipes. Vous pouvez reprendre la photo ci-dessus et/ou en ajouter d'autres."
+        field:
+          label: "Photo"
+          name: "image"
+          widget: "image"
+          choose_url: false
+
+  - name: "articles"
+    label: "Vie du club"
+    label_singular: "Article"
+    description: "Les actualités du club (tournois, moments conviviaux...) affichées sur la page /vie-du-club."
+    folder: "src/content/articles"
+    create: true
+    delete: true
+    extension: "md"
+    format: "frontmatter"
+    identifier_field: "titre"
+    summary: "{{titre}}"
+    media_folder: "../../assets"
+    public_folder: "../../assets"
+    fields:
+      - label: "Titre de l'article"
+        name: "titre"
+        widget: "string"
+
+      - label: "Date de publication"
+        name: "date"
+        widget: "datetime"
+        format: "YYYY-MM-DD"
+        date_format: "DD/MM/YYYY"
+        time_format: false
+        hint: "Détermine l'ordre d'affichage des articles (le plus récent en premier)."
+
+      - label: "Photo de couverture"
+        name: "couverture"
+        widget: "image"
+        hint: "Affichée en haut de l'article et sur la liste des articles. Glissez-déposez une image, ou choisissez-en une déjà présente dans la médiathèque."
+        choose_url: false
+
+      - label: "Extrait (résumé court)"
+        name: "extrait"
+        widget: "text"
+        hint: "1 à 2 phrases, affichées dans la liste des articles sur /vie-du-club."
+
+      - label: "Identifiant technique de l'adresse (URL)"
+        name: "slug"
+        widget: "string"
+        pattern: ["^[a-z0-9]+(-[a-z0-9]+)*$", "Uniquement des lettres minuscules, chiffres et tirets, sans espace ni accent (exemple : tournoi-de-noel)."]
+        hint: "Détermine l'adresse de la page de l'article (ex. 'tournoi-de-noel' donnera /vie-du-club/tournoi-de-noel). Choisissez-le à la création et ne le modifiez plus ensuite : le changer casserait le lien si l'article a déjà été partagé."
+
+      - label: "Contenu de l'article"
+        name: "body"
+        widget: "markdown"
+        hint: "Le texte de l'article. Vous pouvez aussi insérer des photos directement dans le texte avec le bouton image de la barre d'outils."
+
+  - name: "partenaires"
+    label: "Partenaires"
+    label_singular: "Partenaire"
+    description: "Les partenaires/sponsors affichés sur la page d'accueil."
+    folder: "src/content/partenaires"
+    create: true
+    delete: true
+    extension: "md"
+    format: "frontmatter"
+    identifier_field: "nom"
+    summary: "{{nom}}"
+    media_folder: "../../assets"
+    public_folder: "../../assets"
+    fields:
+      - label: "Nom du partenaire"
+        name: "nom"
+        widget: "string"
+
+      - label: "Logo"
+        name: "logo"
+        widget: "image"
+        hint: "Idéalement un fond transparent (PNG) ou blanc. Glissez-déposez une image, ou choisissez-en une déjà présente dans la médiathèque."
+        choose_url: false
+
+      - label: "Site web du partenaire"
+        name: "url"
+        widget: "string"
+        pattern: ["^https?://.+", "L'adresse doit commencer par http:// ou https://"]
+        hint: "Le logo renverra vers cette adresse. Exemple : https://exemple.com"
+
+      - label: "Description courte"
+        name: "description"
+        widget: "text"
+        required: false
+        hint: "Optionnelle : pas affichée sur le site pour l'instant, mais disponible pour plus tard."

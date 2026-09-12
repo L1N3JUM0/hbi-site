@@ -9,7 +9,8 @@ tarif: "190 €"
 description: "Entraînements le mardi et le jeudi de 17h30 à 19h, encadrés par Teddy et Laurent."
 # Première photo réelle (entraînement) -- la seconde est un placeholder à
 # remplacer quand une deuxième vraie photo sera disponible. Voir le README.
-photos:
+photoProfil: "../../assets/u13-masculins-1.jpg"
+galerie:
   - "../../assets/u13-masculins-1.jpg"
   - "../../assets/action-2.jpg"
 ---

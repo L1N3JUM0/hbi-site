@@ -33,7 +33,7 @@ async function nextMatchesFor(slug: string) {
 }
 
 function photosFor(team: CollectionEntry<"equipes">) {
-	return team.data.photos.map((src, i) => ({ src, alt: `${team.data.nom} — photo ${i + 1}` }));
+	return team.data.galerie.map((src, i) => ({ src, alt: `${team.data.nom} — photo ${i + 1}` }));
 }
 ---
 

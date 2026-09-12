@@ -9,7 +9,8 @@ tarif: "210 €"
 description: "Entraînements le mercredi de 18h30 à 20h et le vendredi de 19h à 20h30, encadrés par Léa et Caroline."
 # Première photo réelle (match) -- la seconde est un placeholder à
 # remplacer quand une deuxième vraie photo sera disponible. Voir le README.
-photos:
+photoProfil: "../../assets/u17-feminines-1.jpg"
+galerie:
   - "../../assets/u17-feminines-1.jpg"
   - "../../assets/match-1.jpg"
 ---

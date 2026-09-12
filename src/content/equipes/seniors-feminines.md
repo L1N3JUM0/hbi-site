@@ -9,7 +9,8 @@ tarif: "220 €"
 description: "Entraînements le mercredi et le vendredi de 20h30 à 22h30, encadrées par Cyril et Thierry."
 # Photos temporaires (placeholders) en attendant de vraies photos de cette
 # équipe -- voir le README pour la procédure de remplacement.
-photos:
+photoProfil: "../../assets/action-2.jpg"
+galerie:
   - "../../assets/action-2.jpg"
   - "../../assets/vie-club-2.jpg"
 ---

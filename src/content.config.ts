@@ -30,9 +30,12 @@ const equipes = defineCollection({
 			/** Texte court (1-2 phrases) : survol de la carte sur la homepage ET
 			 * texte affiché sur /equipes. */
 			description: z.string(),
-			/** photos[0] est utilisée sur la homepage ; la liste complète
-			 * alimente le carrousel de /equipes. Chemins relatifs à ce fichier. */
-			photos: z.array(image()),
+			/** Photo utilisée sur la carte homepage ET en tête de la page équipe.
+			 * Chemin relatif à ce fichier. */
+			photoProfil: image(),
+			/** Photos du carrousel sur /equipes (peut inclure ou non photoProfil).
+			 * Chemins relatifs à ce fichier. */
+			galerie: z.array(image()),
 		}),
 });
 
