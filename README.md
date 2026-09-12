@@ -248,15 +248,24 @@ branche directement sur les content collections ci-dessus via
     Seniors masculins 1 et 2). L'y exposer aurait demandé de restructurer
     cette donnée, hors périmètre de cette tâche — ça reste une modification
     de développeur (voir la section Agenda ci-dessus).
-- **Authentification** : GitHub natif, en `publish_mode: editorial_workflow`
-  (les modifications passent par une étape de relecture avant publication).
-  Comme le site est hébergé sur GitHub Pages (pas de fonction serveur),
-  l'échange OAuth passe par un petit relais externe (voir
-  `backend.base_url` dans `config.yml`) — typiquement le Cloudflare Worker
-  [sveltia-cms-auth](https://github.com/sveltia/sveltia-cms-auth), à
-  déployer une fois avec un compte Cloudflare et une OAuth App GitHub.
-  Seuls les collaborateurs du dépôt GitHub peuvent se connecter ; pour en
-  ajouter un, voir la fin de `GUIDE-EDITION.md`.
+- **Authentification** : GitHub natif. Comme le site est hébergé sur GitHub
+  Pages (pas de fonction serveur), l'échange OAuth passe par un petit relais
+  externe (voir `backend.base_url` dans `config.yml`) — le Cloudflare Worker
+  [sveltia-cms-auth](https://github.com/sveltia/sveltia-cms-auth), déployé
+  en CLI (`wrangler deploy`, pas depuis ce dépôt) avec les secrets
+  `GITHUB_CLIENT_ID`/`GITHUB_CLIENT_SECRET` de l'OAuth App GitHub du club et
+  `ALLOWED_DOMAINS` restreint au domaine du site. Seuls les collaborateurs
+  du dépôt GitHub peuvent se connecter ; pour en ajouter un, voir la fin de
+  `GUIDE-EDITION.md`.
+- **Publication directe, pas de workflow éditorial** : volontairement
+  désactivé (`publish_mode` absent = comportement par défaut) tant que seules
+  les deux administratrices ont accès au CMS — la relecture avant
+  publication n'apportait rien dans cette configuration. Pour la réactiver
+  (accès élargi à des bénévoles non techniques), ajouter dans
+  `public/admin/config.yml`, juste avant `site_url` :
+  ```yaml
+  publish_mode: editorial_workflow
+  ```
 - **Tester en local** sans configurer l'authentification : lancez
   `npm run dev`, ouvrez `/admin/index.html`, cliquez sur **« Travailler avec
   un dépôt local »** et choisissez le dossier racine du projet. Les

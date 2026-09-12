@@ -7,9 +7,12 @@ backend:
   # voir le Worker "sveltia-cms-auth" sur le compte Cloudflare du club.
   base_url: https://sveltia-cms-auth.hbi-hand84.workers.dev
 
-# Les modifications passent par une étape de relecture avant publication
-# (utile même à deux personnes, pour éviter une publication accidentelle).
-publish_mode: editorial_workflow
+# Publication directe (pas de workflow éditorial) : les deux seules
+# personnes ayant accès au CMS sont administratrices et à l'aise
+# techniquement, l'étape de relecture n'apportait rien ici. Si l'accès est
+# un jour élargi à des bénévoles non techniques, réactiver la relecture
+# avant publication en ajoutant la ligne :
+#   publish_mode: editorial_workflow
 
 site_url: https://l1n3jum0.github.io/hbi-site
 show_preview_links: false
