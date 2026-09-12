@@ -11,7 +11,7 @@ histoireIntro: |-
   porte cette histoire au quotidien, avec une équipe de bénévoles et
   d’éducateurs attachée à trois valeurs : la solidarité, le
   respect et la convivialité. Elles infusent chaque entraînement, chaque
-  match et chaque moment partagé au bord du terrain. Au cosec.
+  match et chaque moment partagé au bord du terrain.
 
   Ces valeurs se résument dans la devise du club, répétée aux jeunes
   comme aux plus expérimentés :
