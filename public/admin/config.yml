@@ -22,6 +22,38 @@ media_folder: "src/assets"
 public_folder: "/src/assets"
 
 collections:
+  - name: "photosAccueil"
+    label: "Photos de la page d'accueil"
+    label_singular: "Photo"
+    description: "Les photos qui défilent dans le bandeau « La vie du club, en images » sur la page d'accueil."
+    folder: "src/content/photos-accueil"
+    create: true
+    delete: true
+    extension: "md"
+    format: "frontmatter"
+    summary: "{{alt}}"
+    media_folder: "../../assets"
+    public_folder: "../../assets"
+    fields:
+      - label: "Photo"
+        name: "image"
+        widget: "image"
+        hint: "Glissez-déposez une image, ou choisissez-en une déjà présente dans la médiathèque."
+        choose_url: false
+        media_folder: "../../assets"
+        public_folder: "../../assets"
+
+      - label: "Description de la photo"
+        name: "alt"
+        widget: "string"
+        hint: "Décrivez brièvement ce que montre la photo (utile pour les personnes malvoyantes qui utilisent un lecteur d'écran). Exemple : « Match des seniors féminines au COSEC Émile Avy »."
+
+      - label: "Ordre d'affichage"
+        name: "ordre"
+        widget: "number"
+        value_type: "int"
+        hint: "Détermine l'ordre de passage dans le carrousel (1 = en premier). Deux photos ne devraient pas avoir le même numéro."
+
   - name: "equipes"
     label: "Équipes"
     label_singular: "Équipe"
@@ -82,6 +114,8 @@ collections:
         widget: "image"
         hint: "C'est LA photo affichée sur la page d'accueil et en haut de la fiche équipe sur /equipes. Glissez-déposez une image, ou choisissez-en une déjà présente dans la médiathèque."
         choose_url: false
+        media_folder: "../../assets"
+        public_folder: "../../assets"
 
       - label: "Galerie de photos"
         name: "galerie"
@@ -92,6 +126,8 @@ collections:
           name: "image"
           widget: "image"
           choose_url: false
+          media_folder: "../../assets"
+          public_folder: "../../assets"
 
   - name: "articles"
     label: "Vie du club"
@@ -124,6 +160,8 @@ collections:
         widget: "image"
         hint: "Affichée en haut de l'article et sur la liste des articles. Glissez-déposez une image, ou choisissez-en une déjà présente dans la médiathèque."
         choose_url: false
+        media_folder: "../../assets"
+        public_folder: "../../assets"
 
       - label: "Extrait (résumé court)"
         name: "extrait"
@@ -164,6 +202,8 @@ collections:
         widget: "image"
         hint: "Idéalement un fond transparent (PNG) ou blanc. Glissez-déposez une image, ou choisissez-en une déjà présente dans la médiathèque."
         choose_url: false
+        media_folder: "../../assets"
+        public_folder: "../../assets"
 
       - label: "Site web du partenaire"
         name: "url"

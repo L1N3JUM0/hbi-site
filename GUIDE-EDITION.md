@@ -14,6 +14,17 @@ code, via l'interface d'administration.
 > Seules les personnes ajoutées comme collaborateurs du dépôt GitHub peuvent
 > se connecter (voir "Donner accès à une nouvelle personne" en bas de page).
 
+## Ajouter/retirer une photo du carrousel de la page d'accueil
+
+1. Cliquez sur **Photos de la page d'accueil**.
+2. Pour en ajouter une : **Nouvelle photo**, glissez-déposez l'image,
+   décrivez-la brièvement (champ **« Description de la photo »**, utile pour
+   les personnes malvoyantes), et donnez-lui un **« Ordre d'affichage »**
+   (1 = en premier).
+3. Pour en retirer une : ouvrez-la et utilisez la corbeille en haut de la
+   page.
+4. **Enregistrer**, puis **Publier**.
+
 ## Modifier une équipe
 
 1. Cliquez sur **Équipes**, puis sur l'équipe à modifier.

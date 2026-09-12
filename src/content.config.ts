@@ -78,4 +78,21 @@ const partenaires = defineCollection({
 		}),
 });
 
-export const collections = { equipes, articles, partenaires };
+/**
+ * Une photo du bandeau "La vie du club, en images" sur la homepage
+ * (composant PhotoBand.astro). Un fichier par photo, comme les autres
+ * collections -- éditable depuis Sveltia CMS.
+ */
+const photosAccueil = defineCollection({
+	loader: glob({ pattern: "*.md", base: "./src/content/photos-accueil" }),
+	schema: ({ image }) =>
+		z.object({
+			image: image(),
+			/** Texte alternatif (accessibilité) décrivant la photo. */
+			alt: z.string(),
+			/** Ordre de passage dans le carrousel (1 = en premier). */
+			ordre: z.number(),
+		}),
+});
+
+export const collections = { equipes, articles, partenaires, photosAccueil };

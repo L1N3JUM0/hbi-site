@@ -1,16 +1,9 @@
 ---
-import vieClub1 from "../assets/vie-club-1.jpg";
-import vieClub2 from "../assets/vie-club-2.jpg";
-import action1 from "../assets/action-1.jpg";
-import match1 from "../assets/match-1.jpg";
+import { getCollection } from "astro:content";
 import PhotoCarousel from "./PhotoCarousel.astro";
 
-const photos = [
-	{ src: vieClub1, alt: "Moment de vie du club au HBI" },
-	{ src: action1, alt: "Action de jeu lors d'un entraînement du HBI" },
-	{ src: match1, alt: "Match du Handball Islois" },
-	{ src: vieClub2, alt: "Ambiance au bord du terrain au HBI" },
-];
+const entries = (await getCollection("photosAccueil")).sort((a, b) => a.data.ordre - b.data.ordre);
+const photos = entries.map((entry) => ({ src: entry.data.image, alt: entry.data.alt }));
 ---
 
 <section class="photo-band">

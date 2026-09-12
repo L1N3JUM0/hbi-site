@@ -20,8 +20,10 @@ Le déploiement se fait automatiquement sur GitHub Pages via
 - `src/pages/` — une page par route (`index.astro`, `le-club.astro`, `equipes.astro`, `agenda.astro`)
 - `src/components/` — composants réutilisables (Header, Footer, cartes, etc.)
 - `src/styles/tokens.css` — la seule source de couleurs du site
-- `src/content/equipes/` — un fichier par équipe (collection de contenu Astro)
-- `src/content.config.ts` — schéma de cette collection
+- `src/content/equipes/`, `src/content/articles/`, `src/content/partenaires/`,
+  `src/content/photos-accueil/` — content collections Astro (un fichier par
+  équipe/article/partenaire/photo)
+- `src/content.config.ts` — schéma de ces collections
 - `src/data/` — fichiers de configuration (ex : liaison agenda/équipe)
 - `src/lib/` — logique de récupération de données (ex : parsing iCal)
 
@@ -125,6 +127,15 @@ intégration propre et conforme RGPD (récupération côté build, pas d'embed
 tiers — voir les contraintes du projet). Une fois que ce sera fait, cette
 carte est l'endroit où brancher un vrai aperçu des dernières publications.
 
+## Photos de la page d'accueil
+
+Le bandeau "La vie du club, en images" de la homepage (composant
+`PhotoBand.astro`) lit la collection **`src/content/photos-accueil/`** — un
+fichier Markdown par photo, avec trois champs : `image` (chemin relatif vers
+`src/assets/`), `alt` (texte alternatif, accessibilité) et `ordre` (ordre de
+passage dans le carrousel). Éditable depuis Sveltia CMS (rubrique "Photos de
+la page d'accueil") : on peut y ajouter ou retirer une photo librement.
+
 ## Agenda des matchs (calendriers FFHandball)
 
 L'agenda (`/agenda`, bandeau "prochain match à domicile" sur la homepage,
@@ -207,22 +218,30 @@ branche directement sur les content collections ci-dessus via
   amont ne change l'interface sans prévenir. Pour monter de version,
   changez le numéro dans les deux endroits (`@sveltia/cms@X.Y.Z`) après
   avoir vérifié le changelog.
-- **`public/admin/config.yml`** définit les 3 collections éditables
-  (`equipes`, `articles`, `partenaires`) avec des libellés en français, et
-  restreint volontairement certains champs pour un public non technique :
+- **`public/admin/config.yml`** définit les 4 collections éditables
+  (`photosAccueil`, `equipes`, `articles`, `partenaires`) avec des libellés
+  en français, et restreint volontairement certains champs pour un public
+  non technique :
   - `equipes` : création/suppression désactivées (l'effectif de la saison
     est fixé) ; les champs `slug` et `ordre` sont en `widget: hidden` (non
     éditables depuis l'interface, car les changer casserait des liens ou le
     tri) ; `type` est un menu déroulant fermé (pas de texte libre).
-  - `articles`/`partenaires` : création/suppression activées ; le champ
-    `slug` des articles reste un texte libre (nécessaire pour l'URL d'un
-    nouvel article) mais validé par un motif (minuscules/chiffres/tirets
-    uniquement) et accompagné d'un avertissement.
-  - Toutes les collections partagent le même dossier média
-    (`src/assets`, en chemin relatif `../../assets` pour rester compatible
-    avec le schéma `image()` d'Astro) : une photo uploadée une fois est
-    réutilisable depuis n'importe quel champ image de n'importe quelle
-    collection.
+  - `articles`/`partenaires`/`photosAccueil` : création/suppression
+    activées ; le champ `slug` des articles reste un texte libre (nécessaire
+    pour l'URL d'un nouvel article) mais validé par un motif
+    (minuscules/chiffres/tirets uniquement) et accompagné d'un
+    avertissement.
+  - Toutes les collections partagent le même dossier média (`src/assets`,
+    en chemin relatif `../../assets` pour rester compatible avec le schéma
+    `image()` d'Astro) : une photo uploadée une fois est réutilisable depuis
+    n'importe quel champ image de n'importe quelle collection. Ce chemin
+    relatif doit être déclaré sur **chaque champ image pris individuellement**
+    (y compris ceux imbriqués dans un widget `list`, comme `galerie`) : le
+    réglage au niveau de la collection ne se propage pas automatiquement aux
+    champs imbriqués (constaté en test — un champ `list > image` sans son
+    propre `media_folder` récupère le dossier média global et écrit un
+    chemin absolu du style `/src/assets/x.jpg`, incompatible avec le schéma
+    `image()` d'Astro qui attend un chemin relatif au fichier `.md`).
   - **Le flux de calendrier FFHandball n'est pas dans ce CMS** : il vit dans
     `src/data/agenda-teams.config.ts` (fichier TypeScript, pas une content
     collection), avec une relation un-flux-vers-plusieurs-équipes (ex :
