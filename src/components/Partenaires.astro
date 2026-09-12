@@ -14,7 +14,7 @@ const partenaires = await getCollection("partenaires");
 					{partenaires.map((p) => (
 						<li>
 							<a href={p.data.url} target="_blank" rel="noopener noreferrer" aria-label={p.data.nom}>
-								<Image src={p.data.logo} alt={p.data.nom} width={160} height={80} />
+								<Image src={p.data.logo} alt={p.data.nom} width={240} />
 							</a>
 						</li>
 					))}
@@ -66,14 +66,12 @@ const partenaires = await getCollection("partenaires");
 		width: auto;
 		height: auto;
 		object-fit: contain;
-		filter: grayscale(1);
-		opacity: 0.6;
-		transition: filter 0.2s ease, opacity 0.2s ease;
+		filter: grayscale(0.65);
+		transition: filter 0.2s ease;
 	}
 	.logos a:hover :global(img),
 	.logos a:focus-visible :global(img) {
 		filter: grayscale(0);
-		opacity: 1;
 	}
 	.logos a:focus-visible {
 		outline: 2px solid var(--color-blue);
