@@ -7,18 +7,63 @@ interface Props {
 
 const { resultat } = Astro.props;
 const courbe = courbeScore(resultat);
+const adversaire = resultat.data.adversaire;
 ---
 
 {
 	courbe && (
-		<svg class="score-chart" viewBox={`0 0 ${courbe.width} ${courbe.height}`} role="img" aria-label="Évolution du score au fil du match">
-			<path d={courbe.pathEux} class="ligne ligne--eux" />
-			<path d={courbe.pathNous} class="ligne ligne--nous" />
-		</svg>
+		<figure class="score-chart-wrap">
+			<figcaption class="legende">
+				<span class="legende-item">
+					<svg class="legende-trait" viewBox="0 0 32 8" aria-hidden="true">
+						<line x1="0" y1="4" x2="32" y2="4" class="ligne ligne--nous" />
+					</svg>
+					HBI
+				</span>
+				<span class="legende-item">
+					<svg class="legende-trait" viewBox="0 0 32 8" aria-hidden="true">
+						<line x1="0" y1="4" x2="32" y2="4" class="ligne ligne--eux" />
+					</svg>
+					{adversaire}
+				</span>
+			</figcaption>
+			<svg
+				class="score-chart"
+				viewBox={`0 0 ${courbe.width} ${courbe.height}`}
+				role="img"
+				aria-label={`Évolution du score : HBI en trait plein épais, ${adversaire} en trait pointillé fin.`}
+			>
+				<path d={courbe.pathEux} class="ligne ligne--eux" />
+				<path d={courbe.pathNous} class="ligne ligne--nous" />
+			</svg>
+		</figure>
 	)
 }
 
 <style>
+	.score-chart-wrap {
+		margin: 0;
+	}
+	.legende {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.9rem;
+		margin: 0 0 0.4rem;
+	}
+	.legende-item {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		color: rgba(255, 255, 255, 0.8);
+		font-size: 0.75rem;
+		font-weight: 700;
+		max-width: 100%;
+	}
+	.legende-trait {
+		width: 22px;
+		height: 8px;
+		flex-shrink: 0;
+	}
 	.score-chart {
 		display: block;
 		width: 100%;
@@ -29,12 +74,16 @@ const courbe = courbeScore(resultat);
 		stroke-linecap: round;
 		stroke-linejoin: round;
 	}
+	/* Distinction qui ne repose pas que sur la couleur (accessibilité
+	 * daltonisme) : trait plein et épais pour le HBI, pointillé et plus fin
+	 * pour l'adversaire. */
 	.ligne--nous {
 		stroke: var(--color-crimson);
-		stroke-width: 2.5;
+		stroke-width: 3;
 	}
 	.ligne--eux {
-		stroke: rgba(255, 255, 255, 0.35);
-		stroke-width: 2;
+		stroke: rgba(255, 255, 255, 0.55);
+		stroke-width: 1.75;
+		stroke-dasharray: 5 4;
 	}
 </style>

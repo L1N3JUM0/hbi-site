@@ -1,6 +1,6 @@
 ---
 import MatchScoreChart from "./MatchScoreChart.astro";
-import { efficaciteTir, formatDateCourte, issueDuMatch, meilleursButeurs, scoreNousEux, statsEquipeNous, type Resultat } from "../../lib/resultats";
+import { buteurs, efficaciteTir, formatDateCourte, gardiens, issueDuMatch, scoreNousEux, statsEquipeNous, type Resultat } from "../../lib/resultats";
 
 interface Props {
 	resultat: Resultat;
@@ -16,7 +16,8 @@ const issueLabelLongue = { victoire: "Victoire", defaite: "Défaite", nul: "Matc
 const { nous, eux } = scoreNousEux(resultat);
 const stats = statsEquipeNous(resultat);
 const efficacite = stats ? efficaciteTir(stats.buts, stats.tirs) : null;
-const buteurs = meilleursButeurs(resultat, affichageStats);
+const listeButeurs = buteurs(resultat, affichageStats);
+const listeGardiens = gardiens(resultat, affichageStats);
 ---
 
 <li class="match">
@@ -58,14 +59,31 @@ const buteurs = meilleursButeurs(resultat, affichageStats);
 			}
 
 			{
-				buteurs.length > 0 && (
-					<div class="buteurs">
-						<p class="buteurs__titre">Meilleur·e·s buteur·se·s</p>
-						<ul>
-							{buteurs.map((b) => (
+				listeButeurs.length > 0 && (
+					<div class="joueurs-bloc">
+						<p class="joueurs-bloc__titre">
+							Buteur·se·s ({listeButeurs.length})
+						</p>
+						<ul class="joueurs-liste">
+							{listeButeurs.map((b) => (
 								<li>
-									{b.label} — {b.buts} but{b.buts > 1 ? "s" : ""}
+									<span class="joueur-nom">{b.label}</span> — {b.buts} but{b.buts > 1 ? "s" : ""}
 									{b.tirs > 0 && ` (${b.buts}/${b.tirs})`}
+								</li>
+							))}
+						</ul>
+					</div>
+				)
+			}
+
+			{
+				listeGardiens.length > 0 && (
+					<div class="joueurs-bloc">
+						<p class="joueurs-bloc__titre">Gardien·ne·s</p>
+						<ul class="joueurs-liste">
+							{listeGardiens.map((g) => (
+								<li>
+									<span class="joueur-nom">{g.label}</span> — {g.arrets} arrêt{g.arrets > 1 ? "s" : ""}
 								</li>
 							))}
 						</ul>
@@ -176,10 +194,10 @@ const buteurs = meilleursButeurs(resultat, affichageStats);
 		font-weight: 700;
 		margin: 0;
 	}
-	.buteurs {
+	.joueurs-bloc {
 		margin-top: 0.9rem;
 	}
-	.buteurs__titre {
+	.joueurs-bloc__titre {
 		color: rgba(255, 255, 255, 0.55);
 		font-size: 0.68rem;
 		text-transform: uppercase;
@@ -187,15 +205,23 @@ const buteurs = meilleursButeurs(resultat, affichageStats);
 		font-weight: 700;
 		margin: 0 0 0.4rem;
 	}
-	.buteurs ul {
+	/* Colonnes multiples adaptatives : jamais de liste tronquée (voir
+	 * buteurs()), mais compact quand la carte est assez large pour deux
+	 * colonnes -- une seule colonne sur mobile, sans media query. */
+	.joueurs-liste {
 		list-style: none;
 		margin: 0;
 		padding: 0;
-		display: grid;
-		gap: 0.3rem;
+		columns: 170px 2;
+		column-gap: 1.2rem;
 	}
-	.buteurs li {
+	.joueurs-liste li {
 		color: var(--color-white);
 		font-size: 0.85rem;
+		line-height: 1.5;
+		break-inside: avoid;
+	}
+	.joueur-nom {
+		font-weight: 700;
 	}
 </style>

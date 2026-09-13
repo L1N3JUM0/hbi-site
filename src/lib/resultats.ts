@@ -120,22 +120,47 @@ export interface ButeurAffiche {
 	tirs: number;
 }
 
-/** Meilleur·e·s buteur·se·s du HBI sur ce match, avec leur libellé
+export interface GardienAffiche {
+	numero: number;
+	label: string;
+	arrets: number;
+}
+
+function libellesAffichage(joueurs: { numero: number; prenom: string; nom: string }[], affichageStats: "nominatif" | "pseudonymise" | "masque") {
+	return disambiguateDisplayNames(joueurs, affichageStats);
+}
+
+/** Tou·te·s les buteur·se·s du HBI sur ce match (pas seulement un podium :
+ * voir un premier but de la saison compte tout autant pour un jeune que
+ * d'être dans le trio de tête), classé·e·s par nombre de buts. Libellé
  * d'affichage déjà résolu selon le mode de l'équipe (voir
  * disambiguateDisplayNames) -- `[]` si l'affichage des stats individuelles
  * est désactivé pour cette équipe ou qu'aucun·e joueur·se n'a marqué. */
-export function meilleursButeurs(r: Resultat, affichageStats: "nominatif" | "pseudonymise" | "masque", limite = 3): ButeurAffiche[] {
+export function buteurs(r: Resultat, affichageStats: "nominatif" | "pseudonymise" | "masque"): ButeurAffiche[] {
 	const joueurs = r.data.statsJoueurs ?? [];
 	if (affichageStats === "masque" || joueurs.length === 0) return [];
 
-	const labels = disambiguateDisplayNames(
-		joueurs.map((j) => ({ numero: j.numero, prenom: j.prenom, nom: j.nom })),
-		affichageStats,
-	);
+	const labels = libellesAffichage(joueurs, affichageStats);
 
 	return [...joueurs]
 		.filter((j) => j.buts > 0)
 		.sort((a, b) => b.buts - a.buts)
-		.slice(0, limite)
 		.map((j) => ({ numero: j.numero, label: labels.get(j.numero) ?? `${j.prenom} ${j.nom}`, buts: j.buts, tirs: j.tirs }));
+}
+
+/** Gardien·ne·s du HBI ayant fait au moins un arrêt sur ce match -- un
+ * gardien n'a pas sa place dans un classement de buteur·se·s, mais sa
+ * performance (arrêts) mérite d'être visible tout autant. Repéré via la
+ * colonne "Arrets" de la feuille (seul·e·s les gardien·ne·s en ont), pas
+ * via un poste explicite qui n'existe pas dans les données extraites. */
+export function gardiens(r: Resultat, affichageStats: "nominatif" | "pseudonymise" | "masque"): GardienAffiche[] {
+	const joueurs = r.data.statsJoueurs ?? [];
+	if (affichageStats === "masque" || joueurs.length === 0) return [];
+
+	const labels = libellesAffichage(joueurs, affichageStats);
+
+	return [...joueurs]
+		.filter((j) => j.arrets > 0)
+		.sort((a, b) => b.arrets - a.arrets)
+		.map((j) => ({ numero: j.numero, label: labels.get(j.numero) ?? `${j.prenom} ${j.nom}`, arrets: j.arrets }));
 }

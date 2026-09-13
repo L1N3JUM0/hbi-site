@@ -82,7 +82,7 @@ function parseHeaderFields(rows) {
 	);
 	const teamsMatch = teamsRow ? /^(.+?)\s*\/\s*(.+?)\s+(\d+)\s+(\d+)$/.exec(rowText(teamsRow.row)) : null;
 
-	const detailRow = findRow(rows, (r) => rowText(r).includes("DETAIL") && rowText(r).includes("SCORE"));
+	const detailRow = findRow(rows, (r) => /d[ée]tail/i.test(rowText(r)) && /score/i.test(rowText(r)));
 	const detailNumbers = detailRow ? [...rowText(detailRow.row).matchAll(/\d+/g)].map((m) => Number(m[0])) : [];
 	// Les nombres de "Code Renc"/"Groupe" ne sont pas sur cette ligne : ce
 	// sont uniquement les scores par période, en paires (domicile, extérieur).
@@ -263,8 +263,14 @@ function parseChronologie(rows, dérouleIndex) {
 	const scoreX = [];
 	for (let i = dérouleIndex; i < rows.length; i++) {
 		for (const item of rows[i].items) {
-			if (item.str === "Temps") tempsX.push(item.x);
-			else if (item.str === "Score") scoreX.push(item.x);
+			// Les en-têtes "Temps"/"Score" de la colonne de droite ne sont pas
+			// toujours réimprimés sur chaque page (vu sur une feuille réelle où
+			// seule la colonne "PERIODE 1" a un en-tête répété) : on se base
+			// donc aussi directement sur les valeurs réelles (temps "MM:SS",
+			// score "NN - NN"), toujours présentes en nombre, pour repérer les
+			// deux colonnes même quand un en-tête manque.
+			if (item.str === "Temps" || EVENT_TIME_PATTERN.test(item.str)) tempsX.push(item.x);
+			else if (item.str === "Score" || EVENT_SCORE_PATTERN.test(item.str)) scoreX.push(item.x);
 		}
 	}
 	const [tempsGauche, tempsDroite] = clusterX(tempsX);
@@ -370,7 +376,8 @@ export async function parseFeuilleDeMatch(pdfBytes) {
 	}
 	const [premiereEquipe, deuxiemeEquipe] = headerRows;
 
-	const deroule = findRow(rows, (r) => rowText(r).includes("Déroulé du Match"));
+	// Casse variable selon la compétition ("Déroulé du Match" / "Déroulé du match").
+	const deroule = findRow(rows, (r) => /d[ée]roul[ée] du match/i.test(rowText(r)));
 
 	const joueursDomicile = parsePlayerTable(rows, premiereEquipe.index, deuxiemeEquipe.index);
 	const joueursExterieur = parsePlayerTable(rows, deuxiemeEquipe.index, deroule?.index ?? rows.length);
