@@ -43,6 +43,17 @@ jobs:
         run: npm run build
 
       - name: Committer les résultats importés depuis les feuilles de match
+        # ATTENTION en modifiant ce fichier : le marqueur "[skip ci]" utilisé
+        # dans le message du commit ci-dessous (git commit -m) est scanné par
+        # GitHub sur le MESSAGE ENTIER de n'importe quel commit poussé sur
+        # main, corps compris -- pas seulement sur les commits produits ici.
+        # Un commit de travail qui citerait ce marqueur littéralement dans sa
+        # description (même pour l'expliquer) se ferait lui-même ignorer par
+        # ce workflow, sans échec ni message visible nulle part. Incident vu
+        # en septembre 2026. Ne jamais écrire "[skip ci]" (ni variantes :
+        # "[ci skip]", "[no ci]"...) ailleurs que dans la ligne `git commit`
+        # ci-dessous.
+        #
         # "npm run build" ci-dessus régénère src/content/resultats/pdf-*.md
         # depuis les PDF de src/content/feuilles-match/ (voir
         # scripts/import-fdme.mjs). Ces fichiers doivent être commités pour
