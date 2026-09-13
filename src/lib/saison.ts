@@ -12,10 +12,22 @@
  * src/lib/resultats.ts) : comme le site se reconstruit chaque jour (voir
  * .github/workflows/deploy.yml), le basculement d'une saison à l'autre se
  * fait tout seul le moment venu, sans changement de code.
+ *
+ * Lit l'année/le mois en heure française (`Intl`, pas `getFullYear()`/
+ * `getMonth()`) : ces deux méthodes lisent le fuseau horaire de la machine
+ * qui exécute le code, qui peut différer de la France (le runner GitHub
+ * Actions tourne en UTC) -- un `date` minuit-2h du matin heure de Paris
+ * tomberait alors sur le mauvais jour calendaire une fois relu en UTC. Même
+ * classe de bug que celle corrigée dans parseFeuille.mjs (heure d'un match
+ * dépendante du fuseau horaire de la machine qui importe la feuille) : voir
+ * l'incident de septembre 2026.
  */
+const ANNEE_MOIS_PARIS = new Intl.DateTimeFormat("en-US", { timeZone: "Europe/Paris", year: "numeric", month: "numeric" });
+
 export function saisonPour(date: Date): string {
-	const annee = date.getFullYear();
-	const mois = date.getMonth() + 1;
+	const parties = Object.fromEntries(ANNEE_MOIS_PARIS.formatToParts(date).map((p) => [p.type, p.value]));
+	const annee = Number(parties.year);
+	const mois = Number(parties.month);
 	return mois >= 7 ? `${annee}-${annee + 1}` : `${annee - 1}-${annee}`;
 }
 

@@ -15,6 +15,37 @@ const STAT_HEADER_LABELS = { buts: "Buts", sept_m: "7m", tirs: "Tirs", arrets: "
  * gauche) ne soit pris à tort pour une statistique sur une ligne creuse. */
 const STAT_COLUMN_MAX_DISTANCE = 10;
 
+/**
+ * Convertit une heure "murale" (celle affichée sur la feuille, toujours en
+ * heure française) en instant UTC correct, sans dépendre du fuseau horaire
+ * de la machine qui exécute l'import -- sans ça, la même feuille produit un
+ * `date` différent selon que l'import tourne en local (heure d'été/hiver
+ * française) ou sur un runner GitHub Actions (UTC), comme observé en
+ * production en septembre 2026 (2h d'écart entre les deux). Utilise deux
+ * passes par `Intl.DateTimeFormat` (aucune dépendance à ajouter) : on
+ *"devine" un instant UTC avec les mêmes chiffres, on regarde à quelle heure
+ * il correspond réellement à Paris, et on corrige de l'écart constaté --
+ * fonctionne été comme hiver (CET/CEST) sans coder les règles de
+ * changement d'heure à la main.
+ */
+function heureFrancaiseVersUtc(annee, mois, jour, heure, minute) {
+	const utcApprox = Date.UTC(annee, mois - 1, jour, heure, minute);
+	const formatteur = new Intl.DateTimeFormat("en-US", {
+		timeZone: "Europe/Paris",
+		hourCycle: "h23",
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+		hour: "2-digit",
+		minute: "2-digit",
+		second: "2-digit",
+	});
+	const parties = Object.fromEntries(formatteur.formatToParts(utcApprox).map((p) => [p.type, p.value]));
+	const vuAParis = Date.UTC(Number(parties.year), Number(parties.month) - 1, Number(parties.day), Number(parties.hour), Number(parties.minute), Number(parties.second));
+	const ecart = vuAParis - utcApprox;
+	return new Date(utcApprox - ecart);
+}
+
 function findRow(rows, predicate, fromIndex = 0) {
 	for (let i = fromIndex; i < rows.length; i++) {
 		if (predicate(rows[i])) return { row: rows[i], index: i };
@@ -36,7 +67,7 @@ function parseHeaderFields(rows) {
 	let date = null;
 	if (dateMatch) {
 		const [, jj, mm, aaaa, hh, min] = dateMatch;
-		date = new Date(Number(aaaa), Number(mm) - 1, Number(jj), Number(hh), Number(min));
+		date = heureFrancaiseVersUtc(Number(aaaa), Number(mm), Number(jj), Number(hh), Number(min));
 	}
 
 	const salleRow = findRow(rows, (r) => /salle\s*:?/i.test(rowText(r)));

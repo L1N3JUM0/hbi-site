@@ -2,7 +2,7 @@
 source: "pdf"
 codeRencontre: "VAGEXGY"
 equipeSlug: "u15-feminines"
-date: "2025-09-28T14:00:00.000Z"
+date: "2025-09-28T12:00:00.000Z"
 journee: "J2"
 competition: "CHAMPIONNAT U15 EXCELLENCE FEMININ U15F EXC"
 typeMatch: "championnat"
