@@ -49,10 +49,14 @@ export function detectEquipe(competitionText) {
 		if (options.mixte) return { equipeSlug: options.mixte, typeMatch };
 		if (feminin && options.feminin) return { equipeSlug: options.feminin, typeMatch };
 		if (masculin && options.masculin) return { equipeSlug: options.masculin, typeMatch };
-		// Âge reconnu mais genre absent/inattendu du texte : un seul genre
-		// existe pour cet âge dans ce club, on peut le déduire sans ambiguïté.
-		const only = options.feminin ?? options.masculin;
-		if (only && !feminin && !masculin) return { equipeSlug: only, typeMatch };
+		// Âge reconnu mais genre absent/inattendu du texte (ex. une
+		// compétition étiquetée "MIXTE" une saison donnée pour une catégorie
+		// qui a par ailleurs un vrai féminin et un vrai masculin dans ce club,
+		// vu en 2025-2026 pour U13) : ne PAS deviner entre les deux quand les
+		// deux existent -- seul un âge n'ayant qu'un seul genre possible dans
+		// ce club (U17F, U18M) peut être déduit sans ambiguïté ici.
+		const genresPossibles = [options.feminin, options.masculin].filter(Boolean);
+		if (genresPossibles.length === 1 && !feminin && !masculin) return { equipeSlug: genresPossibles[0], typeMatch };
 		return { equipeSlug: null, typeMatch };
 	}
 

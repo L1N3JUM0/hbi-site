@@ -1,0 +1,20 @@
+---
+source: "pdf"
+codeRencontre: "VAGGXSL"
+equipeSlug: "u13-masculins"
+date: "2025-10-11T12:00:00.000Z"
+journee: "J1"
+competition: "U13 MIXTE TOURNOI D'AUTOMNE 2025 T3"
+typeMatch: "championnat"
+domicile: false
+adversaire: "ENTENTE SUD DURANCE PLANAIS CAVAILLON"
+salle: "6313 - BERTHOIRE"
+scoreDomicile: 3
+scoreExterieur: 7
+scoreMiTempsDomicile: 3
+scoreMiTempsExterieur: 7
+chronologie: [{"temps":"00:17","scoreDomicile":0,"scoreExterieur":1,"type":"but"},{"temps":"01:03","scoreDomicile":0,"scoreExterieur":1,"type":"exclusion"},{"temps":"01:10","scoreDomicile":0,"scoreExterieur":2,"type":"but"},{"temps":"02:46","scoreDomicile":0,"scoreExterieur":2,"type":"exclusion"},{"temps":"03:02","scoreDomicile":0,"scoreExterieur":2,"type":"tir_manque"},{"temps":"03:06","scoreDomicile":0,"scoreExterieur":2,"type":"arret"},{"temps":"03:39","scoreDomicile":0,"scoreExterieur":3,"type":"but"},{"temps":"03:57","scoreDomicile":0,"scoreExterieur":3,"type":"tir_manque"},{"temps":"04:01","scoreDomicile":0,"scoreExterieur":3,"type":"arret"},{"temps":"04:22","scoreDomicile":1,"scoreExterieur":3,"type":"but"},{"temps":"04:53","scoreDomicile":1,"scoreExterieur":4,"type":"but"},{"temps":"05:12","scoreDomicile":1,"scoreExterieur":4,"type":"tir_manque"},{"temps":"06:13","scoreDomicile":1,"scoreExterieur":5,"type":"but"},{"temps":"06:15","scoreDomicile":1,"scoreExterieur":5,"type":"autre"},{"temps":"06:30","scoreDomicile":1,"scoreExterieur":5,"type":"tir_manque"},{"temps":"06:32","scoreDomicile":1,"scoreExterieur":5,"type":"arret"},{"temps":"07:53","scoreDomicile":1,"scoreExterieur":5,"type":"tir_manque"},{"temps":"08:32","scoreDomicile":1,"scoreExterieur":6,"type":"but"},{"temps":"09:01","scoreDomicile":2,"scoreExterieur":6,"type":"but"},{"temps":"09:54","scoreDomicile":2,"scoreExterieur":6,"type":"tir_manque"},{"temps":"10:51","scoreDomicile":2,"scoreExterieur":6,"type":"tir_manque"},{"temps":"11:46","scoreDomicile":2,"scoreExterieur":7,"type":"but"},{"temps":"12:11","scoreDomicile":3,"scoreExterieur":7,"type":"but"}]
+statsEquipeDomicile: {"buts":3,"tirs":9,"arrets":0,"exclusions":2,"avertissements":0}
+statsEquipeExterieur: {"buts":7,"tirs":8,"arrets":3,"exclusions":0,"avertissements":0}
+statsJoueurs: [{"numero":15,"nom":"BLASCO","prenom":"leo","buts":1,"sept_m":0,"tirs":1,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":14,"nom":"BOUKHECHEM","prenom":"kais","buts":2,"sept_m":0,"tirs":3,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":8,"nom":"CHILAIN","prenom":"tao","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":4,"nom":"COLIN","prenom":"lisandro","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":6,"nom":"DEROSAS FERRERI","prenom":"andrea","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":9,"nom":"FOURNIER","prenom":"jean","buts":1,"sept_m":0,"tirs":1,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":5,"nom":"GARCIN","prenom":"theo","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":10,"nom":"LACOSTE","prenom":"sacha","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":13,"nom":"LOPES BRANDELET","prenom":"leandre","buts":1,"sept_m":0,"tirs":1,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":7,"nom":"LOUYER","prenom":"leon","buts":2,"sept_m":0,"tirs":2,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":3,"nom":"MAJOR","prenom":"kenzo","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":16,"nom":"MUGEMANGANGO","prenom":"louis","buts":0,"sept_m":0,"tirs":0,"arrets":3,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":1,"nom":"PINEDA","prenom":"leo","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false}]
+---
