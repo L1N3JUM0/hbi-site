@@ -1,7 +1,7 @@
 ---
 nom: Test
 type: competition
-statut: active
+statut: archivee
 slug: u16
 ordre: 20
 categorieAge: U16
