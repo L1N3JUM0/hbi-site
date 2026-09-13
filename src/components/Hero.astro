@@ -41,7 +41,7 @@ import logoSrc from "../assets/logo-transparent.png";
 		justify-content: center;
 		overflow: hidden;
 		background: var(--color-navy-deep);
-		padding: 1rem;
+		padding: 0.5rem 1rem;
 	}
 
 	/* The stage is designed as a fixed-size reference canvas (--stage-w x
@@ -86,9 +86,9 @@ import logoSrc from "../assets/logo-transparent.png";
 		--logo-left: -10px;
 
 		--header-h: 64px;
-		--hero-vpad: 32px;
+		--hero-vpad: 16px;
 		--hero-hpad: 32px;
-		--hero-peek: 80px;
+		--hero-peek: 140px;
 		--hero-budget-h: calc(100vh - var(--header-h) - var(--hero-vpad) - var(--hero-peek));
 		--hero-budget-w: calc(100vw - var(--hero-hpad));
 		/* one scale for both axes -- never distorts the aspect ratio, never
@@ -127,7 +127,7 @@ import logoSrc from "../assets/logo-transparent.png";
 	.logo-mark {
 		position: absolute;
 		left: var(--logo-left);
-		bottom: calc(var(--court-bottom) - (var(--logo-size) / 2));
+		bottom: var(--court-bottom);
 		width: var(--logo-size);
 		height: var(--logo-size);
 		opacity: 0.5;
