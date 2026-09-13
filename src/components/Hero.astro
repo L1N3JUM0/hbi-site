@@ -93,22 +93,40 @@ import logoSrc from "../assets/logo-transparent.png";
 		--hero-budget-w: calc(100vw - var(--hero-hpad));
 		/* one scale for both axes -- never distorts the aspect ratio, never
 		   grows past the tier's designed size, and is bounded by whichever
-		   of width or height is tightest at the current viewport. */
+		   of width or height is tightest at the current viewport. --scale is
+		   always computed against the FULL --stage-h, never the cropped one
+		   below, so it never changes because of the crop -- elements keep
+		   exactly the size this produced already. */
 		--scale: clamp(
 			0.55,
 			min(calc(var(--hero-budget-h) / var(--stage-h)), calc(var(--hero-budget-w) / var(--stage-w))),
 			1
 		);
 
+		/* The reference canvas has empty margin baked in above the runner
+		   and below the ground line (room the design never actually fills).
+		   --top-crop/--bottom-crop measure that margin (minus a slice kept
+		   as breathing room) so it can be trimmed from the LAYOUT box below,
+		   without touching --stage-h (and therefore without touching
+		   --scale, or the size of anything drawn on the canvas). */
+		--crop-margin: calc(var(--stage-h) * 0.06);
+		--top-crop: calc(var(--stage-h) - var(--player-bottom) - var(--player-h) - var(--crop-margin));
+		--bottom-crop: calc(var(--court-bottom) - var(--crop-margin));
+
 		width: calc(var(--stage-w) * var(--scale));
-		height: calc(var(--stage-h) * var(--scale));
+		height: calc((var(--stage-h) - var(--top-crop) - var(--bottom-crop)) * var(--scale));
 	}
 
 	.hero-stage {
 		position: relative;
 		width: var(--stage-w);
 		height: var(--stage-h);
-		transform: scale(var(--scale));
+		/* shift up by the cropped top margin (in the canvas's own units,
+		   so the shift is scaled along with everything else) -- the
+		   now-excess top/bottom margin spills outside .hero-frame's
+		   shorter box and is clipped by .hero's existing overflow:hidden,
+		   which is flat navy in that band anyway so nothing is lost. */
+		transform: scale(var(--scale)) translateY(calc(-1 * var(--top-crop)));
 		transform-origin: top left;
 	}
 
@@ -331,6 +349,10 @@ import logoSrc from "../assets/logo-transparent.png";
 			--motto-font: 0.95rem;
 			--logo-size: 59px;
 			--logo-left: -5px;
+			/* mobile's canvas is already compact and wasn't part of the
+			   complaint -- skip the crop so it stays exactly as-is. */
+			--top-crop: 0px;
+			--bottom-crop: 0px;
 		}
 	}
 
