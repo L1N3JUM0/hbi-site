@@ -349,12 +349,30 @@ collections:
     delete: true
     extension: "md"
     format: "frontmatter"
+    # Sans ceci, Sveltia identifie chaque entrée par un identifiant
+    # technique illisible ("8b955a6d59ac") : le seul champ de la collection
+    # est un fichier, pas un texte, donc pas de nom lisible à en tirer tout
+    # seul. Le nom du PDF déposé (généralement le code de la rencontre côté
+    # FFHandball, ex. "wagtilr.pdf") reste le seul repère disponible tant
+    # que le PDF n'a pas été analysé -- un libellé du type "équipe vs
+    # adversaire, date" demanderait que le résultat de l'analyse (faite
+    # côté build, pas dans le CMS) soit réécrit ici, hors de portée d'une
+    # simple configuration.
+    summary: "{{pdf}}"
     fields:
       - label: "Feuille de match (PDF)"
         name: "pdf"
         widget: "file"
-        media_folder: "src/content/feuilles-match/files"
-        public_folder: "/src/content/feuilles-match/files"
+        # Chemins relatifs au dossier de la collection ("folder:" ci-dessus)
+        # -- écrire ici le chemin absolu "src/content/feuilles-match/files"
+        # produit un dossier DOUBLÉ sur le disque
+        # ("feuilles-match/src/content/feuilles-match/files/...") : Sveltia
+        # résout un media_folder/public_folder relatif par rapport au
+        # dossier de la collection, pas par rapport à la racine du dépôt.
+        # Vu en production le 2026-09 -- voir scripts/import-fdme.mjs qui,
+        # par précaution, essaie aussi l'ancienne forme absolue au cas où.
+        media_folder: "files"
+        public_folder: "files"
         hint: "Le PDF téléchargé depuis le site de la FFHandball (voir GUIDE-EDITION.md pour savoir où le trouver)."
 
   - name: "resultats"

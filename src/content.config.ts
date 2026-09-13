@@ -1,5 +1,6 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
+import { saisonPour } from "./lib/saison";
 
 /**
  * Corrige un chemin d'image "nu" (ex. `src/assets/x.png`) que Sveltia CMS
@@ -241,8 +242,10 @@ const statJoueurMatch = z.object({
  *
  * Les entrées générées automatiquement sont *recalculées à chaque build*
  * depuis leur PDF source (fichier nommé `pdf-<codeRencontre>.md`, jamais
- * dupliqué) : les champs `chronologie`, `statsEquipeDomicile/Exterieur` et
- * `statsJoueurs` y sont donc écrasés à chaque reconstruction du site --
+ * dupliqué), puis commitées par le workflow de déploiement (voir
+ * .github/workflows/deploy.yml) pour rester visibles et corrigeables
+ * depuis le CMS : les champs `chronologie`, `statsEquipeDomicile/Exterieur`
+ * et `statsJoueurs` y sont donc écrasés à chaque reconstruction du site --
  * ne pas les modifier à la main, ce serait perdu au prochain build. Seul
  * `equipeSlug` est préservé si vous le corrigez à la main (voir
  * scripts/import-fdme.mjs) : utile quand l'équipe n'a pas été détectée
@@ -250,32 +253,39 @@ const statJoueurMatch = z.object({
  */
 const resultats = defineCollection({
 	loader: glob({ pattern: "*.md", base: "./src/content/resultats" }),
-	schema: z.object({
-		source: z.enum(["pdf", "manuel"]).default("manuel"),
-		/** Identifiant FFHandball de la rencontre (ex. "VAGEXGV") -- clé de
-		 * déduplication pour les entrées générées depuis une feuille de match.
-		 * Absent pour une entrée saisie à la main. */
-		codeRencontre: z.string().optional(),
-		/** Doit correspondre au `slug` d'une entrée de la collection "equipes". */
-		equipeSlug: z.string(),
-		date: z.coerce.date(),
-		/** Ex. "J1". Absent pour un match de coupe ou amical. */
-		journee: z.string().optional(),
-		competition: z.string().optional(),
-		typeMatch: z.enum(["championnat", "coupe", "autre"]).default("championnat"),
-		/** true si le HBI recevait. */
-		domicile: z.boolean(),
-		adversaire: z.string(),
-		salle: z.string().optional(),
-		scoreDomicile: z.number(),
-		scoreExterieur: z.number(),
-		scoreMiTempsDomicile: z.number().optional(),
-		scoreMiTempsExterieur: z.number().optional(),
-		chronologie: z.array(chronologieEvenement).optional(),
-		statsEquipeDomicile: statsEquipeMatch.optional(),
-		statsEquipeExterieur: statsEquipeMatch.optional(),
-		statsJoueurs: z.array(statJoueurMatch).optional(),
-	}),
+	schema: z
+		.object({
+			source: z.enum(["pdf", "manuel"]).default("manuel"),
+			/** Identifiant FFHandball de la rencontre (ex. "VAGEXGV") -- clé de
+			 * déduplication pour les entrées générées depuis une feuille de match.
+			 * Absent pour une entrée saisie à la main. */
+			codeRencontre: z.string().optional(),
+			/** Doit correspondre au `slug` d'une entrée de la collection "equipes". */
+			equipeSlug: z.string(),
+			date: z.coerce.date(),
+			/** Ex. "J1". Absent pour un match de coupe ou amical. */
+			journee: z.string().optional(),
+			competition: z.string().optional(),
+			typeMatch: z.enum(["championnat", "coupe", "autre"]).default("championnat"),
+			/** true si le HBI recevait. */
+			domicile: z.boolean(),
+			adversaire: z.string(),
+			salle: z.string().optional(),
+			scoreDomicile: z.number(),
+			scoreExterieur: z.number(),
+			scoreMiTempsDomicile: z.number().optional(),
+			scoreMiTempsExterieur: z.number().optional(),
+			chronologie: z.array(chronologieEvenement).optional(),
+			statsEquipeDomicile: statsEquipeMatch.optional(),
+			statsEquipeExterieur: statsEquipeMatch.optional(),
+			statsJoueurs: z.array(statJoueurMatch).optional(),
+		})
+		/** `saison` (ex. "2025-2026") n'est jamais un champ saisi ou importé :
+		 * elle est recalculée depuis `date` à chaque lecture de la collection,
+		 * pour une entrée générée depuis une feuille de match comme pour une
+		 * entrée saisie à la main -- jamais périmée, même si la date d'une
+		 * entrée manuelle est corrigée après coup. Voir src/lib/saison.ts. */
+		.transform((data) => ({ ...data, saison: saisonPour(data.date) })),
 });
 
 export const collections = { equipes, articles, partenaires, photosAccueil, leClub, histoireClub, resultats };

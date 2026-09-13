@@ -263,20 +263,52 @@ le mode d'emploi côté bénévole.
    synchronisation incrémentale : déterministe, donc jamais de doublon même
    en cas d'exécutions répétées, et une feuille supprimée de "Feuilles de
    match" fait disparaître son résultat généré au build suivant.
-3. Ces fichiers générés (`pdf-*.md`) sont **gitignorés** (voir
-   `.gitignore`) : ils n'ont pas besoin d'être commités puisqu'ils sont
-   recréés à chaque build (y compris en CI, voir `deploy.yml`) depuis le
-   PDF, qui lui fait foi. Un résultat saisi à la main (secours, sans
-   feuille de match, formulaire "Nouveau résultat" du CMS) n'a pas ce
-   préfixe et reste suivi normalement par Git.
+3. Ces fichiers générés (`pdf-*.md`) sont **commités automatiquement** par
+   le workflow de déploiement, juste après `npm run build` (étape
+   "Committer les résultats..." dans `deploy.yml`, avec `[skip ci]` pour ne
+   pas redéclencher un build). Nécessaire pour qu'ils soient **visibles et
+   corrigeables depuis le CMS** (Sveltia lit le dépôt réel sur GitHub,
+   jamais la sortie d'un build) — une régénération identique (rien de
+   nouveau depuis le dernier build) ne produit aucune différence, donc
+   aucun commit. Un résultat saisi à la main (secours, sans feuille de
+   match, formulaire "Nouveau résultat" du CMS) n'a pas le préfixe `pdf-`
+   et est commité normalement par le CMS lui-même, comme tout autre contenu.
 4. **Robustesse** : un PDF illisible ou dans un format inattendu ne fait
    jamais échouer le build (`FeuilleFormatError`, capturée par le script) —
-   il est simplement ignoré avec un avertissement dans les logs. Une
-   feuille reconnue mais dont l'équipe n'a pas pu être déduite du nom de la
-   compétition produit un résultat avec `equipeSlug` vide et un
-   avertissement invitant à le corriger à la main dans le CMS ; cette
-   correction manuelle est ensuite préservée d'un build à l'autre tant que
-   la détection automatique échoue (voir `preserveEquipeSlugSiBesoin()`).
+   il est simplement ignoré, avec un avertissement dans les logs **et** un
+   bandeau visible sur `/equipes` (`src/components/ErreursImport.astro`,
+   alimenté par `src/data/import-erreurs.generated.json`, régénéré à chaque
+   build et non commité — purement diagnostique pour le build courant).
+   Une feuille reconnue mais dont l'équipe n'a pas pu être déduite du nom
+   de la compétition produit un résultat avec `equipeSlug` vide (également
+   signalé) ; cette valeur, une fois corrigée à la main dans le CMS, est
+   préservée d'un build à l'autre tant que la détection automatique échoue
+   (voir `preserveEquipeSlugSiBesoin()`) — ce qui suppose justement que les
+   fichiers générés soient commités (point 3), sans quoi chaque build
+   CI repartirait d'une feuille vierge.
+
+### Saisons
+
+Chaque résultat porte une `saison` (ex. "2025-2026"), calculée depuis sa
+`date` par `src/lib/saison.ts` (bascule au 1er juillet) — un champ **dérivé
+par transformation de schéma** (`content.config.ts`), jamais stocké ni
+saisi, pour ne jamais devenir incohérent avec `date`, y compris pour un
+résultat saisi à la main dont la date serait corrigée après coup.
+
+Sur `/equipes`, le bloc "Résultats" ne montre que la **saison en cours**
+(déterminée par la date du jour au moment du build — voir
+`saisonActuelle()` — donc la bascule d'une saison à l'autre se fait toute
+seule au fil des rebuilds quotidiens, sans changement de code) : l'effectif
+d'une équipe change d'une saison à l'autre, afficher un ancien résultat
+comme s'il concernait l'équipe actuelle serait trompeur. Les saisons
+passées ne sont pas supprimées : elles apparaissent sous un second bloc
+replié "Saisons précédentes", groupées par saison (voir
+`resultatsParSaison()` dans `src/lib/resultats.ts` et
+`ResultatsEquipe.astro`) — choisi plutôt qu'une page d'archives dédiée ou
+un sélecteur de saison, pour rester sur une seule page et ne rien ajouter
+à la navigation tant qu'il n'y a que deux ou trois saisons ; à reconsidérer
+si l'historique devient volumineux (voir aussi la piste "page dédiée" du
+point 3, stats cumulées sur la saison).
 
 ### Extraction (`src/lib/fdme/`)
 

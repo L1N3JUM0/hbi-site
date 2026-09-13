@@ -11,7 +11,11 @@ on:
     - cron: "0 4 * * *"
 
 permissions:
-  contents: read
+  # "write" (au lieu de "read") : le build commite les résultats importés
+  # depuis les feuilles de match (voir l'étape "Committer..." plus bas) --
+  # nécessaire pour qu'ils soient visibles/corrigeables dans le CMS, qui
+  # lit le dépôt réel sur GitHub, pas la sortie éphémère de ce build.
+  contents: write
   pages: write
   id-token: write
 
@@ -37,6 +41,35 @@ jobs:
 
       - name: Build Astro
         run: npm run build
+
+      - name: Committer les résultats importés depuis les feuilles de match
+        # "npm run build" ci-dessus régénère src/content/resultats/pdf-*.md
+        # depuis les PDF de src/content/feuilles-match/ (voir
+        # scripts/import-fdme.mjs). Ces fichiers doivent être commités pour
+        # être visibles ET corrigeables dans le CMS (Sveltia lit le dépôt
+        # réel sur GitHub, jamais la sortie de ce build) -- une régénération
+        # identique (rien de nouveau depuis le dernier build) ne produit
+        # aucune différence, donc aucun commit ici. "[skip ci]" évite que ce
+        # commit ne redéclenche immédiatement un nouveau build.
+        # "continue-on-error" : un conflit de push (rare, deux builds
+        # concurrents) ne doit pas empêcher le déploiement du site, qui a
+        # déjà été construit à l'étape précédente -- le prochain build
+        # (prochain commit, ou rebuild quotidien) réessaiera avec un
+        # "checkout" à jour. Pas de "git pull --rebase" ici : le checkout
+        # est peu profond (historique tronqué), le rebase y est fragile ;
+        # un simple push qui échoue en cas de conflit, laissé à la
+        # prochaine exécution, est plus sûr.
+        continue-on-error: true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/content/resultats
+          if git diff --cached --quiet; then
+            echo "Aucun résultat modifié."
+          else
+            git commit -m "Met à jour les résultats importés depuis les feuilles de match [skip ci]"
+            git push origin HEAD:main
+          fi
 
       - name: Configurer GitHub Pages
         uses: actions/configure-pages@v5

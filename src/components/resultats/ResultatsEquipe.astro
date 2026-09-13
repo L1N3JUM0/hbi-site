@@ -1,6 +1,6 @@
 ---
 import ResultatMatch from "./ResultatMatch.astro";
-import { getResultatsForEquipe } from "../../lib/resultats";
+import { getResultatsForEquipe, resultatsParSaison } from "../../lib/resultats";
 
 interface Props {
 	equipeSlug: string;
@@ -8,18 +8,39 @@ interface Props {
 }
 
 const { equipeSlug, affichageStats } = Astro.props;
-const resultats = await getResultatsForEquipe(equipeSlug);
+const tousLesResultats = await getResultatsForEquipe(equipeSlug);
+const { saisonEnCours, saisonsPrecedentes } = resultatsParSaison(tousLesResultats);
 ---
 
 {
-	resultats.length > 0 && (
+	saisonEnCours.length > 0 && (
 		<details class="resultats">
-			<summary>Résultats ({resultats.length})</summary>
+			<summary>Résultats ({saisonEnCours.length})</summary>
 			<ul>
-				{resultats.map((r) => (
+				{saisonEnCours.map((r) => (
 					<ResultatMatch resultat={r} affichageStats={affichageStats} />
 				))}
 			</ul>
+		</details>
+	)
+}
+
+{
+	saisonsPrecedentes.length > 0 && (
+		<details class="resultats resultats--archives">
+			<summary>Saisons précédentes</summary>
+			{saisonsPrecedentes.map(({ saison, resultats }) => (
+				<details class="saison">
+					<summary>
+						{saison} ({resultats.length})
+					</summary>
+					<ul>
+						{resultats.map((r) => (
+							<ResultatMatch resultat={r} affichageStats={affichageStats} />
+						))}
+					</ul>
+				</details>
+			))}
 		</details>
 	)
 }
@@ -60,8 +81,35 @@ const resultats = await getResultatsForEquipe(equipeSlug);
 		padding: 0;
 	}
 
+	.saison {
+		margin: 0.5rem 0 0 1rem;
+	}
+	.saison > summary {
+		cursor: pointer;
+		list-style: none;
+		color: rgba(255, 255, 255, 0.85);
+		font-size: 0.8rem;
+		font-weight: 700;
+		min-height: 44px;
+		display: flex;
+		align-items: center;
+	}
+	.saison > summary::-webkit-details-marker {
+		display: none;
+	}
+	.saison > summary::before {
+		content: "▸";
+		display: inline-block;
+		margin-right: 0.5rem;
+		transition: transform 0.15s ease;
+	}
+	.saison[open] > summary::before {
+		transform: rotate(90deg);
+	}
+
 	@media (prefers-reduced-motion: reduce) {
-		.resultats > summary::before {
+		.resultats > summary::before,
+		.saison > summary::before {
 			transition: none;
 		}
 	}

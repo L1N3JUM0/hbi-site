@@ -25,19 +25,22 @@ function findRow(rows, predicate, fromIndex = 0) {
 function parseHeaderFields(rows) {
 	const text = rows.map(rowText).join("\n");
 
+	// Deux gabarits observés selon la compétition ("DATE:"/"SALLE:" en
+	// majuscules avec "Journée / Date", ou "Date"/"Salle" sans majuscules ni
+	// ":" et "Journée" seule) -- l'un et l'autre sont acceptés partout.
 	const code = /Code Renc\s+(\S+)/.exec(text)?.[1];
 	const competition = /Compétition\s+(.+?)\s+Groupe/.exec(text)?.[1]?.trim();
-	const journee = /Journ[ée]e\s*\/\s*Date\s+(J\d+)/.exec(text)?.[1];
+	const journee = /Journ[ée]e\s*(?:\/\s*Date)?\s+(J\d+)/i.exec(text)?.[1];
 
-	const dateMatch = /DATE:\s+\S+\s+(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}):(\d{2})/.exec(text);
+	const dateMatch = /Date\s*:?\s+\S+\s+(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}):(\d{2})/i.exec(text);
 	let date = null;
 	if (dateMatch) {
 		const [, jj, mm, aaaa, hh, min] = dateMatch;
 		date = new Date(Number(aaaa), Number(mm) - 1, Number(jj), Number(hh), Number(min));
 	}
 
-	const salleRow = findRow(rows, (r) => /SALLE:/.test(rowText(r)));
-	const salle = salleRow ? /SALLE:\s+(.+)$/.exec(rowText(salleRow.row))?.[1]?.trim() : undefined;
+	const salleRow = findRow(rows, (r) => /salle\s*:?/i.test(rowText(r)));
+	const salle = salleRow ? /salle\s*:?\s+(.+)$/i.exec(rowText(salleRow.row))?.[1]?.trim() : undefined;
 
 	const teamsRow = findRow(
 		rows,
@@ -85,12 +88,14 @@ function parseHeaderFields(rows) {
  * Tirs Arrets Av. 2' Dis") -- une extraction par expression régulière
  * classique échoue sur ce tableau (colonnes trop resserrées en fin de
  * ligne) ; il faut passer par les coordonnées x et rattacher chaque valeur
- * à la colonne d'en-tête la plus proche. */
+ * à la colonne d'en-tête la plus proche. La colonne "Type Lic" (parfois
+ * "Type JFL" selon la compétition) n'est volontairement pas recherchée ici
+ * : elle n'est jamais exploitée par le parseur, l'exiger ne ferait
+ * qu'ajouter une façon de plus pour une feuille valide d'être rejetée. */
 function headerColumnPositions(headerRow) {
 	const find = (str) => headerRow.items.find((i) => i.str === str)?.x;
 	const positions = {
 		licence: find("Licence"),
-		typeLic: find("Type Lic"),
 		buts: find("Buts"),
 		sept_m: find("7m"),
 		tirs: find("Tirs"),

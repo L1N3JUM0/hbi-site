@@ -1,0 +1,80 @@
+---
+/**
+ * Bandeau visible listant les feuilles de match qui n'ont pas pu être
+ * importées automatiquement (voir scripts/import-fdme.mjs). Sans lui, un
+ * échec d'import ne serait visible que dans les logs du build -- invisible
+ * pour la personne (souvent non technique) qui a déposé la feuille.
+ *
+ * Lit un fichier régénéré à chaque build (jamais commité, voir
+ * .gitignore) : lecture directe en `fs`, pas via astro:content, pour ne
+ * pas avoir à déclarer une collection pour une donnée purement
+ * diagnostique. Absent (avant le premier `npm run build`/`import-fdme`,
+ * ex. `npm run dev` sans prébuild) -> aucun bandeau, pas d'erreur.
+ */
+import { readFileSync } from "node:fs";
+
+interface Erreur {
+	fichier: string;
+	raison: string;
+}
+
+let erreurs: Erreur[] = [];
+try {
+	erreurs = JSON.parse(readFileSync("src/data/import-erreurs.generated.json", "utf-8"));
+} catch {
+	erreurs = [];
+}
+---
+
+{
+	erreurs.length > 0 && (
+		<div class="erreurs-import">
+			<p class="titre">
+				⚠ {erreurs.length} feuille{erreurs.length > 1 ? "s" : ""} de match n'
+				{erreurs.length > 1 ? "ont" : "a"} pas pu être importée{erreurs.length > 1 ? "s" : ""} automatiquement
+			</p>
+			<ul>
+				{erreurs.map((e) => (
+					<li>
+						<strong>{e.fichier}</strong> — {e.raison}
+					</li>
+				))}
+			</ul>
+			<p class="aide">
+				Vérifiez le fichier déposé dans « Feuilles de match », ou contactez la personne qui gère le site
+				techniquement.
+			</p>
+		</div>
+	)
+}
+
+<style>
+	.erreurs-import {
+		max-width: 1000px;
+		margin: 0 auto;
+		padding: 1rem 1.5rem;
+		background: rgba(187, 3, 77, 0.12);
+		border-left: 3px solid var(--color-crimson);
+	}
+	.titre {
+		color: var(--color-white);
+		font-weight: 800;
+		font-size: 0.95rem;
+		margin: 0 0 0.5rem;
+	}
+	.erreurs-import ul {
+		margin: 0 0 0.5rem;
+		padding-left: 1.2rem;
+	}
+	.erreurs-import li {
+		color: rgba(255, 255, 255, 0.9);
+		font-size: 0.85rem;
+		line-height: 1.5;
+		margin-bottom: 0.3rem;
+	}
+	.aide {
+		color: rgba(255, 255, 255, 0.65);
+		font-size: 0.8rem;
+		margin: 0;
+	}
+</style>

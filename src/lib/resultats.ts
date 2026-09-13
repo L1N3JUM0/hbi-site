@@ -1,13 +1,46 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import { disambiguateDisplayNames } from "./fdme/noms.mjs";
+import { saisonActuelle } from "./saison";
 
 export type Resultat = CollectionEntry<"resultats">;
 export type Issue = "victoire" | "defaite" | "nul";
 
-/** Tous les résultats d'une équipe, du plus récent au plus ancien. */
+/** Tous les résultats d'une équipe, du plus récent au plus ancien, toutes
+ * saisons confondues -- voir `resultatsParSaison` pour ne garder que la
+ * saison en cours et regrouper le reste par saison. */
 export async function getResultatsForEquipe(equipeSlug: string): Promise<Resultat[]> {
 	const all = await getCollection("resultats");
 	return all.filter((r) => r.data.equipeSlug === equipeSlug).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+}
+
+export interface ResultatsParSaison {
+	/** Résultats de la saison en cours (au moment du build), du plus récent
+	 * au plus ancien. */
+	saisonEnCours: Resultat[];
+	/** Saisons passées, de la plus récente à la plus ancienne ; chaque
+	 * entrée déjà triée du match le plus récent au plus ancien. */
+	saisonsPrecedentes: { saison: string; resultats: Resultat[] }[];
+}
+
+/** Sépare les résultats d'une équipe entre la saison en cours (à afficher
+ * directement) et les saisons précédentes (archivées, regroupées) --
+ * l'effectif d'une équipe change d'une saison à l'autre, afficher un
+ * ancien résultat comme s'il concernait l'équipe actuelle serait trompeur. */
+export function resultatsParSaison(resultats: Resultat[]): ResultatsParSaison {
+	const actuelle = saisonActuelle();
+	const saisonEnCours = resultats.filter((r) => r.data.saison === actuelle);
+
+	const groupes = new Map<string, Resultat[]>();
+	for (const r of resultats) {
+		if (r.data.saison === actuelle) continue;
+		if (!groupes.has(r.data.saison)) groupes.set(r.data.saison, []);
+		groupes.get(r.data.saison)!.push(r);
+	}
+	const saisonsPrecedentes = [...groupes.entries()]
+		.sort((a, b) => (a[0] < b[0] ? 1 : -1))
+		.map(([saison, resultats]) => ({ saison, resultats }));
+
+	return { saisonEnCours, saisonsPrecedentes };
 }
 
 /** Score domicile/extérieur remis dans l'ordre "nous/eux" du point de vue

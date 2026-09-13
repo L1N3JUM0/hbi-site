@@ -130,7 +130,14 @@ statistiques d'équipe et les meilleur·e·s buteur·se·s.
 Si le match n'apparaît toujours pas après une dizaine de minutes, il est
 possible que le PDF n'ait pas pu être lu automatiquement (feuille
 scannée au lieu d'un export du site FFHandball, format inhabituel...) :
-contactez la personne qui gère le site techniquement pour vérifier.
+un bandeau apparaît alors en haut de `/equipes` pour le signaler
+clairement, avec le nom du fichier concerné.
+
+**Seuls les matchs de la saison en cours (septembre à juin) apparaissent
+dans le bloc Résultats.** C'est volontaire : l'effectif d'une équipe change
+d'une saison à l'autre, un ancien résultat n'a plus le même sens. Les
+saisons précédentes ne sont pas perdues : elles restent consultables juste
+en dessous, dans un second bloc replié **« Saisons précédentes »**.
 
 **En secours**, si vous n'avez pas pu récupérer la feuille de match, vous
 pouvez saisir un résultat à la main : rubrique **Résultats** → **Nouveau

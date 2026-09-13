@@ -6,6 +6,7 @@ import Footer from "../components/Footer.astro";
 import AjouterAgendaButton from "../components/AjouterAgendaButton.astro";
 import PhotoCarousel from "../components/PhotoCarousel.astro";
 import ResultatsEquipe from "../components/resultats/ResultatsEquipe.astro";
+import ErreursImport from "../components/ErreursImport.astro";
 import Favicon from "../components/Favicon.astro";
 import { withBase } from "../utils/links";
 import { getCollection, type CollectionEntry } from "astro:content";
@@ -56,6 +57,8 @@ function photosFor(team: CollectionEntry<"equipes">) {
 			title="Nos équipes"
 			subtitle="Du baby hand aux seniors, en passant par le handball adapté : l'effectif complet du HBI pour la saison 2026-2027, entraînements au COSEC Émile Avy."
 		/>
+
+		<ErreursImport />
 
 		<section class="teams">
 			<div class="wrap">
