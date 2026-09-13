@@ -2,7 +2,7 @@
 source: "pdf"
 codeRencontre: "VAGEXHC"
 equipeSlug: "u15-feminines"
-date: "2025-10-11T14:30:00.000Z"
+date: "2025-10-11T16:30:00.000Z"
 competition: "CHAMPIONNAT U15 EXCELLENCE FEMININ U15F EXC"
 typeMatch: "championnat"
 domicile: false

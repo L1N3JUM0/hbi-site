@@ -2,7 +2,7 @@
 source: "pdf"
 codeRencontre: "WAGTHZV"
 equipeSlug: "seniors-feminines"
-date: "2026-09-13T15:00:00.000Z"
+date: "2026-09-13T17:00:00.000Z"
 journee: "J1"
 competition: "DIVISION 1 FEMININES DIVISION 1 TERRITORIALE FÉMININE"
 typeMatch: "championnat"
