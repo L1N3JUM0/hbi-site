@@ -1,27 +1,35 @@
 ---
+import { Image } from "astro:assets";
 import playerSrc from "../assets/player/pose-4-tir-reference.svg?url";
+import logoSrc from "../assets/logo-transparent.png";
 ---
 
 <section class="hero">
-	<div class="hero-stage">
-		<div class="court-line"></div>
-
-		<div class="player">
-			<div class="speedlines">
-				<div class="line"></div>
-				<div class="line"></div>
-				<div class="line"></div>
-				<div class="line"></div>
+	<div class="hero-frame">
+		<div class="hero-stage">
+			<div class="logo-mark">
+				<Image src={logoSrc} alt="" width={260} height={260} format="webp" loading="eager" />
 			</div>
-			<img src={playerSrc} alt="" class="player-svg" />
-		</div>
 
-		<div class="impact"></div>
+			<div class="court-line"></div>
 
-		<div class="motto">
-			<p class="line1">Je ne perds jamais</p>
-			<p class="line2">soit je gagne,</p>
-			<p class="line3">soit j&rsquo;apprends.</p>
+			<div class="player">
+				<div class="speedlines">
+					<div class="line"></div>
+					<div class="line"></div>
+					<div class="line"></div>
+					<div class="line"></div>
+				</div>
+				<img src={playerSrc} alt="" class="player-svg" />
+			</div>
+
+			<div class="impact"></div>
+
+			<div class="motto">
+				<p class="line1">Je ne perds jamais</p>
+				<p class="line2">soit je gagne,</p>
+				<p class="line3">soit j&rsquo;apprends.</p>
+			</div>
 		</div>
 	</div>
 </section>
@@ -33,10 +41,25 @@ import playerSrc from "../assets/player/pose-4-tir-reference.svg?url";
 		justify-content: center;
 		overflow: hidden;
 		background: var(--color-navy-deep);
-		padding: 2rem 1rem;
+		padding: 1rem;
 	}
 
-	.hero-stage {
+	/* The stage is designed as a fixed-size reference canvas (--stage-w x
+	   --stage-h) so every element's position/size is a plain px value --
+	   simple to reason about and to retune per breakpoint. .hero-frame is
+	   the responsive shell around it: sized to the SCALED footprint (so the
+	   flex layout never reserves more space than what's actually shown),
+	   while .hero-stage keeps its natural reference size and is shrunk with
+	   `transform: scale()` to fit. --scale is capped at 1 (never enlarges
+	   past a breakpoint's designed size) and floored at 0.55 (never shrinks
+	   into illegibility); in between, it targets whatever vertical budget
+	   is left after the sticky header, the hero's own padding, and a
+	   deliberate slice reserved so the next section is already peeking in
+	   on load -- this is what keeps the hero from eating the whole
+	   viewport on short/laptop screens while still using more room on
+	   tall ones (see --hero-budget below).
+	   Values also drive the logo-mark (departure point of the runner). */
+	.hero-frame {
 		--stage-w: 800px;
 		--stage-h: 500px;
 		--player-w: 200px;
@@ -59,10 +82,34 @@ import playerSrc from "../assets/player/pose-4-tir-reference.svg?url";
 		--motto-bottom: 180px;
 		--motto-maxw: 260px;
 		--motto-font: 1.5rem;
+		--logo-size: 130px;
+		--logo-left: -10px;
 
+		--header-h: 64px;
+		--hero-vpad: 32px;
+		--hero-hpad: 32px;
+		--hero-peek: 80px;
+		--hero-budget-h: calc(100vh - var(--header-h) - var(--hero-vpad) - var(--hero-peek));
+		--hero-budget-w: calc(100vw - var(--hero-hpad));
+		/* one scale for both axes -- never distorts the aspect ratio, never
+		   grows past the tier's designed size, and is bounded by whichever
+		   of width or height is tightest at the current viewport. */
+		--scale: clamp(
+			0.55,
+			min(calc(var(--hero-budget-h) / var(--stage-h)), calc(var(--hero-budget-w) / var(--stage-w))),
+			1
+		);
+
+		width: calc(var(--stage-w) * var(--scale));
+		height: calc(var(--stage-h) * var(--scale));
+	}
+
+	.hero-stage {
 		position: relative;
-		width: min(var(--stage-w), 100%);
+		width: var(--stage-w);
 		height: var(--stage-h);
+		transform: scale(var(--scale));
+		transform-origin: top left;
 	}
 
 	.court-line {
@@ -72,6 +119,29 @@ import playerSrc from "../assets/player/pose-4-tir-reference.svg?url";
 		right: 0;
 		height: 2px;
 		background: rgba(255, 255, 255, 0.12);
+	}
+
+	/* club badge as the runner's departure point: dimmed and placed behind
+	   everything else so it reads as a mark the player breaks away from,
+	   not a second full-strength logo competing with the header's. */
+	.logo-mark {
+		position: absolute;
+		left: var(--logo-left);
+		bottom: calc(var(--court-bottom) - (var(--logo-size) / 2));
+		width: var(--logo-size);
+		height: var(--logo-size);
+		opacity: 0.5;
+		animation: logo-pulse 3.2s infinite;
+	}
+	.logo-mark :global(img) {
+		width: 100%;
+		height: 100%;
+		display: block;
+	}
+	@keyframes logo-pulse {
+		0%, 5% { transform: scale(1); opacity: 0.5; }
+		10% { transform: scale(1.05); opacity: 0.68; }
+		20%, 100% { transform: scale(1); opacity: 0.5; }
 	}
 
 	/* speed lines behind the runner: nested inside .player so they inherit
@@ -236,7 +306,7 @@ import playerSrc from "../assets/player/pose-4-tir-reference.svg?url";
 	   same relative layout (no overlap between the runner and the motto),
 	   same keyframe percentages/duration. */
 	@media (max-width: 640px) {
-		.hero-stage {
+		.hero-frame {
 			--stage-w: 360px;
 			--stage-h: 225px;
 			--player-w: 90px;
@@ -259,6 +329,8 @@ import playerSrc from "../assets/player/pose-4-tir-reference.svg?url";
 			--motto-bottom: 81px;
 			--motto-maxw: 130px;
 			--motto-font: 0.95rem;
+			--logo-size: 59px;
+			--logo-left: -5px;
 		}
 	}
 
@@ -270,7 +342,7 @@ import playerSrc from "../assets/player/pose-4-tir-reference.svg?url";
 	   grows to use wide viewports instead of looking like a stretched mobile
 	   card. Font size is scaled less aggressively to avoid oversized text. */
 	@media (min-width: 1280px) {
-		.hero-stage {
+		.hero-frame {
 			--stage-w: 1080px;
 			--stage-h: 675px;
 			--player-w: 270px;
@@ -293,10 +365,12 @@ import playerSrc from "../assets/player/pose-4-tir-reference.svg?url";
 			--motto-bottom: 243px;
 			--motto-maxw: 350px;
 			--motto-font: 1.75rem;
+			--logo-size: 176px;
+			--logo-left: -14px;
 		}
 	}
 	@media (min-width: 1600px) {
-		.hero-stage {
+		.hero-frame {
 			--stage-w: 1360px;
 			--stage-h: 850px;
 			--player-w: 340px;
@@ -319,11 +393,13 @@ import playerSrc from "../assets/player/pose-4-tir-reference.svg?url";
 			--motto-bottom: 306px;
 			--motto-maxw: 442px;
 			--motto-font: 2rem;
+			--logo-size: 221px;
+			--logo-left: -17px;
 		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.player, .speedlines, .impact {
+		.player, .speedlines, .impact, .logo-mark {
 			animation: none !important;
 		}
 		.player {
