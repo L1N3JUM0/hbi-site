@@ -6,14 +6,13 @@ import playerSrc from "../assets/player/pose-4-tir-reference.svg?url";
 	<div class="hero-stage">
 		<div class="court-line"></div>
 
-		<div class="speedlines">
-			<div class="line"></div>
-			<div class="line"></div>
-			<div class="line"></div>
-			<div class="line"></div>
-		</div>
-
 		<div class="player">
+			<div class="speedlines">
+				<div class="line"></div>
+				<div class="line"></div>
+				<div class="line"></div>
+				<div class="line"></div>
+			</div>
 			<img src={playerSrc} alt="" class="player-svg" />
 		</div>
 
@@ -44,7 +43,6 @@ import playerSrc from "../assets/player/pose-4-tir-reference.svg?url";
 		--player-h: 280px;
 		--player-bottom: 100px;
 		--court-bottom: 110px;
-		--speed-bottom: 130px;
 		--speed-w: 260px;
 		--speed-h: 220px;
 		--speed-move: 90px;
@@ -76,11 +74,13 @@ import playerSrc from "../assets/player/pose-4-tir-reference.svg?url";
 		background: rgba(255, 255, 255, 0.12);
 	}
 
-	/* speed lines behind the runner */
+	/* speed lines behind the runner: nested inside .player so they inherit
+	   its animated `left` position and stay glued just behind it at every
+	   instant, instead of drifting apart when timings diverge. */
 	.speedlines {
 		position: absolute;
-		left: 0;
-		bottom: var(--speed-bottom);
+		right: calc(100% - (var(--player-w) * 0.12));
+		bottom: calc(var(--player-h) * 0.11);
 		width: var(--speed-w);
 		height: var(--speed-h);
 		opacity: 0;
@@ -243,7 +243,6 @@ import playerSrc from "../assets/player/pose-4-tir-reference.svg?url";
 			--player-h: 126px;
 			--player-bottom: 45px;
 			--court-bottom: 50px;
-			--speed-bottom: 59px;
 			--speed-w: 117px;
 			--speed-h: 99px;
 			--speed-move: 40px;
@@ -260,6 +259,66 @@ import playerSrc from "../assets/player/pose-4-tir-reference.svg?url";
 			--motto-bottom: 81px;
 			--motto-maxw: 130px;
 			--motto-font: 0.95rem;
+		}
+	}
+
+	/* Desktop: the 800x500 reference composition is designed for a compact
+	   viewport and otherwise stays that size forever, leaving a small boxed
+	   stage stranded in the middle of a much wider navy background on large
+	   screens. These tiers scale every spatial variable uniformly (same
+	   principle as the mobile block above, just upward) so the hero actually
+	   grows to use wide viewports instead of looking like a stretched mobile
+	   card. Font size is scaled less aggressively to avoid oversized text. */
+	@media (min-width: 1280px) {
+		.hero-stage {
+			--stage-w: 1080px;
+			--stage-h: 675px;
+			--player-w: 270px;
+			--player-h: 378px;
+			--player-bottom: 135px;
+			--court-bottom: 149px;
+			--speed-w: 350px;
+			--speed-h: 297px;
+			--speed-move: 122px;
+			--run-start: -351px;
+			--run-mid: 392px;
+			--run-land: 459px;
+			--run-bounce: 446px;
+			--run-settle: 452px;
+			--impact-bottom: 130px;
+			--impact-left: 540px;
+			--impact-size: 95px;
+			--impact-border: 4px;
+			--motto-right: 54px;
+			--motto-bottom: 243px;
+			--motto-maxw: 350px;
+			--motto-font: 1.75rem;
+		}
+	}
+	@media (min-width: 1600px) {
+		.hero-stage {
+			--stage-w: 1360px;
+			--stage-h: 850px;
+			--player-w: 340px;
+			--player-h: 476px;
+			--player-bottom: 170px;
+			--court-bottom: 187px;
+			--speed-w: 442px;
+			--speed-h: 374px;
+			--speed-move: 153px;
+			--run-start: -442px;
+			--run-mid: 493px;
+			--run-land: 578px;
+			--run-bounce: 561px;
+			--run-settle: 570px;
+			--impact-bottom: 163px;
+			--impact-left: 680px;
+			--impact-size: 119px;
+			--impact-border: 5px;
+			--motto-right: 68px;
+			--motto-bottom: 306px;
+			--motto-maxw: 442px;
+			--motto-font: 2rem;
 		}
 	}
 
