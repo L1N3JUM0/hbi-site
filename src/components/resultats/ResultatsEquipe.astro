@@ -1,0 +1,68 @@
+---
+import ResultatMatch from "./ResultatMatch.astro";
+import { getResultatsForEquipe } from "../../lib/resultats";
+
+interface Props {
+	equipeSlug: string;
+	affichageStats: "nominatif" | "pseudonymise" | "masque";
+}
+
+const { equipeSlug, affichageStats } = Astro.props;
+const resultats = await getResultatsForEquipe(equipeSlug);
+---
+
+{
+	resultats.length > 0 && (
+		<details class="resultats">
+			<summary>Résultats ({resultats.length})</summary>
+			<ul>
+				{resultats.map((r) => (
+					<ResultatMatch resultat={r} affichageStats={affichageStats} />
+				))}
+			</ul>
+		</details>
+	)
+}
+
+<style>
+	.resultats {
+		margin-top: 1rem;
+		padding-top: 1rem;
+		border-top: 1px solid rgba(255, 255, 255, 0.15);
+	}
+	.resultats > summary {
+		cursor: pointer;
+		list-style: none;
+		color: var(--color-white);
+		font-size: 0.75rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		font-weight: 700;
+		min-height: 44px;
+		display: flex;
+		align-items: center;
+	}
+	.resultats > summary::-webkit-details-marker {
+		display: none;
+	}
+	.resultats > summary::before {
+		content: "▸";
+		display: inline-block;
+		margin-right: 0.5rem;
+		transition: transform 0.15s ease;
+	}
+	.resultats[open] > summary::before {
+		transform: rotate(90deg);
+	}
+	.resultats ul {
+		list-style: none;
+		margin: 0.5rem 0 0;
+		padding: 0;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.resultats > summary::before {
+			transition: none;
+		}
+	}
+</style>

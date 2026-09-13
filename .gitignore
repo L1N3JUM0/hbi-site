@@ -3,6 +3,12 @@ dist/
 # generated types
 .astro/
 
+# Résultats générés automatiquement à partir des feuilles de match (PDF)
+# déposées dans src/content/feuilles-match/ -- régénérés à chaque build
+# (voir scripts/import-fdme.mjs), jamais committés. Un résultat saisi à la
+# main (secours, sans feuille de match) n'a pas ce préfixe et reste suivi.
+src/content/resultats/pdf-*.md
+
 # dependencies
 node_modules/
 

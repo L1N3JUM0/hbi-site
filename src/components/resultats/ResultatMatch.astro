@@ -1,0 +1,201 @@
+---
+import MatchScoreChart from "./MatchScoreChart.astro";
+import { efficaciteTir, formatDateCourte, issueDuMatch, meilleursButeurs, scoreNousEux, statsEquipeNous, type Resultat } from "../../lib/resultats";
+
+interface Props {
+	resultat: Resultat;
+	affichageStats: "nominatif" | "pseudonymise" | "masque";
+}
+
+const { resultat, affichageStats } = Astro.props;
+const r = resultat.data;
+
+const issue = issueDuMatch(resultat);
+const issueLabel = { victoire: "V", defaite: "D", nul: "N" }[issue];
+const issueLabelLongue = { victoire: "Victoire", defaite: "Défaite", nul: "Match nul" }[issue];
+const { nous, eux } = scoreNousEux(resultat);
+const stats = statsEquipeNous(resultat);
+const efficacite = stats ? efficaciteTir(stats.buts, stats.tirs) : null;
+const buteurs = meilleursButeurs(resultat, affichageStats);
+---
+
+<li class="match">
+	<details>
+		<summary>
+			<span class={`issue issue--${issue}`} title={issueLabelLongue}>{issueLabel}</span>
+			<span class="lieu">{r.domicile ? "Dom." : "Ext."}</span>
+			<span class="adversaire">{r.adversaire}</span>
+			<span class="score">{nous} – {eux}</span>
+			{r.typeMatch === "coupe" && <span class="tag-coupe">Coupe</span>}
+			<span class="date">{formatDateCourte(r.date)}</span>
+		</summary>
+
+		<div class="detail">
+			<MatchScoreChart resultat={resultat} />
+
+			{
+				stats && (
+					<dl class="stats-equipe">
+						<div>
+							<dt>Buts / tirs</dt>
+							<dd>
+								{stats.tirs > 0 ? `${stats.buts} / ${stats.tirs}` : "—"}
+								{efficacite !== null && ` (${efficacite}%)`}
+							</dd>
+						</div>
+						<div>
+							<dt>Arrêts</dt>
+							<dd>{stats.arrets}</dd>
+						</div>
+						<div>
+							<dt>Discipline</dt>
+							<dd>
+								{stats.exclusions} excl. · {stats.avertissements} avert.
+							</dd>
+						</div>
+					</dl>
+				)
+			}
+
+			{
+				buteurs.length > 0 && (
+					<div class="buteurs">
+						<p class="buteurs__titre">Meilleur·e·s buteur·se·s</p>
+						<ul>
+							{buteurs.map((b) => (
+								<li>
+									{b.label} — {b.buts} but{b.buts > 1 ? "s" : ""}
+									{b.tirs > 0 && ` (${b.buts}/${b.tirs})`}
+								</li>
+							))}
+						</ul>
+					</div>
+				)
+			}
+		</div>
+	</details>
+</li>
+
+<style>
+	.match {
+		border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+	}
+	.match:last-child {
+		border-bottom: none;
+	}
+	summary {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.65rem 0.1rem;
+		cursor: pointer;
+		list-style: none;
+		min-height: 44px;
+	}
+	summary::-webkit-details-marker {
+		display: none;
+	}
+	summary::marker {
+		content: "";
+	}
+	.issue {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 1.6rem;
+		height: 1.6rem;
+		border-radius: 999px;
+		font-weight: 800;
+		font-size: 0.8rem;
+		flex-shrink: 0;
+		color: var(--color-white);
+	}
+	.issue--victoire {
+		background: var(--color-crimson);
+	}
+	.issue--defaite {
+		background: rgba(255, 255, 255, 0.18);
+	}
+	.issue--nul {
+		background: rgba(255, 255, 255, 0.3);
+	}
+	.lieu {
+		color: rgba(255, 255, 255, 0.5);
+		font-size: 0.75rem;
+		font-weight: 700;
+	}
+	.adversaire {
+		color: var(--color-white);
+		font-weight: 700;
+		font-size: 0.9rem;
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+	.score {
+		color: var(--color-white);
+		font-weight: 800;
+		font-size: 0.9rem;
+		white-space: nowrap;
+	}
+	.tag-coupe {
+		background: var(--color-crimson);
+		color: var(--color-white);
+		font-size: 0.65rem;
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		padding: 0.15rem 0.4rem;
+	}
+	.date {
+		color: rgba(255, 255, 255, 0.55);
+		font-size: 0.78rem;
+		white-space: nowrap;
+	}
+
+	.detail {
+		padding: 0.25rem 0.1rem 1rem;
+	}
+	.stats-equipe {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 0.5rem;
+		margin: 0.9rem 0 0;
+	}
+	.stats-equipe dt {
+		color: rgba(255, 255, 255, 0.55);
+		font-size: 0.68rem;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		font-weight: 700;
+		margin: 0 0 0.15rem;
+	}
+	.stats-equipe dd {
+		color: var(--color-white);
+		font-size: 0.85rem;
+		font-weight: 700;
+		margin: 0;
+	}
+	.buteurs {
+		margin-top: 0.9rem;
+	}
+	.buteurs__titre {
+		color: rgba(255, 255, 255, 0.55);
+		font-size: 0.68rem;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		font-weight: 700;
+		margin: 0 0 0.4rem;
+	}
+	.buteurs ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.3rem;
+	}
+	.buteurs li {
+		color: var(--color-white);
+		font-size: 0.85rem;
+	}
+</style>

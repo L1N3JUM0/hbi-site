@@ -13,4 +13,5 @@ photoProfil: "../../assets/action-2.jpg"
 galerie:
   - "../../assets/action-2.jpg"
   - "../../assets/vie-club-2.jpg"
+affichageStats: nominatif
 ---

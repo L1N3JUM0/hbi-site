@@ -1,0 +1,40 @@
+---
+import { courbeScore, type Resultat } from "../../lib/resultats";
+
+interface Props {
+	resultat: Resultat;
+}
+
+const { resultat } = Astro.props;
+const courbe = courbeScore(resultat);
+---
+
+{
+	courbe && (
+		<svg class="score-chart" viewBox={`0 0 ${courbe.width} ${courbe.height}`} role="img" aria-label="Évolution du score au fil du match">
+			<path d={courbe.pathEux} class="ligne ligne--eux" />
+			<path d={courbe.pathNous} class="ligne ligne--nous" />
+		</svg>
+	)
+}
+
+<style>
+	.score-chart {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+	.ligne {
+		fill: none;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+	.ligne--nous {
+		stroke: var(--color-crimson);
+		stroke-width: 2.5;
+	}
+	.ligne--eux {
+		stroke: rgba(255, 255, 255, 0.35);
+		stroke-width: 2;
+	}
+</style>

@@ -13,4 +13,5 @@ photoProfil: "../../assets/seniors-masculins-1.jpg"
 galerie:
   - "../../assets/seniors-masculins-1.jpg"
   - "../../assets/action-1.jpg"
+affichageStats: nominatif
 ---

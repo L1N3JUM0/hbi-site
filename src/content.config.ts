@@ -65,6 +65,13 @@ const equipes = defineCollection({
 			/** Photos du carrousel sur /equipes (peut inclure ou non photoProfil).
 			 * Chemins relatifs à ce fichier. */
 			galerie: z.array(safeImage(image)),
+			/** Mode d'affichage des stats individuelles dans le bloc "Résultats" de
+			 * cette équipe sur /equipes : "nominatif" (prénom + nom complet),
+			 * "pseudonymise" (prénom + initiale, ex. "Théo M.") ou "masque" (aucune
+			 * stat individuelle affichée, seules les stats d'équipe le sont).
+			 * Par défaut pseudonymisé (le choix le plus prudent) -- mettre
+			 * "nominatif" explicitement pour les équipes seniors (majeurs). */
+			affichageStats: z.enum(["nominatif", "pseudonymise", "masque"]).default("pseudonymise"),
 		}),
 });
 
@@ -175,4 +182,100 @@ const histoireClub = defineCollection({
 		}),
 });
 
-export const collections = { equipes, articles, partenaires, photosAccueil, leClub, histoireClub };
+/** Un point de la chronologie d'un match : le score cumulé au moment de
+ * l'événement, pour tracer le graphique d'évolution du score. `mi_temps` et
+ * `fin_match` sont des points de repère recalés sur le score officiel
+ * (bloc "Détail score" de la feuille), pas comptés depuis la chronologie
+ * brute -- voir le commentaire dans src/lib/fdme/parseFeuille.mjs sur les
+ * rares lignes sans horodatage exploitable en fin de période. */
+const chronologieEvenement = z.object({
+	temps: z.string(),
+	scoreDomicile: z.number(),
+	scoreExterieur: z.number(),
+	type: z.enum([
+		"but",
+		"exclusion",
+		"avertissement",
+		"disqualification",
+		"tir_manque",
+		"arret",
+		"mi_temps",
+		"fin_match",
+		"autre",
+	]),
+});
+
+const statsEquipeMatch = z.object({
+	buts: z.number(),
+	tirs: z.number(),
+	arrets: z.number(),
+	exclusions: z.number(),
+	avertissements: z.number(),
+});
+
+/** Stats d'un·e joueur·se du HBI sur un match -- jamais celles de l'équipe
+ * adverse (aucune raison de publier les stats nominatives d'enfants d'un
+ * autre club). Le prénom/nom complet est toujours stocké ; c'est
+ * l'affichage qui dépend du réglage `affichageStats` de l'équipe (voir
+ * content.config.ts > equipes). Jamais de numéro de licence ni de nom de
+ * naissance, ni ici ni ailleurs. */
+const statJoueurMatch = z.object({
+	numero: z.number(),
+	prenom: z.string(),
+	nom: z.string(),
+	buts: z.number(),
+	sept_m: z.number(),
+	tirs: z.number(),
+	arrets: z.number(),
+	avertissements: z.number(),
+	exclusions: z.number(),
+	disqualification: z.boolean(),
+});
+
+/**
+ * Le résultat d'un match. Une entrée par rencontre, soit générée
+ * automatiquement à partir d'une feuille de match PDF importée (voir
+ * src/content/feuilles-match/ et scripts/import-fdme.mjs, exécuté avant
+ * chaque build), soit saisie à la main en secours quand aucune feuille n'a
+ * été récupérée (score et infos de base uniquement dans ce cas).
+ *
+ * Les entrées générées automatiquement sont *recalculées à chaque build*
+ * depuis leur PDF source (fichier nommé `pdf-<codeRencontre>.md`, jamais
+ * dupliqué) : les champs `chronologie`, `statsEquipeDomicile/Exterieur` et
+ * `statsJoueurs` y sont donc écrasés à chaque reconstruction du site --
+ * ne pas les modifier à la main, ce serait perdu au prochain build. Seul
+ * `equipeSlug` est préservé si vous le corrigez à la main (voir
+ * scripts/import-fdme.mjs) : utile quand l'équipe n'a pas été détectée
+ * automatiquement à partir du nom de la compétition.
+ */
+const resultats = defineCollection({
+	loader: glob({ pattern: "*.md", base: "./src/content/resultats" }),
+	schema: z.object({
+		source: z.enum(["pdf", "manuel"]).default("manuel"),
+		/** Identifiant FFHandball de la rencontre (ex. "VAGEXGV") -- clé de
+		 * déduplication pour les entrées générées depuis une feuille de match.
+		 * Absent pour une entrée saisie à la main. */
+		codeRencontre: z.string().optional(),
+		/** Doit correspondre au `slug` d'une entrée de la collection "equipes". */
+		equipeSlug: z.string(),
+		date: z.coerce.date(),
+		/** Ex. "J1". Absent pour un match de coupe ou amical. */
+		journee: z.string().optional(),
+		competition: z.string().optional(),
+		typeMatch: z.enum(["championnat", "coupe", "autre"]).default("championnat"),
+		/** true si le HBI recevait. */
+		domicile: z.boolean(),
+		adversaire: z.string(),
+		salle: z.string().optional(),
+		scoreDomicile: z.number(),
+		scoreExterieur: z.number(),
+		scoreMiTempsDomicile: z.number().optional(),
+		scoreMiTempsExterieur: z.number().optional(),
+		chronologie: z.array(chronologieEvenement).optional(),
+		statsEquipeDomicile: statsEquipeMatch.optional(),
+		statsEquipeExterieur: statsEquipeMatch.optional(),
+		statsJoueurs: z.array(statJoueurMatch).optional(),
+	}),
+});
+
+export const collections = { equipes, articles, partenaires, photosAccueil, leClub, histoireClub, resultats };

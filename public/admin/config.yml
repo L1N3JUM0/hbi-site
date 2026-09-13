@@ -339,3 +339,135 @@ collections:
         widget: "text"
         required: false
         hint: "Optionnelle : pas affichée sur le site pour l'instant, mais disponible pour plus tard."
+
+  - name: "feuillesMatch"
+    label: "Feuilles de match"
+    label_singular: "Feuille de match"
+    description: "Déposez ici le PDF de la feuille de match téléchargé sur le site de la FFHandball : le résultat, la chronologie et les statistiques sont ajoutés automatiquement au site lors de la prochaine reconstruction (quelques minutes, pas d'autre action nécessaire). Voir GUIDE-EDITION.md pour la marche à suivre complète."
+    folder: "src/content/feuilles-match"
+    create: true
+    delete: true
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - label: "Feuille de match (PDF)"
+        name: "pdf"
+        widget: "file"
+        media_folder: "src/content/feuilles-match/files"
+        public_folder: "/src/content/feuilles-match/files"
+        hint: "Le PDF téléchargé depuis le site de la FFHandball (voir GUIDE-EDITION.md pour savoir où le trouver)."
+
+  - name: "resultats"
+    label: "Résultats"
+    label_singular: "Résultat"
+    description: "Un résultat par match. Rempli automatiquement dès qu'une feuille de match est déposée dans « Feuilles de match » : n'utilisez « Nouveau résultat » qu'en secours, pour un match dont vous n'avez pas pu récupérer la feuille (score et infos de base uniquement dans ce cas)."
+    folder: "src/content/resultats"
+    create: true
+    delete: true
+    extension: "md"
+    format: "frontmatter"
+    summary: "{{adversaire}} — {{date}}"
+    fields:
+      - label: "Équipe"
+        name: "equipeSlug"
+        widget: "relation"
+        collection: "equipes"
+        search_fields: ["nom"]
+        value_field: "slug"
+        display_fields: ["nom"]
+        hint: "Détectée automatiquement pour un résultat importé depuis une feuille de match ; à corriger ici seulement si la détection s'est trompée (compétition non reconnue)."
+
+      - label: "Date et heure du match"
+        name: "date"
+        widget: "datetime"
+
+      - label: "Journée"
+        name: "journee"
+        widget: "string"
+        required: false
+        hint: "Exemple : J1. Laissez vide pour un match de coupe ou amical."
+
+      - label: "Compétition"
+        name: "competition"
+        widget: "string"
+        required: false
+
+      - label: "Type de match"
+        name: "typeMatch"
+        widget: "select"
+        default: "championnat"
+        options:
+          - { label: "Championnat", value: "championnat" }
+          - { label: "Coupe", value: "coupe" }
+          - { label: "Autre", value: "autre" }
+
+      - label: "Le HBI recevait"
+        name: "domicile"
+        widget: "boolean"
+        default: true
+
+      - label: "Adversaire"
+        name: "adversaire"
+        widget: "string"
+
+      - label: "Salle"
+        name: "salle"
+        widget: "string"
+        required: false
+
+      - label: "Score du HBI"
+        name: "scoreDomicile"
+        widget: "number"
+        value_type: "int"
+        hint: "Le score du HBI si « Le HBI recevait » est coché, sinon le score de l'adversaire."
+
+      - label: "Score de l'adversaire"
+        name: "scoreExterieur"
+        widget: "number"
+        value_type: "int"
+
+      - label: "Score du HBI à la mi-temps"
+        name: "scoreMiTempsDomicile"
+        widget: "number"
+        value_type: "int"
+        required: false
+
+      - label: "Score de l'adversaire à la mi-temps"
+        name: "scoreMiTempsExterieur"
+        widget: "number"
+        value_type: "int"
+        required: false
+
+      # Champs techniques : remplis automatiquement par l'import d'une
+      # feuille de match, jamais à saisir à la main -- masqués du
+      # formulaire (widget "hidden") pour ne pas être modifiés ou effacés
+      # par erreur en éditant les champs ci-dessus.
+      - label: "Origine (technique)"
+        name: "source"
+        widget: "hidden"
+        default: "manuel"
+
+      - label: "Code rencontre (technique)"
+        name: "codeRencontre"
+        widget: "hidden"
+        required: false
+
+      - label: "Chronologie (technique)"
+        name: "chronologie"
+        widget: "hidden"
+        required: false
+
+      - label: "Stats équipe domicile (technique)"
+        name: "statsEquipeDomicile"
+        widget: "hidden"
+        required: false
+
+      - label: "Stats équipe extérieur (technique)"
+        name: "statsEquipeExterieur"
+        widget: "hidden"
+        required: false
+
+      - label: "Stats joueur·se·s (technique)"
+        name: "statsJoueurs"
+        widget: "hidden"
+        required: false

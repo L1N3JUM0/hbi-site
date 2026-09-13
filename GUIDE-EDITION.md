@@ -88,6 +88,63 @@ Vous ne pouvez ni ajouter ni supprimer une équipe depuis cette interface :
 la liste des équipes est fixée pour la saison. Pour un vrai changement
 d'effectif, contactez la personne qui s'occupe du site.
 
+## Ajouter le résultat d'un match
+
+Après un match, la feuille de match officielle (score, chronologie,
+statistiques des joueur·se·s) est publiée par la fédération quelques
+heures après la rencontre. Le site peut la récupérer automatiquement :
+vous n'avez qu'à déposer le PDF, tout le reste (résultat, graphique
+d'évolution du score, statistiques) est ajouté seul.
+
+### 1. Récupérer le PDF sur le site de la FFHandball
+
+1. Sur le site de la FFHandball (celui utilisé pour le calendrier et le
+   classement — pour les équipes concernées, accessible depuis le bouton
+   « Voir le classement » sur `/agenda`), ouvrez la page de la rencontre du
+   HBI qui vient de se jouer.
+2. Téléchargez la **feuille de match (PDF)** de cette rencontre — le bouton
+   s'appelle en général « Feuille de match » ou une icône PDF à côté du
+   score.
+3. Enregistrez le fichier sur votre ordinateur ou votre téléphone (son nom
+   n'a pas d'importance, ex. `VAGEXGV.pdf`).
+
+### 2. Le déposer sur le site
+
+1. Connectez-vous sur `/admin` (voir "Se connecter" en haut de ce guide) et
+   cliquez sur **Feuilles de match**.
+2. Cliquez sur **Nouvelle feuille de match**, puis glissez-déposez le PDF
+   téléchargé à l'étape précédente dans le champ **« Feuille de match
+   (PDF) »**.
+3. **Enregistrer**. C'est tout : pas de score à recopier, pas d'équipe à
+   choisir, le site s'en charge.
+
+### 3. Le résultat apparaît sur le site
+
+Le dépôt du PDF déclenche une reconstruction automatique du site, comme
+pour n'importe quel autre changement (voir "Publication" plus bas) —
+**comptez quelques minutes**. Une fois terminé, le match apparaît dans le
+bloc **Résultats** (replié par défaut, à dérouler) de la fiche de l'équipe
+concernée sur `/equipes`, avec le graphique d'évolution du score, les
+statistiques d'équipe et les meilleur·e·s buteur·se·s.
+
+Si le match n'apparaît toujours pas après une dizaine de minutes, il est
+possible que le PDF n'ait pas pu être lu automatiquement (feuille
+scannée au lieu d'un export du site FFHandball, format inhabituel...) :
+contactez la personne qui gère le site techniquement pour vérifier.
+
+**En secours**, si vous n'avez pas pu récupérer la feuille de match, vous
+pouvez saisir un résultat à la main : rubrique **Résultats** → **Nouveau
+résultat**, en renseignant l'équipe, la date, l'adversaire et le score
+(pas de graphique ni de statistiques détaillées dans ce cas, faute de
+feuille de match à analyser).
+
+*Note technique (pour la personne qui gère le site) : les statistiques
+individuelles des joueur·se·s sont affichées en nominatif ou pseudonymisées
+selon l'équipe (champ `affichageStats` dans `src/content/equipes/`,
+volontairement absent de l'interface `/admin` vu l'enjeu de confidentialité
+pour les catégories jeunes) — voir CLAUDE.md et le code pour le détail des
+règles.*
+
 ## Publier un article dans « Vie du club »
 
 1. Cliquez sur **Vie du club**, puis sur **Nouvel article** (ou un article

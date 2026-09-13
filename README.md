@@ -241,6 +241,97 @@ En plus du build à chaque push sur `main`, `.github/workflows/deploy.yml`
 déclenche un rebuild automatique chaque jour (`schedule: cron`) pour que les
 matchs à venir restent à jour même sans nouveau commit.
 
+## Résultats de matchs (feuilles de match FFHandball)
+
+Le bloc "Résultats" de `/equipes` (replié par défaut, graphique
+d'évolution du score, stats d'équipe, meilleur·e·s buteur·se·s) est
+alimenté par l'analyse automatique des feuilles de match officielles
+(PDF FFHandball), déposées via Sveltia CMS — voir `GUIDE-EDITION.md` pour
+le mode d'emploi côté bénévole.
+
+### Pipeline
+
+1. Un PDF est déposé via la collection CMS **"Feuilles de match"** → un
+   fichier `src/content/feuilles-match/<slug>.md` (frontmatter `pdf: ...`)
+   + le PDF lui-même dans `src/content/feuilles-match/files/` — les deux
+   sont commités normalement (documents publiés par la fédération, pas de
+   raison de les exclure du dépôt).
+2. **`scripts/import-fdme.mjs`**, lancé avant chaque build (script npm
+   `prebuild`, comme `check-content-images.mjs`), analyse **tous** les PDF
+   déposés et (ré)écrit `src/content/resultats/pdf-<codeRencontre>.md` en
+   conséquence. C'est une **régénération complète à chaque build**, pas une
+   synchronisation incrémentale : déterministe, donc jamais de doublon même
+   en cas d'exécutions répétées, et une feuille supprimée de "Feuilles de
+   match" fait disparaître son résultat généré au build suivant.
+3. Ces fichiers générés (`pdf-*.md`) sont **gitignorés** (voir
+   `.gitignore`) : ils n'ont pas besoin d'être commités puisqu'ils sont
+   recréés à chaque build (y compris en CI, voir `deploy.yml`) depuis le
+   PDF, qui lui fait foi. Un résultat saisi à la main (secours, sans
+   feuille de match, formulaire "Nouveau résultat" du CMS) n'a pas ce
+   préfixe et reste suivi normalement par Git.
+4. **Robustesse** : un PDF illisible ou dans un format inattendu ne fait
+   jamais échouer le build (`FeuilleFormatError`, capturée par le script) —
+   il est simplement ignoré avec un avertissement dans les logs. Une
+   feuille reconnue mais dont l'équipe n'a pas pu être déduite du nom de la
+   compétition produit un résultat avec `equipeSlug` vide et un
+   avertissement invitant à le corriger à la main dans le CMS ; cette
+   correction manuelle est ensuite préservée d'un build à l'autre tant que
+   la détection automatique échoue (voir `preserveEquipeSlugSiBesoin()`).
+
+### Extraction (`src/lib/fdme/`)
+
+Volontairement en JavaScript simple (`.mjs`), pas TypeScript : ces modules
+sont importés à la fois par `scripts/import-fdme.mjs` (exécuté par `node`
+brut, sans étape de compilation) et par les composants Astro d'affichage —
+`.ts` aurait exigé un outillage d'exécution TypeScript supplémentaire côté
+script, pour un gain de typage marginal ici.
+
+- **`pdfRows.mjs`** — extrait le texte du PDF via `pdfjs-dist` (bibliothèque
+  JS pure, aucune dépendance système contrairement à `pdftotext`) et le
+  regroupe en "lignes" positionnées (texte + coordonnée x réelle, pas une
+  grille de caractères). Nécessaire car le tableau de stats joueur·se·s a
+  des colonnes (`Buts 7m Tirs Arrets Av. 2' Dis`) trop resserrées pour
+  qu'une extraction texte "à plat" les distingue de façon fiable — voir le
+  commentaire en tête de fichier.
+- **`parseFeuille.mjs`** — le parseur complet : en-tête (code rencontre,
+  compétition, date, journée, salle, équipes), score mi-temps/final (bloc
+  "Détail score"), tableau de stats des deux équipes (colonnes déduites par
+  proximité aux en-têtes, pas par expression régulière), chronologie du
+  match (deux colonnes visuelles PERIODE 1/PERIODE 2, fusionnées et triées
+  par temps). Une vérification de cohérence (somme des buts des
+  joueur·se·s == score final) est journalisée en avertissement si elle ne
+  correspond pas, sans jamais bloquer l'import.
+- **`noms.mjs`** — séparation nom/prénom par la CASSE (nom de famille en
+  MAJUSCULES) plutôt que par position ou nombre de mots, pour gérer les
+  noms composés ("BAYON DE NOYER Nicolas") et prénoms composés
+  ("Jean-francois") ; suppression du nom de naissance entre parenthèses
+  ("(Né.e FAY)") ; pseudonymisation ("Théo M.") avec départage des
+  homonymes par extension progressive de l'initiale, en s'appuyant sur le
+  numéro de maillot comme clé interne stable (jamais le libellé affiché).
+- **`equipeMatch.mjs`** — déduit l'équipe HBI concernée à partir de l'âge et
+  du genre présents dans le nom de la compétition (pas de
+  `src/data/agenda-teams.config.ts`, qui ne couvre que les équipes ayant un
+  flux iCal configuré) ; utilise aussi le code FFHandball du club
+  (`6384006`, préfixe de tous les numéros de licence du HBI — voir l'e-mail
+  de contact dans `CLAUDE.md`) comme signal fiable pour savoir quel camp de
+  la feuille est le HBI.
+
+Validé sur 6 feuilles de match réelles (championnat U15F, plusieurs
+adversaires et scores) lors du développement de cette fonctionnalité.
+
+### Confidentialité des stats individuelles
+
+Chaque équipe (`src/content/equipes/`) a un champ `affichageStats`
+(`nominatif` / `pseudonymise` / `masque`, défaut `pseudonymise`) qui
+contrôle l'affichage des stats des joueur·se·s du HBI sur `/equipes` — le
+stockage, lui, garde toujours le prénom/nom complet (jamais le numéro de
+licence, jamais le nom de naissance). Volontairement **absent de
+l'interface `/admin`** (widget non exposé dans `config.yml`) vu l'enjeu de
+confidentialité pour les catégories jeunes : à changer uniquement en
+éditant le fichier de l'équipe directement. Voir `CLAUDE.md` pour le détail
+des règles retenues (pourquoi ce choix, quelles équipes sont en
+`nominatif`).
+
 ## Back-office (Sveltia CMS)
 
 `public/admin/` contient l'interface d'édition à destination des bénévoles
@@ -254,10 +345,11 @@ branche directement sur les content collections ci-dessus via
   amont ne change l'interface sans prévenir. Pour monter de version,
   changez le numéro dans les deux endroits (`@sveltia/cms@X.Y.Z`) après
   avoir vérifié le changelog.
-- **`public/admin/config.yml`** définit les 6 collections éditables
+- **`public/admin/config.yml`** définit les 8 collections éditables
   (`leClub`, `histoireClub`, `photosAccueil`, `equipes`, `articles`,
-  `partenaires`) avec des libellés en français, et restreint volontairement
-  certains champs pour un public non technique :
+  `partenaires`, `feuillesMatch`, `resultats`) avec des libellés en
+  français, et restreint volontairement certains champs pour un public non
+  technique :
   - `equipes` : création/suppression désactivées (l'effectif de la saison
     est fixé) ; les champs `slug` et `ordre` sont en `widget: hidden` (non
     éditables depuis l'interface, car les changer casserait des liens ou le

@@ -13,4 +13,5 @@ photoProfil: "../../assets/match-1.jpg"
 galerie:
   - "../../assets/match-1.jpg"
   - "../../assets/action-1.jpg"
+affichageStats: nominatif
 ---
