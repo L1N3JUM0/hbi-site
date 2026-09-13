@@ -2,6 +2,7 @@
 source: "pdf"
 codeRencontre: "VAGNMFB"
 equipeSlug: "u13-masculins"
+equipeNumero: "2"
 date: "2026-01-17T14:00:00.000Z"
 journee: "J6"
 competition: "U13 MIXTE CHAMPIONNAT HONNEUR U13 MIXTE"

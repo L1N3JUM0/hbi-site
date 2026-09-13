@@ -1,6 +1,6 @@
 import { extractRows, rowText, nearestItem } from "./pdfRows.mjs";
 import { stripBirthName, splitNomPrenom } from "./noms.mjs";
-import { detectEquipe, CLUB_CODE, CLUB_NAME_PATTERN } from "./equipeMatch.mjs";
+import { detectEquipe, extraireNumeroEquipe, CLUB_CODE, CLUB_NAME_PATTERN } from "./equipeMatch.mjs";
 
 /** Erreur levée quand une feuille ne correspond pas au format attendu --
  * l'appelant (scripts/import-fdme.mjs) l'attrape pour ignorer ce PDF avec un
@@ -416,10 +416,12 @@ export async function parseFeuilleDeMatch(pdfBytes, equipesCompetition = []) {
 	const domicile = domicileEstHBI;
 	const joueursHBI = domicile ? joueursDomicile : joueursExterieur;
 	const adversaire = domicile ? header.equipeExterieur : header.equipeDomicile;
+	const equipeNumero = extraireNumeroEquipe(domicile ? header.equipeDomicile : header.equipeExterieur);
 
 	return {
 		codeRencontre: header.codeRencontre,
 		equipeSlug,
+		equipeNumero,
 		date: header.date,
 		journee: header.journee,
 		competition: header.competition,

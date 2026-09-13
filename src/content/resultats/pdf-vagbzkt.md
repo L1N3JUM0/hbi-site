@@ -2,6 +2,7 @@
 source: "pdf"
 codeRencontre: "VAGBZKT"
 equipeSlug: "seniors-masculins"
+equipeNumero: "2"
 date: "2025-11-23T15:00:00.000Z"
 journee: "J6"
 competition: "DIVISION 1 MASCULINS DIVISION 1"

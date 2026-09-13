@@ -330,6 +330,20 @@ const resultats = defineCollection({
 			codeRencontre: z.string().optional(),
 			/** Doit correspondre au `slug` d'une entrée de la collection "equipes". */
 			equipeSlug: z.string(),
+			/** Quand plusieurs équipes du club sont engagées dans la même
+			 * catégorie (ex. Seniors masculins 1 et 2, qui partagent le même
+			 * `equipeSlug`) : lequel des deux a joué ce match. Extrait
+			 * automatiquement du nom d'équipe sur la feuille de match ("HANDBALL
+			 * ISLOIS 2" -> "2", voir extraireNumeroEquipe() dans
+			 * src/lib/fdme/equipeMatch.mjs) ; à renseigner à la main uniquement
+			 * pour un résultat saisi en secours. Absent la plupart du temps :
+			 * soit une équipe seule dans sa catégorie (rien à afficher), soit
+			 * la première équipe engagée -- son nom reste "HANDBALL ISLOIS" sans
+			 * suffixe sur la feuille -- traitée comme "1" par défaut à
+			 * l'affichage (voir ResultatMatch.astro) uniquement quand
+			 * `aPlusieursEquipes()` (src/lib/resultats.ts) détecte qu'un partage
+			 * de poule existe bel et bien pour cette équipe. */
+			equipeNumero: z.string().optional(),
 			date: z.coerce.date(),
 			/** Ex. "J1". Absent pour un match de coupe ou amical. */
 			journee: z.string().optional(),

@@ -1,6 +1,6 @@
 ---
 import ResultatMatch from "./ResultatMatch.astro";
-import { getResultatsForEquipe, resultatsParSaison } from "../../lib/resultats";
+import { getResultatsForEquipe, resultatsParSaison, aPlusieursEquipes } from "../../lib/resultats";
 
 interface Props {
 	equipeSlug: string;
@@ -10,6 +10,9 @@ interface Props {
 const { equipeSlug, affichageStats } = Astro.props;
 const tousLesResultats = await getResultatsForEquipe(equipeSlug);
 const { saisonEnCours, saisonsPrecedentes } = resultatsParSaison(tousLesResultats);
+/** Calculé sur TOUS les résultats (pas seulement la saison en cours) : le
+ * badge équipe doit rester cohérent entre le bloc courant et les archives. */
+const distinguerEquipe = aPlusieursEquipes(tousLesResultats);
 ---
 
 {
@@ -18,7 +21,7 @@ const { saisonEnCours, saisonsPrecedentes } = resultatsParSaison(tousLesResultat
 			<summary>Résultats ({saisonEnCours.length})</summary>
 			<ul>
 				{saisonEnCours.map((r) => (
-					<ResultatMatch resultat={r} affichageStats={affichageStats} />
+					<ResultatMatch resultat={r} affichageStats={affichageStats} distinguerEquipe={distinguerEquipe} />
 				))}
 			</ul>
 		</details>
@@ -36,7 +39,7 @@ const { saisonEnCours, saisonsPrecedentes } = resultatsParSaison(tousLesResultat
 					</summary>
 					<ul>
 						{resultats.map((r) => (
-							<ResultatMatch resultat={r} affichageStats={affichageStats} />
+							<ResultatMatch resultat={r} affichageStats={affichageStats} distinguerEquipe={distinguerEquipe} />
 						))}
 					</ul>
 				</details>

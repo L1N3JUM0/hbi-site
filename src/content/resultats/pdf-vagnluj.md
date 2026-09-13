@@ -2,6 +2,7 @@
 source: "pdf"
 codeRencontre: "VAGNLUJ"
 equipeSlug: "seniors-masculins"
+equipeNumero: "2"
 date: "2026-01-11T15:00:00.000Z"
 journee: "J10"
 competition: "DIVISION 1 MASCULINS DIVISION 1"

@@ -2,6 +2,7 @@
 source: "pdf"
 codeRencontre: "VAGOUEW"
 equipeSlug: "seniors-masculins"
+equipeNumero: "2"
 date: "2026-05-16T18:00:00.000Z"
 journee: "J18"
 competition: "DIVISION 1 MASCULINS DIVISION 1"

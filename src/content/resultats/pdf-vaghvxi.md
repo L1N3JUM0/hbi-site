@@ -2,6 +2,7 @@
 source: "pdf"
 codeRencontre: "VAGHVXI"
 equipeSlug: "u13-masculins"
+equipeNumero: "2"
 date: "2025-11-29T14:00:00.000Z"
 journee: "J3"
 competition: "U13 MIXTE CHAMPIONNAT HONNEUR U13 MIXTE"

@@ -121,6 +121,7 @@ function frontmatter(data) {
 	set("source", "pdf");
 	set("codeRencontre", data.codeRencontre);
 	set("equipeSlug", data.equipeSlug);
+	if (data.equipeNumero) set("equipeNumero", data.equipeNumero);
 	set("date", data.date.toISOString());
 	if (data.journee) set("journee", data.journee);
 	if (data.competition) set("competition", data.competition);

@@ -2,6 +2,7 @@
 source: "pdf"
 codeRencontre: "WAGTILR"
 equipeSlug: "seniors-masculins"
+equipeNumero: "1"
 date: "2026-09-13T13:00:00.000Z"
 journee: "J1"
 competition: "DIVISION 1 MASCULINS DIVISION 1 TERRITORIALE MASCULINS"

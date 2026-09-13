@@ -2,6 +2,7 @@
 source: "pdf"
 codeRencontre: "VAGBZLQ"
 equipeSlug: "seniors-masculins"
+equipeNumero: "2"
 date: "2026-01-31T18:45:00.000Z"
 journee: "J11"
 competition: "DIVISION 1 MASCULINS DIVISION 1"

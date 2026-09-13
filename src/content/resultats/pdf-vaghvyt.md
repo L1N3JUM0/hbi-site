@@ -2,6 +2,7 @@
 source: "pdf"
 codeRencontre: "VAGHVYT"
 equipeSlug: "u13-masculins"
+equipeNumero: "2"
 date: "2026-03-07T12:45:00.000Z"
 journee: "J9"
 competition: "U13 MIXTE CHAMPIONNAT HONNEUR U13 MIXTE"

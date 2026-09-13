@@ -13,6 +13,33 @@ export async function getResultatsForEquipe(equipeSlug: string): Promise<Resulta
 	return all.filter((r) => r.data.equipeSlug === equipeSlug).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 }
 
+/** true si plusieurs équipes du club sont distinguées dans ces résultats (ex.
+ * Seniors masculins 1 et 2, qui partagent le même `equipeSlug` mais jouent
+ * dans des feuilles de match différentes) -- déterminé directement depuis les
+ * données, jamais depuis une configuration séparée à maintenir à jour.
+ *
+ * Un seul `equipeNumero` non vide (même une seule fois, même toujours la
+ * même valeur, ex. toujours "2") suffit à le détecter : une équipe seule
+ * dans sa catégorie n'a JAMAIS de numéro sur ses feuilles de match (son nom y
+ * reste "HANDBALL ISLOIS" sans suffixe -- voir extraireNumeroEquipe() dans
+ * src/lib/fdme/equipeMatch.mjs), donc la moindre apparition d'un numéro
+ * prouve à elle seule qu'une deuxième équipe existe, même si cette dernière
+ * n'a par ailleurs jamais explicitement le numéro "1" sur ses propres
+ * feuilles (le cas le plus courant : seule l'équipe SUIVANTE porte un
+ * suffixe). Constaté en pratique : les feuilles "U13 masculins" ne portent
+ * jamais explicitement de "1", seulement parfois un "2" (équipe Honneur
+ * engagée en parallèle) -- exiger deux valeurs distinctes aurait laissé ce
+ * cas passer inaperçu.
+ *
+ * Reste vrai pour les archives même si le partage de poule s'arrête plus
+ * tard (calculé sur TOUS les résultats de l'équipe, toutes saisons
+ * confondues) ; ne fait jamais apparaître de numéro pour une catégorie qui
+ * n'a jamais eu de deuxième équipe (voir ResultatMatch.astro, qui n'affiche
+ * le badge "Équipe N" que si ceci est vrai). */
+export function aPlusieursEquipes(resultats: Resultat[]): boolean {
+	return resultats.some((r) => !!r.data.equipeNumero);
+}
+
 export interface ResultatsParSaison {
 	/** Résultats de la saison en cours (au moment du build), du plus récent
 	 * au plus ancien. */

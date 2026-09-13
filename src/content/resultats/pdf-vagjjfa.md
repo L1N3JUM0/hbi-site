@@ -2,6 +2,7 @@
 source: "pdf"
 codeRencontre: "VAGJJFA"
 equipeSlug: "seniors-masculins"
+equipeNumero: "2"
 date: "2025-11-29T18:00:00.000Z"
 journee: "J2"
 competition: "DIVISION 1 MASCULINS DIVISION 1"

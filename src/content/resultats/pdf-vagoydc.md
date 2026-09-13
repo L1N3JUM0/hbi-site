@@ -2,6 +2,7 @@
 source: "pdf"
 codeRencontre: "VAGOYDC"
 equipeSlug: "u13-masculins"
+equipeNumero: "2"
 date: "2026-04-04T12:30:00.000Z"
 journee: "J11"
 competition: "U13 MIXTE CHAMPIONNAT HONNEUR U13 MIXTE"

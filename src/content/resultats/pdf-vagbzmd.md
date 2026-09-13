@@ -2,6 +2,7 @@
 source: "pdf"
 codeRencontre: "VAGBZMD"
 equipeSlug: "seniors-masculins"
+equipeNumero: "2"
 date: "2026-03-07T18:30:00.000Z"
 journee: "J13"
 competition: "DIVISION 1 MASCULINS DIVISION 1"

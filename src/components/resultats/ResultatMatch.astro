@@ -5,9 +5,13 @@ import { buteurs, efficaciteTir, formatDateCourte, gardiens, issueDuMatch, score
 interface Props {
 	resultat: Resultat;
 	affichageStats: "nominatif" | "pseudonymise" | "masque";
+	/** N'affiche le badge "Équipe N" que si l'équipe a réellement plusieurs
+	 * équipes engagées dans sa catégorie (voir aPlusieursEquipes()) --
+	 * jamais de numéro superflu pour une catégorie qui n'en a qu'une. */
+	distinguerEquipe?: boolean;
 }
 
-const { resultat, affichageStats } = Astro.props;
+const { resultat, affichageStats, distinguerEquipe = false } = Astro.props;
 const r = resultat.data;
 
 const issue = issueDuMatch(resultat);
@@ -25,6 +29,7 @@ const listeGardiens = gardiens(resultat, affichageStats);
 		<summary>
 			<span class={`issue issue--${issue}`} title={issueLabelLongue}>{issueLabel}</span>
 			<span class="lieu">{r.domicile ? "Dom." : "Ext."}</span>
+			{distinguerEquipe && <span class="equipe-num">Équipe {r.equipeNumero ?? "1"}</span>}
 			<span class="adversaire">{r.adversaire}</span>
 			<span class="score">{nous} – {eux}</span>
 			{r.typeMatch === "coupe" && <span class="tag-coupe">Coupe</span>}
@@ -164,6 +169,16 @@ const listeGardiens = gardiens(resultat, affichageStats);
 		text-transform: uppercase;
 		letter-spacing: 0.04em;
 		padding: 0.15rem 0.4rem;
+	}
+	.equipe-num {
+		background: rgba(255, 255, 255, 0.15);
+		color: var(--color-white);
+		font-size: 0.65rem;
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		padding: 0.15rem 0.4rem;
+		white-space: nowrap;
 	}
 	.date {
 		color: rgba(255, 255, 255, 0.55);

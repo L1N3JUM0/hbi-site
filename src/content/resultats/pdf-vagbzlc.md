@@ -2,6 +2,7 @@
 source: "pdf"
 codeRencontre: "VAGBZLC"
 equipeSlug: "seniors-masculins"
+equipeNumero: "2"
 date: "2025-12-14T16:00:00.000Z"
 journee: "J8"
 competition: "DIVISION 1 MASCULINS DIVISION 1"

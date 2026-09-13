@@ -76,3 +76,20 @@ export function detectEquipe(competitionText, equipesCompetition) {
  * ("HANDBALL ISLOIS", "HANDBALL ISLOIS 1"...). */
 export const CLUB_CODE = "6384006";
 export const CLUB_NAME_PATTERN = /handball\s*islois/i;
+
+/** Quand plusieurs équipes du club sont engagées dans la même poule (ex.
+ * Seniors masculins 1 et 2), la feuille de match les distingue -- pour la
+ * plupart -- par un numéro à la fin du nom d'équipe ("HANDBALL ISLOIS 2").
+ * `null` si aucun numéro n'est trouvé : soit une équipe seule dans sa
+ * catégorie, soit -- convention FFHandball constatée sur les feuilles
+ * réelles -- la première équipe engagée, dont le nom reste "HANDBALL ISLOIS"
+ * sans suffixe (vu le 08/11/2025 : la même compétition imprime "HANDBALL
+ * ISLOIS" pour l'équipe 1 et "HANDBALL ISLOIS 2" pour l'équipe 2, sur deux
+ * feuilles différentes). Ne PAS transformer ce `null` en "1" ici : seul
+ * l'appelant sait, en regardant l'ensemble des résultats déjà connus de
+ * cette équipe (voir aPlusieursEquipes() dans src/lib/resultats.ts), si "pas
+ * de numéro" doit se comprendre comme "équipe 1 implicite" ou comme "pas de
+ * partage de poule du tout". */
+export function extraireNumeroEquipe(nomEquipeHBI) {
+	return /(\d+)\s*$/.exec(nomEquipeHBI.trim())?.[1] ?? null;
+}
