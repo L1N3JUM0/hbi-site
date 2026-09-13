@@ -1,0 +1,138 @@
+---
+import { getNextMatchday, formatMatchDate, formatMatchTime } from "../lib/agenda";
+import { withBase } from "../utils/links";
+
+const matches = await getNextMatchday();
+---
+
+{
+	matches.length > 0 && (
+		<section class="prochaine-journee">
+			<div class="wrap">
+				<span class="kicker">Prochaine journée</span>
+				<ul class="match-list">
+					{matches.map((m) => (
+						<li class={`match-row ${m.isHome ? "match-row--home" : "match-row--away"}`}>
+							<span class={`badge ${m.isHome ? "badge--home" : "badge--away"}`}>
+								{m.isHome ? "Domicile" : "Extérieur"}
+							</span>
+							<span class="teams">{m.isDerby ? m.teamLabel : `${m.teamLabel} vs ${m.opponent}`}</span>
+							<span class="when">
+								{formatMatchDate(m.start)} à {formatMatchTime(m.start)}
+							</span>
+						</li>
+					))}
+				</ul>
+				<a class="see-all" href={withBase("/agenda")}>
+					Voir tous les matchs →
+				</a>
+			</div>
+		</section>
+	)
+}
+
+<style>
+	.prochaine-journee {
+		background: var(--color-crimson);
+		padding: 2.25rem 1.5rem;
+		text-align: center;
+	}
+	.wrap {
+		max-width: 720px;
+		margin: 0 auto;
+	}
+	.kicker {
+		display: inline-block;
+		color: var(--color-white);
+		font-weight: 800;
+		font-size: 0.8rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		opacity: 0.9;
+		margin-bottom: 1rem;
+	}
+	.match-list {
+		list-style: none;
+		margin: 0 0 1.25rem;
+		padding: 0;
+		display: grid;
+		gap: 0.6rem;
+	}
+	.match-row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		column-gap: 0.75rem;
+		row-gap: 0.3rem;
+		padding: 0.6rem 1rem;
+		border-radius: 10px;
+		text-align: left;
+	}
+	.match-row--home {
+		background: var(--color-white);
+	}
+	.match-row--away {
+		background: rgba(255, 255, 255, 0.12);
+	}
+	.badge {
+		flex-shrink: 0;
+		display: inline-block;
+		font-weight: 800;
+		font-size: 0.7rem;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		padding: 0.25rem 0.6rem;
+		border-radius: 999px;
+	}
+	.badge--home {
+		background: var(--color-crimson);
+		color: var(--color-white);
+	}
+	.badge--away {
+		background: rgba(255, 255, 255, 0.2);
+		color: var(--color-white);
+	}
+	.teams {
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		font-weight: 800;
+		font-size: 1rem;
+		flex: 1 1 auto;
+	}
+	.match-row--home .teams {
+		color: var(--color-crimson);
+	}
+	.match-row--away .teams {
+		color: var(--color-white);
+	}
+	.when {
+		font-size: 0.85rem;
+		flex-shrink: 0;
+	}
+	.match-row--home .when {
+		color: var(--color-navy);
+	}
+	.match-row--away .when {
+		color: rgba(255, 255, 255, 0.85);
+	}
+	.see-all {
+		display: inline-block;
+		color: var(--color-white);
+		font-weight: 800;
+		text-decoration: none;
+		border-bottom: 2px solid var(--color-white);
+		padding-bottom: 0.15rem;
+	}
+	.see-all:hover {
+		border-bottom-color: var(--color-navy-deep);
+		color: var(--color-navy-deep);
+	}
+
+	@media (max-width: 480px) {
+		.match-row {
+			flex-direction: column;
+			align-items: flex-start;
+			text-align: left;
+		}
+	}
+</style>

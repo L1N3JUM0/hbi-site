@@ -20,6 +20,10 @@ export interface AgendaMatch {
 	/** Flux iCal d'origine (pour le bouton "Ajouter à mon agenda"). */
 	icsUrl: string;
 	classementUrl?: string;
+	/** Numéro de journée de championnat, extrait de la description de
+	 * l'événement iCal quand le flux le fournit (ex: "Journée 3"). Sert à
+	 * regrouper de façon fiable les matchs d'une même journée. */
+	journee: number | null;
 }
 
 export interface Competition {
@@ -30,6 +34,19 @@ export interface Competition {
 
 const CLUB_PATTERN = /handball\s*islois/i;
 const HOME_LOCATION_PATTERN = /emile avy/i;
+const JOURNEE_PATTERN = /journ[ée]e\s*(\d+)/i;
+
+/** Nombre de jours d'écart maximum entre deux matchs d'une même compétition
+ * pour les considérer comme faisant partie de la même journée, quand le
+ * flux iCal ne fournit pas de numéro de journée exploitable. Une journée de
+ * championnat s'étale généralement sur un week-end (samedi + dimanche),
+ * parfois avec un match avancé au vendredi ou reporté au lundi. */
+const FALLBACK_MATCHDAY_WINDOW_DAYS = 3;
+
+function parseJournee(description: string): number | null {
+	const match = JOURNEE_PATTERN.exec(description);
+	return match ? Number(match[1]) : null;
+}
 
 function textValue(value: unknown): string {
 	if (value == null) return "";
@@ -62,6 +79,7 @@ interface FeedEvent {
 	summary: string;
 	location: string;
 	matchUrl?: string;
+	journee: number | null;
 }
 
 interface FeedData {
@@ -91,6 +109,7 @@ async function fetchFeed(url: string): Promise<FeedData> {
 						summary: textValue(event.summary),
 						location: textValue(event.location),
 						matchUrl: event.url,
+						journee: parseJournee(textValue(event.description)),
 					}));
 
 				const rawName = (data.vcalendar as { name?: string } | undefined)?.name;
@@ -147,6 +166,7 @@ export async function getAgendaMatches(): Promise<AgendaMatch[]> {
 				matchUrl: event.matchUrl,
 				icsUrl: url,
 				classementUrl,
+				journee: event.journee,
 			};
 
 			if (matchedA && matchedB) {
@@ -186,9 +206,48 @@ export async function getAgendaMatches(): Promise<AgendaMatch[]> {
 	return matches;
 }
 
-export async function getNextHomeMatch(): Promise<AgendaMatch | undefined> {
+/** Tous les matchs de la prochaine journée de championnat, toutes équipes et
+ * toutes compétitions du club confondues.
+ *
+ * Chaque compétition (un flux iCal = une poule) a sa propre numérotation de
+ * journée, indépendante des autres catégories. On détermine donc la
+ * "prochaine journée" compétition par compétition -- c'est le numéro de
+ * journée du prochain match à venir de cette compétition -- puis on
+ * regroupe tous les matchs de chaque compétition qui partagent ce même
+ * numéro. Quand le flux ne fournit pas de numéro de journée exploitable, on
+ * se rabat sur une fenêtre de quelques jours autour du prochain match de
+ * cette compétition (une journée s'étale généralement sur un seul
+ * week-end). Le résultat de chaque compétition est ensuite fusionné et trié
+ * chronologiquement : les matchs affichés peuvent donc venir de week-ends
+ * légèrement différents si les compétitions ne sont pas alignées, mais
+ * chaque match affiché correspond bien à la prochaine échéance de son
+ * équipe. */
+export async function getNextMatchday(): Promise<AgendaMatch[]> {
 	const matches = await getAgendaMatches();
-	return matches.find((m) => m.isHome);
+
+	const byCompetition = new Map<string, AgendaMatch[]>();
+	for (const match of matches) {
+		const list = byCompetition.get(match.icsUrl) ?? [];
+		list.push(match);
+		byCompetition.set(match.icsUrl, list);
+	}
+
+	const result: AgendaMatch[] = [];
+	for (const competitionMatches of byCompetition.values()) {
+		const next = competitionMatches[0];
+		if (!next) continue;
+
+		if (next.journee != null) {
+			result.push(...competitionMatches.filter((m) => m.journee === next.journee));
+		} else {
+			const windowMs = FALLBACK_MATCHDAY_WINDOW_DAYS * 24 * 60 * 60 * 1000;
+			const cutoff = next.start.getTime() + windowMs;
+			result.push(...competitionMatches.filter((m) => m.start.getTime() <= cutoff));
+		}
+	}
+
+	result.sort((a, b) => a.start.getTime() - b.start.getTime());
+	return result;
 }
 
 /** Les prochains matchs d'une équipe précise (identifiée par son
