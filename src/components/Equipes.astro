@@ -3,7 +3,9 @@ import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import { withBase } from "../utils/links";
 
-const allTeams = (await getCollection("equipes")).sort((a, b) => a.data.ordre - b.data.ordre);
+const allTeams = (await getCollection("equipes"))
+	.filter((t) => t.data.statut !== "archivee")
+	.sort((a, b) => a.data.ordre - b.data.ordre);
 const competition = allTeams.filter((t) => t.data.type === "competition");
 const decouverte = allTeams.filter((t) => t.data.type === "decouverte" || t.data.type === "inclusion");
 

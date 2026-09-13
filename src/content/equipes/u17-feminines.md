@@ -3,6 +3,8 @@ nom: U17 féminines
 type: competition
 slug: u17-feminines
 ordre: 7
+categorieAge: U17
+genre: feminin
 horaires: Mercredi 18h30-20h / vendredi 19h-20h30
 encadrants: Léa et Caroline
 tarif: 210 €

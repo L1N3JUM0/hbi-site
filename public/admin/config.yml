@@ -194,9 +194,9 @@ collections:
   - name: "equipes"
     label: "Équipes"
     label_singular: "Équipe"
-    description: "Les informations et photos de chaque équipe/créneau du club. La liste des équipes est fixée pour la saison : on ne peut qu'en modifier le contenu, pas en ajouter ou en supprimer ici."
+    description: "Les informations et photos de chaque équipe/créneau du club. Vous pouvez créer une nouvelle équipe (ex. une nouvelle catégorie d'âge) directement ici. Une équipe qui s'arrête ne se supprime jamais : passez son Statut à « Archivée » pour garder ses résultats consultables (voir GUIDE-EDITION.md, section « Changement de saison »)."
     folder: "src/content/equipes"
-    create: false
+    create: true
     delete: false
     extension: "md"
     format: "frontmatter"
@@ -217,13 +217,74 @@ collections:
           - { label: "Créneau inclusion (handball adapté)", value: "inclusion" }
           - { label: "Créneau transversal (plusieurs catégories)", value: "transversal" }
 
+      - label: "Statut"
+        name: "statut"
+        widget: "select"
+        default: "active"
+        hint: "Une équipe qui s'arrête (dissoute, catégorie non reconduite la saison suivante...) passe en « Archivée » plutôt que d'être supprimée. Elle disparaît alors de la liste principale de /equipes (plus d'horaires ni de tarif, qui n'ont plus de sens) mais reste visible dans une section « Équipes des saisons passées » en bas de page, avec ses résultats toujours consultables."
+        options:
+          - { label: "Active", value: "active" }
+          - { label: "Archivée (ne joue plus, résultats conservés)", value: "archivee" }
+
       - label: "Identifiant technique"
         name: "slug"
-        widget: "hidden"
+        widget: "string"
+        pattern: ["^[a-z0-9]+(-[a-z0-9]+)*$", "Uniquement des lettres minuscules, chiffres et tirets, sans espace ni accent (exemple : u16-masculins)."]
+        hint: "À choisir à la création d'une nouvelle équipe, en cohérence avec son nom (ex. « U16 masculins » → « u16-masculins »). Ne le modifiez plus une fois l'équipe créée : il sert d'ancre sur /equipes et relie les résultats de match à cette équipe -- le changer casserait ce lien pour les résultats déjà enregistrés."
 
       - label: "Ordre d'affichage"
         name: "ordre"
-        widget: "hidden"
+        widget: "number"
+        value_type: "int"
+        hint: "Détermine l'ordre d'apparition parmi les équipes de même catégorie (1 = en premier). Regardez les valeurs déjà utilisées par les autres équipes et choisissez-en une libre pour positionner la nouvelle."
+
+      - label: "Catégorie d'âge (pour le rattachement automatique des feuilles de match)"
+        name: "categorieAge"
+        widget: "string"
+        required: false
+        pattern: ["^(U\\d{1,2}|senior)$", "Exactement « U » suivi de l'âge (exemple : U13, U17), ou « senior »."]
+        hint: "Exactement comme dans le nom de la compétition sur les feuilles de match FFHandball (ex. U13, U17), ou « senior » pour les seniors. Permet au site de reconnaître automatiquement à quelle équipe rattacher une feuille de match déposée. Laissez vide pour un créneau qui ne joue pas de championnat classé par âge (Loisirs, Découverte, Handensemble, créneau transversal)."
+
+      - label: "Genre (pour le rattachement automatique des feuilles de match)"
+        name: "genre"
+        widget: "select"
+        required: false
+        hint: "Avec « Catégorie d'âge » ci-dessus, permet de distinguer automatiquement deux équipes du même âge (ex. U13 féminines et U13 masculins). Laissez vide si « Catégorie d'âge » est vide."
+        options:
+          - { label: "Mixte", value: "mixte" }
+          - { label: "Féminin", value: "feminin" }
+          - { label: "Masculin", value: "masculin" }
+
+      - label: "Calendriers de compétition (flux FFHandball)"
+        name: "calendriers"
+        widget: "list"
+        required: false
+        summary: "{{fields.repere}}"
+        hint: "Un calendrier par équipe engagée en championnat dans cette catégorie. Sur la page de la compétition sur ffhandball.fr, cliquez sur « Ajouter les matchs à votre calendrier » et copiez le lien .ics proposé. Laissez cette liste vide tant que le calendrier de la saison n'est pas encore publié par la fédération, ou pour un créneau qui ne joue pas de championnat : l'équipe n'apparaît simplement pas dans l'agenda, sans erreur."
+        fields:
+          - label: "Lien du calendrier (.ics)"
+            name: "url"
+            widget: "string"
+            pattern: ["^https?://.+\\.ics$", "L'adresse doit commencer par http:// ou https:// et se terminer par .ics"]
+            hint: "Le lien copié depuis le bouton « Ajouter les matchs à votre calendrier » de ffhandball.fr."
+
+          - label: "Repère de cette équipe dans le flux"
+            name: "repere"
+            widget: "string"
+            default: "Handball Islois"
+            hint: "Ne changez cette valeur que si PLUSIEURS équipes du club jouent dans la même poule (ex. Seniors masculins 1 et 2) : indiquez alors le texte exact qui les distingue sur ffhandball.fr (ex. « Handball Islois 1 »). Dans tous les autres cas, laissez la valeur par défaut."
+
+          - label: "Numéro (si plusieurs équipes du club dans cette poule)"
+            name: "libelle"
+            widget: "string"
+            required: false
+            hint: "Exemple : 1 ou 2. Affiché après le nom de l'équipe sur l'agenda pour les distinguer. Laissez vide s'il n'y a qu'une seule équipe du club dans cette poule."
+
+          - label: "Lien du classement (en secours)"
+            name: "classementUrl"
+            widget: "string"
+            required: false
+            hint: "Laissez vide : il est déduit automatiquement des matchs du calendrier dans la grande majorité des cas. Ne renseignez ce champ que si le lien « Voir le classement » sur /agenda ne fonctionne pas pour cette équipe."
 
       - label: "Jours et horaires d'entraînement"
         name: "horaires"

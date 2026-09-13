@@ -3,6 +3,11 @@ nom: "Seniors féminines"
 type: competition
 slug: seniors-feminines
 ordre: 9
+categorieAge: senior
+genre: feminin
+calendriers:
+  - url: "https://competition-calendar.ffhandball.fr/c-32648/s-3577.ics"
+    repere: "Handball Islois"
 horaires: "Mercredi et vendredi 20h30-22h30"
 encadrants: "Cyril et Thierry"
 tarif: "220 €"

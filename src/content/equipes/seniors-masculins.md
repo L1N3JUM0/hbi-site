@@ -3,6 +3,15 @@ nom: "Seniors masculins"
 type: competition
 slug: seniors-masculins
 ordre: 10
+categorieAge: senior
+genre: masculin
+calendriers:
+  - url: "https://competition-calendar.ffhandball.fr/c-32649/s-3577.ics"
+    repere: "Handball Islois 1"
+    libelle: "1"
+  - url: "https://competition-calendar.ffhandball.fr/c-32649/s-3577.ics"
+    repere: "Handball Islois 2"
+    libelle: "2"
 horaires: "Mardi et jeudi 20h30-22h30"
 encadrants: "Christophe"
 tarif: "220 €"

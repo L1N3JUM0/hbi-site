@@ -32,6 +32,7 @@ import { parseFeuilleDeMatch, FeuilleFormatError } from "../src/lib/fdme/parseFe
 
 const FEUILLES_DIR = "src/content/feuilles-match";
 const RESULTATS_DIR = "src/content/resultats";
+const EQUIPES_DIR = "src/content/equipes";
 /** Régénéré à chaque build (jamais commité, voir .gitignore) : liste des
  * feuilles actuellement en échec, lue par ErreursImport.astro pour
  * afficher un avertissement visible sur le site -- sans ça, un échec
@@ -80,6 +81,28 @@ function resolvePdfFilePath(value) {
 	return relatifRacine;
 }
 
+/** Lit les équipes de compétition (slug + catégorie d'âge + genre) depuis la
+ * collection "equipes", pour le rattachement automatique d'une feuille de
+ * match à son équipe (voir detectEquipe() dans src/lib/fdme/equipeMatch.mjs).
+ * Lecture directe en `fs`, comme le reste de ce script : il tourne avant le
+ * build Astro (voir l'en-tête de ce fichier), `astro:content` n'est donc pas
+ * encore disponible. Une équipe sans "categorieAge"/"genre" renseigné
+ * (Loisirs, Découverte, Handensemble, créneau transversal) est simplement
+ * absente de la liste -- elle ne peut jamais être rattachée automatiquement,
+ * ce qui est le comportement voulu. */
+function chargerEquipesCompetition() {
+	if (!existsSync(EQUIPES_DIR)) return [];
+	return readdirSync(EQUIPES_DIR)
+		.filter((f) => f.endsWith(".md"))
+		.map((f) => readFileSync(join(EQUIPES_DIR, f), "utf-8"))
+		.map((content) => ({
+			slug: /^slug:\s*"?([^"\n]+?)"?\s*$/m.exec(content)?.[1],
+			categorieAge: /^categorieAge:\s*"?([^"\n]+?)"?\s*$/m.exec(content)?.[1],
+			genre: /^genre:\s*"?([^"\n]+?)"?\s*$/m.exec(content)?.[1],
+		}))
+		.filter((e) => e.slug && e.categorieAge && e.genre);
+}
+
 /** Si la détection automatique échoue (equipeSlug null) mais qu'une entrée
  * générée précédemment pour ce même code de rencontre avait déjà un
  * equipeSlug corrigé à la main, on le conserve plutôt que d'écraser avec du
@@ -118,6 +141,7 @@ function frontmatter(data) {
 }
 
 const entries = listPdfEntries();
+const equipesCompetition = chargerEquipesCompetition();
 let ok = 0;
 let ignorees = 0;
 const codesGeneres = new Set();
@@ -144,7 +168,7 @@ for (const entryPath of entries) {
 
 	try {
 		const bytes = new Uint8Array(readFileSync(pdfPath));
-		const data = await parseFeuilleDeMatch(bytes);
+		const data = await parseFeuilleDeMatch(bytes, equipesCompetition);
 		const cible = join(RESULTATS_DIR, `pdf-${data.codeRencontre.toLowerCase()}.md`);
 		data.equipeSlug = preserveEquipeSlugSiBesoin(cible, data.equipeSlug);
 

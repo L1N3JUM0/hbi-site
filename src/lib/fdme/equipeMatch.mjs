@@ -2,68 +2,70 @@
  * Résout l'équipe HBI concernée par une feuille de match à partir du texte
  * de la compétition (ex. "CHAMPIONNAT U15 EXCELLENCE FEMININ U15F EXC").
  *
- * Ne dépend PAS de src/data/agenda-teams.config.ts : ce fichier ne couvre
- * que les équipes ayant un flux iCal configuré (3 aujourd'hui), alors
- * qu'une feuille de match peut concerner n'importe quelle équipe de
- * compétition du club. La correspondance se fait donc directement contre
- * les slugs de la collection "equipes" (liste fixée pour la saison, voir
- * CLAUDE.md) via l'âge + le genre détectés dans le nom de la compétition.
- *
- * Si l'effectif du club change (nouvelle catégorie), mettre à jour la table
- * SLUG_PAR_AGE_GENRE ci-dessous en même temps que src/content/equipes/.
+ * Ne contient plus de table câblée en dur : la liste des équipes de
+ * compétition (slug + catégorie d'âge + genre) est lue depuis la collection
+ * "equipes" du CMS (champs `categorieAge`/`genre`, voir content.config.ts) et
+ * passée en second argument par l'appelant (scripts/import-fdme.mjs, qui la
+ * lit directement en `fs` car il tourne avant qu'`astro:content` ne soit
+ * disponible). Créer une nouvelle équipe dans le CMS avec ces deux champs
+ * renseignés suffit donc à la rendre reconnaissable ici, sans toucher au
+ * code -- notamment pour une catégorie jamais vue auparavant (ex. un futur
+ * U20) : voir CLAUDE.md pour l'historique (U17F/U18M créées en 2026-2027,
+ * split U13 mixte -> U13F/U13M en 2025-2026).
  */
 
-const AGE_PATTERN = /\bU\s?(9|11|13|15|17|18)\b/i;
+/** N'importe quel âge à un ou deux chiffres précédé de "U" (pas seulement
+ * les âges déjà vus au club) : une catégorie jamais rencontrée avant
+ * fonctionne dès que la fiche équipe correspondante existe dans le CMS. */
+const AGE_PATTERN = /\bU\s?(\d{1,2})\b/i;
 const FEMININ_PATTERN = /f[ée]minin/i;
 const MASCULIN_PATTERN = /masculin/i;
 const COUPE_PATTERN = /\bcoupe\b/i;
 
-/** U9/U11 sont mixtes dans ce club : le genre du nom de compétition (le cas
- * échéant) est ignoré pour ces deux âges. U17 n'existe qu'en féminines et
- * U18 qu'en masculins pour ce club (voir CLAUDE.md) : pas d'ambiguïté à
- * résoudre, mais on vérifie que le genre détecté ne les contredit pas. */
-const SLUG_PAR_AGE_GENRE = {
-	9: { mixte: "u9-mixtes" },
-	11: { mixte: "u11-mixtes" },
-	13: { feminin: "u13-feminines", masculin: "u13-masculins" },
-	15: { feminin: "u15-feminines", masculin: "u15-masculins" },
-	17: { feminin: "u17-feminines" },
-	18: { masculin: "u18-masculins" },
-};
-
 /**
+ * @typedef {{ slug: string, categorieAge: string, genre: "mixte" | "feminin" | "masculin" }} EquipeCompetition
+ *
  * @param {string} competitionText
+ * @param {EquipeCompetition[]} equipesCompetition Équipes de compétition
+ *   déclarées dans le CMS avec une catégorie d'âge et un genre renseignés.
  * @returns {{ equipeSlug: string | null, typeMatch: "championnat" | "coupe" }}
  */
-export function detectEquipe(competitionText) {
+export function detectEquipe(competitionText, equipesCompetition) {
 	const typeMatch = COUPE_PATTERN.test(competitionText) ? "coupe" : "championnat";
 
 	const ageMatch = AGE_PATTERN.exec(competitionText);
 	const feminin = FEMININ_PATTERN.test(competitionText);
 	const masculin = MASCULIN_PATTERN.test(competitionText);
 
-	if (ageMatch) {
-		const age = Number(ageMatch[1]);
-		const options = SLUG_PAR_AGE_GENRE[age];
-		if (!options) return { equipeSlug: null, typeMatch };
-		if (options.mixte) return { equipeSlug: options.mixte, typeMatch };
-		if (feminin && options.feminin) return { equipeSlug: options.feminin, typeMatch };
-		if (masculin && options.masculin) return { equipeSlug: options.masculin, typeMatch };
-		// Âge reconnu mais genre absent/inattendu du texte (ex. une
-		// compétition étiquetée "MIXTE" une saison donnée pour une catégorie
-		// qui a par ailleurs un vrai féminin et un vrai masculin dans ce club,
-		// vu en 2025-2026 pour U13) : ne PAS deviner entre les deux quand les
-		// deux existent -- seul un âge n'ayant qu'un seul genre possible dans
-		// ce club (U17F, U18M) peut être déduit sans ambiguïté ici.
-		const genresPossibles = [options.feminin, options.masculin].filter(Boolean);
-		if (genresPossibles.length === 1 && !feminin && !masculin) return { equipeSlug: genresPossibles[0], typeMatch };
-		return { equipeSlug: null, typeMatch };
+	// Pas d'âge détecté dans le texte de la compétition : on suppose seniors
+	// (aucune autre catégorie adulte n'a de sigle d'âge dans son nom de
+	// compétition).
+	const categorieAge = ageMatch ? `U${Number(ageMatch[1])}` : "senior";
+
+	const candidats = equipesCompetition.filter((e) => e.categorieAge === categorieAge);
+	if (candidats.length === 0) return { equipeSlug: null, typeMatch };
+
+	// U9/U11 sont mixtes dans ce club (et toute autre catégorie mixte future) :
+	// le genre détecté dans le texte, le cas échéant, est ignoré.
+	const mixte = candidats.find((e) => e.genre === "mixte");
+	if (mixte) return { equipeSlug: mixte.slug, typeMatch };
+
+	if (feminin) {
+		const match = candidats.find((e) => e.genre === "feminin");
+		if (match) return { equipeSlug: match.slug, typeMatch };
+	}
+	if (masculin) {
+		const match = candidats.find((e) => e.genre === "masculin");
+		if (match) return { equipeSlug: match.slug, typeMatch };
 	}
 
-	// Pas d'âge détecté : on suppose seniors (aucune autre catégorie adulte
-	// n'a de sigle d'âge dans son nom de compétition).
-	if (feminin) return { equipeSlug: "seniors-feminines", typeMatch };
-	if (masculin) return { equipeSlug: "seniors-masculins", typeMatch };
+	// Genre absent/inattendu du texte (ex. une compétition étiquetée "MIXTE"
+	// une saison donnée pour une catégorie qui a par ailleurs un vrai féminin
+	// et un vrai masculin dans ce club, vu en 2025-2026 pour U13) : ne PAS
+	// deviner entre les deux quand plusieurs équipes existent pour cet âge --
+	// seule une catégorie n'ayant qu'une équipe possible (ex. U17F, U18M) peut
+	// être déduite sans ambiguïté ici.
+	if (candidats.length === 1 && !feminin && !masculin) return { equipeSlug: candidats[0].slug, typeMatch };
 	return { equipeSlug: null, typeMatch };
 }
 

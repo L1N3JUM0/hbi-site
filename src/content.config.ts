@@ -37,6 +37,28 @@ function safeImage(image: () => z.ZodType<unknown, string>) {
  * fichier Markdown indépendant dans src/content/equipes/, avec uniquement
  * des champs simples (texte, nombre, liste d'images).
  */
+/** Un flux iCal de compétition rattaché à une équipe. Une équipe engagée
+ * seule dans sa poule n'a qu'une entrée ; deux équipes du club engagées dans
+ * la même poule (ex. Seniors masculins 1 et 2) ont chacune la leur, avec le
+ * même `url` mais un `repere` différent -- c'est ce texte, tel qu'il
+ * apparaît dans le flux ("Handball Islois 1"), qui permet de départager les
+ * deux camps d'un même match. Voir src/lib/agenda.ts. */
+const calendrierEquipe = z.object({
+	url: z.string().url(),
+	/** Texte qui identifie CETTE équipe dans le flux iCal. "Handball Islois"
+	 * convient tant qu'une seule équipe du club joue dans cette poule ; à
+	 * personnaliser ("Handball Islois 1"/"2"...) seulement en cas de partage
+	 * de poule entre plusieurs équipes du club. */
+	repere: z.string().default("Handball Islois"),
+	/** Affiché après le nom de l'équipe sur l'agenda pour distinguer
+	 * plusieurs équipes du club dans la même poule (ex. "1", "2"). Vide dans
+	 * le cas courant d'une seule équipe. */
+	libelle: z.string().optional(),
+	/** Laisser vide : déduit automatiquement de l'URL des rencontres du flux.
+	 * À renseigner uniquement si la déduction échoue pour ce flux. */
+	classementUrl: z.string().url().optional(),
+});
+
 const equipes = defineCollection({
 	loader: glob({ pattern: "*.md", base: "./src/content/equipes" }),
 	schema: ({ image }) =>
@@ -47,10 +69,18 @@ const equipes = defineCollection({
 			 * "decouverte" / "inclusion" : créneaux ouverts à tous (Baby Hand, Handensemble).
 			 * "transversal" : créneau commun à plusieurs catégories (étirements/spé gardien). */
 			type: z.enum(["competition", "decouverte", "inclusion", "transversal"]),
+			/** "active" (par défaut) ou "archivee" -- une équipe qui s'arrête
+			 * (dissoute, catégorie non reconduite...) passe en "archivee" plutôt
+			 * que d'être supprimée : ses résultats passés doivent rester
+			 * consultables (voir /equipes, section "Équipes des saisons
+			 * passées"). Une équipe archivée disparaît de l'effectif affiché
+			 * (plus d'horaires/tarif/agenda, ça n'a plus de sens) mais garde son
+			 * `slug`, donc ses résultats dans la collection "resultats". */
+			statut: z.enum(["active", "archivee"]).default("active"),
 			/** Identifiant stable : ancre sur /equipes (#slug) ET clé de
-			 * correspondance avec agendaTeams[].equipeSlug dans
-			 * src/data/agenda-teams.config.ts. Ne jamais changer une fois publié
-			 * (ça casserait les liens existants et la correspondance agenda). */
+			 * correspondance avec `equipeSlug` dans la collection "resultats".
+			 * Ne jamais changer une fois publié (ça casserait les liens
+			 * existants, l'agenda et le rattachement des résultats). */
 			slug: z.string(),
 			/** Ordre d'affichage (homepage + /equipes), au sein de son "type". */
 			ordre: z.number(),
@@ -73,6 +103,32 @@ const equipes = defineCollection({
 			 * Par défaut pseudonymisé (le choix le plus prudent) -- mettre
 			 * "nominatif" explicitement pour les équipes seniors (majeurs). */
 			affichageStats: z.enum(["nominatif", "pseudonymise", "masque"]).default("pseudonymise"),
+			/** Catégorie d'âge de la compétition FFHandball ("U9", "U13", "U17",
+			 * "senior"...), exactement comme elle apparaît dans le nom de la
+			 * compétition sur les feuilles de match. Sert UNIQUEMENT au
+			 * rattachement automatique d'une feuille de match déposée à cette
+			 * équipe (voir src/lib/fdme/equipeMatch.mjs) -- absent pour un
+			 * créneau qui ne joue pas de championnat classé par âge (Loisirs,
+			 * Découverte, Handensemble, créneau transversal). Format libre
+			 * (pas un enum) pour qu'une nouvelle catégorie jamais vue auparavant
+			 * (ex. un futur U20) fonctionne sans modification de ce fichier --
+			 * seule la fiche équipe doit être créée dans le CMS. */
+			categorieAge: z
+				.string()
+				.regex(/^(U\d{1,2}|senior)$/, 'Doit être "U" suivi de l\'âge (ex. U13), ou "senior".')
+				.optional(),
+			/** Genre de la compétition -- avec `categorieAge`, sert au
+			 * rattachement automatique d'une feuille de match (voir
+			 * src/lib/fdme/equipeMatch.mjs). Absent si `categorieAge` l'est. */
+			genre: z.enum(["mixte", "feminin", "masculin"]).optional(),
+			/** Calendriers FFHandball (flux iCal) de cette équipe. Vide tant que
+			 * le calendrier de la saison n'a pas été publié par la fédération, ou
+			 * pour un créneau qui ne joue pas de championnat -- l'équipe
+			 * n'apparaît alors simplement pas dans l'agenda, sans erreur. Deux
+			 * entrées pour une équipe engageant deux équipes dans la même poule
+			 * (ex. Seniors masculins 1 et 2). Voir src/lib/agenda.ts, qui
+			 * remplace l'ancien src/data/agenda-teams.config.ts. */
+			calendriers: z.array(calendrierEquipe).default([]),
 		}),
 });
 

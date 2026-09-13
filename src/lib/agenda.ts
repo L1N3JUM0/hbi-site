@@ -1,6 +1,24 @@
 import ical from "node-ical";
 import type { VEvent } from "node-ical";
-import { agendaTeams, type AgendaTeamConfig } from "../data/agenda-teams.config";
+import { getCollection } from "astro:content";
+
+export interface AgendaTeamConfig {
+	/** Nom affiché sur le site (page /equipes, page /agenda) : le nom de
+	 * l'équipe, complété par son "libelle" (ex. "1"/"2") si plusieurs
+	 * équipes du club partagent la même poule. */
+	nomAffiche: string;
+	/** `slug` de l'entrée correspondante dans la collection "equipes". */
+	equipeSlug: string;
+	/** Flux iCal officiel FFHandball de la compétition (peut être partagé par
+	 * plusieurs équipes du club engagées dans la même poule). */
+	urlIcs: string;
+	/** Texte tel qu'il apparaît dans les résumés d'événements du flux pour
+	 * repérer CETTE équipe précisément. Comparaison insensible à la casse. */
+	matchLabel: string;
+	/** Lien vers le classement de la compétition, si renseigné à la main
+	 * dans le CMS (sinon déduit automatiquement de l'URL des rencontres). */
+	urlClassement?: string;
+}
 
 export interface AgendaMatch {
 	id: string;
@@ -126,9 +144,42 @@ async function fetchFeed(url: string): Promise<FeedData> {
 	return cached;
 }
 
-function groupTeamsByFeed(): Map<string, AgendaTeamConfig[]> {
+let agendaTeamsPromise: Promise<AgendaTeamConfig[]> | null = null;
+
+/** Aplatit les `calendriers` de chaque équipe active de la collection
+ * "equipes" en une liste d'équipes d'agenda -- remplace l'ancien
+ * src/data/agenda-teams.config.ts, désormais éditable depuis le CMS (voir
+ * content.config.ts). Une équipe archivée (voir champ `statut`) n'apparaît
+ * jamais ici, même si son ancien calendrier n'a pas été vidé : une équipe
+ * qui s'arrête n'a plus de matchs à venir. Mise en cache (comme fetchFeed
+ * ci-dessus) : la collection ne change pas en cours de build. */
+export async function getAgendaTeams(): Promise<AgendaTeamConfig[]> {
+	if (!agendaTeamsPromise) {
+		agendaTeamsPromise = (async (): Promise<AgendaTeamConfig[]> => {
+			const equipes = await getCollection("equipes");
+			const teams: AgendaTeamConfig[] = [];
+			for (const equipe of equipes) {
+				if (equipe.data.statut === "archivee") continue;
+				for (const cal of equipe.data.calendriers) {
+					teams.push({
+						nomAffiche: cal.libelle ? `${equipe.data.nom} ${cal.libelle}`.trim() : equipe.data.nom,
+						equipeSlug: equipe.data.slug,
+						urlIcs: cal.url,
+						matchLabel: cal.repere,
+						urlClassement: cal.classementUrl,
+					});
+				}
+			}
+			return teams;
+		})();
+	}
+	return agendaTeamsPromise;
+}
+
+async function groupTeamsByFeed(): Promise<Map<string, AgendaTeamConfig[]>> {
+	const teams = await getAgendaTeams();
 	const byUrl = new Map<string, AgendaTeamConfig[]>();
-	for (const team of agendaTeams) {
+	for (const team of teams) {
 		const list = byUrl.get(team.urlIcs) ?? [];
 		list.push(team);
 		byUrl.set(team.urlIcs, list);
@@ -140,7 +191,7 @@ export async function getAgendaMatches(): Promise<AgendaMatch[]> {
 	const now = new Date();
 	const matches: AgendaMatch[] = [];
 
-	for (const [url, teams] of groupTeamsByFeed()) {
+	for (const [url, teams] of await groupTeamsByFeed()) {
 		const { events } = await fetchFeed(url);
 		if (events.length === 0) continue;
 
@@ -198,7 +249,8 @@ export async function getAgendaMatches(): Promise<AgendaMatch[]> {
 				});
 			}
 			// Sinon : variante d'équipe présente dans le flux mais pas encore
-			// déclarée dans agenda-teams.config.ts (ex: future 3e équipe) -- ignorée.
+			// déclarée dans les "Calendriers" de la fiche équipe correspondante
+			// dans le CMS (ex: future 3e équipe) -- ignorée.
 		}
 	}
 
@@ -258,18 +310,19 @@ export async function getMatchesForEquipe(equipeSlug: string, limit = 3): Promis
 	return matches.filter((m) => m.equipeSlugs.includes(equipeSlug)).slice(0, limit);
 }
 
-/** true si au moins une équipe d'agenda-teams.config.ts pointe vers ce
- * equipeSlug -- pour savoir si l'on doit afficher un bloc "prochains
- * matchs" sur cette section, même quand la liste peut être vide. */
-export function hasAgendaFeed(equipeSlug: string): boolean {
-	return agendaTeams.some((t) => t.equipeSlug === equipeSlug);
+/** true si au moins un calendrier est déclaré pour ce equipeSlug -- pour
+ * savoir si l'on doit afficher un bloc "prochains matchs" sur cette section,
+ * même quand la liste peut être vide. */
+export async function hasAgendaFeed(equipeSlug: string): Promise<boolean> {
+	const teams = await getAgendaTeams();
+	return teams.some((t) => t.equipeSlug === equipeSlug);
 }
 
 /** Un lien de classement par compétition (flux), pas par équipe. */
 export async function getCompetitionLinks(): Promise<Competition[]> {
 	const competitions: Competition[] = [];
 
-	for (const [url, teams] of groupTeamsByFeed()) {
+	for (const [url, teams] of await groupTeamsByFeed()) {
 		const { events, calendarName } = await fetchFeed(url);
 		const classementUrl =
 			teams.find((t) => t.urlClassement)?.urlClassement ??

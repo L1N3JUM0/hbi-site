@@ -3,6 +3,8 @@ nom: "U11 mixtes"
 type: competition
 slug: u11-mixtes
 ordre: 2
+categorieAge: U11
+genre: mixte
 horaires: "Lundi 17h-18h30 / mercredi 15h-16h30"
 encadrants: "Teddy"
 tarif: "180 €"

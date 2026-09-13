@@ -3,6 +3,8 @@ nom: "U9 mixtes"
 type: competition
 slug: u9-mixtes
 ordre: 1
+categorieAge: U9
+genre: mixte
 horaires: "Mercredi 14h-15h30"
 encadrants: "Lydie et Teddy"
 tarif: "170 €"

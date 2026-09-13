@@ -10,13 +10,20 @@ import ErreursImport from "../components/ErreursImport.astro";
 import Favicon from "../components/Favicon.astro";
 import { withBase } from "../utils/links";
 import { getCollection, type CollectionEntry } from "astro:content";
-import { agendaTeams } from "../data/agenda-teams.config";
-import { getMatchesForEquipe, hasAgendaFeed, formatMatchDate, formatMatchTime } from "../lib/agenda";
+import { getAgendaTeams, getMatchesForEquipe, hasAgendaFeed, formatMatchDate, formatMatchTime } from "../lib/agenda";
+import { saisonActuelle } from "../lib/saison";
 
 const allTeams = (await getCollection("equipes")).sort((a, b) => a.data.ordre - b.data.ordre);
-const competition = allTeams.filter((t) => t.data.type === "competition");
-const decouverte = allTeams.filter((t) => t.data.type === "decouverte" || t.data.type === "inclusion");
-const transversal = allTeams.find((t) => t.data.type === "transversal");
+const actives = allTeams.filter((t) => t.data.statut !== "archivee");
+const competition = actives.filter((t) => t.data.type === "competition");
+const decouverte = actives.filter((t) => t.data.type === "decouverte" || t.data.type === "inclusion");
+const transversal = actives.find((t) => t.data.type === "transversal");
+/** Équipes qui ont cessé de jouer (dissoutes, catégorie non reconduite...) :
+ * plus affichées dans l'effectif, mais leurs résultats passés doivent rester
+ * consultables -- voir GUIDE-EDITION.md, section "Changement de saison". */
+const archivees = allTeams.filter((t) => t.data.statut === "archivee");
+
+const agendaTeams = await getAgendaTeams();
 
 const typeLabel: Record<string, string> = {
 	decouverte: "Découverte",
@@ -30,7 +37,7 @@ function agendaButtonsFor(slug: string) {
 /** Prochains matchs à afficher sur la section de cette équipe (vide si pas
  * de flux configuré, ou pas de match à venir pour l'instant). */
 async function nextMatchesFor(slug: string) {
-	if (!hasAgendaFeed(slug)) return [];
+	if (!(await hasAgendaFeed(slug))) return [];
 	return getMatchesForEquipe(slug, 3);
 }
 
@@ -55,7 +62,7 @@ function photosFor(team: CollectionEntry<"equipes">) {
 		<Header />
 		<PageBanner
 			title="Nos équipes"
-			subtitle="Du baby hand aux seniors, en passant par le handball adapté : l'effectif complet du HBI pour la saison 2026-2027, entraînements au COSEC Émile Avy."
+			subtitle={`Du baby hand aux seniors, en passant par le handball adapté : l'effectif complet du HBI pour la saison ${saisonActuelle()}, entraînements au COSEC Émile Avy.`}
 		/>
 
 		<ErreursImport />
@@ -191,6 +198,26 @@ function photosFor(team: CollectionEntry<"equipes">) {
 								</div>
 							</dl>
 						</div>
+					</div>
+				</section>
+			)
+		}
+
+		{
+			archivees.length > 0 && (
+				<section class="archives">
+					<div class="wrap">
+						<details class="archives-details">
+							<summary>Équipes des saisons passées ({archivees.length})</summary>
+							<div class="archives-grid">
+								{archivees.map((t) => (
+									<div class="card card--archivee" id={t.data.slug}>
+										<h3>{t.data.nom}</h3>
+										<ResultatsEquipe equipeSlug={t.data.slug} affichageStats={t.data.affichageStats} />
+									</div>
+								))}
+							</div>
+						</details>
 					</div>
 				</section>
 			)
@@ -423,8 +450,51 @@ function photosFor(team: CollectionEntry<"equipes">) {
 		margin: 0 auto;
 	}
 
+	.archives {
+		background: var(--color-navy);
+		padding: 2rem 1.5rem 3rem;
+	}
+	.archives-details > summary {
+		cursor: pointer;
+		list-style: none;
+		color: var(--color-white);
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		font-weight: 800;
+		font-size: 1.1rem;
+		min-height: 44px;
+		display: flex;
+		align-items: center;
+	}
+	.archives-details > summary::-webkit-details-marker {
+		display: none;
+	}
+	.archives-details > summary::before {
+		content: "▸";
+		display: inline-block;
+		margin-right: 0.6rem;
+		transition: transform 0.15s ease;
+	}
+	.archives-details[open] > summary::before {
+		transform: rotate(90deg);
+	}
+	.archives-grid {
+		margin-top: 1.5rem;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+		gap: 1.25rem;
+	}
+	.card--archivee {
+		background: var(--color-navy-deep);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.archives-details > summary::before {
+			transition: none;
+		}
+	}
+
 	@media (max-width: 640px) {
-		.grid {
+		.grid,
+		.archives-grid {
 			grid-template-columns: 1fr;
 		}
 	}

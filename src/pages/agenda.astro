@@ -6,11 +6,11 @@ import Footer from "../components/Footer.astro";
 import AjouterAgendaButton from "../components/AjouterAgendaButton.astro";
 import Favicon from "../components/Favicon.astro";
 import { withBase } from "../utils/links";
-import { agendaTeams } from "../data/agenda-teams.config";
-import { getAgendaMatches, getCompetitionLinks, formatMatchDate, formatMatchTime } from "../lib/agenda";
+import { getAgendaMatches, getAgendaTeams, getCompetitionLinks, formatMatchDate, formatMatchTime } from "../lib/agenda";
 
 const matches = await getAgendaMatches();
 const competitions = await getCompetitionLinks();
+const agendaTeams = await getAgendaTeams();
 ---
 
 <html lang="fr">
@@ -32,19 +32,25 @@ const competitions = await getCompetitionLinks();
 			subtitle="Tous les prochains matchs du HBI, toutes équipes confondues, à partir des calendriers officiels FFHandball."
 		/>
 
-		<section class="subscribe">
-			<div class="wrap">
-				<h2>S&rsquo;abonner à l&rsquo;agenda d&rsquo;une équipe</h2>
-				<p class="intro">
-					Chaque bouton pointe directement vers le flux officiel FFHandball de
-					l&rsquo;équipe&nbsp;: ajoutez-le à Google Agenda, Apple Calendrier ou
-					Outlook pour ne manquer aucun match.
-				</p>
-				<div class="buttons">
-					{agendaTeams.map((t) => <AjouterAgendaButton href={t.urlIcs} label={`${t.nomAffiche} →`} />)}
-				</div>
-			</div>
-		</section>
+		{
+			agendaTeams.length > 0 && (
+				<section class="subscribe">
+					<div class="wrap">
+						<h2>S&rsquo;abonner à l&rsquo;agenda d&rsquo;une équipe</h2>
+						<p class="intro">
+							Chaque bouton pointe directement vers le flux officiel FFHandball de
+							l&rsquo;équipe&nbsp;: ajoutez-le à Google Agenda, Apple Calendrier ou
+							Outlook pour ne manquer aucun match.
+						</p>
+						<div class="buttons">
+							{agendaTeams.map((t) => (
+								<AjouterAgendaButton href={t.urlIcs} label={`${t.nomAffiche} →`} />
+							))}
+						</div>
+					</div>
+				</section>
+			)
+		}
 
 		<section class="matches">
 			<div class="wrap">

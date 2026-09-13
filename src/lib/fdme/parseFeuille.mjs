@@ -366,10 +366,11 @@ function ajouterRepetesChronologie(events, header) {
  * prêtes à écrire dans une entrée de la collection "resultats".
  *
  * @param {Uint8Array} pdfBytes
+ * @param {import("./equipeMatch.mjs").EquipeCompetition[]} [equipesCompetition] Voir detectEquipe().
  * @returns {Promise<object>} voir la forme détaillée dans scripts/import-fdme.mjs
  * @throws {FeuilleFormatError} si le PDF n'a pas le format attendu.
  */
-export async function parseFeuilleDeMatch(pdfBytes) {
+export async function parseFeuilleDeMatch(pdfBytes, equipesCompetition = []) {
 	const rows = await extractRows(pdfBytes);
 	const header = parseHeaderFields(rows);
 
@@ -410,7 +411,7 @@ export async function parseFeuilleDeMatch(pdfBytes) {
 	let chronologie = deroule ? parseChronologie(rows, deroule.index) : [];
 	if (chronologie.length > 0) chronologie = ajouterRepetesChronologie(chronologie, header);
 
-	const { equipeSlug, typeMatch } = detectEquipe(header.competition);
+	const { equipeSlug, typeMatch } = detectEquipe(header.competition, equipesCompetition);
 
 	const domicile = domicileEstHBI;
 	const joueursHBI = domicile ? joueursDomicile : joueursExterieur;
