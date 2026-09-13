@@ -6,10 +6,11 @@ import Footer from "../components/Footer.astro";
 import Favicon from "../components/Favicon.astro";
 import { withBase } from "../utils/links";
 import { getCollection } from "astro:content";
+import { trierEquipes } from "../lib/equipes";
 
-const categories = (await getCollection("equipes"))
-	.filter((t) => t.data.type !== "transversal" && t.data.statut !== "archivee")
-	.sort((a, b) => a.data.ordre - b.data.ordre);
+const categories = trierEquipes(
+	(await getCollection("equipes")).filter((t) => t.data.type !== "transversal" && t.data.statut !== "archivee"),
+);
 
 const merciUrl = `${Astro.site?.origin ?? ""}${withBase("/merci")}`;
 ---

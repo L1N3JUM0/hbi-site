@@ -2,7 +2,6 @@
 nom: U18 masculins
 type: competition
 slug: u18-masculins
-ordre: 8
 categorieAge: U18
 genre: masculin
 horaires: Mercredi et vendredi 19h-20h30

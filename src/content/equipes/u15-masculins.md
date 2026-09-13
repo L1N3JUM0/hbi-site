@@ -2,7 +2,6 @@
 nom: "U15 masculins"
 type: competition
 slug: u15-masculins
-ordre: 6
 categorieAge: U15
 genre: masculin
 horaires: "Mardi et jeudi 19h-20h30"

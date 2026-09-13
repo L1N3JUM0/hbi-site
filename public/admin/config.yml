@@ -165,31 +165,28 @@ collections:
 
   - name: "photosAccueil"
     label: "Photos de la page d'accueil"
-    label_singular: "Photo"
     description: "Les photos qui défilent dans le bandeau « La vie du club, en images » sur la page d'accueil."
-    folder: "src/content/photos-accueil"
-    create: true
-    delete: true
-    extension: "md"
-    format: "frontmatter"
-    summary: "{{alt}}"
-    fields:
-      - label: "Photo"
-        name: "image"
-        widget: "image"
-        hint: "Glissez-déposez une image, ou choisissez-en une déjà présente dans la médiathèque."
-        choose_url: false
+    files:
+      - name: "page"
+        label: "Photos du bandeau"
+        file: "src/content/photos-accueil/page.md"
+        fields:
+          - label: "Photos"
+            name: "photos"
+            widget: "list"
+            summary: "{{fields.alt}}"
+            hint: "Utilisez la poignée à gauche de chaque photo pour la faire glisser et changer son ordre de passage dans le carrousel -- plus besoin de numéro. Le bouton en bas ajoute une nouvelle photo, la poubelle en retire une."
+            fields:
+              - label: "Photo"
+                name: "image"
+                widget: "image"
+                hint: "Glissez-déposez une image, ou choisissez-en une déjà présente dans la médiathèque."
+                choose_url: false
 
-      - label: "Description de la photo"
-        name: "alt"
-        widget: "string"
-        hint: "Décrivez brièvement ce que montre la photo (utile pour les personnes malvoyantes qui utilisent un lecteur d'écran). Exemple : « Match des seniors féminines au COSEC Émile Avy »."
-
-      - label: "Ordre d'affichage"
-        name: "ordre"
-        widget: "number"
-        value_type: "int"
-        hint: "Détermine l'ordre de passage dans le carrousel (1 = en premier). Deux photos ne devraient pas avoir le même numéro."
+              - label: "Description de la photo"
+                name: "alt"
+                widget: "string"
+                hint: "Décrivez brièvement ce que montre la photo (utile pour les personnes malvoyantes qui utilisent un lecteur d'écran). Exemple : « Match des seniors féminines au COSEC Émile Avy »."
 
   - name: "equipes"
     label: "Équipes"
@@ -232,18 +229,12 @@ collections:
         pattern: ["^[a-z0-9]+(-[a-z0-9]+)*$", "Uniquement des lettres minuscules, chiffres et tirets, sans espace ni accent (exemple : u16-masculins)."]
         hint: "À choisir à la création d'une nouvelle équipe, en cohérence avec son nom (ex. « U16 masculins » → « u16-masculins »). Ne le modifiez plus une fois l'équipe créée : il sert d'ancre sur /equipes et relie les résultats de match à cette équipe -- le changer casserait ce lien pour les résultats déjà enregistrés."
 
-      - label: "Ordre d'affichage"
-        name: "ordre"
-        widget: "number"
-        value_type: "int"
-        hint: "Détermine l'ordre d'apparition parmi les équipes de même catégorie (1 = en premier). Regardez les valeurs déjà utilisées par les autres équipes et choisissez-en une libre pour positionner la nouvelle."
-
       - label: "Catégorie d'âge (pour le rattachement automatique des feuilles de match)"
         name: "categorieAge"
         widget: "string"
         required: false
         pattern: ["^(U\\d{1,2}|senior)$", "Exactement « U » suivi de l'âge (exemple : U13, U17), ou « senior »."]
-        hint: "Exactement comme dans le nom de la compétition sur les feuilles de match FFHandball (ex. U13, U17), ou « senior » pour les seniors. Permet au site de reconnaître automatiquement à quelle équipe rattacher une feuille de match déposée. Laissez vide pour un créneau qui ne joue pas de championnat classé par âge (Loisirs, Découverte, Handensemble, créneau transversal)."
+        hint: "Exactement comme dans le nom de la compétition sur les feuilles de match FFHandball (ex. U13, U17), ou « senior » pour les seniors. Permet au site de reconnaître automatiquement à quelle équipe rattacher une feuille de match déposée, ET de la placer au bon endroit dans la liste des équipes (voir « Ordre d'affichage » plus bas). Laissez vide pour un créneau qui ne joue pas de championnat classé par âge (Loisirs, Découverte, Handensemble, créneau transversal)."
 
       - label: "Genre (pour le rattachement automatique des feuilles de match)"
         name: "genre"
@@ -254,6 +245,13 @@ collections:
           - { label: "Mixte", value: "mixte" }
           - { label: "Féminin", value: "feminin" }
           - { label: "Masculin", value: "masculin" }
+
+      - label: "Ordre d'affichage (uniquement si pas de catégorie d'âge)"
+        name: "ordre"
+        widget: "number"
+        value_type: "int"
+        required: false
+        hint: "Si « Catégorie d'âge » est renseigné ci-dessus, ce champ est inutile et ignoré : l'équipe se place automatiquement du plus jeune au plus âgé. Il ne sert que pour un créneau SANS catégorie d'âge (Loisirs, Découverte, Handensemble, créneau transversal), pour choisir sa position à la main. Laissé vide, un tel créneau s'affiche en dernier."
 
       - label: "Calendriers de compétition (flux FFHandball)"
         name: "calendriers"

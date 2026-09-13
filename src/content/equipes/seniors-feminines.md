@@ -2,7 +2,6 @@
 nom: "Seniors féminines"
 type: competition
 slug: seniors-feminines
-ordre: 9
 categorieAge: senior
 genre: feminin
 calendriers:

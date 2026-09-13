@@ -2,7 +2,6 @@
 nom: "Seniors masculins"
 type: competition
 slug: seniors-masculins
-ordre: 10
 categorieAge: senior
 genre: masculin
 calendriers:

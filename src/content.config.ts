@@ -82,8 +82,14 @@ const equipes = defineCollection({
 			 * Ne jamais changer une fois publié (ça casserait les liens
 			 * existants, l'agenda et le rattachement des résultats). */
 			slug: z.string(),
-			/** Ordre d'affichage (homepage + /equipes), au sein de son "type". */
-			ordre: z.number(),
+			/** Ordre d'affichage (homepage + /equipes), au sein de son "type".
+			 * Facultatif : pour toute équipe ayant une `categorieAge` (voir plus
+			 * bas), l'ordre est calculé automatiquement (du plus jeune au plus
+			 * âgé) et ce champ est ignoré même renseigné. Il ne sert que
+			 * d'exception manuelle pour les créneaux sans catégorie d'âge
+			 * (Loisirs, Découverte, Inclusion, créneau transversal) -- voir
+			 * src/lib/equipes.ts, trierEquipes(). */
+			ordre: z.number().optional(),
 			horaires: z.string(),
 			encadrants: z.string(),
 			tarif: z.string(),
@@ -172,19 +178,25 @@ const partenaires = defineCollection({
 });
 
 /**
- * Une photo du bandeau "La vie du club, en images" sur la homepage
- * (composant PhotoBand.astro). Un fichier par photo, comme les autres
- * collections -- éditable depuis Sveltia CMS.
+ * Les photos du bandeau "La vie du club, en images" sur la homepage
+ * (composant PhotoBand.astro). Un seul fichier (id "page"), sur le même
+ * principe de "page singleton" que "leClub" ci-dessous -- toutes les photos
+ * vivent dans un unique champ liste (`photos`), réordonnable par
+ * glisser-déposer dans Sveltia CMS. Remplace l'ancien "un fichier par photo"
+ * avec un `ordre` numérique saisi à la main (source d'erreurs constatée en
+ * production : deux photos s'étaient déjà retrouvées avec le même numéro).
  */
 const photosAccueil = defineCollection({
 	loader: glob({ pattern: "*.md", base: "./src/content/photos-accueil" }),
 	schema: ({ image }) =>
 		z.object({
-			image: safeImage(image),
-			/** Texte alternatif (accessibilité) décrivant la photo. */
-			alt: z.string(),
-			/** Ordre de passage dans le carrousel (1 = en premier). */
-			ordre: z.number(),
+			photos: z.array(
+				z.object({
+					image: safeImage(image),
+					/** Texte alternatif (accessibilité) décrivant la photo. */
+					alt: z.string(),
+				}),
+			),
 		}),
 });
 

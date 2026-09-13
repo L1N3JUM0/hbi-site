@@ -1,9 +1,9 @@
 ---
-import { getCollection } from "astro:content";
+import { getEntry } from "astro:content";
 import PhotoCarousel from "./PhotoCarousel.astro";
 
-const entries = (await getCollection("photosAccueil")).sort((a, b) => a.data.ordre - b.data.ordre);
-const photos = entries.map((entry) => ({ src: entry.data.image, alt: entry.data.alt }));
+const page = await getEntry("photosAccueil", "page");
+const photos = (page?.data.photos ?? []).map((p) => ({ src: p.image, alt: p.alt }));
 ---
 
 <section class="photo-band">

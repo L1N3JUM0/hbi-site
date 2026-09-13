@@ -34,16 +34,18 @@ parlant (ex. `IMG_2481.jpg`), ouvrez la **Bibliothèque de médias**, cliquez
 sur la photo puis renommez-la : partout où elle est déjà utilisée sur le
 site se met à jour automatiquement avec le nouveau nom, rien ne se casse.
 
-## Ajouter/retirer une photo du carrousel de la page d'accueil
+## Ajouter/retirer/réordonner une photo du carrousel de la page d'accueil
 
-1. Cliquez sur **Photos de la page d'accueil**.
-2. Pour en ajouter une : **Nouvelle photo**, glissez-déposez l'image,
-   décrivez-la brièvement (champ **« Description de la photo »**, utile pour
-   les personnes malvoyantes), et donnez-lui un **« Ordre d'affichage »**
-   (1 = en premier).
-3. Pour en retirer une : ouvrez-la et utilisez la corbeille en haut de la
-   page.
-4. **Enregistrer** : le changement part directement en ligne (voir
+1. Cliquez sur **Photos de la page d'accueil**. Toutes les photos du
+   carrousel apparaissent dans une seule liste, dans leur ordre de passage.
+2. Pour en ajouter une : bouton **« Ajouter »** en bas de la liste,
+   glissez-déposez l'image, puis décrivez-la brièvement (champ **«
+   Description de la photo »**, utile pour les personnes malvoyantes).
+3. Pour en retirer une : la corbeille sur sa ligne.
+4. Pour changer l'ordre de passage : attrapez une photo par la poignée à
+   gauche de sa ligne et glissez-la à l'endroit voulu dans la liste — pas de
+   numéro à saisir.
+5. **Enregistrer** : le changement part directement en ligne (voir
    "Publication" ci-dessous).
 
 ## Modifier la page « Le club »
@@ -98,13 +100,16 @@ directement depuis `/admin`, sans intervention technique.
      avec des tirets, sans espace ni accent (ex. « u16-masculins »). Choisissez-le
      soigneusement : ne le modifiez plus une fois l'équipe créée, il relie les
      résultats de match à cette équipe.
-   - **Ordre d'affichage** : un nombre qui détermine sa place dans la liste
-     (regardez les nombres déjà utilisés par les autres équipes de la même
-     catégorie, et choisissez-en un libre).
    - **Catégorie d'âge** et **Genre** : voir "Rattacher automatiquement les
      feuilles de match à une nouvelle équipe" ci-dessous — important, sans
      ça les feuilles de match de cette équipe ne se rattacheront pas toutes
-     seules.
+     seules. Ces deux champs déterminent aussi automatiquement sa place dans
+     la liste des équipes (du plus jeune au plus âgé) : **rien à saisir dans
+     « Ordre d'affichage »** dans ce cas, laissez-le vide.
+   - **Ordre d'affichage** : à ignorer si vous avez rempli « Catégorie
+     d'âge » ci-dessus. Ne sert que pour un créneau qui n'en a pas (Loisirs,
+     Découverte, Handensemble, créneau transversal) : un nombre pour choisir
+     sa place à la main, ou vide pour qu'il s'affiche en dernier.
    - Horaires, encadrant(s), tarif, description, photo(s) : comme pour une
      équipe existante.
 3. **Enregistrer**.

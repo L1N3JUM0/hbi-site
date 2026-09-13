@@ -2,7 +2,11 @@
 nom: "Loisirs"
 type: competition
 slug: loisirs
-ordre: 11
+# Pas de categorieAge/genre (ne joue pas un championnat classé par âge) :
+# ordre manuel, volontairement au-delà du rang calculé le plus élevé (senior
+# masculin = 901) pour apparaître après toutes les équipes de compétition
+# classées par âge -- voir src/lib/equipes.ts.
+ordre: 950
 horaires: "Lundi 20h-22h30"
 encadrants: "David"
 tarif: "160 €"

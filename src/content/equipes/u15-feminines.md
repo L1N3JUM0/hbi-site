@@ -2,7 +2,6 @@
 nom: "U15 féminines"
 type: competition
 slug: u15-feminines
-ordre: 5
 categorieAge: U15
 genre: feminin
 horaires: "Mercredi 16h30-18h / vendredi 18h-19h30"

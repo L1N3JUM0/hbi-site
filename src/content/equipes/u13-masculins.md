@@ -2,7 +2,6 @@
 nom: "U13 masculins"
 type: competition
 slug: u13-masculins
-ordre: 4
 categorieAge: U13
 genre: masculin
 horaires: "Mardi et jeudi 17h30-19h"

@@ -2,7 +2,6 @@
 nom: "U13 féminines"
 type: competition
 slug: u13-feminines
-ordre: 3
 categorieAge: U13
 genre: feminin
 horaires: "Mercredi 16h30-18h / vendredi 17h30-19h"
