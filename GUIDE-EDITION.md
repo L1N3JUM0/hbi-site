@@ -253,6 +253,30 @@ résultat**, en renseignant l'équipe, la date, l'adversaire et le score
 (pas de graphique ni de statistiques détaillées dans ce cas, faute de
 feuille de match à analyser).
 
+**Si plusieurs équipes du club sont engagées dans la même catégorie**
+(actuellement les Seniors masculins), un badge « Équipe 1 »/« Équipe 2 »
+s'affiche automatiquement sur chaque résultat pour les distinguer. Pour un
+résultat saisi à la main dans ce cas, renseignez le champ **« Numéro
+d'équipe »** (1, 2...) ; laissez-le vide pour toute autre équipe.
+
+### Un match perdu par forfait
+
+Un forfait (le HBI ou l'adversaire ne s'est pas présenté) ne donne lieu à
+aucune feuille de match : il faut le saisir à la main, mais sans score ni
+statistiques puisque le match n'a pas eu lieu.
+
+1. Repérez la date et l'adversaire exacts de ce match sur `/agenda` (il y
+   figurait avant d'être déclaré forfait) — ça évite de les ressaisir de
+   mémoire.
+2. Rubrique **Résultats** → **Nouveau résultat**. Renseignez l'équipe, la
+   date et l'adversaire comme d'habitude.
+3. Dans le champ **« Forfait »**, indiquez qui a déclaré forfait (le
+   Handball Islois, ou l'adversaire).
+4. Laissez les champs de score vides.
+5. **Enregistrer**. Le match apparaît dans la liste des résultats à sa
+   date, avec une mention « Forfait » claire à la place du score — compté
+   comme une défaite ou une victoire selon le camp qui a déclaré forfait.
+
 *Note technique (pour la personne qui gère le site) : les statistiques
 individuelles des joueur·se·s sont affichées en nominatif ou pseudonymisées
 selon l'équipe (champ `affichageStats` dans `src/content/equipes/`,

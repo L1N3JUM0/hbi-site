@@ -353,8 +353,15 @@ const resultats = defineCollection({
 			domicile: z.boolean(),
 			adversaire: z.string(),
 			salle: z.string().optional(),
-			scoreDomicile: z.number(),
-			scoreExterieur: z.number(),
+			/** Rencontre non disputée : qui a déclaré forfait. Absent pour un
+			 * match normalement joué (l'immense majorité des cas). Quand
+			 * renseigné, `scoreDomicile`/`scoreExterieur` restent vides : pas de
+			 * score ni de statistiques pour un match qui n'a pas eu lieu -- voir
+			 * issueDuMatch() dans src/lib/resultats.ts, qui déduit directement
+			 * victoire/défaite de ce champ sans passer par un score. */
+			forfait: z.enum(["nous", "adversaire"]).optional(),
+			scoreDomicile: z.number().optional(),
+			scoreExterieur: z.number().optional(),
 			scoreMiTempsDomicile: z.number().optional(),
 			scoreMiTempsExterieur: z.number().optional(),
 			chronologie: z.array(chronologieEvenement).optional(),

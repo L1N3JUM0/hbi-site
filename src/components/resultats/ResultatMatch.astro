@@ -17,11 +17,14 @@ const r = resultat.data;
 const issue = issueDuMatch(resultat);
 const issueLabel = { victoire: "V", defaite: "D", nul: "N" }[issue];
 const issueLabelLongue = { victoire: "Victoire", defaite: "Défaite", nul: "Match nul" }[issue];
-const { nous, eux } = scoreNousEux(resultat);
-const stats = statsEquipeNous(resultat);
+/** Pas de score, de chronologie ni de statistiques pour un forfait -- match
+ * non disputé (voir le champ `forfait` dans content.config.ts). */
+const score = r.forfait ? null : scoreNousEux(resultat);
+const stats = r.forfait ? undefined : statsEquipeNous(resultat);
 const efficacite = stats ? efficaciteTir(stats.buts, stats.tirs) : null;
-const listeButeurs = buteurs(resultat, affichageStats);
-const listeGardiens = gardiens(resultat, affichageStats);
+const listeButeurs = r.forfait ? [] : buteurs(resultat, affichageStats);
+const listeGardiens = r.forfait ? [] : gardiens(resultat, affichageStats);
+const forfaitLabel = r.forfait === "nous" ? `Le Handball Islois a déclaré forfait face à ${r.adversaire}.` : `${r.adversaire} a déclaré forfait face au Handball Islois.`;
 ---
 
 <li class="match">
@@ -31,68 +34,76 @@ const listeGardiens = gardiens(resultat, affichageStats);
 			<span class="lieu">{r.domicile ? "Dom." : "Ext."}</span>
 			{distinguerEquipe && <span class="equipe-num">Équipe {r.equipeNumero ?? "1"}</span>}
 			<span class="adversaire">{r.adversaire}</span>
-			<span class="score">{nous} – {eux}</span>
+			{r.forfait ? <span class="tag-forfait">Forfait</span> : <span class="score">{score ? `${score.nous} – ${score.eux}` : "—"}</span>}
 			{r.typeMatch === "coupe" && <span class="tag-coupe">Coupe</span>}
 			<span class="date">{formatDateCourte(r.date)}</span>
 		</summary>
 
 		<div class="detail">
-			<MatchScoreChart resultat={resultat} />
-
 			{
-				stats && (
-					<dl class="stats-equipe">
-						<div>
-							<dt>Buts / tirs</dt>
-							<dd>
-								{stats.tirs > 0 ? `${stats.buts} / ${stats.tirs}` : "—"}
-								{efficacite !== null && ` (${efficacite}%)`}
-							</dd>
-						</div>
-						<div>
-							<dt>Arrêts</dt>
-							<dd>{stats.arrets}</dd>
-						</div>
-						<div>
-							<dt>Discipline</dt>
-							<dd>
-								{stats.exclusions} excl. · {stats.avertissements} avert.
-							</dd>
-						</div>
-					</dl>
-				)
-			}
+				r.forfait ? (
+					<p class="forfait-detail">{forfaitLabel}</p>
+				) : (
+					<>
+						<MatchScoreChart resultat={resultat} />
 
-			{
-				listeButeurs.length > 0 && (
-					<div class="joueurs-bloc">
-						<p class="joueurs-bloc__titre">
-							Buteur·se·s ({listeButeurs.length})
-						</p>
-						<ul class="joueurs-liste">
-							{listeButeurs.map((b) => (
-								<li>
-									<span class="joueur-nom">{b.label}</span> — {b.buts} but{b.buts > 1 ? "s" : ""}
-									{b.tirs > 0 && ` (${b.buts}/${b.tirs})`}
-								</li>
-							))}
-						</ul>
-					</div>
-				)
-			}
+						{
+							stats && (
+								<dl class="stats-equipe">
+									<div>
+										<dt>Buts / tirs</dt>
+										<dd>
+											{stats.tirs > 0 ? `${stats.buts} / ${stats.tirs}` : "—"}
+											{efficacite !== null && ` (${efficacite}%)`}
+										</dd>
+									</div>
+									<div>
+										<dt>Arrêts</dt>
+										<dd>{stats.arrets}</dd>
+									</div>
+									<div>
+										<dt>Discipline</dt>
+										<dd>
+											{stats.exclusions} excl. · {stats.avertissements} avert.
+										</dd>
+									</div>
+								</dl>
+							)
+						}
 
-			{
-				listeGardiens.length > 0 && (
-					<div class="joueurs-bloc">
-						<p class="joueurs-bloc__titre">Gardien·ne·s</p>
-						<ul class="joueurs-liste">
-							{listeGardiens.map((g) => (
-								<li>
-									<span class="joueur-nom">{g.label}</span> — {g.arrets} arrêt{g.arrets > 1 ? "s" : ""}
-								</li>
-							))}
-						</ul>
-					</div>
+						{
+							listeButeurs.length > 0 && (
+								<div class="joueurs-bloc">
+									<p class="joueurs-bloc__titre">
+										Buteur·se·s ({listeButeurs.length})
+									</p>
+									<ul class="joueurs-liste">
+										{listeButeurs.map((b) => (
+											<li>
+												<span class="joueur-nom">{b.label}</span> — {b.buts} but{b.buts > 1 ? "s" : ""}
+												{b.tirs > 0 && ` (${b.buts}/${b.tirs})`}
+											</li>
+										))}
+									</ul>
+								</div>
+							)
+						}
+
+						{
+							listeGardiens.length > 0 && (
+								<div class="joueurs-bloc">
+									<p class="joueurs-bloc__titre">Gardien·ne·s</p>
+									<ul class="joueurs-liste">
+										{listeGardiens.map((g) => (
+											<li>
+												<span class="joueur-nom">{g.label}</span> — {g.arrets} arrêt{g.arrets > 1 ? "s" : ""}
+											</li>
+										))}
+									</ul>
+								</div>
+							)
+						}
+					</>
 				)
 			}
 		</div>
@@ -179,6 +190,22 @@ const listeGardiens = gardiens(resultat, affichageStats);
 		letter-spacing: 0.04em;
 		padding: 0.15rem 0.4rem;
 		white-space: nowrap;
+	}
+	.tag-forfait {
+		background: var(--color-crimson);
+		color: var(--color-white);
+		font-size: 0.65rem;
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		padding: 0.15rem 0.4rem;
+		white-space: nowrap;
+	}
+	.forfait-detail {
+		color: rgba(255, 255, 255, 0.85);
+		font-size: 0.85rem;
+		line-height: 1.5;
+		margin: 0.4rem 0 0;
 	}
 	.date {
 		color: rgba(255, 255, 255, 0.55);

@@ -71,15 +71,24 @@ export function resultatsParSaison(resultats: Resultat[]): ResultatsParSaison {
 }
 
 /** Score domicile/extérieur remis dans l'ordre "nous/eux" du point de vue
- * du HBI, quel que soit le camp qu'il occupait sur ce match. */
-export function scoreNousEux(r: Resultat): { nous: number; eux: number } {
-	return r.data.domicile ? { nous: r.data.scoreDomicile, eux: r.data.scoreExterieur } : { nous: r.data.scoreExterieur, eux: r.data.scoreDomicile };
+ * du HBI, quel que soit le camp qu'il occupait sur ce match. `null` pour un
+ * forfait (pas de score, voir `forfait` dans content.config.ts) ou toute
+ * entrée manuelle où l'un des deux scores manquerait. */
+export function scoreNousEux(r: Resultat): { nous: number; eux: number } | null {
+	const { domicile, scoreDomicile, scoreExterieur } = r.data;
+	if (scoreDomicile == null || scoreExterieur == null) return null;
+	return domicile ? { nous: scoreDomicile, eux: scoreExterieur } : { nous: scoreExterieur, eux: scoreDomicile };
 }
 
 export function issueDuMatch(r: Resultat): Issue {
-	const { nous, eux } = scoreNousEux(r);
-	if (nous > eux) return "victoire";
-	if (nous < eux) return "defaite";
+	// Un forfait n'a pas de score à comparer : le camp qui a déclaré forfait
+	// a perdu, sans ambiguïté possible.
+	if (r.data.forfait === "nous") return "defaite";
+	if (r.data.forfait === "adversaire") return "victoire";
+	const score = scoreNousEux(r);
+	if (!score) return "nul"; // score manquant sur une entrée manuelle -- ne devrait pas arriver, garde-fou.
+	if (score.nous > score.eux) return "victoire";
+	if (score.nous < score.eux) return "defaite";
 	return "nul";
 }
 

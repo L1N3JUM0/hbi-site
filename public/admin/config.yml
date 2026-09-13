@@ -498,16 +498,28 @@ collections:
         widget: "string"
         required: false
 
+      - label: "Forfait"
+        name: "forfait"
+        widget: "select"
+        required: false
+        hint: "Uniquement si ce match n'a pas été disputé (forfait déclaré par une des deux équipes). Laissez vide pour un match normalement joué, et remplissez les scores ci-dessous comme d'habitude. Astuce : regardez /agenda pour retrouver la date et l'adversaire exacts de ce match avant de créer le résultat."
+        options:
+          - { label: "Le Handball Islois a déclaré forfait", value: "nous" }
+          - { label: "L'adversaire a déclaré forfait", value: "adversaire" }
+
       - label: "Score du HBI"
         name: "scoreDomicile"
         widget: "number"
         value_type: "int"
-        hint: "Le score du HBI si « Le HBI recevait » est coché, sinon le score de l'adversaire."
+        required: false
+        hint: "Le score du HBI si « Le HBI recevait » est coché, sinon le score de l'adversaire. Laissez vide en cas de forfait (champ ci-dessus)."
 
       - label: "Score de l'adversaire"
         name: "scoreExterieur"
         widget: "number"
         value_type: "int"
+        required: false
+        hint: "Laissez vide en cas de forfait."
 
       - label: "Score du HBI à la mi-temps"
         name: "scoreMiTempsDomicile"
