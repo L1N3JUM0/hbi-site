@@ -275,13 +275,24 @@ function parseChronologie(rows, dérouleIndex) {
 	}
 	const [tempsGauche, tempsDroite] = clusterX(tempsX);
 	const [scoreGauche, scoreDroite] = clusterX(scoreX);
-	if (tempsDroite === undefined || scoreDroite === undefined) {
+	if (tempsGauche === undefined || scoreGauche === undefined) {
 		throw new FeuilleFormatError("En-tête de la chronologie du match ('Déroulé du Match') non reconnu.");
 	}
+	// Les matchs plus courts (catégories jeunes) tiennent parfois entièrement
+	// dans une seule colonne -- pas de "PERIODE 2" à droite dans ce cas, vu
+	// sur des feuilles U13 réelles. On ne construit une deuxième colonne que
+	// si une deuxième position x a effectivement été détectée.
 	const slots = [
-		{ tempsX: tempsGauche, scoreX: scoreGauche, actionXMin: scoreGauche + ACTION_OFFSET_FROM_SCORE, actionXMax: tempsDroite },
-		{ tempsX: tempsDroite, scoreX: scoreDroite, actionXMin: scoreDroite + ACTION_OFFSET_FROM_SCORE, actionXMax: Infinity },
+		{
+			tempsX: tempsGauche,
+			scoreX: scoreGauche,
+			actionXMin: scoreGauche + ACTION_OFFSET_FROM_SCORE,
+			actionXMax: tempsDroite ?? Infinity,
+		},
 	];
+	if (tempsDroite !== undefined && scoreDroite !== undefined) {
+		slots.push({ tempsX: tempsDroite, scoreX: scoreDroite, actionXMin: scoreDroite + ACTION_OFFSET_FROM_SCORE, actionXMax: Infinity });
+	}
 
 	const events = [];
 	for (let i = dérouleIndex; i < rows.length; i++) {
