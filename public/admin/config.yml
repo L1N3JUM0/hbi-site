@@ -24,6 +24,31 @@ show_preview_links: false
 media_folder: "src/assets"
 public_folder: "/src/assets"
 
+# Optimisation automatique des images à l'envoi (dans le navigateur, avant
+# écriture dans le dépôt) : les bénévoles n'ont rien à préparer eux-mêmes
+# (compression, redimensionnement...) avant d'envoyer une affiche Canva ou
+# une photo de téléphone. Voir GUIDE-EDITION.md.
+media_libraries:
+  all:
+    # 2048px de large/haut couvre largement le plus grand affichage réel du
+    # site (la photo de couverture d'un article, demandée en 1200px à
+    # Astro) tout en gardant de la marge pour les écrans à haute densité de
+    # pixels (Retina/2x). Ne fait que réduire les images plus grandes que
+    # ça -- une image déjà plus petite n'est jamais agrandie.
+    transformations:
+      raster_image:
+        format: webp
+        width: 2048
+        height: 2048
+      svg:
+        optimize: true
+    # Vérifiée APRÈS optimisation (donc sur le fichier déjà compressé) :
+    # une limite haute ici est un simple garde-fou contre un fichier
+    # anormal, pas un budget serré -- une photo optimisée dépasse rarement
+    # quelques centaines de Ko.
+    max_file_size: 5000000
+    slugify_filename: true
+
 collections:
   - name: "leClub"
     label: "Page « Le club »"

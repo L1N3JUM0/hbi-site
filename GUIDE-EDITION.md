@@ -24,6 +24,16 @@ glisser-déposer une nouvelle, soit en choisir une déjà présente — même si
 elle a été ajoutée depuis une autre rubrique. Pas besoin de retéléverser
 deux fois la même image.
 
+**Pas besoin de préparer vos photos avant de les envoyer.** Une affiche
+Canva, une photo prise avec le téléphone (même plusieurs Mo) : le site les
+compresse et les redimensionne automatiquement dès l'envoi. Vous n'avez
+rien à faire de particulier de votre côté.
+
+**Renommer une photo déjà envoyée.** Si le nom d'un fichier n'est pas très
+parlant (ex. `IMG_2481.jpg`), ouvrez la **Bibliothèque de médias**, cliquez
+sur la photo puis renommez-la : partout où elle est déjà utilisée sur le
+site se met à jour automatiquement avec le nouveau nom, rien ne se casse.
+
 ## Ajouter/retirer une photo du carrousel de la page d'accueil
 
 1. Cliquez sur **Photos de la page d'accueil**.

@@ -348,3 +348,31 @@ fichier qui n'existe nulle part fera toujours échouer le build, à raison —
 impossible d'afficher une image qui n'existe pas) ; ils éliminent la classe
 de bug observée (un format de chemin inhabituel pour un fichier qui, lui,
 existe bel et bien).
+
+### Optimisation automatique des images à l'envoi
+
+`media_libraries.all` dans `config.yml` fait tourner, côté navigateur, une
+compression/conversion automatique **à chaque nouvel envoi** (les fichiers
+déjà dans le dépôt ne sont jamais retouchés) :
+
+- `transformations.raster_image` : conversion en WebP, réduite si besoin à
+  2048 px de large/haut maximum (jamais agrandie si l'original est plus
+  petit). Cette valeur couvre largement le plus grand affichage réel du
+  site (couverture d'article demandée à 1200 px à Astro — voir les appels à
+  `<Image width={...} />` dans `src/`), avec de la marge pour les écrans
+  Retina/haute densité.
+- `transformations.svg.optimize` : minification des SVG (utile pour les
+  logos de partenaires).
+- `max_file_size: 5000000` (5 Mo) : vérifié **après** transformation (donc
+  sur le fichier déjà compressé, confirmé en lisant le code de Sveltia CMS
+  -- la fonction qui applique `transformations` s'exécute avant celle qui
+  compare `file.size` à cette limite) — un simple garde-fou contre un
+  fichier anormal, pas un budget serré à l'usage normal.
+- `slugify_filename: true` : assainit le nom de fichier à l'envoi (accents,
+  espaces, majuscules, parenthèses...), pour éviter tout souci de chemin
+  selon l'hébergement.
+
+Un fichier `.webp` comme source d'un champ `image()` d'Astro fonctionne
+sans rien à changer côté schéma ou composants (déjà le cas en production :
+`src/assets/Pays_d'Aix_Université_Club_Handball_2017_logo.svg.webp`, le
+logo d'un partenaire, est une vraie source WebP qui build normalement).
