@@ -272,11 +272,11 @@ collections:
             default: "Handball Islois"
             hint: "Ne changez cette valeur que si PLUSIEURS équipes du club jouent dans la même poule (ex. Seniors masculins 1 et 2) : indiquez alors le texte exact qui les distingue sur ffhandball.fr (ex. « Handball Islois 1 »). Dans tous les autres cas, laissez la valeur par défaut."
 
-          - label: "Numéro (si plusieurs équipes du club dans cette poule)"
+          - label: "Libellé (si plusieurs équipes du club dans cette catégorie)"
             name: "libelle"
             widget: "string"
             required: false
-            hint: "Exemple : 1 ou 2. Affiché après le nom de l'équipe sur l'agenda pour les distinguer. Laissez vide s'il n'y a qu'une seule équipe du club dans cette poule."
+            hint: "Affiché après le nom de l'équipe sur l'agenda et les résultats pour les distinguer. Laissez vide s'il n'y a qu'une seule équipe du club dans cette catégorie. Deux cas : (1) même poule (ex. Seniors masculins 1 et 2) -> mettez simplement « 1 »/« 2 ». (2) compétitions différentes (ex. U15 masculins Excellence et Départementale) -> mettez un mot qui sert AUSSI à reconnaître automatiquement les feuilles de match de cette équipe (ex. « Excellence », « Départementale ») : choisissez un mot qui apparaît tel quel (accents et majuscules ignorés) dans le nom de la compétition sur les feuilles de match, en évitant les terminaisons qui peuvent varier (préférez « Départemental » à « Départementale »)."
 
           - label: "Lien du classement (en secours)"
             name: "classementUrl"

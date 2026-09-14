@@ -1,9 +1,10 @@
 ---
 /**
  * Bandeau visible listant les feuilles de match qui n'ont pas pu être
- * importées automatiquement (voir scripts/import-fdme.mjs). Sans lui, un
- * échec d'import ne serait visible que dans les logs du build -- invisible
- * pour la personne (souvent non technique) qui a déposé la feuille.
+ * importées automatiquement, ET celles importées mais avec un point à
+ * vérifier à la main (voir scripts/import-fdme.mjs). Sans lui, un souci
+ * d'import ne serait visible que dans les logs du build -- invisible pour
+ * la personne (souvent non technique) qui a déposé la feuille.
  *
  * Lit un fichier régénéré à chaque build (jamais commité, voir
  * .gitignore) : lecture directe en `fs`, pas via astro:content, pour ne
@@ -13,22 +14,26 @@
  */
 import { readFileSync } from "node:fs";
 
-interface Erreur {
+interface Signalement {
 	fichier: string;
 	raison: string;
 }
 
-let erreurs: Erreur[] = [];
+let erreurs: Signalement[] = [];
+let avertissements: Signalement[] = [];
 try {
-	erreurs = JSON.parse(readFileSync("src/data/import-erreurs.generated.json", "utf-8"));
+	const donnees = JSON.parse(readFileSync("src/data/import-erreurs.generated.json", "utf-8"));
+	erreurs = donnees.erreurs ?? [];
+	avertissements = donnees.avertissements ?? [];
 } catch {
 	erreurs = [];
+	avertissements = [];
 }
 ---
 
 {
 	erreurs.length > 0 && (
-		<div class="erreurs-import">
+		<div class="signalement-import erreur">
 			<p class="titre">
 				⚠ {erreurs.length} feuille{erreurs.length > 1 ? "s" : ""} de match n'
 				{erreurs.length > 1 ? "ont" : "a"} pas pu être importée{erreurs.length > 1 ? "s" : ""} automatiquement
@@ -48,13 +53,38 @@ try {
 	)
 }
 
+{
+	avertissements.length > 0 && (
+		<div class="signalement-import avertissement">
+			<p class="titre">
+				ℹ {avertissements.length} résultat{avertissements.length > 1 ? "s" : ""} importé
+				{avertissements.length > 1 ? "s" : ""} à vérifier
+			</p>
+			<ul>
+				{avertissements.map((a) => (
+					<li>
+						<strong>{a.fichier}</strong> — {a.raison}
+					</li>
+				))}
+			</ul>
+			<p class="aide">Le résultat est publié, seul ce point précis n'a pas pu être déterminé automatiquement.</p>
+		</div>
+	)
+}
+
 <style>
-	.erreurs-import {
+	.signalement-import {
 		max-width: 1000px;
-		margin: 0 auto;
+		margin: 0 auto 1rem;
 		padding: 1rem 1.5rem;
+	}
+	.signalement-import.erreur {
 		background: rgba(187, 3, 77, 0.12);
 		border-left: 3px solid var(--color-crimson);
+	}
+	.signalement-import.avertissement {
+		background: rgba(2, 89, 170, 0.15);
+		border-left: 3px solid var(--color-blue);
 	}
 	.titre {
 		color: var(--color-white);
@@ -62,11 +92,11 @@ try {
 		font-size: 0.95rem;
 		margin: 0 0 0.5rem;
 	}
-	.erreurs-import ul {
+	.signalement-import ul {
 		margin: 0 0 0.5rem;
 		padding-left: 1.2rem;
 	}
-	.erreurs-import li {
+	.signalement-import li {
 		color: rgba(255, 255, 255, 0.9);
 		font-size: 0.85rem;
 		line-height: 1.5;

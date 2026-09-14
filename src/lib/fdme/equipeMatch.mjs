@@ -23,7 +23,8 @@ const MASCULIN_PATTERN = /masculin/i;
 const COUPE_PATTERN = /\bcoupe\b/i;
 
 /**
- * @typedef {{ slug: string, categorieAge: string, genre: "mixte" | "feminin" | "masculin" }} EquipeCompetition
+ * @typedef {{ url: string, libelle?: string }} CalendrierEquipe
+ * @typedef {{ slug: string, categorieAge: string, genre: "mixte" | "feminin" | "masculin", calendriers?: CalendrierEquipe[] }} EquipeCompetition
  *
  * @param {string} competitionText
  * @param {EquipeCompetition[]} equipesCompetition Équipes de compétition
@@ -92,4 +93,61 @@ export const CLUB_NAME_PATTERN = /handball\s*islois/i;
  * partage de poule du tout". */
 export function extraireNumeroEquipe(nomEquipeHBI) {
 	return /(\d+)\s*$/.exec(nomEquipeHBI.trim())?.[1] ?? null;
+}
+
+/** Retire les diacritiques et met en minuscules, pour comparer deux textes
+ * sans tenir compte de la casse ni des accents (ex. le libellé "Départementale"
+ * saisi dans le CMS doit reconnaître "DEPARTEMENTALE" sur une feuille de
+ * match, qui n'a pas toujours les accents). */
+function normaliserTexte(texte) {
+	return texte
+		.normalize("NFD")
+		.replace(/[̀-ͯ]/g, "")
+		.toLowerCase();
+}
+
+/**
+ * Cas différent de `extraireNumeroEquipe` ci-dessus : quand plusieurs
+ * équipes du club partagent la même catégorie (`categorieAge`+`genre`) mais
+ * sont engagées dans des COMPÉTITIONS DIFFÉRENTES -- donc des flux iCal
+ * différents, contrairement aux Seniors masculins 1/2 qui partagent la même
+ * poule (ex. U15 masculins "Excellence Région" et "Départementale" à partir
+ * de la saison 2026-2027). Sur la feuille de match, le nom d'équipe HBI ne
+ * porte alors aucun suffixe distinctif dans les deux cas ("HANDBALL
+ * ISLOIS") : seul le texte de la compétition permet de savoir laquelle des
+ * deux a joué, comparé au `libelle` de chaque calendrier de la fiche équipe
+ * (ex. "Excellence", "Départementale" -- voir content.config.ts).
+ *
+ * N'est PERTINENT que si les calendriers de l'équipe ont des `url`
+ * distinctes (donc de vraies compétitions différentes) : à l'appelant de ne
+ * pas invoquer cette fonction pour une équipe dont les calendriers
+ * partagent la même `url` (partage de poule, cas de `extraireNumeroEquipe`
+ * ci-dessus) -- sinon un libellé numérique ("1"/"2") pourrait matcher par
+ * coïncidence un numéro de poule dans le texte de la compétition ("POULE
+ * 2") et produire un rattachement silencieusement faux.
+ *
+ * Ne devine JAMAIS en cas de doute (aucun `libelle` ne correspond, ou
+ * plusieurs correspondent à la fois) : un rattachement faux serait pire
+ * qu'un résultat importé mais non distingué -- voir l'appelant
+ * (scripts/import-fdme.mjs), qui signale alors le cas dans le bandeau
+ * d'erreurs d'import plutôt que de deviner.
+ *
+ * @param {string} competitionText
+ * @param {CalendrierEquipe[]} calendriers Calendriers de l'équipe déjà
+ *   déterminée par `detectEquipe()`.
+ * @returns {{ libelle: string | null, ambigu: boolean }} `ambigu` est true
+ *   quand une décision existe à prendre (plusieurs calendriers avec un
+ *   `libelle` et des compétitions distinctes) mais n'a pas pu être prise
+ *   automatiquement -- à distinguer du cas "rien à distinguer" (`libelle`
+ *   et `ambigu` tous les deux absents/false), qui n'appelle aucune action.
+ */
+export function detecterLibelleCompetition(competitionText, calendriers) {
+	const candidats = (calendriers ?? []).filter((c) => c.libelle?.trim());
+	if (candidats.length < 2) return { libelle: null, ambigu: false };
+
+	const texteNormalise = normaliserTexte(competitionText);
+	const correspondances = candidats.filter((c) => texteNormalise.includes(normaliserTexte(c.libelle.trim())));
+
+	if (correspondances.length === 1) return { libelle: correspondances[0].libelle.trim(), ambigu: false };
+	return { libelle: null, ambigu: true };
 }

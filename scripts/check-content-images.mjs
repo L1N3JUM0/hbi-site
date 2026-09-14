@@ -14,11 +14,12 @@
  * Lancé automatiquement avant `npm run build` (script "prebuild" dans
  * package.json). Peut aussi être lancé seul : `node scripts/check-content-images.mjs`.
  */
-import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, statSync } from "node:fs";
 import { dirname, extname, join } from "node:path";
+import { lireFrontmatter } from "./frontmatter.mjs";
 
 const contentDir = "src/content";
-const imageLinePattern = /^\s*(?:-\s*)?(?:[a-zA-Z]+:\s*)?"?([^"\n]+\.(?:jpe?g|png|webp|svg|gif))"?\s*$/i;
+const IMAGE_EXTENSION_PATTERN = /\.(?:jpe?g|png|webp|svg|gif)$/i;
 
 function listMarkdownFiles(dir) {
 	const files = [];
@@ -33,15 +34,19 @@ function listMarkdownFiles(dir) {
 	return files;
 }
 
-function extractImagePaths(frontmatter) {
-	const paths = [];
-	for (const line of frontmatter.split("\n")) {
-		const match = line.match(imageLinePattern);
-		if (match && !match[1].includes("://")) {
-			paths.push(match[1].trim());
-		}
+/** Parcourt récursivement les valeurs du frontmatter parsé (peu importe le
+ * nom du champ ou son imbrication -- texte simple, liste `galerie`, entrée
+ * de liste `calendriers`...) et retient celles qui ressemblent à un chemin
+ * d'image locale, pour vérifier qu'elles existent vraiment sur le disque. */
+function extractImagePaths(valeur, chemins = []) {
+	if (typeof valeur === "string") {
+		if (IMAGE_EXTENSION_PATTERN.test(valeur) && !valeur.includes("://")) chemins.push(valeur.trim());
+	} else if (Array.isArray(valeur)) {
+		for (const item of valeur) extractImagePaths(item, chemins);
+	} else if (valeur && typeof valeur === "object") {
+		for (const item of Object.values(valeur)) extractImagePaths(item, chemins);
 	}
-	return paths;
+	return chemins;
 }
 
 /** Même logique que normalizeImagePath() dans src/content.config.ts --
@@ -62,10 +67,8 @@ function resolvePath(file, normalized) {
 
 const problems = [];
 for (const file of listMarkdownFiles(contentDir)) {
-	const text = readFileSync(file, "utf-8");
-	const frontmatterMatch = text.match(/^---\n([\s\S]*?)\n---/);
-	if (!frontmatterMatch) continue;
-	for (const rawPath of extractImagePaths(frontmatterMatch[1])) {
+	const data = lireFrontmatter(file);
+	for (const rawPath of extractImagePaths(data)) {
 		const resolved = resolvePath(file, normalize(rawPath));
 		if (!existsSync(resolved)) {
 			problems.push({ file, rawPath, resolved });

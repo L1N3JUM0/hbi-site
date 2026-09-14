@@ -32,6 +32,55 @@ function safeImage(image: () => z.ZodType<unknown, string>) {
 }
 
 /**
+ * Sveltia CMS écrit `null` (champ "number") ou une chaîne vide (champ
+ * "string"/"select"/URL) pour un champ FACULTATIF laissé vide dans le
+ * formulaire -- jamais l'absence pure de la clé en YAML. `.optional()` seul
+ * ne suffit donc pas : `null` n'est pas `undefined` pour Zod, et une chaîne
+ * vide reste une chaîne valide pour `z.string()` mais pas pour
+ * `z.string().url()` ou un enum. Sans ce pré-traitement, vider un champ
+ * facultatif depuis le CMS pouvait faire échouer TOUT le build -- incident
+ * du 2026-09 sur l'équipe u15-masculins ("ordre" et
+ * "calendriers.0.classementUrl" laissés vides à la création d'un calendrier).
+ */
+function videVersAbsent(valeur: unknown) {
+	return valeur === null || valeur === "" ? undefined : valeur;
+}
+
+/**
+ * Champ facultatif tolérant : une valeur vide (null/"" écrite par le CMS)
+ * OU invalide (mauvais format, énumération inconnue...) devient simplement
+ * "non renseigné" plutôt que de faire échouer le build. Deuxième niveau de
+ * protection au-delà de `videVersAbsent` ci-dessus : une saisie imparfaite
+ * depuis le CMS doit au pire dégrader l'affichage (le champ n'apparaît pas),
+ * jamais bloquer la publication du site -- voir CLAUDE.md et le commentaire
+ * de `videVersAbsent`. À utiliser pour tout champ dont l'appelant gère déjà
+ * l'absence (`?? valeur par défaut`, `if (champ) ...`) : c'est le cas de
+ * tous les champs facultatifs de ce fichier.
+ */
+function champFacultatif<T extends z.ZodTypeAny>(schema: T) {
+	return z.preprocess(videVersAbsent, schema.optional().catch(undefined));
+}
+
+/** Comme `champFacultatif`, mais pour un champ qui a déjà une valeur de
+ * repli "métier" (`.default()`) plutôt que "non renseigné" -- ex. le statut
+ * d'une équipe, vide à tort, doit redevenir "active", pas disparaître. */
+function champAvecDefaut<T extends z.ZodTypeAny>(schema: T, defaut: z.infer<T>) {
+	return z.preprocess(videVersAbsent, schema.default(defaut).catch(defaut));
+}
+
+/** Pour les deux seuls champs liste "requis" du schéma (`galerie`,
+ * `calendriers`) : une liste vide est une valeur de repli sûre et sans
+ * ambiguïté (contrairement à un texte ou une image manquante, pour
+ * lesquels il n'existe pas de repli qui ne serait pas trompeur) -- ces
+ * champs restent donc "requis" au sens où ils doivent être un tableau,
+ * mais `null` (jamais écrit intentionnellement par le CMS pour une liste,
+ * mais toléré par précaution) est traité comme une liste vide plutôt que
+ * de faire échouer le build. */
+function listeTolerante<T extends z.ZodTypeAny>(schema: T) {
+	return z.preprocess(videVersAbsent, schema.default([] as z.infer<T>).catch([] as z.infer<T>));
+}
+
+/**
  * Une équipe/catégorie du club. Conçue pour être éditée directement par un
  * futur back-office Sveltia CMS sans restructuration : chaque équipe est un
  * fichier Markdown indépendant dans src/content/equipes/, avec uniquement
@@ -49,14 +98,14 @@ const calendrierEquipe = z.object({
 	 * convient tant qu'une seule équipe du club joue dans cette poule ; à
 	 * personnaliser ("Handball Islois 1"/"2"...) seulement en cas de partage
 	 * de poule entre plusieurs équipes du club. */
-	repere: z.string().default("Handball Islois"),
+	repere: champAvecDefaut(z.string(), "Handball Islois"),
 	/** Affiché après le nom de l'équipe sur l'agenda pour distinguer
 	 * plusieurs équipes du club dans la même poule (ex. "1", "2"). Vide dans
 	 * le cas courant d'une seule équipe. */
-	libelle: z.string().optional(),
+	libelle: champFacultatif(z.string()),
 	/** Laisser vide : déduit automatiquement de l'URL des rencontres du flux.
 	 * À renseigner uniquement si la déduction échoue pour ce flux. */
-	classementUrl: z.string().url().optional(),
+	classementUrl: champFacultatif(z.string().url()),
 });
 
 const equipes = defineCollection({
@@ -76,7 +125,7 @@ const equipes = defineCollection({
 			 * passées"). Une équipe archivée disparaît de l'effectif affiché
 			 * (plus d'horaires/tarif/agenda, ça n'a plus de sens) mais garde son
 			 * `slug`, donc ses résultats dans la collection "resultats". */
-			statut: z.enum(["active", "archivee"]).default("active"),
+			statut: champAvecDefaut(z.enum(["active", "archivee"]), "active"),
 			/** Identifiant stable : ancre sur /equipes (#slug) ET clé de
 			 * correspondance avec `equipeSlug` dans la collection "resultats".
 			 * Ne jamais changer une fois publié (ça casserait les liens
@@ -89,7 +138,7 @@ const equipes = defineCollection({
 			 * d'exception manuelle pour les créneaux sans catégorie d'âge
 			 * (Loisirs, Découverte, Inclusion, créneau transversal) -- voir
 			 * src/lib/equipes.ts, trierEquipes(). */
-			ordre: z.number().optional(),
+			ordre: champFacultatif(z.number()),
 			horaires: z.string(),
 			encadrants: z.string(),
 			tarif: z.string(),
@@ -101,14 +150,14 @@ const equipes = defineCollection({
 			photoProfil: safeImage(image),
 			/** Photos du carrousel sur /equipes (peut inclure ou non photoProfil).
 			 * Chemins relatifs à ce fichier. */
-			galerie: z.array(safeImage(image)),
+			galerie: listeTolerante(z.array(safeImage(image))),
 			/** Mode d'affichage des stats individuelles dans le bloc "Résultats" de
 			 * cette équipe sur /equipes : "nominatif" (prénom + nom complet),
 			 * "pseudonymise" (prénom + initiale, ex. "Théo M.") ou "masque" (aucune
 			 * stat individuelle affichée, seules les stats d'équipe le sont).
 			 * Par défaut pseudonymisé (le choix le plus prudent) -- mettre
 			 * "nominatif" explicitement pour les équipes seniors (majeurs). */
-			affichageStats: z.enum(["nominatif", "pseudonymise", "masque"]).default("pseudonymise"),
+			affichageStats: champAvecDefaut(z.enum(["nominatif", "pseudonymise", "masque"]), "pseudonymise"),
 			/** Catégorie d'âge de la compétition FFHandball ("U9", "U13", "U17",
 			 * "senior"...), exactement comme elle apparaît dans le nom de la
 			 * compétition sur les feuilles de match. Sert UNIQUEMENT au
@@ -119,14 +168,11 @@ const equipes = defineCollection({
 			 * (pas un enum) pour qu'une nouvelle catégorie jamais vue auparavant
 			 * (ex. un futur U20) fonctionne sans modification de ce fichier --
 			 * seule la fiche équipe doit être créée dans le CMS. */
-			categorieAge: z
-				.string()
-				.regex(/^(U\d{1,2}|senior)$/, 'Doit être "U" suivi de l\'âge (ex. U13), ou "senior".')
-				.optional(),
+			categorieAge: champFacultatif(z.string().regex(/^(U\d{1,2}|senior)$/, 'Doit être "U" suivi de l\'âge (ex. U13), ou "senior".')),
 			/** Genre de la compétition -- avec `categorieAge`, sert au
 			 * rattachement automatique d'une feuille de match (voir
 			 * src/lib/fdme/equipeMatch.mjs). Absent si `categorieAge` l'est. */
-			genre: z.enum(["mixte", "feminin", "masculin"]).optional(),
+			genre: champFacultatif(z.enum(["mixte", "feminin", "masculin"])),
 			/** Calendriers FFHandball (flux iCal) de cette équipe. Vide tant que
 			 * le calendrier de la saison n'a pas été publié par la fédération, ou
 			 * pour un créneau qui ne joue pas de championnat -- l'équipe
@@ -134,7 +180,7 @@ const equipes = defineCollection({
 			 * entrées pour une équipe engageant deux équipes dans la même poule
 			 * (ex. Seniors masculins 1 et 2). Voir src/lib/agenda.ts, qui
 			 * remplace l'ancien src/data/agenda-teams.config.ts. */
-			calendriers: z.array(calendrierEquipe).default([]),
+			calendriers: listeTolerante(z.array(calendrierEquipe)),
 		}),
 });
 
@@ -173,7 +219,7 @@ const partenaires = defineCollection({
 			url: z.string().url(),
 			/** Optionnelle : pas affichée pour l'instant (la section reste
 			 * volontairement sobre, logos seuls), disponible si besoin plus tard. */
-			description: z.string().optional(),
+			description: champFacultatif(z.string()),
 		}),
 });
 
@@ -244,8 +290,8 @@ const histoireClub = defineCollection({
 			 * "Saison 2010-2011", "Années 1990"...). */
 			periode: z.string(),
 			texte: z.string(),
-			photo: safeImage(image).optional(),
-			photoAlt: z.string().optional(),
+			photo: champFacultatif(safeImage(image)),
+			photoAlt: champFacultatif(z.string()),
 			/** Ordre d'affichage (chronologique ou autre, au choix). */
 			ordre: z.number(),
 		}),
@@ -323,11 +369,11 @@ const resultats = defineCollection({
 	loader: glob({ pattern: "*.md", base: "./src/content/resultats" }),
 	schema: z
 		.object({
-			source: z.enum(["pdf", "manuel"]).default("manuel"),
+			source: champAvecDefaut(z.enum(["pdf", "manuel"]), "manuel"),
 			/** Identifiant FFHandball de la rencontre (ex. "VAGEXGV") -- clé de
 			 * déduplication pour les entrées générées depuis une feuille de match.
 			 * Absent pour une entrée saisie à la main. */
-			codeRencontre: z.string().optional(),
+			codeRencontre: champFacultatif(z.string()),
 			/** Doit correspondre au `slug` d'une entrée de la collection "equipes". */
 			equipeSlug: z.string(),
 			/** Quand plusieurs équipes du club sont engagées dans la même
@@ -343,31 +389,31 @@ const resultats = defineCollection({
 			 * l'affichage (voir ResultatMatch.astro) uniquement quand
 			 * `aPlusieursEquipes()` (src/lib/resultats.ts) détecte qu'un partage
 			 * de poule existe bel et bien pour cette équipe. */
-			equipeNumero: z.string().optional(),
+			equipeNumero: champFacultatif(z.string()),
 			date: z.coerce.date(),
 			/** Ex. "J1". Absent pour un match de coupe ou amical. */
-			journee: z.string().optional(),
-			competition: z.string().optional(),
-			typeMatch: z.enum(["championnat", "coupe", "autre"]).default("championnat"),
+			journee: champFacultatif(z.string()),
+			competition: champFacultatif(z.string()),
+			typeMatch: champAvecDefaut(z.enum(["championnat", "coupe", "autre"]), "championnat"),
 			/** true si le HBI recevait. */
 			domicile: z.boolean(),
 			adversaire: z.string(),
-			salle: z.string().optional(),
+			salle: champFacultatif(z.string()),
 			/** Rencontre non disputée : qui a déclaré forfait. Absent pour un
 			 * match normalement joué (l'immense majorité des cas). Quand
 			 * renseigné, `scoreDomicile`/`scoreExterieur` restent vides : pas de
 			 * score ni de statistiques pour un match qui n'a pas eu lieu -- voir
 			 * issueDuMatch() dans src/lib/resultats.ts, qui déduit directement
 			 * victoire/défaite de ce champ sans passer par un score. */
-			forfait: z.enum(["nous", "adversaire"]).optional(),
-			scoreDomicile: z.number().optional(),
-			scoreExterieur: z.number().optional(),
-			scoreMiTempsDomicile: z.number().optional(),
-			scoreMiTempsExterieur: z.number().optional(),
-			chronologie: z.array(chronologieEvenement).optional(),
-			statsEquipeDomicile: statsEquipeMatch.optional(),
-			statsEquipeExterieur: statsEquipeMatch.optional(),
-			statsJoueurs: z.array(statJoueurMatch).optional(),
+			forfait: champFacultatif(z.enum(["nous", "adversaire"])),
+			scoreDomicile: champFacultatif(z.number()),
+			scoreExterieur: champFacultatif(z.number()),
+			scoreMiTempsDomicile: champFacultatif(z.number()),
+			scoreMiTempsExterieur: champFacultatif(z.number()),
+			chronologie: champFacultatif(z.array(chronologieEvenement)),
+			statsEquipeDomicile: champFacultatif(statsEquipeMatch),
+			statsEquipeExterieur: champFacultatif(statsEquipeMatch),
+			statsJoueurs: champFacultatif(z.array(statJoueurMatch)),
 		})
 		/** `saison` (ex. "2025-2026") n'est jamais un champ saisi ou importé :
 		 * elle est recalculée depuis `date` à chaque lecture de la collection,

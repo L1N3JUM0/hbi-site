@@ -29,6 +29,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseFeuilleDeMatch, FeuilleFormatError } from "../src/lib/fdme/parseFeuille.mjs";
+import { lireFrontmatter } from "./frontmatter.mjs";
 
 const FEUILLES_DIR = "src/content/feuilles-match";
 const RESULTATS_DIR = "src/content/resultats";
@@ -52,9 +53,7 @@ function listPdfEntries() {
 
 /** Lit le champ `pdf:` du frontmatter d'une entrée CMS "Feuilles de match". */
 function extractPdfFieldValue(mdPath) {
-	const content = readFileSync(mdPath, "utf-8");
-	const match = /^pdf:\s*"?([^"\n]+?)"?\s*$/m.exec(content);
-	return match?.[1];
+	return lireFrontmatter(mdPath).pdf;
 }
 
 /**
@@ -94,11 +93,16 @@ function chargerEquipesCompetition() {
 	if (!existsSync(EQUIPES_DIR)) return [];
 	return readdirSync(EQUIPES_DIR)
 		.filter((f) => f.endsWith(".md"))
-		.map((f) => readFileSync(join(EQUIPES_DIR, f), "utf-8"))
-		.map((content) => ({
-			slug: /^slug:\s*"?([^"\n]+?)"?\s*$/m.exec(content)?.[1],
-			categorieAge: /^categorieAge:\s*"?([^"\n]+?)"?\s*$/m.exec(content)?.[1],
-			genre: /^genre:\s*"?([^"\n]+?)"?\s*$/m.exec(content)?.[1],
+		.map((f) => lireFrontmatter(join(EQUIPES_DIR, f)))
+		.map((data) => ({
+			slug: data.slug,
+			categorieAge: data.categorieAge,
+			genre: data.genre,
+			// Calendriers (url + libelle) : utilisés uniquement pour distinguer
+			// deux équipes du club dans la même catégorie mais des compétitions
+			// différentes -- voir detecterLibelleCompetition() dans
+			// src/lib/fdme/equipeMatch.mjs.
+			calendriers: (data.calendriers ?? []).map((c) => ({ url: c.url, libelle: c.libelle })),
 		}))
 		.filter((e) => e.slug && e.categorieAge && e.genre);
 }
@@ -110,8 +114,7 @@ function chargerEquipesCompetition() {
 function preserveEquipeSlugSiBesoin(cible, equipeSlugDetecte) {
 	if (equipeSlugDetecte) return equipeSlugDetecte;
 	if (!existsSync(cible)) return "";
-	const existant = /^equipeSlug:\s*"([^"]*)"/m.exec(readFileSync(cible, "utf-8"))?.[1];
-	return existant || "";
+	return lireFrontmatter(cible).equipeSlug || "";
 }
 
 function frontmatter(data) {
@@ -148,6 +151,14 @@ let ignorees = 0;
 const codesGeneres = new Set();
 /** @type {{ fichier: string, raison: string }[]} */
 const erreurs = [];
+/** Feuilles importées avec succès mais dont une information n'a pas pu être
+ * déterminée automatiquement (ex. laquelle de deux équipes du club, engagées
+ * dans des compétitions différentes, a joué -- voir equipeNumeroAmbigu dans
+ * src/lib/fdme/parseFeuille.mjs) : signalées séparément de `erreurs`
+ * ci-dessus, moins alarmantes qu'un import totalement échoué puisque le
+ * résultat est bien publié, juste incomplet.
+ * @type {{ fichier: string, raison: string }[]} */
+const avertissementsAffiches = [];
 
 for (const entryPath of entries) {
 	const nomEntree = extractPdfFieldValue(entryPath)?.split("/").pop() ?? entryPath;
@@ -182,6 +193,11 @@ for (const entryPath of entries) {
 				`[import-fdme] ${pdfPath} : ${raison} -- à corriger à la main dans la fiche "${data.codeRencontre}" de la collection Résultats.`,
 			);
 			erreurs.push({ fichier: `${data.codeRencontre} (${nomEntree})`, raison: `${raison} À corriger dans la collection Résultats du CMS.` });
+		} else if (data.equipeNumeroAmbigu) {
+			avertissementsAffiches.push({
+				fichier: `${data.codeRencontre} (${nomEntree})`,
+				raison: `Résultat importé, mais impossible de déterminer automatiquement laquelle des équipes du club a joué (compétition « ${data.competition} »). Renseignez le champ "Numéro d'équipe" à la main dans la fiche Résultat.`,
+			});
 		}
 
 		writeFileSync(cible, frontmatter(data), "utf-8");
@@ -199,7 +215,7 @@ for (const entryPath of entries) {
 	}
 }
 
-writeFileSync(ERREURS_PATH, JSON.stringify(erreurs, null, "\t") + "\n", "utf-8");
+writeFileSync(ERREURS_PATH, JSON.stringify({ erreurs, avertissements: avertissementsAffiches }, null, "\t") + "\n", "utf-8");
 
 // Nettoyage : une fiche générée dont la feuille source a été supprimée
 // (ou renommée) de "Feuilles de match" ne doit pas rester indéfiniment.

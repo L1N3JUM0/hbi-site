@@ -1,6 +1,6 @@
 import { extractRows, rowText, nearestItem } from "./pdfRows.mjs";
 import { stripBirthName, splitNomPrenom } from "./noms.mjs";
-import { detectEquipe, extraireNumeroEquipe, CLUB_CODE, CLUB_NAME_PATTERN } from "./equipeMatch.mjs";
+import { detectEquipe, extraireNumeroEquipe, detecterLibelleCompetition, CLUB_CODE, CLUB_NAME_PATTERN } from "./equipeMatch.mjs";
 
 /** Erreur levée quand une feuille ne correspond pas au format attendu --
  * l'appelant (scripts/import-fdme.mjs) l'attrape pour ignorer ce PDF avec un
@@ -416,12 +416,40 @@ export async function parseFeuilleDeMatch(pdfBytes, equipesCompetition = []) {
 	const domicile = domicileEstHBI;
 	const joueursHBI = domicile ? joueursDomicile : joueursExterieur;
 	const adversaire = domicile ? header.equipeExterieur : header.equipeDomicile;
-	const equipeNumero = extraireNumeroEquipe(domicile ? header.equipeDomicile : header.equipeExterieur);
+
+	// Deux mécanismes distincts pour distinguer plusieurs équipes du club
+	// dans la même catégorie (voir equipeMatch.mjs) : d'abord le suffixe du
+	// nom d'équipe sur la feuille (partage de poule, ex. Seniors 1/2) ; si
+	// absent ET que l'équipe a de vraies compétitions différentes (urls de
+	// calendrier distinctes, ex. U15M Excellence/Départementale), le texte
+	// de la compétition comparé au `libelle` de chaque calendrier.
+	let equipeNumero = extraireNumeroEquipe(domicile ? header.equipeDomicile : header.equipeExterieur);
+	// true quand une décision restait à prendre (plusieurs équipes du club,
+	// compétitions distinctes) mais n'a pas pu l'être automatiquement --
+	// l'appelant (scripts/import-fdme.mjs) l'affiche alors dans le bandeau
+	// d'erreurs d'import plutôt que de deviner (voir detecterLibelleCompetition()).
+	let equipeNumeroAmbigu = false;
+	if (!equipeNumero && equipeSlug) {
+		const equipe = equipesCompetition.find((e) => e.slug === equipeSlug);
+		const urlsDistinctes = new Set((equipe?.calendriers ?? []).map((c) => c.url)).size;
+		if (urlsDistinctes > 1) {
+			const { libelle, ambigu } = detecterLibelleCompetition(header.competition, equipe.calendriers);
+			if (libelle) {
+				equipeNumero = libelle;
+			} else if (ambigu) {
+				equipeNumeroAmbigu = true;
+				avertissements.push(
+					`Plusieurs équipes du club existent pour cette catégorie, engagées dans des compétitions différentes, mais impossible de déterminer laquelle a joué à partir du texte de la compétition (« ${header.competition} ») : aucun libellé de calendrier ne correspond de façon unique. À corriger à la main (champ "Numéro d'équipe") dans la fiche Résultat "${header.codeRencontre}".`,
+				);
+			}
+		}
+	}
 
 	return {
 		codeRencontre: header.codeRencontre,
 		equipeSlug,
 		equipeNumero,
+		equipeNumeroAmbigu,
 		date: header.date,
 		journee: header.journee,
 		competition: header.competition,
