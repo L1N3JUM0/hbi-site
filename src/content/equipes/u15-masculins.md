@@ -1,17 +1,22 @@
 ---
-nom: "U15 masculins"
+nom: U15 masculins
 type: competition
+statut: active
 slug: u15-masculins
 categorieAge: U15
 genre: masculin
-horaires: "Mardi et jeudi 19h-20h30"
-encadrants: "Bruno et Teddy"
-tarif: "200 €"
-description: "Entraînements le mardi et le jeudi de 19h à 20h30, encadrés par Bruno et Teddy."
-# Photos temporaires (placeholders) en attendant de vraies photos de cette
-# équipe -- voir le README pour la procédure de remplacement.
-photoProfil: "../../assets/vie-club-1.jpg"
+ordre: null
+calendriers:
+  - url: https://competition-calendar.ffhandball.fr/c-32450/s-3577.ics
+    repere: Handball Islois
+    libelle: ''
+    classementUrl: ''
+horaires: Mardi et jeudi 19h-20h30
+encadrants: Bruno et Teddy
+tarif: 200 €
+description: Entraînements le mardi et le jeudi de 19h à 20h30, encadrés par Bruno et Teddy.
+photoProfil: ../../assets/vie-club-1.jpg
 galerie:
-  - "../../assets/vie-club-1.jpg"
-  - "../../assets/vie-club-2.jpg"
+  - ../../assets/vie-club-1.jpg
+  - ../../assets/vie-club-2.jpg
 ---
