@@ -386,9 +386,9 @@ const resultats = defineCollection({
 			 * soit une équipe seule dans sa catégorie (rien à afficher), soit
 			 * la première équipe engagée -- son nom reste "HANDBALL ISLOIS" sans
 			 * suffixe sur la feuille -- traitée comme "1" par défaut à
-			 * l'affichage (voir ResultatMatch.astro) uniquement quand
-			 * `aPlusieursEquipes()` (src/lib/resultats.ts) détecte qu'un partage
-			 * de poule existe bel et bien pour cette équipe. */
+			 * l'affichage (voir libelleEquipeAffiche() dans src/lib/resultats.ts)
+			 * uniquement quand `aPlusieursEquipes()` (même fichier) détecte qu'un
+			 * partage de poule existe bel et bien pour cette équipe. */
 			equipeNumero: champFacultatif(z.string()),
 			date: z.coerce.date(),
 			/** Ex. "J1". Absent pour un match de coupe ou amical. */

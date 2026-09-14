@@ -125,7 +125,7 @@ function photosFor(team: CollectionEntry<"equipes">) {
 											</a>
 										</div>
 									)}
-									<ResultatsEquipe equipeSlug={t.data.slug} affichageStats={t.data.affichageStats} />
+									<ResultatsEquipe equipeSlug={t.data.slug} affichageStats={t.data.affichageStats} calendriers={t.data.calendriers} />
 								</div>
 							);
 						})
@@ -214,7 +214,7 @@ function photosFor(team: CollectionEntry<"equipes">) {
 								{archivees.map((t) => (
 									<div class="card card--archivee" id={t.data.slug}>
 										<h3>{t.data.nom}</h3>
-										<ResultatsEquipe equipeSlug={t.data.slug} affichageStats={t.data.affichageStats} />
+										<ResultatsEquipe equipeSlug={t.data.slug} affichageStats={t.data.affichageStats} calendriers={t.data.calendriers} />
 									</div>
 								))}
 							</div>

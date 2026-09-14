@@ -1,0 +1,76 @@
+---
+import ResultatMatch from "./ResultatMatch.astro";
+import { grouperResultats, type GroupeIdentite, type Resultat } from "../../lib/resultats";
+
+interface Props {
+	resultats: Resultat[];
+	affichageStats: "nominatif" | "pseudonymise" | "masque";
+	/** `null` pour une catégorie à équipe unique : liste plate, sans groupe ni
+	 * libellé -- aucun changement d'affichage dans ce cas, le cas courant.
+	 * Sinon, résultats regroupés par équipe (voir ordreGroupesEquipe() et
+	 * grouperResultats() dans src/lib/resultats.ts), chaque groupe portant
+	 * son libellé en en-tête plutôt qu'un badge à lire sur chaque match. */
+	ordreGroupes: GroupeIdentite[] | null;
+}
+
+const { resultats, affichageStats, ordreGroupes } = Astro.props;
+const groupes = ordreGroupes ? grouperResultats(resultats, ordreGroupes) : null;
+---
+
+{
+	groupes ? (
+		groupes.map((groupe) => (
+			<div class="groupe-equipe">
+				<p class="groupe-equipe__titre">
+					{groupe.libelle} <span class="groupe-equipe__compte">({groupe.resultats.length})</span>
+				</p>
+				<ul>
+					{groupe.resultats.map((r) => (
+						<ResultatMatch resultat={r} affichageStats={affichageStats} />
+					))}
+				</ul>
+			</div>
+		))
+	) : (
+		<ul>
+			{resultats.map((r) => (
+				<ResultatMatch resultat={r} affichageStats={affichageStats} />
+			))}
+		</ul>
+	)
+}
+
+<style>
+	ul {
+		list-style: none;
+		margin: 0.5rem 0 0;
+		padding: 0;
+	}
+	.groupe-equipe {
+		margin-top: 0.9rem;
+	}
+	.groupe-equipe:first-child {
+		margin-top: 0.5rem;
+	}
+	.groupe-equipe__titre {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		margin: 0;
+		padding: 0.4rem 0.6rem;
+		background: rgba(255, 255, 255, 0.08);
+		border-left: 3px solid var(--color-crimson);
+		color: var(--color-white);
+		font-size: 0.8rem;
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+	}
+	.groupe-equipe__compte {
+		font-weight: 600;
+		text-transform: none;
+		letter-spacing: normal;
+		color: rgba(255, 255, 255, 0.55);
+	}
+</style>

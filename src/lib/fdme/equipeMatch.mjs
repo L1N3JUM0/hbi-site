@@ -98,8 +98,11 @@ export function extraireNumeroEquipe(nomEquipeHBI) {
 /** Retire les diacritiques et met en minuscules, pour comparer deux textes
  * sans tenir compte de la casse ni des accents (ex. le libellé "Départementale"
  * saisi dans le CMS doit reconnaître "DEPARTEMENTALE" sur une feuille de
- * match, qui n'a pas toujours les accents). */
-function normaliserTexte(texte) {
+ * match, qui n'a pas toujours les accents). Exportée : réutilisée telle
+ * quelle par src/lib/resultats.ts pour regrouper par équipe à l'affichage
+ * sans se laisser abuser par une variante de casse/accents du même libellé
+ * (ex. "Excellence" vs "excellence" saisis à des moments différents). */
+export function normaliserTexte(texte) {
 	return texte
 		.normalize("NFD")
 		.replace(/[̀-ͯ]/g, "")

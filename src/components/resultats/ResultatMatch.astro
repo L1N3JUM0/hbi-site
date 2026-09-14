@@ -5,14 +5,9 @@ import { buteurs, efficaciteTir, formatDateCourte, gardiens, issueDuMatch, score
 interface Props {
 	resultat: Resultat;
 	affichageStats: "nominatif" | "pseudonymise" | "masque";
-	/** N'affiche le badge distinguant l'équipe ("Équipe N", ou un libellé
-	 * libre type "Excellence") que si le club a réellement plusieurs équipes
-	 * engagées dans cette catégorie (voir aPlusieursEquipes()) -- jamais de
-	 * badge superflu pour une catégorie qui n'en a qu'une. */
-	distinguerEquipe?: boolean;
 }
 
-const { resultat, affichageStats, distinguerEquipe = false } = Astro.props;
+const { resultat, affichageStats } = Astro.props;
 const r = resultat.data;
 
 const issue = issueDuMatch(resultat);
@@ -26,14 +21,6 @@ const efficacite = stats ? efficaciteTir(stats.buts, stats.tirs) : null;
 const listeButeurs = r.forfait ? [] : buteurs(resultat, affichageStats);
 const listeGardiens = r.forfait ? [] : gardiens(resultat, affichageStats);
 const forfaitLabel = r.forfait === "nous" ? `Le Handball Islois a déclaré forfait face à ${r.adversaire}.` : `${r.adversaire} a déclaré forfait face au Handball Islois.`;
-
-/** "Équipe {numero}" pour un numéro classique (partage de poule, ex.
- * Seniors 1/2) ; le libellé brut, sans le mot "Équipe" devant, pour un
- * libellé libre (deux équipes engagées dans des compétitions différentes,
- * ex. "Excellence"/"Départementale" -- voir detecterLibelleCompetition()
- * dans src/lib/fdme/equipeMatch.mjs). */
-const numeroEquipe = r.equipeNumero ?? "1";
-const labelEquipe = /^\d+$/.test(numeroEquipe) ? `Équipe ${numeroEquipe}` : numeroEquipe;
 ---
 
 <li class="match">
@@ -41,7 +28,6 @@ const labelEquipe = /^\d+$/.test(numeroEquipe) ? `Équipe ${numeroEquipe}` : num
 		<summary>
 			<span class={`issue issue--${issue}`} title={issueLabelLongue}>{issueLabel}</span>
 			<span class="lieu">{r.domicile ? "Dom." : "Ext."}</span>
-			{distinguerEquipe && <span class="equipe-num">{labelEquipe}</span>}
 			<span class="adversaire">{r.adversaire}</span>
 			{r.forfait ? <span class="tag-forfait">Forfait</span> : <span class="score">{score ? `${score.nous} – ${score.eux}` : "—"}</span>}
 			{r.typeMatch === "coupe" && <span class="tag-coupe">Coupe</span>}
@@ -189,16 +175,6 @@ const labelEquipe = /^\d+$/.test(numeroEquipe) ? `Équipe ${numeroEquipe}` : num
 		text-transform: uppercase;
 		letter-spacing: 0.04em;
 		padding: 0.15rem 0.4rem;
-	}
-	.equipe-num {
-		background: rgba(255, 255, 255, 0.15);
-		color: var(--color-white);
-		font-size: 0.65rem;
-		font-weight: 800;
-		text-transform: uppercase;
-		letter-spacing: 0.04em;
-		padding: 0.15rem 0.4rem;
-		white-space: nowrap;
 	}
 	.tag-forfait {
 		background: var(--color-crimson);

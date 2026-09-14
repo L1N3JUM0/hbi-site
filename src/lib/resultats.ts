@@ -1,5 +1,6 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import { disambiguateDisplayNames } from "./fdme/noms.mjs";
+import { normaliserTexte } from "./fdme/equipeMatch.mjs";
 import { saisonActuelle } from "./saison";
 
 export type Resultat = CollectionEntry<"resultats">;
@@ -38,6 +39,96 @@ export async function getResultatsForEquipe(equipeSlug: string): Promise<Resulta
  * le badge "Équipe N" que si ceci est vrai). */
 export function aPlusieursEquipes(resultats: Resultat[]): boolean {
 	return resultats.some((r) => !!r.data.equipeNumero);
+}
+
+/** "Équipe {numero}" pour un numéro classique de partage de poule (ex.
+ * Seniors 1/2) ; le libellé tel quel, sans le mot "Équipe" devant, pour un
+ * libellé libre (deux équipes engagées dans des compétitions différentes,
+ * ex. "Excellence"/"Départemental" -- voir detecterLibelleCompetition() dans
+ * src/lib/fdme/equipeMatch.mjs). Règle de présentation unique, partagée par
+ * le badge de ResultatMatch.astro et les en-têtes de groupe ci-dessous --
+ * jamais dupliquée pour ne pas risquer de diverger. */
+export function libelleEquipeAffiche(numero: string | null | undefined): string {
+	const valeur = numero || "1";
+	return /^\d+$/.test(valeur) ? `Équipe ${valeur}` : valeur;
+}
+
+export interface GroupeIdentite {
+	/** Clé de regroupement normalisée (casse/accents ignorés, voir
+	 * normaliserTexte() dans src/lib/fdme/equipeMatch.mjs) -- deux résultats
+	 * dont le `equipeNumero` ne diffère que par la casse ou les accents
+	 * (ex. "Excellence" saisi automatiquement vs "excellence" retapé à la
+	 * main sur un résultat de secours) rejoignent le même groupe. */
+	cle: string;
+	/** Libellé à afficher : celui du calendrier ACTUEL de l'équipe qui
+	 * correspond à cette clé quand il existe -- source de vérité unique,
+	 * pour qu'un résultat saisi avec une casse différente affiche quand même
+	 * le libellé "officiel" du CMS plutôt que sa propre graphie. Sinon (clé
+	 * absente des calendriers actuels : partage de poule qui a cessé,
+	 * calendrier remplacé à la saison suivante...), le libellé tel qu'il
+	 * apparaît dans les résultats eux-mêmes. */
+	libelle: string;
+}
+
+/**
+ * Ordre canonique des groupes d'équipes pour une catégorie qui en compte
+ * plusieurs (voir `aPlusieursEquipes`) -- calculé UNE fois sur l'ensemble
+ * des résultats connus de l'équipe (toutes saisons confondues) et sur ses
+ * calendriers actuels, pour que la saison en cours et les archives utilisent
+ * exactement le même ordre et les mêmes libellés (voir `grouperResultats`
+ * ci-dessous, qui répartit ensuite un sous-ensemble de résultats selon cet
+ * ordre).
+ *
+ * 1. D'abord les équipes déclarées dans les calendriers actuels de la fiche
+ *    équipe, dans leur ordre de déclaration dans le CMS (reflète
+ *    l'intention du club, ex. "Excellence" avant "Départemental").
+ * 2. Puis toute clé observée dans les résultats mais absente des
+ *    calendriers actuels (catégorie dont le partage de poule a cessé,
+ *    calendrier remplacé à la saison suivante...), triée numériquement
+ *    d'abord (Équipe 1, Équipe 2...), puis alphabétiquement.
+ */
+export function ordreGroupesEquipe(tousLesResultats: Resultat[], calendriers: { libelle?: string }[]): GroupeIdentite[] {
+	const groupes = new Map<string, GroupeIdentite>();
+
+	for (const cal of calendriers) {
+		const brut = cal.libelle?.trim();
+		if (!brut) continue;
+		const cle = normaliserTexte(brut);
+		if (!groupes.has(cle)) groupes.set(cle, { cle, libelle: libelleEquipeAffiche(brut) });
+	}
+
+	const restants: GroupeIdentite[] = [];
+	for (const r of tousLesResultats) {
+		const cle = normaliserTexte(r.data.equipeNumero || "1");
+		if (groupes.has(cle) || restants.some((g) => g.cle === cle)) continue;
+		restants.push({ cle, libelle: libelleEquipeAffiche(r.data.equipeNumero) });
+	}
+	restants.sort((a, b) => {
+		const na = Number(a.cle);
+		const nb = Number(b.cle);
+		if (!Number.isNaN(na) && !Number.isNaN(nb)) return na - nb;
+		if (!Number.isNaN(na)) return -1;
+		if (!Number.isNaN(nb)) return 1;
+		return a.libelle.localeCompare(b.libelle, "fr");
+	});
+
+	return [...groupes.values(), ...restants];
+}
+
+export interface GroupeResultats extends GroupeIdentite {
+	resultats: Resultat[];
+}
+
+/** Répartit un sous-ensemble de résultats (ex. la saison en cours, ou une
+ * saison archivée) selon l'ordre canonique de `ordreGroupesEquipe` -- ne
+ * garde que les groupes non vides pour ce sous-ensemble précis. */
+export function grouperResultats(resultats: Resultat[], ordre: GroupeIdentite[]): GroupeResultats[] {
+	return ordre
+		.map((groupe) => ({
+			...groupe,
+			resultats: resultats.filter((r) => normaliserTexte(r.data.equipeNumero || "1") === groupe.cle),
+		}))
+		.filter((g) => g.resultats.length > 0);
 }
 
 export interface ResultatsParSaison {

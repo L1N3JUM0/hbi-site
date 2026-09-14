@@ -1,29 +1,34 @@
 ---
-import ResultatMatch from "./ResultatMatch.astro";
-import { getResultatsForEquipe, resultatsParSaison, aPlusieursEquipes } from "../../lib/resultats";
+import ListeResultats from "./ListeResultats.astro";
+import { getResultatsForEquipe, resultatsParSaison, aPlusieursEquipes, ordreGroupesEquipe } from "../../lib/resultats";
 
 interface Props {
 	equipeSlug: string;
 	affichageStats: "nominatif" | "pseudonymise" | "masque";
+	/** Calendriers actuels de la fiche équipe (voir content.config.ts) --
+	 * sert uniquement à ordonner et nommer les groupes quand la catégorie
+	 * compte plusieurs équipes (voir ordreGroupesEquipe() dans
+	 * src/lib/resultats.ts) ; sans effet pour une catégorie à équipe unique. */
+	calendriers?: { libelle?: string }[];
 }
 
-const { equipeSlug, affichageStats } = Astro.props;
+const { equipeSlug, affichageStats, calendriers = [] } = Astro.props;
 const tousLesResultats = await getResultatsForEquipe(equipeSlug);
 const { saisonEnCours, saisonsPrecedentes } = resultatsParSaison(tousLesResultats);
-/** Calculé sur TOUS les résultats (pas seulement la saison en cours) : le
- * badge équipe doit rester cohérent entre le bloc courant et les archives. */
-const distinguerEquipe = aPlusieursEquipes(tousLesResultats);
+
+/** `null` pour une catégorie à équipe unique : ListeResultats affiche alors
+ * une liste plate, sans groupe ni libellé -- aucun changement par rapport à
+ * avant. Calculé UNE fois sur TOUS les résultats (pas seulement la saison en
+ * cours) pour que la saison en cours et les archives utilisent le même
+ * ordre et les mêmes libellés de groupe. */
+const ordreGroupes = aPlusieursEquipes(tousLesResultats) ? ordreGroupesEquipe(tousLesResultats, calendriers) : null;
 ---
 
 {
 	saisonEnCours.length > 0 && (
 		<details class="resultats">
 			<summary>Résultats ({saisonEnCours.length})</summary>
-			<ul>
-				{saisonEnCours.map((r) => (
-					<ResultatMatch resultat={r} affichageStats={affichageStats} distinguerEquipe={distinguerEquipe} />
-				))}
-			</ul>
+			<ListeResultats resultats={saisonEnCours} affichageStats={affichageStats} ordreGroupes={ordreGroupes} />
 		</details>
 	)
 }
@@ -37,11 +42,7 @@ const distinguerEquipe = aPlusieursEquipes(tousLesResultats);
 					<summary>
 						{saison} ({resultats.length})
 					</summary>
-					<ul>
-						{resultats.map((r) => (
-							<ResultatMatch resultat={r} affichageStats={affichageStats} distinguerEquipe={distinguerEquipe} />
-						))}
-					</ul>
+					<ListeResultats resultats={resultats} affichageStats={affichageStats} ordreGroupes={ordreGroupes} />
 				</details>
 			))}
 		</details>
@@ -77,11 +78,6 @@ const distinguerEquipe = aPlusieursEquipes(tousLesResultats);
 	}
 	.resultats[open] > summary::before {
 		transform: rotate(90deg);
-	}
-	.resultats ul {
-		list-style: none;
-		margin: 0.5rem 0 0;
-		padding: 0;
 	}
 
 	.saison {
