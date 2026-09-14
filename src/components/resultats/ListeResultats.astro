@@ -19,17 +19,17 @@ const groupes = ordreGroupes ? grouperResultats(resultats, ordreGroupes) : null;
 
 {
 	groupes ? (
-		groupes.map((groupe) => (
-			<div class="groupe-equipe">
-				<p class="groupe-equipe__titre">
+		groupes.map((groupe, index) => (
+			<details class="groupe-equipe" open={index === 0}>
+				<summary class="groupe-equipe__titre">
 					{groupe.libelle} <span class="groupe-equipe__compte">({groupe.resultats.length})</span>
-				</p>
+				</summary>
 				<ul>
 					{groupe.resultats.map((r) => (
 						<ResultatMatch resultat={r} affichageStats={affichageStats} />
 					))}
 				</ul>
-			</div>
+			</details>
 		))
 	) : (
 		<ul>
@@ -66,11 +66,32 @@ const groupes = ordreGroupes ? grouperResultats(resultats, ordreGroupes) : null;
 		font-weight: 800;
 		text-transform: uppercase;
 		letter-spacing: 0.04em;
+		cursor: pointer;
+		list-style: none;
+		min-height: 44px;
+		box-sizing: border-box;
+	}
+	.groupe-equipe__titre::-webkit-details-marker {
+		display: none;
+	}
+	.groupe-equipe__titre::before {
+		content: "▸";
+		display: inline-block;
+		transition: transform 0.15s ease;
+	}
+	.groupe-equipe[open] > .groupe-equipe__titre::before {
+		transform: rotate(90deg);
 	}
 	.groupe-equipe__compte {
 		font-weight: 600;
 		text-transform: none;
 		letter-spacing: normal;
 		color: rgba(255, 255, 255, 0.55);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.groupe-equipe__titre::before {
+			transition: none;
+		}
 	}
 </style>
