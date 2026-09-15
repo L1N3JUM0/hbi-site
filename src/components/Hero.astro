@@ -3,8 +3,17 @@ import { Image } from "astro:assets";
 import { getEntry } from "astro:content";
 
 const page = await getEntry("photosHero", "page");
-const photos = (page?.data.photos ?? []).map((p) => ({ src: p.image, alt: p.alt }));
+const photos = (page?.data.photos ?? []).map((p) => ({ src: p.image, alt: p.alt, cadrage: p.cadrage }));
 const n = photos.length;
+
+/** Traduit le cadrage choisi dans le CMS en `object-position` CSS : ne
+ * touche jamais au fichier d'origine, seule la portion visible dans le
+ * cadre (rogné en haut/bas par le format très large du hero) change. */
+const OBJECT_POSITION: Record<string, string> = {
+	haut: "center top",
+	centre: "center center",
+	bas: "center bottom",
+};
 
 /* Rythme du diaporama : chaque photo reste pleinement visible ~6,2s, avec un
    fondu enchaîné de 1,8s qui la fait chevaucher la photo suivante -- jamais
@@ -94,6 +103,7 @@ const HERO_WIDTHS = [480, 768, 1080, 1440, 1920];
 								loading="eager"
 								decoding={isFirst ? "sync" : "async"}
 								fetchpriority={isFirst ? "high" : "low"}
+								style={`object-position: ${OBJECT_POSITION[photo.cadrage] ?? OBJECT_POSITION.centre};`}
 							/>
 						</div>
 					</div>

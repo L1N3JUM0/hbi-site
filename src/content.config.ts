@@ -241,6 +241,11 @@ const photosAccueil = defineCollection({
 					image: safeImage(image),
 					/** Texte alternatif (accessibilité) décrivant la photo. */
 					alt: z.string(),
+					/** Partie de la photo conservée au rognage (la vignette a une
+					 * hauteur fixe, l'image d'origine non). Pilote l'`object-position`
+					 * CSS -- l'image d'origine n'est jamais recadrée, ce choix reste
+					 * réversible à tout moment depuis le CMS. */
+					cadrage: champAvecDefaut(z.enum(["haut", "centre", "bas"]), "centre"),
 				}),
 			),
 		}),
@@ -263,6 +268,12 @@ const photosHero = defineCollection({
 					image: safeImage(image),
 					/** Texte alternatif (accessibilité) décrivant la photo. */
 					alt: z.string(),
+					/** Partie de la photo conservée au rognage (le bandeau est
+					 * beaucoup plus large que haut, l'image d'origine ne l'est pas
+					 * forcément). Pilote l'`object-position` CSS -- l'image d'origine
+					 * n'est jamais recadrée, ce choix reste réversible à tout moment
+					 * depuis le CMS. */
+					cadrage: champAvecDefaut(z.enum(["haut", "centre", "bas"]), "centre"),
 				}),
 			),
 		}),

@@ -188,6 +188,16 @@ collections:
                 widget: "string"
                 hint: "Décrivez brièvement ce que montre la photo (utile pour les personnes malvoyantes qui utilisent un lecteur d'écran). Exemple : « Match des seniors féminines au COSEC Émile Avy »."
 
+              - label: "Cadrage"
+                name: "cadrage"
+                widget: "select"
+                default: "centre"
+                hint: "La vignette du carrousel est plus large que haute : ce réglage choisit quelle partie de la photo reste visible une fois rognée (l'image d'origine n'est jamais modifiée, vous pouvez changer d'avis à tout moment)."
+                options:
+                  - { label: "Haut de la photo", value: "haut" }
+                  - { label: "Centre de la photo", value: "centre" }
+                  - { label: "Bas de la photo", value: "bas" }
+
   - name: "photosHero"
     label: "Photos du bandeau d'accueil (diaporama)"
     description: "Les photos d'ACTION (jeu, compétition) qui défilent en grand en haut de la page d'accueil. Choisissez des photos de match ou d'entraînement montrant de l'intensité sportive -- pas de photos posées ni de groupe, qui ont leur place dans « Photos de la page d'accueil » ci-dessus. 4 à 5 photos donnent le meilleur rythme."
@@ -212,6 +222,16 @@ collections:
                 name: "alt"
                 widget: "string"
                 hint: "Décrivez brièvement l'action montrée (utile pour les personnes malvoyantes qui utilisent un lecteur d'écran). Exemple : « Tir en suspension lors d'un match du Handball Islois »."
+
+              - label: "Cadrage"
+                name: "cadrage"
+                widget: "select"
+                default: "centre"
+                hint: "Le diaporama est très large et rogne le haut et le bas de la photo : ce réglage choisit quelle partie reste visible (l'image d'origine n'est jamais modifiée, vous pouvez changer d'avis à tout moment)."
+                options:
+                  - { label: "Haut de la photo", value: "haut" }
+                  - { label: "Centre de la photo", value: "centre" }
+                  - { label: "Bas de la photo", value: "bas" }
 
   - name: "equipes"
     label: "Équipes"
