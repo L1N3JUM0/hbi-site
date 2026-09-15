@@ -15,8 +15,8 @@ horaires: Mardi et jeudi 19h-20h30
 encadrants: Bruno et Teddy
 tarif: 200 €
 description: Entraînements le mardi et le jeudi de 19h à 20h30, encadrés par Bruno et Teddy.
-photoProfil: ../../assets/vie-club-1.jpg
+photoProfil: /src/assets/u15-prof.webp
 galerie:
-  - ../../assets/vie-club-1.jpg
-  - ../../assets/vie-club-2.jpg
+  - /src/assets/u15-prof.webp
+  - /src/assets/u15-1.webp
 ---
