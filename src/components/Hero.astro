@@ -1,439 +1,233 @@
 ---
 import { Image } from "astro:assets";
-import playerSrc from "../assets/player/pose-4-tir-reference.svg?url";
-import logoSrc from "../assets/logo-transparent.png";
+import { getEntry } from "astro:content";
+
+const page = await getEntry("photosHero", "page");
+const photos = (page?.data.photos ?? []).map((p) => ({ src: p.image, alt: p.alt }));
+const n = photos.length;
+
+/* Rythme du diaporama : chaque photo reste pleinement visible ~6,2s, avec un
+   fondu enchaîné de 1,8s qui la fait chevaucher la photo suivante -- jamais
+   de coupe franche ni de passage par le noir. SEGMENT est le temps ABSOLU
+   entre le début d'apparition de deux photos consécutives : il ne dépend pas
+   du nombre de photos, donc en ajouter ou en retirer depuis le CMS ne change
+   jamais le rythme perçu, seulement la durée totale d'un cycle complet. */
+const FADE = 1.8;
+const HOLD = 6.2;
+const SEGMENT = FADE + HOLD;
+const totalDuration = Math.max(n, 1) * SEGMENT;
+
+const round = (value: number) => Math.round(value * 1000) / 1000;
+const fadeInPct = round((FADE / totalDuration) * 100);
+const segmentPct = round((SEGMENT / totalDuration) * 100);
+const fadeOutEndPct = round(((SEGMENT + FADE) / totalDuration) * 100);
+
+/* 4 mouvements de zoom/dérive différents, appliqués à tour de rôle : évite
+   l'effet "même zoom appliqué à toutes les photos" qui trahit un diaporama
+   automatique. Amplitude volontairement faible (8-10%) pour rester sobre. */
+const variants = ["hero-zoom-in", "hero-pan-left", "hero-zoom-out", "hero-pan-right"];
+
+/* Les pourcentages de ces keyframes dépendent du nombre de photos (via
+   fadeInPct/segmentPct/fadeOutEndPct) : ils doivent donc être générés au
+   build plutôt qu'écrits en dur -- une <style> Astro classique ne permet pas
+   d'interpoler des sélecteurs de keyframes, d'où le set:html ci-dessous. */
+const dynamicCss =
+	n >= 2
+		? `
+@keyframes hero-fade {
+	0% { opacity: 0; }
+	${fadeInPct}% { opacity: 1; }
+	${segmentPct}% { opacity: 1; }
+	${fadeOutEndPct}% { opacity: 0; }
+	100% { opacity: 0; }
+}
+@keyframes hero-fade-first {
+	0% { opacity: 1; }
+	${segmentPct}% { opacity: 1; }
+	${fadeOutEndPct}% { opacity: 0; }
+	100% { opacity: 0; }
+}
+@keyframes hero-zoom-in {
+	0% { transform: scale(1); }
+	${fadeOutEndPct}% { transform: scale(1.1); }
+	100% { transform: scale(1.1); }
+}
+@keyframes hero-zoom-out {
+	0% { transform: scale(1.1); }
+	${fadeOutEndPct}% { transform: scale(1); }
+	100% { transform: scale(1); }
+}
+@keyframes hero-pan-left {
+	0% { transform: scale(1.1) translateX(3%); }
+	${fadeOutEndPct}% { transform: scale(1.1) translateX(-3%); }
+	100% { transform: scale(1.1) translateX(-3%); }
+}
+@keyframes hero-pan-right {
+	0% { transform: scale(1.1) translateX(-3%); }
+	${fadeOutEndPct}% { transform: scale(1.1) translateX(3%); }
+	100% { transform: scale(1.1) translateX(3%); }
+}
+`.trim()
+		: "";
+
+const HERO_WIDTHS = [480, 768, 1080, 1440, 1920];
 ---
 
 <section class="hero">
-	<div class="hero-frame">
-		<div class="hero-stage">
-			<div class="logo-mark">
-				<Image src={logoSrc} alt="" width={260} height={260} format="webp" loading="eager" />
-			</div>
+	<div class="hero-viewport">
+		{
+			photos.map((photo, i) => {
+				const isFirst = i === 0;
+				const delay = round(i * SEGMENT);
+				const slideStyle = n >= 2 ? `animation-name: ${isFirst ? "hero-fade-first" : "hero-fade"}; animation-duration: ${totalDuration}s; animation-delay: ${delay}s;` : undefined;
+				const mediaStyle = n >= 2 ? `animation-duration: ${totalDuration}s; animation-delay: ${delay}s;` : undefined;
+				return (
+					<div class:list={["slide", isFirst && "is-first"]} style={slideStyle}>
+						<div class:list={["slide-media", variants[i % variants.length]]} style={mediaStyle}>
+							<Image
+								src={photo.src}
+								alt={photo.alt}
+								width={photo.src.width}
+								widths={HERO_WIDTHS}
+								sizes="100vw"
+								format="avif"
+								loading="eager"
+								decoding={isFirst ? "sync" : "async"}
+								fetchpriority={isFirst ? "high" : "low"}
+							/>
+						</div>
+					</div>
+				);
+			})
+		}
 
-			<div class="court-line"></div>
+		<div class="scrim" aria-hidden="true"></div>
 
-			<div class="player">
-				<div class="speedlines">
-					<div class="line"></div>
-					<div class="line"></div>
-					<div class="line"></div>
-					<div class="line"></div>
-				</div>
-				<img src={playerSrc} alt="" class="player-svg" />
-			</div>
-
-			<div class="impact"></div>
-
-			<div class="motto">
-				<p class="line1">Je ne perds jamais</p>
-				<p class="line2">soit je gagne,</p>
-				<p class="line3">soit j&rsquo;apprends.</p>
-			</div>
-		</div>
+		<p class="motto">
+			<span class="line1">Je ne perds jamais</span>
+			<span class="line2">soit je gagne, soit j&rsquo;apprends.</span>
+		</p>
 	</div>
 </section>
 
+<style set:html={dynamicCss} />
+
 <style>
 	.hero {
-		display: flex;
-		align-items: center;
-		justify-content: center;
+		position: relative;
 		overflow: hidden;
 		background: var(--color-navy-deep);
-		padding: 0.5rem 1rem;
 	}
 
-	/* The stage is designed as a fixed-size reference canvas (--stage-w x
-	   --stage-h) so every element's position/size is a plain px value --
-	   simple to reason about and to retune per breakpoint. .hero-frame is
-	   the responsive shell around it: sized to the SCALED footprint (so the
-	   flex layout never reserves more space than what's actually shown),
-	   while .hero-stage keeps its natural reference size and is shrunk with
-	   `transform: scale()` to fit. --scale is capped at 1 (never enlarges
-	   past a breakpoint's designed size) and floored at 0.55 (never shrinks
-	   into illegibility); in between, it targets whatever vertical budget
-	   is left after the sticky header, the hero's own padding, and a
-	   deliberate slice reserved so the next section is already peeking in
-	   on load -- this is what keeps the hero from eating the whole
-	   viewport on short/laptop screens while still using more room on
-	   tall ones (see --hero-budget below).
-	   Values also drive the logo-mark (departure point of the runner). */
-	.hero-frame {
-		--stage-w: 800px;
-		--stage-h: 500px;
-		--player-w: 200px;
-		--player-h: 280px;
-		--player-bottom: 100px;
-		--court-bottom: 110px;
-		--speed-w: 260px;
-		--speed-h: 220px;
-		--speed-move: 90px;
-		--run-start: -260px;
-		--run-mid: 290px;
-		--run-land: 340px;
-		--run-bounce: 330px;
-		--run-settle: 335px;
-		--impact-bottom: 96px;
-		--impact-left: 400px;
-		--impact-size: 70px;
-		--impact-border: 3px;
-		--motto-right: 40px;
-		--motto-bottom: 180px;
-		--motto-maxw: 260px;
-		--motto-font: 1.5rem;
-		--logo-size: 130px;
-		--logo-left: -10px;
-
+	.hero-viewport {
 		--header-h: 64px;
-		--hero-vpad: 16px;
-		--hero-hpad: 32px;
-		--hero-peek: 140px;
-		--hero-budget-h: calc(100vh - var(--header-h) - var(--hero-vpad) - var(--hero-peek));
-		--hero-budget-w: calc(100vw - var(--hero-hpad));
-		/* one scale for both axes -- never distorts the aspect ratio, never
-		   grows past the tier's designed size, and is bounded by whichever
-		   of width or height is tightest at the current viewport. --scale is
-		   always computed against the FULL --stage-h, never the cropped one
-		   below, so it never changes because of the crop -- elements keep
-		   exactly the size this produced already. */
-		--scale: clamp(
-			0.55,
-			min(calc(var(--hero-budget-h) / var(--stage-h)), calc(var(--hero-budget-w) / var(--stage-w))),
-			1
-		);
-
-		/* The reference canvas has empty margin baked in above the runner
-		   and below the ground line (room the design never actually fills).
-		   --top-crop/--bottom-crop measure that margin (minus a slice kept
-		   as breathing room) so it can be trimmed from the LAYOUT box below,
-		   without touching --stage-h (and therefore without touching
-		   --scale, or the size of anything drawn on the canvas). */
-		--crop-margin: calc(var(--stage-h) * 0.06);
-		--top-crop: calc(var(--stage-h) - var(--player-bottom) - var(--player-h) - var(--crop-margin));
-		--bottom-crop: calc(var(--court-bottom) - var(--crop-margin));
-
-		width: calc(var(--stage-w) * var(--scale));
-		height: calc((var(--stage-h) - var(--top-crop) - var(--bottom-crop)) * var(--scale));
-	}
-
-	.hero-stage {
+		--hero-peek: 260px;
 		position: relative;
-		width: var(--stage-w);
-		height: var(--stage-h);
-		/* shift up by the cropped top margin (in the canvas's own units,
-		   so the shift is scaled along with everything else) -- the
-		   now-excess top/bottom margin spills outside .hero-frame's
-		   shorter box and is clipped by .hero's existing overflow:hidden,
-		   which is flat navy in that band anyway so nothing is lost. */
-		transform: scale(var(--scale)) translateY(calc(-1 * var(--top-crop)));
-		transform-origin: top left;
+		width: 100%;
+		height: clamp(280px, calc(100vh - var(--header-h) - var(--hero-peek)), 480px);
+		overflow: hidden;
 	}
 
-	.court-line {
+	.slide {
 		position: absolute;
-		bottom: var(--court-bottom);
-		left: 0;
-		right: 0;
-		height: 2px;
-		background: rgba(255, 255, 255, 0.12);
+		inset: 0;
+		opacity: 0;
+		animation-timing-function: ease-in-out;
+		animation-iteration-count: infinite;
+	}
+	.slide.is-first {
+		opacity: 1;
 	}
 
-	/* club badge as the runner's departure point: dimmed and placed behind
-	   everything else so it reads as a mark the player breaks away from,
-	   not a second full-strength logo competing with the header's. */
-	.logo-mark {
+	.slide-media {
 		position: absolute;
-		left: var(--logo-left);
-		bottom: var(--court-bottom);
-		width: var(--logo-size);
-		height: var(--logo-size);
-		opacity: 0.5;
-		animation: logo-pulse 3.2s infinite;
-	}
-	.logo-mark :global(img) {
+		inset: 0;
 		width: 100%;
 		height: 100%;
-		display: block;
+		transform-origin: center center;
+		animation-timing-function: ease-in-out;
+		animation-iteration-count: infinite;
+		will-change: transform;
 	}
-	@keyframes logo-pulse {
-		0%, 5% { transform: scale(1); opacity: 0.5; }
-		10% { transform: scale(1.05); opacity: 0.68; }
-		20%, 100% { transform: scale(1); opacity: 0.5; }
+	/* La classe de variante (posée en template) ne fait que choisir QUELLE
+	   keyframe jouer : animation-name doit être fixé ici pour chacune, sinon
+	   .slide-media n'a tout simplement aucune animation de transform. */
+	.slide-media.hero-zoom-in {
+		animation-name: hero-zoom-in;
 	}
-
-	/* speed lines behind the runner: nested inside .player so they inherit
-	   its animated `left` position and stay glued just behind it at every
-	   instant, instead of drifting apart when timings diverge. */
-	.speedlines {
-		position: absolute;
-		right: calc(100% - (var(--player-w) * 0.12));
-		bottom: calc(var(--player-h) * 0.11);
-		width: var(--speed-w);
-		height: var(--speed-h);
-		opacity: 0;
-		animation: speedfade 3.2s infinite;
+	.slide-media.hero-zoom-out {
+		animation-name: hero-zoom-out;
 	}
-	.speedlines .line {
-		position: absolute;
-		height: 4px;
-		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5));
-		border-radius: 2px;
-		animation: speedmove 3.2s infinite;
+	.slide-media.hero-pan-left {
+		animation-name: hero-pan-left;
 	}
-	.speedlines .line:nth-child(1) {
-		top: 9.1%;
-		width: 46.2%;
-		animation-delay: 0s;
+	.slide-media.hero-pan-right {
+		animation-name: hero-pan-right;
 	}
-	.speedlines .line:nth-child(2) {
-		top: 31.8%;
-		width: 65.4%;
-		animation-delay: 0.08s;
-	}
-	.speedlines .line:nth-child(3) {
-		top: 54.5%;
-		width: 38.5%;
-		animation-delay: 0.15s;
-	}
-	.speedlines .line:nth-child(4) {
-		top: 75%;
-		width: 57.7%;
-		animation-delay: 0.05s;
-	}
-
-	@keyframes speedfade {
-		0% { opacity: 0; }
-		6% { opacity: 1; }
-		30% { opacity: 1; }
-		38% { opacity: 0; }
-		100% { opacity: 0; }
-	}
-	@keyframes speedmove {
-		0% { transform: translateX(0); }
-		100% { transform: translateX(var(--speed-move)); }
-	}
-
-	.player {
-		position: absolute;
-		bottom: var(--player-bottom);
-		left: var(--run-start);
-		width: var(--player-w);
-		height: var(--player-h);
-		animation: run-in 3.2s infinite;
-	}
-	.player-svg {
+	.slide-media :global(img) {
 		width: 100%;
 		height: 100%;
+		object-fit: cover;
 		display: block;
-		filter: blur(0px);
 	}
 
-	@keyframes run-in {
-		0% {
-			left: var(--run-start);
-			transform: scale(0.85) rotate(-4deg);
-			filter: blur(3px);
-		}
-		30% {
-			left: var(--run-mid);
-			transform: scale(0.98) rotate(-1deg);
-			filter: blur(1.5px);
-		}
-		38% {
-			left: var(--run-land);
-			transform: scale(1.06, 0.94) rotate(0deg);
-			filter: blur(0px);
-		}
-		44% {
-			left: var(--run-bounce);
-			transform: scale(0.97, 1.04) rotate(0deg);
-		}
-		50%, 88% {
-			left: var(--run-settle);
-			transform: scale(1) rotate(0deg);
-			filter: blur(0px);
-		}
-		100% {
-			left: var(--run-settle);
-			transform: scale(1) rotate(0deg);
-			filter: blur(0px);
-		}
-	}
-
-	/* impact burst on landing */
-	.impact {
+	.scrim {
 		position: absolute;
-		bottom: var(--impact-bottom);
-		left: var(--impact-left);
-		width: var(--impact-size);
-		height: var(--impact-size);
-		border-radius: 50%;
-		border: var(--impact-border) solid var(--color-crimson);
-		opacity: 0;
-		animation: impact-burst 3.2s infinite;
-	}
-	@keyframes impact-burst {
-		0%, 36% { opacity: 0; transform: scale(0.3); }
-		38% { opacity: 0.9; transform: scale(0.5); }
-		46% { opacity: 0; transform: scale(1.6); }
-		100% { opacity: 0; }
+		inset: 0;
+		background: linear-gradient(
+			180deg,
+			rgba(0, 23, 73, 0.32) 0%,
+			rgba(0, 23, 73, 0.22) 35%,
+			rgba(0, 23, 73, 0.55) 68%,
+			rgba(0, 23, 73, 0.85) 100%
+		);
+		pointer-events: none;
 	}
 
 	.motto {
 		position: absolute;
-		right: var(--motto-right);
-		bottom: var(--motto-bottom);
-		max-width: var(--motto-maxw);
-		text-align: right;
-	}
-	.motto p {
+		left: 1.5rem;
+		right: 1.5rem;
+		bottom: 1.25rem;
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
 		color: var(--color-white);
-		font-size: var(--motto-font);
-		font-weight: 800;
-		line-height: 1.15;
 		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-		margin: 0 0 0.15rem;
-		opacity: 0;
+		font-weight: 800;
+		text-shadow: 0 2px 12px rgba(0, 10, 30, 0.6);
 	}
-	.motto .line1 { animation: line1-in 3.2s infinite; }
-	.motto .line2 { animation: line2-in 3.2s infinite; }
-	.motto .line3 { animation: line3-in 3.2s infinite; }
-
-	@keyframes line1-in {
-		0%, 42% { opacity: 0; transform: translateX(14px); }
-		50% { opacity: 1; transform: translateX(0); }
-		92% { opacity: 1; }
-		100% { opacity: 0; }
+	.motto .line1 {
+		font-size: clamp(1.25rem, 5vw, 2rem);
 	}
-	@keyframes line2-in {
-		0%, 54% { opacity: 0; transform: translateX(14px); }
-		62% { opacity: 1; transform: translateX(0); }
-		92% { opacity: 1; }
-		100% { opacity: 0; }
-	}
-	@keyframes line3-in {
-		0%, 66% { opacity: 0; transform: translateX(14px); }
-		74% { opacity: 1; transform: translateX(0); }
-		92% { opacity: 1; }
-		100% { opacity: 0; }
+	.motto .line2 {
+		font-size: clamp(1rem, 3.6vw, 1.5rem);
 	}
 
-	/* Mobile: the whole stage scales down (factor ~0.45) so every element
-	   keeps its desktop proportions -- shorter absolute run-in distance,
-	   same relative layout (no overlap between the runner and the motto),
-	   same keyframe percentages/duration. */
-	@media (max-width: 640px) {
-		.hero-frame {
-			--stage-w: 360px;
-			--stage-h: 225px;
-			--player-w: 90px;
-			--player-h: 126px;
-			--player-bottom: 45px;
-			--court-bottom: 50px;
-			--speed-w: 117px;
-			--speed-h: 99px;
-			--speed-move: 40px;
-			--run-start: -117px;
-			--run-mid: 130px;
-			--run-land: 153px;
-			--run-bounce: 148px;
-			--run-settle: 151px;
-			--impact-bottom: 43px;
-			--impact-left: 180px;
-			--impact-size: 32px;
-			--impact-border: 2px;
-			--motto-right: 18px;
-			--motto-bottom: 81px;
-			--motto-maxw: 130px;
-			--motto-font: 0.95rem;
-			--logo-size: 59px;
-			--logo-left: -5px;
-			/* mobile's canvas is already compact and wasn't part of the
-			   complaint -- skip the crop so it stays exactly as-is. */
-			--top-crop: 0px;
-			--bottom-crop: 0px;
-		}
-	}
-
-	/* Desktop: the 800x500 reference composition is designed for a compact
-	   viewport and otherwise stays that size forever, leaving a small boxed
-	   stage stranded in the middle of a much wider navy background on large
-	   screens. These tiers scale every spatial variable uniformly (same
-	   principle as the mobile block above, just upward) so the hero actually
-	   grows to use wide viewports instead of looking like a stretched mobile
-	   card. Font size is scaled less aggressively to avoid oversized text. */
-	@media (min-width: 1280px) {
-		.hero-frame {
-			--stage-w: 1080px;
-			--stage-h: 675px;
-			--player-w: 270px;
-			--player-h: 378px;
-			--player-bottom: 135px;
-			--court-bottom: 149px;
-			--speed-w: 350px;
-			--speed-h: 297px;
-			--speed-move: 122px;
-			--run-start: -351px;
-			--run-mid: 392px;
-			--run-land: 459px;
-			--run-bounce: 446px;
-			--run-settle: 452px;
-			--impact-bottom: 130px;
-			--impact-left: 540px;
-			--impact-size: 95px;
-			--impact-border: 4px;
-			--motto-right: 54px;
-			--motto-bottom: 243px;
-			--motto-maxw: 350px;
-			--motto-font: 1.75rem;
-			--logo-size: 176px;
-			--logo-left: -14px;
-		}
-	}
-	@media (min-width: 1600px) {
-		.hero-frame {
-			--stage-w: 1360px;
-			--stage-h: 850px;
-			--player-w: 340px;
-			--player-h: 476px;
-			--player-bottom: 170px;
-			--court-bottom: 187px;
-			--speed-w: 442px;
-			--speed-h: 374px;
-			--speed-move: 153px;
-			--run-start: -442px;
-			--run-mid: 493px;
-			--run-land: 578px;
-			--run-bounce: 561px;
-			--run-settle: 570px;
-			--impact-bottom: 163px;
-			--impact-left: 680px;
-			--impact-size: 119px;
-			--impact-border: 5px;
-			--motto-right: 68px;
-			--motto-bottom: 306px;
-			--motto-maxw: 442px;
-			--motto-font: 2rem;
-			--logo-size: 221px;
-			--logo-left: -17px;
+	@media (min-width: 900px) {
+		.motto {
+			left: auto;
+			right: 3rem;
+			bottom: 2.5rem;
+			max-width: 480px;
+			text-align: right;
 		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.player, .speedlines, .impact, .logo-mark {
+		.slide,
+		.slide-media {
 			animation: none !important;
 		}
-		.player {
-			left: var(--run-settle);
-		}
-		.motto .line1, .motto .line2, .motto .line3 {
-			animation: none !important;
-			opacity: 1;
-			transform: none;
-		}
-		.speedlines, .impact {
+		.slide {
 			opacity: 0;
+		}
+		.slide.is-first {
+			opacity: 1;
+		}
+		.slide-media {
+			transform: none !important;
 		}
 	}
 </style>

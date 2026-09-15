@@ -188,6 +188,31 @@ collections:
                 widget: "string"
                 hint: "Décrivez brièvement ce que montre la photo (utile pour les personnes malvoyantes qui utilisent un lecteur d'écran). Exemple : « Match des seniors féminines au COSEC Émile Avy »."
 
+  - name: "photosHero"
+    label: "Photos du bandeau d'accueil (diaporama)"
+    description: "Les photos d'ACTION (jeu, compétition) qui défilent en grand en haut de la page d'accueil. Choisissez des photos de match ou d'entraînement montrant de l'intensité sportive -- pas de photos posées ni de groupe, qui ont leur place dans « Photos de la page d'accueil » ci-dessus. 4 à 5 photos donnent le meilleur rythme."
+    files:
+      - name: "page"
+        label: "Photos du diaporama"
+        file: "src/content/photos-hero/page.md"
+        fields:
+          - label: "Photos"
+            name: "photos"
+            widget: "list"
+            summary: "{{fields.alt}}"
+            hint: "Utilisez la poignée à gauche de chaque photo pour la faire glisser et changer son ordre de passage -- plus besoin de numéro. Le bouton en bas ajoute une nouvelle photo, la poubelle en retire une."
+            fields:
+              - label: "Photo"
+                name: "image"
+                widget: "image"
+                hint: "Glissez-déposez une image, ou choisissez-en une déjà présente dans la médiathèque. Préférez une photo nette, prise pendant le jeu (pas posée)."
+                choose_url: false
+
+              - label: "Description de la photo"
+                name: "alt"
+                widget: "string"
+                hint: "Décrivez brièvement l'action montrée (utile pour les personnes malvoyantes qui utilisent un lecteur d'écran). Exemple : « Tir en suspension lors d'un match du Handball Islois »."
+
   - name: "equipes"
     label: "Équipes"
     label_singular: "Équipe"

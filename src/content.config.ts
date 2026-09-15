@@ -247,6 +247,28 @@ const photosAccueil = defineCollection({
 });
 
 /**
+ * Les photos d'action qui défilent en fond du hero de la page d'accueil
+ * (composant Hero.astro). Même principe de "page singleton" que
+ * "photosAccueil" ci-dessus -- un seul champ liste réordonnable par
+ * glisser-déposer. Des photos de JEU/compétition uniquement (pas de vie de
+ * club, ce rôle reste à "photosAccueil") : le nombre d'entrées pilote
+ * directement le rythme du diaporama (voir Hero.astro).
+ */
+const photosHero = defineCollection({
+	loader: glob({ pattern: "*.md", base: "./src/content/photos-hero" }),
+	schema: ({ image }) =>
+		z.object({
+			photos: z.array(
+				z.object({
+					image: safeImage(image),
+					/** Texte alternatif (accessibilité) décrivant la photo. */
+					alt: z.string(),
+				}),
+			),
+		}),
+});
+
+/**
  * Le contenu de la page unique /le-club : histoire, parrain, infos
  * pratiques. Un seul fichier (id "page"), sur le même principe de "page
  * singleton" que les autres collections -- éditable depuis Sveltia CMS via
@@ -423,4 +445,4 @@ const resultats = defineCollection({
 		.transform((data) => ({ ...data, saison: saisonPour(data.date) })),
 });
 
-export const collections = { equipes, articles, partenaires, photosAccueil, leClub, histoireClub, resultats };
+export const collections = { equipes, articles, partenaires, photosAccueil, photosHero, leClub, histoireClub, resultats };
