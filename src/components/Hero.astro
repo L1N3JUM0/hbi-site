@@ -33,7 +33,9 @@ const fadeOutEndPct = round(((SEGMENT + FADE) / totalDuration) * 100);
 
 /* 4 mouvements de zoom/dérive différents, appliqués à tour de rôle : évite
    l'effet "même zoom appliqué à toutes les photos" qui trahit un diaporama
-   automatique. Amplitude volontairement faible (8-10%) pour rester sobre. */
+   automatique. Amplitude pilotée par --hero-zoom-max/--hero-pan-amount (voir
+   plus bas) : plus faible sur grand écran, où elle s'ajoute déjà au rognage
+   massif d'un bandeau très large. */
 const variants = ["hero-zoom-in", "hero-pan-left", "hero-zoom-out", "hero-pan-right"];
 
 /* Les pourcentages de ces keyframes dépendent du nombre de photos (via
@@ -58,23 +60,23 @@ const dynamicCss =
 }
 @keyframes hero-zoom-in {
 	0% { transform: scale(1); }
-	${fadeOutEndPct}% { transform: scale(1.1); }
-	100% { transform: scale(1.1); }
+	${fadeOutEndPct}% { transform: scale(var(--hero-zoom-max)); }
+	100% { transform: scale(var(--hero-zoom-max)); }
 }
 @keyframes hero-zoom-out {
-	0% { transform: scale(1.1); }
+	0% { transform: scale(var(--hero-zoom-max)); }
 	${fadeOutEndPct}% { transform: scale(1); }
 	100% { transform: scale(1); }
 }
 @keyframes hero-pan-left {
-	0% { transform: scale(1.1) translateX(3%); }
-	${fadeOutEndPct}% { transform: scale(1.1) translateX(-3%); }
-	100% { transform: scale(1.1) translateX(-3%); }
+	0% { transform: scale(var(--hero-zoom-max)) translateX(var(--hero-pan-amount)); }
+	${fadeOutEndPct}% { transform: scale(var(--hero-zoom-max)) translateX(calc(-1 * var(--hero-pan-amount))); }
+	100% { transform: scale(var(--hero-zoom-max)) translateX(calc(-1 * var(--hero-pan-amount))); }
 }
 @keyframes hero-pan-right {
-	0% { transform: scale(1.1) translateX(-3%); }
-	${fadeOutEndPct}% { transform: scale(1.1) translateX(3%); }
-	100% { transform: scale(1.1) translateX(3%); }
+	0% { transform: scale(var(--hero-zoom-max)) translateX(calc(-1 * var(--hero-pan-amount))); }
+	${fadeOutEndPct}% { transform: scale(var(--hero-zoom-max)) translateX(var(--hero-pan-amount)); }
+	100% { transform: scale(var(--hero-zoom-max)) translateX(var(--hero-pan-amount)); }
 }
 `.trim()
 		: "";
@@ -132,10 +134,34 @@ const HERO_WIDTHS = [480, 768, 1080, 1440, 1920];
 	.hero-viewport {
 		--header-h: 64px;
 		--hero-peek: 260px;
+		/* Amplitude du zoom/dérive de fond (voir @keyframes plus haut) --
+		   volontairement plus faible à partir de 900px : elle s'additionne au
+		   rognage vertical d'un bandeau très large, qui est déjà bien plus
+		   sévère sur grand écran qu'en mobile. */
+		--hero-zoom-max: 1.1;
+		--hero-pan-amount: 3%;
 		position: relative;
 		width: 100%;
 		height: clamp(280px, calc(100vh - var(--header-h) - var(--hero-peek)), 480px);
 		overflow: hidden;
+	}
+
+	/* Sur grand écran, le bandeau est beaucoup plus large que haut : à hauteur
+	   égale, le rognage vertical (object-fit: cover) y est donc mécaniquement
+	   plus sévère qu'en mobile. On compense par les deux leviers disponibles
+	   sans revenir à un hero massif : un peu plus de hauteur, et une
+	   amplitude d'animation réduite pour ne pas aggraver l'effet. */
+	@media (min-width: 900px) {
+		.hero-viewport {
+			--hero-zoom-max: 1.05;
+			--hero-pan-amount: 1.5%;
+			height: clamp(280px, calc(100vh - var(--header-h) - var(--hero-peek)), 600px);
+		}
+	}
+	@media (min-width: 1400px) {
+		.hero-viewport {
+			height: clamp(280px, calc(100vh - var(--header-h) - var(--hero-peek)), 680px);
+		}
 	}
 
 	.slide {
