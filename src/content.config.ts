@@ -68,6 +68,18 @@ function champAvecDefaut<T extends z.ZodTypeAny>(schema: T, defaut: z.infer<T>) 
 	return z.preprocess(videVersAbsent, schema.default(defaut).catch(defaut));
 }
 
+/** Coordonnée (en % de la largeur ou de la hauteur de la photo) du point à
+ * garder visible quel que soit le ratio du cadre où la photo est affichée --
+ * traduit en `object-position` CSS. Contrairement à un recadrage classique
+ * (un rectangle fixe), un point en pourcentage reste valable quel que soit
+ * le ratio de la vignette (bandeau très large sur desktop, carte compacte en
+ * mobile...) : c'est justement ce que fait `object-position`. L'image
+ * d'origine n'est jamais recadrée, ce réglage reste réversible à tout moment
+ * depuis le CMS. Défaut au centre (50). */
+function champPourcentage() {
+	return champAvecDefaut(z.number().min(0).max(100), 50);
+}
+
 /** Pour les deux seuls champs liste "requis" du schéma (`galerie`,
  * `calendriers`) : une liste vide est une valeur de repli sûre et sans
  * ambiguïté (contrairement à un texte ou une image manquante, pour
@@ -241,11 +253,10 @@ const photosAccueil = defineCollection({
 					image: safeImage(image),
 					/** Texte alternatif (accessibilité) décrivant la photo. */
 					alt: z.string(),
-					/** Partie de la photo conservée au rognage (la vignette a une
-					 * hauteur fixe, l'image d'origine non). Pilote l'`object-position`
-					 * CSS -- l'image d'origine n'est jamais recadrée, ce choix reste
-					 * réversible à tout moment depuis le CMS. */
-					cadrage: champAvecDefaut(z.enum(["haut", "centre", "bas"]), "centre"),
+					/** Position horizontale du point d'intérêt (voir champPourcentage). */
+					pointX: champPourcentage(),
+					/** Position verticale du point d'intérêt (voir champPourcentage). */
+					pointY: champPourcentage(),
 				}),
 			),
 		}),
@@ -268,12 +279,10 @@ const photosHero = defineCollection({
 					image: safeImage(image),
 					/** Texte alternatif (accessibilité) décrivant la photo. */
 					alt: z.string(),
-					/** Partie de la photo conservée au rognage (le bandeau est
-					 * beaucoup plus large que haut, l'image d'origine ne l'est pas
-					 * forcément). Pilote l'`object-position` CSS -- l'image d'origine
-					 * n'est jamais recadrée, ce choix reste réversible à tout moment
-					 * depuis le CMS. */
-					cadrage: champAvecDefaut(z.enum(["haut", "centre", "bas"]), "centre"),
+					/** Position horizontale du point d'intérêt (voir champPourcentage). */
+					pointX: champPourcentage(),
+					/** Position verticale du point d'intérêt (voir champPourcentage). */
+					pointY: champPourcentage(),
 				}),
 			),
 		}),

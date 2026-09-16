@@ -3,7 +3,7 @@ import { getEntry } from "astro:content";
 import PhotoCarousel from "./PhotoCarousel.astro";
 
 const page = await getEntry("photosAccueil", "page");
-const photos = (page?.data.photos ?? []).map((p) => ({ src: p.image, alt: p.alt, cadrage: p.cadrage }));
+const photos = (page?.data.photos ?? []).map((p) => ({ src: p.image, alt: p.alt, pointX: p.pointX, pointY: p.pointY }));
 ---
 
 <section class="photo-band">

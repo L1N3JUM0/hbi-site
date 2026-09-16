@@ -188,15 +188,24 @@ collections:
                 widget: "string"
                 hint: "Décrivez brièvement ce que montre la photo (utile pour les personnes malvoyantes qui utilisent un lecteur d'écran). Exemple : « Match des seniors féminines au COSEC Émile Avy »."
 
-              - label: "Cadrage"
-                name: "cadrage"
-                widget: "select"
-                default: "centre"
-                hint: "La vignette du carrousel est plus large que haute : ce réglage choisit quelle partie de la photo reste visible une fois rognée (l'image d'origine n'est jamais modifiée, vous pouvez changer d'avis à tout moment)."
-                options:
-                  - { label: "Haut de la photo", value: "haut" }
-                  - { label: "Centre de la photo", value: "centre" }
-                  - { label: "Bas de la photo", value: "bas" }
+              - label: "Point d'intérêt — position horizontale (%)"
+                name: "pointX"
+                widget: "number"
+                value_type: "int"
+                min: 0
+                max: 100
+                step: 5
+                default: 50
+                hint: "La vignette du carrousel n'a pas toujours le même format (plus large sur ordinateur, plus carrée sur mobile) : ce point indique le sujet à garder visible dans tous les cas, sans jamais toucher au fichier d'origine. 0 = bord gauche de la photo, 100 = bord droit, 50 = centré. POUR TROUVER LA VALEUR SANS OUTIL : ouvrez la photo en grand (cliquez dessus dans le sélecteur d'image), puis estimez à l'œil à quel pourcentage de la LARGEUR se trouve votre sujet. Exemple : un visage situé au tiers supérieur de l'image et légèrement sur la gauche → 40 ici, et 30 dans le champ vertical juste en dessous."
+              - label: "Point d'intérêt — position verticale (%)"
+                name: "pointY"
+                widget: "number"
+                value_type: "int"
+                min: 0
+                max: 100
+                step: 5
+                default: 50
+                hint: "Même principe que le champ horizontal ci-dessus, mais pour la HAUTEUR de la photo. 0 = haut de la photo, 100 = bas, 50 = centré. Exemple : un visage au tiers supérieur de l'image (donc plutôt en haut) → 30 ici (et 40 si en plus il est légèrement à gauche, voir le champ horizontal)."
 
   - name: "photosHero"
     label: "Photos du bandeau d'accueil (diaporama)"
@@ -223,15 +232,24 @@ collections:
                 widget: "string"
                 hint: "Décrivez brièvement l'action montrée (utile pour les personnes malvoyantes qui utilisent un lecteur d'écran). Exemple : « Tir en suspension lors d'un match du Handball Islois »."
 
-              - label: "Cadrage"
-                name: "cadrage"
-                widget: "select"
-                default: "centre"
-                hint: "Le diaporama est très large et rogne le haut et le bas de la photo : ce réglage choisit quelle partie reste visible (l'image d'origine n'est jamais modifiée, vous pouvez changer d'avis à tout moment)."
-                options:
-                  - { label: "Haut de la photo", value: "haut" }
-                  - { label: "Centre de la photo", value: "centre" }
-                  - { label: "Bas de la photo", value: "bas" }
+              - label: "Point d'intérêt — position horizontale (%)"
+                name: "pointX"
+                widget: "number"
+                value_type: "int"
+                min: 0
+                max: 100
+                step: 5
+                default: 50
+                hint: "Le diaporama est un bandeau très large qui rogne fortement le haut et le bas de la photo : ce point indique le sujet à garder visible, sans jamais toucher au fichier d'origine. 0 = bord gauche de la photo, 100 = bord droit, 50 = centré. POUR TROUVER LA VALEUR SANS OUTIL : ouvrez la photo en grand (cliquez dessus dans le sélecteur d'image), puis estimez à l'œil à quel pourcentage de la LARGEUR se trouve votre sujet (le ballon, le visage du joueur...). Exemple : un joueur en tir situé au tiers supérieur de l'image et légèrement sur la gauche → 40 ici, et 30 dans le champ vertical juste en dessous."
+              - label: "Point d'intérêt — position verticale (%)"
+                name: "pointY"
+                widget: "number"
+                value_type: "int"
+                min: 0
+                max: 100
+                step: 5
+                default: 50
+                hint: "Même principe que le champ horizontal ci-dessus, mais pour la HAUTEUR de la photo. 0 = haut de la photo, 100 = bas, 50 = centré. C'est le réglage le plus utile ici : le rognage du bandeau est presque toujours vertical. Exemple : un joueur en tir situé au tiers supérieur de l'image → 30 (et 40 si en plus il est légèrement à gauche, voir le champ horizontal)."
 
   - name: "equipes"
     label: "Équipes"

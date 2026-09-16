@@ -5,18 +5,13 @@ import type { ImageMetadata } from "astro";
 interface Photo {
 	src: ImageMetadata;
 	alt: string;
-	/** Partie de la photo conservée au rognage (la vignette a une hauteur
-	 * fixe, l'image d'origine non) -- traduit en `object-position` CSS,
-	 * l'image d'origine n'est jamais recadrée. Absent pour les carrousels qui
+	/** Point d'intérêt (en % de la largeur/hauteur de la photo) à garder
+	 * visible malgré le rognage -- traduit en `object-position` CSS, l'image
+	 * d'origine n'est jamais recadrée. Absents pour les carrousels qui
 	 * n'exposent pas encore ce réglage (ex. galerie d'équipe) : centré par défaut. */
-	cadrage?: "haut" | "centre" | "bas";
+	pointX?: number;
+	pointY?: number;
 }
-
-const OBJECT_POSITION: Record<string, string> = {
-	haut: "center top",
-	centre: "center center",
-	bas: "center bottom",
-};
 
 interface Props {
 	photos: Photo[];
@@ -47,7 +42,7 @@ const { photos, ariaLabel, lightbox = false, variant = "band" } = Astro.props;
 						height={420}
 						format="webp"
 						loading="lazy"
-						style={`object-position: ${OBJECT_POSITION[p.cadrage ?? "centre"]};`}
+						style={`object-position: ${p.pointX ?? 50}% ${p.pointY ?? 50}%;`}
 					/>
 				</div>
 			))
