@@ -1,0 +1,18 @@
+---
+source: "pdf"
+codeRencontre: "UAFYRAO"
+equipeSlug: "u13-feminines"
+date: "2025-05-18T12:00:00.000Z"
+journee: "J1"
+competition: "U13 FEMININES HONNEUR DEPARTEMENTAL TOURNOI DE PRINTEMPS EXCELLENCE"
+typeMatch: "championnat"
+domicile: true
+adversaire: "HANDBALL CLUB CAVAILLONNAIS"
+salle: "6384 - ANDRE GIMARD"
+scoreDomicile: 2
+scoreExterieur: 11
+chronologie: [{"temps":"01:03","scoreDomicile":0,"scoreExterieur":0,"type":"arret"},{"temps":"01:21","scoreDomicile":0,"scoreExterieur":0,"type":"arret"},{"temps":"01:41","scoreDomicile":0,"scoreExterieur":1,"type":"but"},{"temps":"02:10","scoreDomicile":0,"scoreExterieur":1,"type":"arret"},{"temps":"03:07","scoreDomicile":0,"scoreExterieur":2,"type":"but"},{"temps":"03:31","scoreDomicile":1,"scoreExterieur":2,"type":"but"},{"temps":"03:53","scoreDomicile":1,"scoreExterieur":3,"type":"but"},{"temps":"04:44","scoreDomicile":1,"scoreExterieur":4,"type":"but"},{"temps":"05:11","scoreDomicile":1,"scoreExterieur":4,"type":"arret"},{"temps":"05:34","scoreDomicile":1,"scoreExterieur":5,"type":"but"},{"temps":"06:40","scoreDomicile":1,"scoreExterieur":6,"type":"but"},{"temps":"07:41","scoreDomicile":1,"scoreExterieur":6,"type":"arret"},{"temps":"08:01","scoreDomicile":1,"scoreExterieur":7,"type":"but"},{"temps":"08:26","scoreDomicile":1,"scoreExterieur":7,"type":"arret"},{"temps":"08:53","scoreDomicile":1,"scoreExterieur":8,"type":"but"},{"temps":"10:02","scoreDomicile":1,"scoreExterieur":8,"type":"arret"},{"temps":"10:23","scoreDomicile":2,"scoreExterieur":8,"type":"but"},{"temps":"10:38","scoreDomicile":2,"scoreExterieur":9,"type":"but"},{"temps":"11:07","scoreDomicile":2,"scoreExterieur":9,"type":"arret"},{"temps":"11:31","scoreDomicile":2,"scoreExterieur":10,"type":"but"},{"temps":"11:58","scoreDomicile":2,"scoreExterieur":11,"type":"but"}]
+statsEquipeDomicile: {"buts":2,"tirs":2,"arrets":3,"exclusions":0,"avertissements":0}
+statsEquipeExterieur: {"buts":11,"tirs":11,"arrets":5,"exclusions":0,"avertissements":0}
+statsJoueurs: [{"numero":7,"nom":"BOUCHOUX","prenom":"milla","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":15,"nom":"DONATI","prenom":"cassie","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":11,"nom":"FERLAND","prenom":"lilou","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":8,"nom":"FONTBONNE","prenom":"chloe","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":10,"nom":"LEONETTI","prenom":"manon","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":4,"nom":"MARCONI","prenom":"gina","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":6,"nom":"MARCONI","prenom":"lucia","buts":1,"sept_m":0,"tirs":1,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":2,"nom":"MEUNIER GUARINO","prenom":"taos","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":14,"nom":"PAROUTY","prenom":"rose","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":12,"nom":"PUGET","prenom":"elise","buts":1,"sept_m":0,"tirs":1,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":13,"nom":"SCHAMBERGER","prenom":"lea","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":16,"nom":"UNIA","prenom":"lola","buts":0,"sept_m":0,"tirs":0,"arrets":3,"avertissements":0,"exclusions":0,"disqualification":false}]
+---

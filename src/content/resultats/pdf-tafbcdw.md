@@ -1,0 +1,21 @@
+---
+source: "pdf"
+codeRencontre: "TAFBCDW"
+equipeSlug: "u11-mixtes"
+equipeNumero: "2"
+date: "2023-12-09T13:30:00.000Z"
+journee: "J3"
+competition: "U11 DEPARTEMENTAL U11 DEUXIEME PHASE"
+typeMatch: "championnat"
+domicile: true
+adversaire: "HANDBALL CONCERNADE"
+salle: "6384 - EMILE AVY"
+scoreDomicile: 7
+scoreExterieur: 19
+scoreMiTempsDomicile: 4
+scoreMiTempsExterieur: 6
+chronologie: [{"temps":"01:41","scoreDomicile":0,"scoreExterieur":1,"type":"but"},{"temps":"02:46","scoreDomicile":0,"scoreExterieur":2,"type":"but"},{"temps":"07:30","scoreDomicile":0,"scoreExterieur":3,"type":"but"},{"temps":"08:02","scoreDomicile":0,"scoreExterieur":4,"type":"but"},{"temps":"08:40","scoreDomicile":1,"scoreExterieur":4,"type":"but"},{"temps":"10:50","scoreDomicile":2,"scoreExterieur":4,"type":"but"},{"temps":"11:12","scoreDomicile":2,"scoreExterieur":5,"type":"but"},{"temps":"13:22","scoreDomicile":2,"scoreExterieur":6,"type":"but"},{"temps":"14:38","scoreDomicile":3,"scoreExterieur":6,"type":"but"},{"temps":"14:54","scoreDomicile":4,"scoreExterieur":6,"type":"but"},{"temps":"16:35","scoreDomicile":4,"scoreExterieur":7,"type":"but"},{"temps":"18:12","scoreDomicile":4,"scoreExterieur":8,"type":"but"},{"temps":"19:34","scoreDomicile":4,"scoreExterieur":9,"type":"but"},{"temps":"20:03","scoreDomicile":4,"scoreExterieur":10,"type":"but"},{"temps":"20:24","scoreDomicile":5,"scoreExterieur":10,"type":"but"},{"temps":"20:53","scoreDomicile":5,"scoreExterieur":11,"type":"but"},{"temps":"22:05","scoreDomicile":5,"scoreExterieur":12,"type":"but"},{"temps":"22:11","scoreDomicile":5,"scoreExterieur":12,"type":"autre"},{"temps":"24:17","scoreDomicile":5,"scoreExterieur":13,"type":"but"},{"temps":"25:36","scoreDomicile":5,"scoreExterieur":14,"type":"but"},{"temps":"26:17","scoreDomicile":5,"scoreExterieur":15,"type":"but"},{"temps":"30:13","scoreDomicile":5,"scoreExterieur":16,"type":"but"},{"temps":"31:13","scoreDomicile":5,"scoreExterieur":17,"type":"but"},{"temps":"33:09","scoreDomicile":6,"scoreExterieur":17,"type":"but"},{"temps":"35:11","scoreDomicile":6,"scoreExterieur":18,"type":"but"},{"temps":"38:50","scoreDomicile":6,"scoreExterieur":19,"type":"but"},{"temps":"41:57","scoreDomicile":7,"scoreExterieur":19,"type":"but"}]
+statsEquipeDomicile: {"buts":7,"tirs":7,"arrets":0,"exclusions":0,"avertissements":0}
+statsEquipeExterieur: {"buts":19,"tirs":19,"arrets":0,"exclusions":0,"avertissements":0}
+statsJoueurs: [{"numero":10,"nom":"ARSIEL","prenom":"leane","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":4,"nom":"BLASCO","prenom":"leo","buts":3,"sept_m":0,"tirs":3,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":5,"nom":"DOMINATI","prenom":"lilou","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":15,"nom":"FONTBONNE","prenom":"chloe","buts":1,"sept_m":0,"tirs":1,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":1,"nom":"GARCIA","prenom":"tya","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":9,"nom":"GRANGIER--SKROMNY","prenom":"emile","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":3,"nom":"LEONETTI","prenom":"manon","buts":3,"sept_m":0,"tirs":3,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":6,"nom":"PUGET","prenom":"elise","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":12,"nom":"SCHAMBERGER","prenom":"lea","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":13,"nom":"SILVESTRE LEWANDOWSKI","prenom":"loan","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":11,"nom":"UNIA","prenom":"lola","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false}]
+---

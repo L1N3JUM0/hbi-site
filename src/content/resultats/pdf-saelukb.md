@@ -1,0 +1,20 @@
+---
+source: "pdf"
+codeRencontre: "SAELUKB"
+equipeSlug: "u11-mixtes"
+date: "2022-12-03T14:30:00.000Z"
+journee: "J2"
+competition: "CHAMPIONNATS -11 ANS MIXTES CHAMPIONNATS -11 ANS MIXTES"
+typeMatch: "championnat"
+domicile: false
+adversaire: "HANDBALL CLUB ORANGE"
+salle: "6384 - ARGENSOL"
+scoreDomicile: 17
+scoreExterieur: 12
+scoreMiTempsDomicile: 4
+scoreMiTempsExterieur: 8
+chronologie: [{"temps":"00:57","scoreDomicile":1,"scoreExterieur":0,"type":"but"},{"temps":"01:37","scoreDomicile":1,"scoreExterieur":1,"type":"but"},{"temps":"02:12","scoreDomicile":1,"scoreExterieur":2,"type":"but"},{"temps":"04:31","scoreDomicile":1,"scoreExterieur":3,"type":"but"},{"temps":"04:51","scoreDomicile":1,"scoreExterieur":4,"type":"but"},{"temps":"06:36","scoreDomicile":1,"scoreExterieur":5,"type":"but"},{"temps":"06:49","scoreDomicile":1,"scoreExterieur":6,"type":"but"},{"temps":"06:51","scoreDomicile":1,"scoreExterieur":6,"type":"autre"},{"temps":"06:51","scoreDomicile":2,"scoreExterieur":6,"type":"but"},{"temps":"06:51","scoreDomicile":2,"scoreExterieur":7,"type":"but"},{"temps":"06:51","scoreDomicile":2,"scoreExterieur":8,"type":"but"},{"temps":"06:51","scoreDomicile":3,"scoreExterieur":8,"type":"but"},{"temps":"08:11","scoreDomicile":4,"scoreExterieur":8,"type":"but"},{"temps":"15:47","scoreDomicile":4,"scoreExterieur":9,"type":"but"},{"temps":"17:55","scoreDomicile":5,"scoreExterieur":9,"type":"but"},{"temps":"18:46","scoreDomicile":6,"scoreExterieur":9,"type":"but"},{"temps":"20:15","scoreDomicile":7,"scoreExterieur":9,"type":"but"},{"temps":"22:16","scoreDomicile":8,"scoreExterieur":9,"type":"but"},{"temps":"23:25","scoreDomicile":9,"scoreExterieur":9,"type":"but"},{"temps":"23:33","scoreDomicile":9,"scoreExterieur":9,"type":"autre"},{"temps":"24:17","scoreDomicile":9,"scoreExterieur":10,"type":"but"},{"temps":"25:08","scoreDomicile":10,"scoreExterieur":10,"type":"but"},{"temps":"26:15","scoreDomicile":11,"scoreExterieur":10,"type":"but"},{"temps":"28:35","scoreDomicile":11,"scoreExterieur":11,"type":"but"},{"temps":"30:45","scoreDomicile":12,"scoreExterieur":11,"type":"but"},{"temps":"32:18","scoreDomicile":13,"scoreExterieur":11,"type":"but"},{"temps":"36:10","scoreDomicile":14,"scoreExterieur":11,"type":"but"},{"temps":"38:12","scoreDomicile":14,"scoreExterieur":12,"type":"but"},{"temps":"39:41","scoreDomicile":15,"scoreExterieur":12,"type":"but"},{"temps":"41:09","scoreDomicile":16,"scoreExterieur":12,"type":"but"},{"temps":"41:44","scoreDomicile":16,"scoreExterieur":12,"type":"autre"},{"temps":"44:49","scoreDomicile":17,"scoreExterieur":12,"type":"but"}]
+statsEquipeDomicile: {"buts":17,"tirs":17,"arrets":0,"exclusions":0,"avertissements":0}
+statsEquipeExterieur: {"buts":12,"tirs":12,"arrets":0,"exclusions":0,"avertissements":0}
+statsJoueurs: [{"numero":2,"nom":"BELLA","prenom":"milhan","buts":1,"sept_m":0,"tirs":1,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":13,"nom":"BILLIOQUE","prenom":"robin","buts":1,"sept_m":0,"tirs":1,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":12,"nom":"CAMBOULIVES DUFFEAL","prenom":"basile","buts":4,"sept_m":0,"tirs":4,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":9,"nom":"DELEUZE-BONTEMPS","prenom":"laszlo","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":10,"nom":"DOMEAU","prenom":"sacha","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":6,"nom":"FOURNIER","prenom":"jean","buts":3,"sept_m":0,"tirs":3,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":11,"nom":"GARCIN","prenom":"thomas","buts":3,"sept_m":0,"tirs":3,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":15,"nom":"GIROIRE","prenom":"gabin","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":1,"nom":"MUGEMANGANGO","prenom":"louis","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false}]
+---
