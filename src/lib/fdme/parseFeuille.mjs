@@ -76,30 +76,39 @@ const DETAIL_SCORE_COLUMN_MAX_DISTANCE = 8;
  * "DETAIL SCORE" avec les valeurs numériques (une valeur par paire REC/VIS
  * quand la colonne est renseignée, absente sinon).
  *
+ * On repère la ligne "REC"/"VIS" elle-même plutôt qu'un libellé de colonne
+ * précis ("Période 1") pour trouver ce bloc : "Période 1" n'est pas toujours
+ * présente (constaté sur une feuille réelle U13 à une seule période, où le
+ * bloc commence directement par "Fin Tps Reglem.") -- cherchant "Période 1"
+ * en premier, on ne trouvait alors aucun bloc du tout.
+ *
  * @returns {Map<string, {domicile: number|null, exterieur: number|null}> | null}
  *   `null` si le bloc n'est pas reconnaissable du tout (feuille non jouée,
  *   format totalement différent...).
  */
 function parseDetailScore(rows) {
-	const headerFound = findRow(rows, (r) => r.items.some((i) => i.str === "Période 1"));
-	if (!headerFound) return null;
-	const labels = headerFound.row.items;
+	const recVisFound = findRow(rows, (r) => r.items.length >= 2 && r.items.every((i) => i.str === "REC" || i.str === "VIS"));
+	if (!recVisFound || recVisFound.index === 0) return null;
+	const recVisRow = recVisFound.row;
 
-	const recVisRow = rows[headerFound.index + 1];
-	if (!recVisRow || recVisRow.items.length !== labels.length * 2 || !recVisRow.items.every((i) => i.str === "REC" || i.str === "VIS")) {
-		return null;
-	}
+	const labels = rows[recVisFound.index - 1].items;
+	if (labels.length !== recVisRow.items.length / 2) return null;
 	const colonnes = labels.map((label, i) => ({
 		label: label.str,
 		xDomicile: recVisRow.items[i * 2].x,
 		xExterieur: recVisRow.items[i * 2 + 1].x,
 	}));
 
-	const valuesFound = findRow(rows, (r) => r.items.some((i) => i.str === "DETAIL"), headerFound.index + 1);
-	if (!valuesFound) return null;
+	// La ligne des valeurs suit TOUJOURS immédiatement REC/VIS, mais son
+	// libellé varie ("DETAIL"/"SCORE" en deux mots majuscules chez certains
+	// organisateurs, "Détail score" fusionné en un seul, casse mixte, chez
+	// d'autres -- vu sur une feuille réelle organisée par une ligue plutôt
+	// qu'un comité départemental) : on se fie à la position, pas au texte.
+	const valuesRow = rows[recVisFound.index + 1];
+	if (!valuesRow) return null;
 
 	const lireValeur = (x) => {
-		const item = nearestItem(valuesFound.row, x, DETAIL_SCORE_COLUMN_MAX_DISTANCE);
+		const item = nearestItem(valuesRow, x, DETAIL_SCORE_COLUMN_MAX_DISTANCE);
 		return item && /^\d+$/.test(item.str) ? Number(item.str) : null;
 	};
 
