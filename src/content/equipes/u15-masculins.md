@@ -9,6 +9,10 @@ ordre: null
 calendriers:
   - url: https://competition-calendar.ffhandball.fr/c-32450/s-3577.ics
     repere: Handball Islois
+    libelle: U15 Excellence
+    classementUrl: ''
+  - url: https://competition-calendar.ffhandball.fr/c-33206/s-3577.ics
+    repere: Handball Islois
     libelle: ''
     classementUrl: ''
 horaires: Mardi et jeudi 19h-20h30
