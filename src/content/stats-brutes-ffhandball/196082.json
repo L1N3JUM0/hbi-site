@@ -1,6 +1,6 @@
 {
 	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u17-feminines-inter-dep-poule-1-33205/poule-196082/statistiques/",
-	"fetchedAt": "2026-09-17T23:17:20.565Z",
+	"fetchedAt": "2026-09-17T20:51:43.415Z",
 	"classement": [
 		{
 			"id": "10599583",
@@ -57,8 +57,8 @@
 			"butMoins": "0",
 			"diff": "0",
 			"dernieresRencontres": "",
-			"equipe_libelle": "L'ISLE - LE THOR (U17F)",
-			"equipe_logoActif": "0",
+			"equipe_libelle": "HANDBALL ISLOIS",
+			"equipe_logoActif": "1",
 			"structure_logo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg",
 			"ext_structureId": "3577"
 		},
