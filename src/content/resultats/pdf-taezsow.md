@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "TAEZSOW"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 equipeNumero: "2"
 date: "2024-04-13T11:00:00.000Z"
 journee: "J13"

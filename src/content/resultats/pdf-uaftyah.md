@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "UAFTYAH"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2024-12-14T14:30:00.000Z"
 journee: "J4"
 competition: "U13 MIXTE CHAMPIONNAT U13 MIXTE"

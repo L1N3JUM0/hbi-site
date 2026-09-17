@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "VAGCDGX"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2025-09-27T11:30:00.000Z"
 journee: "J1"
 competition: "U13 MIXTE TOURNOI D'AUTOMNE 2025"

@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "TAEVRPJ"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2023-09-24T11:30:00.000Z"
 journee: "J1"
 competition: "BRASSAGE U13 MIXTE BRASSAGE U13 MIXTE"

@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "SAEPKAL"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2023-01-14T16:00:00.000Z"
 journee: "J5"
 competition: "CHAMPIONNATS -13 ANS MIXTES CHAMPIONNATS -13 ANS MIXTES"

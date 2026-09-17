@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "TAFARZV"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2023-11-12T08:15:00.000Z"
 journee: "J1"
 competition: "U13 MIXTE 2023-2024 U13 MIXTE 2EME PHASE"

@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "TAEZSNU"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 equipeNumero: "2"
 date: "2024-01-20T14:45:00.000Z"
 journee: "J6"

@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "SAENHKL"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2022-12-10T13:30:00.000Z"
 journee: "J3"
 competition: "CHAMPIONNATS -13 ANS MIXTES CHAMPIONNATS -13 ANS MIXTES"

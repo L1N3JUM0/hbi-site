@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "UAFQNZU"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2025-05-17T15:30:00.000Z"
 journee: "J13"
 competition: "U13 MIXTE CHAMPIONNAT U13 MIXTE"

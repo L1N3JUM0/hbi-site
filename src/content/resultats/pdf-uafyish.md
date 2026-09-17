@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "UAFYISH"
-equipeSlug: ""
+equipeSlug: "u17-masculins-historique"
 date: "2025-04-27T09:00:00.000Z"
 journee: "J1"
 competition: "U17 EXCELLENCE MASCULIN U17 M EXC 24-25 PHASE 2"

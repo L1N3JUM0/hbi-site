@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "UAFPOOR"
-equipeSlug: ""
+equipeSlug: "u17-masculins-historique"
 date: "2025-02-02T13:00:00.000Z"
 journee: "J11"
 competition: "U17 EXCELLENCE MASCULIN U17 EXCELLENCE MASCULIN"

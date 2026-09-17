@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "VAGHVUS"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2025-11-08T14:30:00.000Z"
 journee: "J1"
 competition: "U13 MIXTE CHAMPIONNAT EXCELLENCE U13 MIXTE"

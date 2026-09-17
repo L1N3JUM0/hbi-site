@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "UAFYISM"
-equipeSlug: ""
+equipeSlug: "u17-masculins-historique"
 date: "2025-05-03T15:30:00.000Z"
 journee: "J2"
 competition: "U17 EXCELLENCE MASCULIN U17 M EXC 24-25 PHASE 2"

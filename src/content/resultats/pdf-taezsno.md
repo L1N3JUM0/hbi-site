@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "TAEZSNO"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 equipeNumero: "2"
 date: "2023-12-10T10:00:00.000Z"
 journee: "J4"

@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "VAGGQMN"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2025-10-04T12:30:00.000Z"
 journee: "J1"
 competition: "U13 MIXTE TOURNOI D'AUTOMNE 2025 T2"

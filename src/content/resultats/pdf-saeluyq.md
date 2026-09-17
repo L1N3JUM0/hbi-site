@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "SAELUYQ"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2023-03-11T14:00:00.000Z"
 journee: "J10"
 competition: "CHAMPIONNATS -13 ANS MIXTES CHAMPIONNATS -13 ANS MIXTES"

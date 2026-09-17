@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "UAFQNYE"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2024-12-01T13:30:00.000Z"
 journee: "J2"
 competition: "U13 MIXTE CHAMPIONNAT U13 MIXTE"

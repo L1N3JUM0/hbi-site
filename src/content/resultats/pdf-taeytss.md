@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "TAEYTSS"
-equipeSlug: ""
+equipeSlug: "u17-masculins-historique"
 date: "2023-10-14T15:00:00.000Z"
 journee: "J2"
 competition: "U17 M INTERDEP OUEST PACA U17 M INTERDEP OUEST PACA"

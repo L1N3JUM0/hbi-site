@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "TAEVYQA"
-equipeSlug: ""
+equipeSlug: "u17-masculins-historique"
 date: "2023-09-23T11:00:00.000Z"
 journee: "J1"
 competition: "BRASSAGES U17 EXCELLENCE PACA GARCONS BRASSAGES U17 EXCELLENCE PACA GARCONS"

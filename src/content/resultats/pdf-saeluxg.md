@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "SAELUXG"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2022-11-19T16:00:00.000Z"
 journee: "J1"
 competition: "CHAMPIONNATS -13 ANS MIXTES CHAMPIONNATS -13 ANS MIXTES"

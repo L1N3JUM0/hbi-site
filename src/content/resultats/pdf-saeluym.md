@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "SAELUYM"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2023-03-05T10:00:00.000Z"
 journee: "J9"
 competition: "CHAMPIONNATS -13 ANS MIXTES CHAMPIONNATS -13 ANS MIXTES"

@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "TAFCDGE"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 equipeNumero: "2"
 date: "2023-11-12T08:30:00.000Z"
 journee: "J1"

@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "UAFXNQH"
-equipeSlug: ""
+equipeSlug: "u17-masculins-historique"
 date: "2025-03-16T15:00:00.000Z"
 journee: "J13"
 competition: "U17 EXCELLENCE MASCULIN U17 EXCELLENCE MASCULIN"

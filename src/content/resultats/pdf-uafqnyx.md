@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "UAFQNYX"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2025-02-01T14:45:00.000Z"
 journee: "J7"
 competition: "U13 MIXTE CHAMPIONNAT U13 MIXTE"

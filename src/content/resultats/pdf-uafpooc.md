@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "UAFPOOC"
-equipeSlug: ""
+equipeSlug: "u17-masculins-historique"
 date: "2024-12-07T17:00:00.000Z"
 journee: "J7"
 competition: "U17 EXCELLENCE MASCULIN U17 EXCELLENCE MASCULIN"

@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "SAELUZC"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2023-05-06T14:30:00.000Z"
 journee: "J13"
 competition: "CHAMPIONNATS -13 ANS MIXTES CHAMPIONNATS -13 ANS MIXTES"

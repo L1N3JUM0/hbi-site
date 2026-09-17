@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "SAELUYA"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2023-01-22T10:30:00.000Z"
 journee: "J6"
 competition: "CHAMPIONNATS -13 ANS MIXTES CHAMPIONNATS -13 ANS MIXTES"

@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "UAFPONP"
-equipeSlug: ""
+equipeSlug: "u17-masculins-historique"
 date: "2024-11-16T17:00:00.000Z"
 journee: "J4"
 competition: "U17 EXCELLENCE MASCULIN U17 EXCELLENCE MASCULIN"

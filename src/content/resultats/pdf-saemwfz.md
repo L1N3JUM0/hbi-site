@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "SAEMWFZ"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2022-12-03T14:30:00.000Z"
 journee: "J2"
 competition: "CHAMPIONNATS -13 ANS MIXTES CHAMPIONNATS -13 ANS MIXTES"

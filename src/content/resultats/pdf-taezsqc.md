@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "TAEZSQC"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2024-02-03T16:00:00.000Z"
 journee: "J7"
 competition: "U13 MIXTE 2023-2024 U13 MIXTE 2EME PHASE"

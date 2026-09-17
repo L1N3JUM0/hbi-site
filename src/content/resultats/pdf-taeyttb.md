@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "TAEYTTB"
-equipeSlug: ""
+equipeSlug: "u17-masculins-historique"
 date: "2023-12-09T15:30:00.000Z"
 journee: "J5"
 competition: "U17 M INTERDEP OUEST PACA U17 M INTERDEP OUEST PACA"

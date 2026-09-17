@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "SAEQJGC"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2023-03-18T16:00:00.000Z"
 journee: "J7"
 competition: "CHAMPIONNATS -13 ANS MIXTES CHAMPIONNATS -13 ANS MIXTES"

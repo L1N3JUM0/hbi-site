@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "TAFIFXL"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2024-05-25T12:00:00.000Z"
 journee: "J1"
 competition: "U13 MIXTE 2023-2024 FINALITES"

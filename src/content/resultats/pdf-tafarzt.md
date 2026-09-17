@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "TAFARZT"
-equipeSlug: ""
+equipeSlug: "u17-masculins-historique"
 date: "2023-11-26T14:00:00.000Z"
 journee: "J4"
 competition: "U17 M INTERDEP OUEST PACA U17 M INTERDEP OUEST PACA"

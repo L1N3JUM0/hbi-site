@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "UAFNYIA"
-equipeSlug: ""
+equipeSlug: "u17-masculins-historique"
 date: "2024-09-22T07:30:00.000Z"
 journee: "J1"
 competition: "U17M QUALIFICATIONS EXCELLENCE REGION QUALIFICATIONS EXCELLENCE REGION"

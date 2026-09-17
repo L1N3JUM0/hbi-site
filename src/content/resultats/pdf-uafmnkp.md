@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "UAFMNKP"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2024-09-28T12:00:00.000Z"
 journee: "J1"
 competition: "U13 MIXTE TOUR 1"

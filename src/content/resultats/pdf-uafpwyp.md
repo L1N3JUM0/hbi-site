@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "UAFPWYP"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2024-10-13T07:00:00.000Z"
 journee: "J1"
 competition: "U13 MIXTE TOUR 2"

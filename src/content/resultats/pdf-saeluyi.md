@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "SAELUYI"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2023-02-04T16:00:00.000Z"
 journee: "J8"
 competition: "CHAMPIONNATS -13 ANS MIXTES CHAMPIONNATS -13 ANS MIXTES"

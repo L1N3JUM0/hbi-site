@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "SAEPHUP"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2023-05-13T15:45:00.000Z"
 journee: "J14"
 competition: "CHAMPIONNATS -13 ANS MIXTES CHAMPIONNATS -13 ANS MIXTES"

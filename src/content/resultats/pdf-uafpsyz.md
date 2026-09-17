@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "UAFPSYZ"
-equipeSlug: ""
+equipeSlug: "u17-masculins-historique"
 date: "2024-10-12T16:00:00.000Z"
 journee: "J2"
 competition: "U17 EXCELLENCE MASCULIN U17 EXCELLENCE MASCULIN"

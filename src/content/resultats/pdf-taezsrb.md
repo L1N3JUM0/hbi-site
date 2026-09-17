@@ -1,7 +1,7 @@
 ---
 source: "pdf"
 codeRencontre: "TAEZSRB"
-equipeSlug: ""
+equipeSlug: "u13-mixte-historique"
 date: "2024-04-13T13:30:00.000Z"
 journee: "J13"
 competition: "U13 MIXTE 2023-2024 U13 MIXTE 2EME PHASE"
