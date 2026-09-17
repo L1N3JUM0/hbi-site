@@ -1,0 +1,44 @@
+---
+/**
+ * Page de diagnostic des imports automatiques (feuilles de match, PDF non
+ * reconnus, équipes non détectées...) -- réservée aux personnes qui gèrent
+ * le site, jamais au grand public. Auparavant affichée en bandeau en haut
+ * de /equipes, visible par n'importe quel visiteur : déplacée ici (non
+ * indexée, hors menu de navigation, lien direct uniquement) pour ne plus
+ * jamais exposer publiquement des détails techniques d'import.
+ */
+import "../styles/tokens.css";
+import Header from "../components/Header.astro";
+import PageBanner from "../components/PageBanner.astro";
+import Footer from "../components/Footer.astro";
+import Favicon from "../components/Favicon.astro";
+import ErreursImport from "../components/ErreursImport.astro";
+---
+
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<Favicon />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Import — Handball Islois</title>
+		<meta name="description" content="Diagnostic des imports automatiques (feuilles de match, statistiques)." />
+		<meta name="robots" content="noindex, nofollow" />
+	</head>
+	<body>
+		<Header />
+		<PageBanner title="Diagnostic d'import" subtitle="Réservé aux personnes qui gèrent le site -- jamais affiché publiquement." />
+		<div class="wrap">
+			<ErreursImport />
+		</div>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.wrap {
+		max-width: 1000px;
+		margin: 2rem auto;
+		padding: 0 1.5rem;
+	}
+</style>

@@ -33,7 +33,7 @@ const { photos, ariaLabel, lightbox = false, variant = "band" } = Astro.props;
 
 	<div class="track" tabindex="0" role="group" aria-label={ariaLabel}>
 		{
-			photos.map((p) => (
+			photos.map((p, i) => (
 				<div class="slide">
 					<Image
 						src={p.src}
@@ -41,7 +41,13 @@ const { photos, ariaLabel, lightbox = false, variant = "band" } = Astro.props;
 						width={640}
 						height={420}
 						format="webp"
-						loading="lazy"
+						/* Variante "card" : seule la 1ère photo (le slide effectivement
+						   visible) reste chargée en lazy -- les suivantes, clippées hors
+						   champ par `overflow: hidden` (voir plus bas), ne défileraient
+						   jamais dans le viewport et ne se chargeraient donc jamais tant
+						   qu'on compte sur le lazy-loading natif ; elles doivent pourtant
+						   être prêtes pour la visionneuse plein écran dès l'ouverture. */
+						loading={variant === "card" && i > 0 ? "eager" : "lazy"}
 						style={`object-position: ${p.pointX ?? 50}% ${p.pointY ?? 50}%;`}
 					/>
 				</div>
@@ -194,9 +200,22 @@ const { photos, ariaLabel, lightbox = false, variant = "band" } = Astro.props;
 	.photo-carousel--band .slide {
 		height: 160px;
 	}
+	/* Variante "card" (carte équipe) : une seule photo visible (photoProfil,
+	   toujours en première position -- voir photosFor() dans equipes.astro),
+	   jamais de défilement inline. Parcourir le reste de la galerie se fait
+	   exclusivement via la visionneuse plein écran (lightbox) ouverte au
+	   clic -- pas de flèches de navigation ni de swipe sur la carte
+	   elle-même, pour ne jamais laisser deviner une deuxième photo qui
+	   n'existe pas (carré vide/coloré) quand l'équipe n'en a qu'une. */
 	.photo-carousel--card .slide {
-		flex-basis: 90%;
+		flex-basis: 100%;
 		height: 160px;
+	}
+	.photo-carousel--card .track {
+		overflow-x: hidden;
+	}
+	.photo-carousel--card .nav-btn {
+		display: none;
 	}
 
 	.nav-btn {
@@ -235,7 +254,7 @@ const { photos, ariaLabel, lightbox = false, variant = "band" } = Astro.props;
 			height: 220px;
 		}
 		.photo-carousel--card .slide {
-			flex-basis: calc((100% - 3px) / 2);
+			flex-basis: 100%;
 			height: 180px;
 		}
 	}

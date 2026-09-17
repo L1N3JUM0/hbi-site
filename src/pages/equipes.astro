@@ -6,7 +6,6 @@ import Footer from "../components/Footer.astro";
 import AjouterAgendaButton from "../components/AjouterAgendaButton.astro";
 import PhotoCarousel from "../components/PhotoCarousel.astro";
 import ResultatsEquipe from "../components/resultats/ResultatsEquipe.astro";
-import ErreursImport from "../components/ErreursImport.astro";
 import Favicon from "../components/Favicon.astro";
 import { withBase } from "../utils/links";
 import { getCollection, type CollectionEntry } from "astro:content";
@@ -50,8 +49,18 @@ async function nextMatchesFor(slug: string) {
 	return getMatchesForEquipe(slug, 3);
 }
 
+/** Photos pour la carte équipe : `photoProfil` toujours en premier (c'est
+ * elle, et elle seule, qui doit être visible sur la carte -- voir la
+ * variante "card" de PhotoCarousel, qui n'affiche que la première photo),
+ * suivie du reste de la galerie (sans dupliquer photoProfil si elle y
+ * figure déjà) pour que la visionneuse plein écran, elle, montre bien la
+ * galerie complète au clic. */
 function photosFor(team: CollectionEntry<"equipes">) {
-	return team.data.galerie.map((src, i) => ({ src, alt: `${team.data.nom} — photo ${i + 1}` }));
+	const profil = { src: team.data.photoProfil, alt: `${team.data.nom} — photo de profil` };
+	const reste = team.data.galerie
+		.filter((src) => src.src !== team.data.photoProfil.src)
+		.map((src, i) => ({ src, alt: `${team.data.nom} — photo ${i + 1}` }));
+	return [profil, ...reste];
 }
 ---
 
@@ -73,8 +82,6 @@ function photosFor(team: CollectionEntry<"equipes">) {
 			title="Nos équipes"
 			subtitle={`Du baby hand aux seniors, en passant par le handball adapté : l'effectif complet du HBI pour la saison ${saisonActuelle()}, entraînements au COSEC Émile Avy.`}
 		/>
-
-		<ErreursImport />
 
 		<section class="teams">
 			<div class="wrap">
