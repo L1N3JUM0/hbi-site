@@ -347,6 +347,13 @@ collections:
             required: false
             hint: "Laissez vide : il est déduit automatiquement des matchs du calendrier dans la grande majorité des cas. Ne renseignez ce champ que si le lien « Voir le classement » sur /agenda ne fonctionne pas pour cette équipe."
 
+          - label: "Lien des statistiques (poule FFHandball)"
+            name: "statistiquesUrl"
+            widget: "string"
+            required: false
+            pattern: ["^https://www\\.ffhandball\\.fr/.+$", "L'adresse doit commencer par https://www.ffhandball.fr/"]
+            hint: "Sur la page de la compétition sur ffhandball.fr, copiez l'adresse de l'onglet « Classement » ou « Statistiques ». C'est la même poule que le calendrier ci-dessus (même valeur pour les deux équipes en cas de poule partagée). Laissez vide pour ne pas afficher cette équipe sur la page Statistiques : aucune erreur, elle disparaît simplement."
+
       - label: "Jours et horaires d'entraînement"
         name: "horaires"
         widget: "string"

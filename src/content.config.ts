@@ -118,6 +118,15 @@ const calendrierEquipe = z.object({
 	/** Laisser vide : déduit automatiquement de l'URL des rencontres du flux.
 	 * À renseigner uniquement si la déduction échoue pour ce flux. */
 	classementUrl: champFacultatif(z.string().url()),
+	/** Page "Classement" ou "Statistiques" de cette compétition sur
+	 * ffhandball.fr (même poule que `url` ci-dessus, donc la même valeur
+	 * pour les deux entrées d'une catégorie partagée par deux équipes du
+	 * club). Sert uniquement à alimenter scripts/import-stats-ffhandball.mjs
+	 * (page /statistiques) -- vide tant que la saison n'est pas publiée par
+	 * la fédération, ou pour une équipe qu'on ne veut pas y afficher :
+	 * l'équipe n'apparaît alors simplement pas sur /statistiques, sans
+	 * erreur. Voir src/content.config.ts > statistiquesPoules. */
+	statistiquesUrl: champFacultatif(z.string().url()),
 });
 
 const equipes = defineCollection({
@@ -465,4 +474,84 @@ const resultats = defineCollection({
 		.transform((data) => ({ ...data, saison: saisonPour(data.date) })),
 });
 
-export const collections = { equipes, articles, partenaires, photosAccueil, photosHero, leClub, histoireClub, resultats };
+/** Un·e joueur·se du HBI dans les stats agrégées FFHandball d'une poule
+ * (buts/arrêts cumulés sur la saison en cours, pas match par match -- pour
+ * ça voir la collection "resultats"). `individuId` est l'identifiant
+ * technique interne de la fédération : jamais affiché tel quel (voir
+ * src/lib/statistiques.ts, qui l'utilise uniquement comme clé pour
+ * disambiguateDisplayNames), et surtout jamais utilisé pour relier un·e
+ * joueur·se d'une saison à l'autre -- sa stabilité dans le temps n'est pas
+ * garantie (voir la discussion qui a mené à ce choix). */
+const statJoueurPoule = z.object({
+	individuId: z.string(),
+	nom: z.string(),
+	prenom: z.string(),
+	matchCount: z.number(),
+	totalButs: z.number(),
+	totalArrets: z.number(),
+	/** `equipeSlug` de la collection "equipes" à qui rattacher cette ligne.
+	 * `equipeNumero` distingue deux équipes du club partageant la même poule
+	 * (ex. Seniors masculins 1 et 2) -- même convention que `equipeNumero`
+	 * dans la collection "resultats", voir extraireNumeroEquipe() dans
+	 * src/lib/fdme/equipeMatch.mjs. */
+	equipeSlug: z.string(),
+	equipeNumero: champFacultatif(z.string()),
+});
+
+/** Classement FFHandball d'une équipe du HBI dans une poule -- un objet par
+ * équipe du club dans cette poule (1 la plupart du temps, 2 quand la
+ * catégorie compte deux équipes engagées dans la même poule). */
+const classementLignePoule = z.object({
+	equipeSlug: z.string(),
+	equipeNumero: champFacultatif(z.string()),
+	place: z.number(),
+	point: z.number(),
+	joue: z.number(),
+	gagne: z.number(),
+	nul: z.number(),
+	perdu: z.number(),
+	butPlus: z.number(),
+	butMoins: z.number(),
+	diff: z.number(),
+});
+
+/**
+ * Classement + stats joueurs d'une poule FFHandball, saison en cours
+ * uniquement -- un fichier par poule, généré par
+ * scripts/import-stats-ffhandball.mjs à partir des pages "Classement" et
+ * "Statistiques" de ffhandball.fr (voir `statistiquesUrl` sur
+ * `calendrierEquipe` ci-dessus). Seules les lignes concernant le HBI sont
+ * gardées ici -- le JSON brut complet de la poule (tous clubs confondus,
+ * utile pour un futur script de contrôle ou pour diagnostiquer un
+ * changement de format côté fédération) est conservé tel quel à côté, dans
+ * src/content/stats-brutes-ffhandball/ (fichiers JSON bruts, pas une
+ * collection Astro).
+ *
+ * Comme pour "resultats" (voir plus haut) : régénéré entièrement à chaque
+ * build, puis commité par le workflow de déploiement pour rester lisible
+ * (et donc consultable) entre deux builds.
+ */
+const statistiquesPoules = defineCollection({
+	loader: glob({ pattern: "*.md", base: "./src/content/statistiques-poules" }),
+	schema: z.object({
+		/** URL saisie dans le CMS (avant normalisation vers /classements/ et
+		 * /statistiques/ par le script d'import) -- gardée pour retrouver
+		 * facilement la page d'origine. */
+		pouleUrl: z.string().url(),
+		misAJour: z.coerce.date(),
+		classement: z.array(classementLignePoule),
+		joueurs: z.array(statJoueurPoule),
+	}),
+});
+
+export const collections = {
+	equipes,
+	articles,
+	partenaires,
+	photosAccueil,
+	photosHero,
+	leClub,
+	histoireClub,
+	resultats,
+	statistiquesPoules,
+};

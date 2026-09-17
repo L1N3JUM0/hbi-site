@@ -13,6 +13,7 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import { getAgendaTeams, getMatchesForEquipe, hasAgendaFeed, formatMatchDate, formatMatchTime } from "../lib/agenda";
 import { saisonActuelle } from "../lib/saison";
 import { trierEquipes } from "../lib/equipes";
+import { slugsAvecStatistiques } from "../lib/statistiques";
 
 const allTeams = trierEquipes(await getCollection("equipes"));
 const actives = allTeams.filter((t) => t.data.statut !== "archivee");
@@ -25,6 +26,13 @@ const transversal = actives.find((t) => t.data.type === "transversal");
 const archivees = allTeams.filter((t) => t.data.statut === "archivee");
 
 const agendaTeams = await getAgendaTeams();
+/** Équipes ayant des statistiques FFHandball publiées (voir
+ * scripts/import-stats-ffhandball.mjs) : sert à n'afficher le lien discret
+ * vers /statistiques que pour celles qui ont effectivement quelque chose à
+ * montrer. Cette page reste volontairement hors du menu de navigation et
+ * non indexée (voir src/pages/statistiques.astro) : destinée aux joueurs,
+ * coachs et dirigeants, pas mise en avant auprès du grand public. */
+const slugsStats = await slugsAvecStatistiques();
 
 const typeLabel: Record<string, string> = {
 	decouverte: "Découverte",
@@ -126,6 +134,11 @@ function photosFor(team: CollectionEntry<"equipes">) {
 										</div>
 									)}
 									<ResultatsEquipe equipeSlug={t.data.slug} affichageStats={t.data.affichageStats} calendriers={t.data.calendriers} />
+									{slugsStats.has(t.data.slug) && (
+										<a class="stats-link" href={withBase(`/statistiques#equipe-${t.data.slug}`)}>
+											Statistiques FFHandball →
+										</a>
+									)}
 								</div>
 							);
 						})
@@ -423,6 +436,18 @@ function photosFor(team: CollectionEntry<"equipes">) {
 	}
 	.agenda-link:hover {
 		color: var(--color-crimson);
+	}
+	/* Volontairement discret (voir le commentaire sur slugsStats plus haut) :
+	 * pas un bouton, une simple ligne de texte en bas de carte. */
+	.stats-link {
+		display: block;
+		margin-top: 0.75rem;
+		color: rgba(255, 255, 255, 0.45);
+		font-size: 0.75rem;
+		text-decoration: none;
+	}
+	.stats-link:hover {
+		color: rgba(255, 255, 255, 0.75);
 	}
 
 	.card--decouverte {

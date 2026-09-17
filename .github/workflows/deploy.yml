@@ -42,7 +42,7 @@ jobs:
       - name: Build Astro
         run: npm run build
 
-      - name: Committer les résultats importés depuis les feuilles de match
+      - name: Committer les résultats et statistiques importés automatiquement
         # ATTENTION en modifiant ce fichier : le marqueur "[skip ci]" utilisé
         # dans le message du commit ci-dessous (git commit -m) est scanné par
         # GitHub sur le MESSAGE ENTIER de n'importe quel commit poussé sur
@@ -54,14 +54,20 @@ jobs:
         # "[ci skip]", "[no ci]"...) ailleurs que dans la ligne `git commit`
         # ci-dessous.
         #
-        # "npm run build" ci-dessus régénère src/content/resultats/pdf-*.md
-        # depuis les PDF de src/content/feuilles-match/ (voir
-        # scripts/import-fdme.mjs). Ces fichiers doivent être commités pour
-        # être visibles ET corrigeables dans le CMS (Sveltia lit le dépôt
-        # réel sur GitHub, jamais la sortie de ce build) -- une régénération
-        # identique (rien de nouveau depuis le dernier build) ne produit
-        # aucune différence, donc aucun commit ici. "[skip ci]" évite que ce
-        # commit ne redéclenche immédiatement un nouveau build.
+        # "npm run build" ci-dessus régénère :
+        # - src/content/resultats/pdf-*.md depuis les PDF de
+        #   src/content/feuilles-match/ (voir scripts/import-fdme.mjs) ;
+        # - src/content/statistiques-poules/*.md (extraction HBI) et
+        #   src/content/stats-brutes-ffhandball/*.json (JSON brut complet,
+        #   conservé pour un futur script de contrôle) depuis les pages
+        #   ffhandball.fr renseignées dans les fiches équipes (voir
+        #   scripts/import-stats-ffhandball.mjs).
+        # Ces fichiers doivent être commités pour être visibles ET
+        # corrigeables dans le CMS (Sveltia lit le dépôt réel sur GitHub,
+        # jamais la sortie de ce build) -- une régénération identique (rien
+        # de nouveau depuis le dernier build) ne produit aucune différence,
+        # donc aucun commit ici. "[skip ci]" évite que ce commit ne
+        # redéclenche immédiatement un nouveau build.
         # "continue-on-error" : un conflit de push (rare, deux builds
         # concurrents) ne doit pas empêcher le déploiement du site, qui a
         # déjà été construit à l'étape précédente -- le prochain build
@@ -74,11 +80,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add src/content/resultats
+          git add src/content/resultats src/content/statistiques-poules src/content/stats-brutes-ffhandball
           if git diff --cached --quiet; then
             echo "Aucun résultat modifié."
           else
-            git commit -m "Met à jour les résultats importés depuis les feuilles de match [skip ci]"
+            git commit -m "Met à jour les résultats et statistiques importés automatiquement [skip ci]"
             git push origin HEAD:main
           fi
 

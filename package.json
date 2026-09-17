@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "prebuild": "node scripts/import-fdme.mjs && node scripts/check-content-images.mjs",
+    "prebuild": "node scripts/import-fdme.mjs && node scripts/import-stats-ffhandball.mjs && node scripts/check-content-images.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
