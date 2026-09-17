@@ -16,10 +16,24 @@
 
 /** N'importe quel âge à un ou deux chiffres précédé de "U" (pas seulement
  * les âges déjà vus au club) : une catégorie jamais rencontrée avant
- * fonctionne dès que la fiche équipe correspondante existe dans le CMS. */
-const AGE_PATTERN = /\bU\s?(\d{1,2})\b/i;
-const FEMININ_PATTERN = /f[ée]minin/i;
-const MASCULIN_PATTERN = /masculin/i;
+ * fonctionne dès que la fiche équipe correspondante existe dans le CMS.
+ * Capture aussi un éventuel genre collé juste après, sans séparateur
+ * ("U15M", "U17F" -- vu sur des compétitions régionales, notamment
+ * "QUALIFICATIONS EXCELLENCE 2025-2026 - U15M" où c'est le SEUL signal de
+ * genre du texte) : exiger une limite de mot juste après le chiffre
+ * (`\bU\s?(\d{1,2})\b`) ratait ce cas, "M"/"F" étant lui-même un caractère
+ * de mot, donc aucune frontière entre "5" et "M". */
+const AGE_PATTERN = /\bU\s?(\d{1,2})\s?([MF])?\b/i;
+/** Repli pour les feuilles anciennes (saisons 2021 à 2023 au moins) et
+ * certaines compétitions régionales, qui n'utilisent pas la forme "U15"
+ * mais "-15 ANS" ou "MOINS DE 15 ANS". */
+const AGE_ANS_PATTERN = /(?:-|MOINS DE)\s*(\d{1,2})\s*ANS\b/i;
+/** "FILLES"/"GARCONS" (sans cédille, l'export FFHandball n'a pas toujours
+ * les accents) : vocabulaire vu sur des compétitions anciennes et
+ * régionales ("U13 FILLES 2023-2024", "U13 EXCELLENCE PACA GARCONS"), en
+ * plus des mots "féminin"/"masculin" habituels. */
+const FEMININ_PATTERN = /f[ée]minin|\bfilles?\b/i;
+const MASCULIN_PATTERN = /masculin|\bgar[çc]ons?\b/i;
 const COUPE_PATTERN = /\bcoupe\b/i;
 
 /**
@@ -34,9 +48,15 @@ const COUPE_PATTERN = /\bcoupe\b/i;
 export function detectEquipe(competitionText, equipesCompetition) {
 	const typeMatch = COUPE_PATTERN.test(competitionText) ? "coupe" : "championnat";
 
-	const ageMatch = AGE_PATTERN.exec(competitionText);
-	const feminin = FEMININ_PATTERN.test(competitionText);
-	const masculin = MASCULIN_PATTERN.test(competitionText);
+	const ageMatch = AGE_PATTERN.exec(competitionText) ?? AGE_ANS_PATTERN.exec(competitionText);
+	let feminin = FEMININ_PATTERN.test(competitionText);
+	let masculin = MASCULIN_PATTERN.test(competitionText);
+	// Repli sur le genre collé juste après l'âge ("U15M", "U17F") quand
+	// aucun mot dédié n'est présent par ailleurs -- voir AGE_PATTERN.
+	if (!feminin && !masculin && ageMatch?.[2]) {
+		feminin = ageMatch[2].toUpperCase() === "F";
+		masculin = ageMatch[2].toUpperCase() === "M";
+	}
 
 	// Pas d'âge détecté dans le texte de la compétition : on suppose seniors
 	// (aucune autre catégorie adulte n'a de sigle d'âge dans son nom de

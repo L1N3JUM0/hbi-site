@@ -5,6 +5,14 @@
  * Règles (voir CLAUDE.md et la demande initiale) :
  * - le nom de naissance entre parenthèses ("(Né.e FAY)") est retiré et
  *   jamais stocké, même abrégé ;
+ * - le nom d'usage suffixé après un tiret ENTOURÉ D'ESPACES ("BALANDRAUD
+ *   lolie - BALANDRAUD", format des feuilles jusqu'à la saison 2022-2023 au
+ *   moins -- mais vu aussi ponctuellement sur des feuilles récentes, ex.
+ *   "DEGRUGILLIERS faustine - RUMAUX DEGRUGILLIERS") est retiré de la même
+ *   façon. À ne JAMAIS confondre avec un nom composé à double tiret SANS
+ *   espaces, qui fait partie du nom et doit rester intact : "PALLAS--POTHIER
+ *   mathys", "JANDOT--BONNET ugo" -- le critère discriminant est la présence
+ *   d'espaces autour du tiret, pas le tiret lui-même ;
  * - le numéro de licence n'est jamais extrait ni stocké (fait ailleurs) ;
  * - séparation nom/prénom par la CASSE (nom de famille en MAJUSCULES,
  *   prénom en casse normale) et non par un découpage positionnel ou un
@@ -13,11 +21,17 @@
  */
 
 const BIRTH_NAME_PATTERN = /\s*\(\s*n[ée]\.?e?\s+[^)]*\)/gi;
+/** Un tiret entouré d'ESPACES (contrairement à "--" collé, voir plus haut)
+ * marque le début d'un nom d'usage : tout ce qui suit jusqu'à la fin de la
+ * chaîne est retiré. */
+const USAGE_NAME_SUFFIX_PATTERN = /\s-\s+.+$/;
 
-/** Retire "(Né.e XXX)" / "(Née XXX)" partout où ça apparaît. À appliquer
- * avant toute autre analyse du texte "NOM prénom (Nom d'usage)". */
+/** Retire "(Né.e XXX)" / "(Née XXX)" et un éventuel nom d'usage suffixé
+ * ("- NOM D'USAGE"), partout où ils apparaissent. À appliquer avant toute
+ * autre analyse du texte "NOM prénom (Nom d'usage)" / "NOM prénom - Nom
+ * d'usage". */
 export function stripBirthName(raw) {
-	return raw.replace(BIRTH_NAME_PATTERN, "").replace(/\s+/g, " ").trim();
+	return raw.replace(BIRTH_NAME_PATTERN, "").replace(USAGE_NAME_SUFFIX_PATTERN, "").replace(/\s+/g, " ").trim();
 }
 
 function isUppercaseWord(word) {

@@ -53,6 +53,63 @@ function findRow(rows, predicate, fromIndex = 0) {
 	return null;
 }
 
+/** Distance maximale (points PDF) entre l'en-tête REC/VIS d'une colonne du
+ * bloc "Détail score" et sa valeur sur la ligne "DETAIL SCORE" -- mêmes
+ * ordres de grandeur que STAT_COLUMN_MAX_DISTANCE plus bas, calibré sur des
+ * feuilles réelles (écart typique de 3 à 5pt). */
+const DETAIL_SCORE_COLUMN_MAX_DISTANCE = 8;
+
+/**
+ * Lit le bloc "Détail score" (Période 1 / [Période 2] / Fin Tps Reglem. /
+ * Prolongation 1 / Prolongation 2 / Tirs au Buts) en s'appuyant UNIQUEMENT
+ * sur les libellés de colonnes et leur position x, jamais sur leur ordre ou
+ * leur nombre : ce bloc n'a pas le même nombre de colonnes d'une feuille à
+ * l'autre (certaines n'ont pas de "Période 2"), et les colonnes vides ne
+ * sont pas remplies -- une lecture par position se tromperait de colonne
+ * (voir note-formats-feuilles-match.md, piège n°1, confirmé sur plusieurs
+ * feuilles réelles 2022-2023).
+ *
+ * Structure constatée, identique sur toutes les feuilles vues (anciennes et
+ * récentes) : trois lignes consécutives -- une ligne de libellés de colonne
+ * ("Période 1", "Fin Tps Reglem."...), une ligne "REC"/"VIS" juste en
+ * dessous (une paire par colonne, dans le même ordre), puis la ligne
+ * "DETAIL SCORE" avec les valeurs numériques (une valeur par paire REC/VIS
+ * quand la colonne est renseignée, absente sinon).
+ *
+ * @returns {Map<string, {domicile: number|null, exterieur: number|null}> | null}
+ *   `null` si le bloc n'est pas reconnaissable du tout (feuille non jouée,
+ *   format totalement différent...).
+ */
+function parseDetailScore(rows) {
+	const headerFound = findRow(rows, (r) => r.items.some((i) => i.str === "Période 1"));
+	if (!headerFound) return null;
+	const labels = headerFound.row.items;
+
+	const recVisRow = rows[headerFound.index + 1];
+	if (!recVisRow || recVisRow.items.length !== labels.length * 2 || !recVisRow.items.every((i) => i.str === "REC" || i.str === "VIS")) {
+		return null;
+	}
+	const colonnes = labels.map((label, i) => ({
+		label: label.str,
+		xDomicile: recVisRow.items[i * 2].x,
+		xExterieur: recVisRow.items[i * 2 + 1].x,
+	}));
+
+	const valuesFound = findRow(rows, (r) => r.items.some((i) => i.str === "DETAIL"), headerFound.index + 1);
+	if (!valuesFound) return null;
+
+	const lireValeur = (x) => {
+		const item = nearestItem(valuesFound.row, x, DETAIL_SCORE_COLUMN_MAX_DISTANCE);
+		return item && /^\d+$/.test(item.str) ? Number(item.str) : null;
+	};
+
+	const resultat = new Map();
+	for (const col of colonnes) {
+		resultat.set(col.label, { domicile: lireValeur(col.xDomicile), exterieur: lireValeur(col.xExterieur) });
+	}
+	return resultat;
+}
+
 function parseHeaderFields(rows) {
 	const text = rows.map(rowText).join("\n");
 
@@ -82,14 +139,6 @@ function parseHeaderFields(rows) {
 	);
 	const teamsMatch = teamsRow ? /^(.+?)\s*\/\s*(.+?)\s+(\d+)\s+(\d+)$/.exec(rowText(teamsRow.row)) : null;
 
-	const detailRow = findRow(rows, (r) => /d[ée]tail/i.test(rowText(r)) && /score/i.test(rowText(r)));
-	const detailNumbers = detailRow ? [...rowText(detailRow.row).matchAll(/\d+/g)].map((m) => Number(m[0])) : [];
-	// Les nombres de "Code Renc"/"Groupe" ne sont pas sur cette ligne : ce
-	// sont uniquement les scores par période, en paires (domicile, extérieur).
-	const scoreMiTemps = detailNumbers.length >= 2 ? { domicile: detailNumbers[0], exterieur: detailNumbers[1] } : null;
-	const scoreFinalDetail =
-		detailNumbers.length >= 4 ? { domicile: detailNumbers.at(-2), exterieur: detailNumbers.at(-1) } : null;
-
 	if (!code || !competition || !date || !teamsMatch) {
 		throw new FeuilleFormatError(
 			`En-tête de feuille de match non reconnu (code=${code}, competition=${competition}, date=${date}, equipes=${teamsMatch ? "ok" : "absent"}).`,
@@ -97,7 +146,28 @@ function parseHeaderFields(rows) {
 	}
 
 	const [, equipeDomicile, equipeExterieur, scoreDomicileHeader, scoreExterieurHeader] = teamsMatch;
-	const scoreFinal = scoreFinalDetail ?? { domicile: Number(scoreDomicileHeader), exterieur: Number(scoreExterieurHeader) };
+
+	// Score officiel (bloc "Détail score", colonne "Fin Tps Reglem.") : voir
+	// parseDetailScore() -- lu par en-tête de colonne, jamais par position,
+	// le nombre de colonnes variant d'une feuille à l'autre.
+	const detail = parseDetailScore(rows);
+	const finTpsReglem = detail?.get("Fin Tps Reglem.");
+	if (!finTpsReglem || finTpsReglem.domicile == null || finTpsReglem.exterieur == null) {
+		throw new FeuilleFormatError(`Bloc "Détail score" non reconnu ou incomplet (colonne "Fin Tps Reglem." introuvable ou vide).`);
+	}
+	// Vérification croisée avec le score affiché à côté des noms d'équipe :
+	// un désaccord signale presque toujours un défaut d'alignement des
+	// colonnes plutôt qu'une vraie incohérence de la feuille -- mieux vaut
+	// rejeter la feuille que publier un score dont on n'est pas sûr (voir
+	// note-formats-feuilles-match.md).
+	if (finTpsReglem.domicile !== Number(scoreDomicileHeader) || finTpsReglem.exterieur !== Number(scoreExterieurHeader)) {
+		throw new FeuilleFormatError(
+			`Score "Fin Tps Reglem." (${finTpsReglem.domicile}-${finTpsReglem.exterieur}) différent du score affiché (${scoreDomicileHeader}-${scoreExterieurHeader}) : lecture du détail du score non fiable.`,
+		);
+	}
+	const scoreFinal = finTpsReglem;
+	const periode1 = detail.get("Période 1");
+	const scoreMiTemps = periode1?.domicile != null && periode1?.exterieur != null ? periode1 : null;
 
 	return {
 		codeRencontre: code,
