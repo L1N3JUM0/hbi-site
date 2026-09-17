@@ -12,7 +12,7 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import { getAgendaTeams, getMatchesForEquipe, hasAgendaFeed, formatMatchDate, formatMatchTime } from "../lib/agenda";
 import { saisonActuelle } from "../lib/saison";
 import { trierEquipes } from "../lib/equipes";
-import { slugsAvecStatistiques } from "../lib/statistiques";
+import { slugsAvecResultats } from "../lib/statistiques";
 
 const allTeams = trierEquipes(await getCollection("equipes"));
 const actives = allTeams.filter((t) => t.data.statut !== "archivee");
@@ -25,13 +25,15 @@ const transversal = actives.find((t) => t.data.type === "transversal");
 const archivees = allTeams.filter((t) => t.data.statut === "archivee");
 
 const agendaTeams = await getAgendaTeams();
-/** Équipes ayant des statistiques FFHandball publiées (voir
- * scripts/import-stats-ffhandball.mjs) : sert à n'afficher le lien discret
- * vers /statistiques que pour celles qui ont effectivement quelque chose à
+/** Équipes ayant au moins un résultat importé (voir src/lib/statistiques.ts,
+ * qui calcule désormais les statistiques à partir de NOTRE collection
+ * "resultats" -- le JSON FFHandball, plus pauvre, ne sert plus que de
+ * vérification en arrière-plan) : sert à n'afficher le lien discret vers
+ * /statistiques que pour celles qui ont effectivement quelque chose à
  * montrer. Cette page reste volontairement hors du menu de navigation et
  * non indexée (voir src/pages/statistiques.astro) : destinée aux joueurs,
  * coachs et dirigeants, pas mise en avant auprès du grand public. */
-const slugsStats = await slugsAvecStatistiques();
+const slugsStats = await slugsAvecResultats();
 
 const typeLabel: Record<string, string> = {
 	decouverte: "Découverte",
@@ -143,7 +145,7 @@ function photosFor(team: CollectionEntry<"equipes">) {
 									<ResultatsEquipe equipeSlug={t.data.slug} affichageStats={t.data.affichageStats} calendriers={t.data.calendriers} />
 									{slugsStats.has(t.data.slug) && (
 										<a class="stats-link" href={withBase(`/statistiques#equipe-${t.data.slug}`)}>
-											Statistiques FFHandball →
+											Statistiques de la saison →
 										</a>
 									)}
 								</div>
@@ -235,6 +237,11 @@ function photosFor(team: CollectionEntry<"equipes">) {
 									<div class="card card--archivee" id={t.data.slug}>
 										<h3>{t.data.nom}</h3>
 										<ResultatsEquipe equipeSlug={t.data.slug} affichageStats={t.data.affichageStats} calendriers={t.data.calendriers} />
+										{slugsStats.has(t.data.slug) && (
+											<a class="stats-link" href={withBase(`/statistiques#equipe-${t.data.slug}`)}>
+												Statistiques de la saison →
+											</a>
+										)}
 									</div>
 								))}
 							</div>

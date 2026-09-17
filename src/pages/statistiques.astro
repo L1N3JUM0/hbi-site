@@ -6,17 +6,15 @@ import Footer from "../components/Footer.astro";
 import Favicon from "../components/Favicon.astro";
 import { getCollection } from "astro:content";
 import { trierEquipes } from "../lib/equipes";
-import { slugsAvecStatistiques, getStatistiquesPourEquipe } from "../lib/statistiques";
+import { slugsAvecResultats, getStatistiquesParSaison } from "../lib/statistiques";
 
-const slugsDisponibles = await slugsAvecStatistiques();
-const equipes = trierEquipes(await getCollection("equipes")).filter(
-	(e) => e.data.statut !== "archivee" && slugsDisponibles.has(e.data.slug),
-);
+const slugsDisponibles = await slugsAvecResultats();
+const equipes = trierEquipes(await getCollection("equipes")).filter((e) => slugsDisponibles.has(e.data.slug));
 
 const blocs = await Promise.all(
 	equipes.map(async (e) => ({
 		equipe: e,
-		stats: await getStatistiquesPourEquipe(e.data.slug, e.data.affichageStats),
+		saisons: await getStatistiquesParSaison(e.data.slug, e.data.calendriers, e.data.affichageStats),
 	})),
 );
 ---
@@ -30,7 +28,7 @@ const blocs = await Promise.all(
 		<title>Statistiques — Handball Islois</title>
 		<meta
 			name="description"
-			content="Classement et statistiques joueurs de chaque équipe du Handball Islois, tels que calculés par la Fédération Française de Handball pour la saison en cours."
+			content="Bilan et statistiques joueurs de chaque équipe du Handball Islois, saison par saison, à partir des feuilles de match officielles."
 		/>
 		{
 			/* Page destinée aux joueurs/coachs/dirigeants, accessible uniquement
@@ -42,10 +40,7 @@ const blocs = await Promise.all(
 	</head>
 	<body>
 		<Header />
-		<PageBanner
-			title="Statistiques"
-			subtitle="Classement et statistiques joueurs de la saison en cours, calculés par la Fédération Française de Handball."
-		/>
+		<PageBanner title="Statistiques" subtitle="Bilan et statistiques joueurs, saison par saison, à partir des feuilles de match officielles." />
 
 		{
 			blocs.length === 0 ? (
@@ -56,83 +51,106 @@ const blocs = await Promise.all(
 				</section>
 			) : (
 				<section class="stats-content">
-				<div class="wrap">
-					<label class="filtre-label" for="filtre-equipe">
-						Choisir une équipe
-					</label>
-					<select id="filtre-equipe">
-						{blocs.map(({ equipe }) => (
-							<option value={equipe.data.slug}>{equipe.data.nom}</option>
-						))}
-					</select>
+					<div class="wrap">
+						<div class="filtres">
+							<div>
+								<label class="filtre-label" for="filtre-equipe">
+									Équipe
+								</label>
+								<select id="filtre-equipe">
+									{blocs
+										.filter(({ saisons }) => saisons.length > 0)
+										.map(({ equipe }) => (
+											<option value={equipe.data.slug}>{equipe.data.nom}</option>
+										))}
+								</select>
+							</div>
+							<div>
+								<label class="filtre-label" for="filtre-saison">
+									Saison
+								</label>
+								<select id="filtre-saison" />
+							</div>
+						</div>
 
-					{blocs.map(({ equipe, stats }) => (
-						<section class="equipe-bloc" id={`equipe-${equipe.data.slug}`} data-equipe-slug={equipe.data.slug}>
-							<h2>{equipe.data.nom}</h2>
-							{stats.groupes.map((groupe) => (
-								<div class="groupe">
-									{stats.plusieursEquipes && <h3>{groupe.libelle}</h3>}
+						{blocs.map(({ equipe, saisons }) =>
+							saisons.map((s) => (
+								<section
+									class="saison-bloc"
+									id={`equipe-${equipe.data.slug}-${s.saison}`}
+									data-equipe-slug={equipe.data.slug}
+									data-saison={s.saison}
+								>
+									<h2>
+										{equipe.data.nom} <span class="saison-label">— {s.saison}</span>
+									</h2>
+									{s.groupes.map((groupe) => (
+										<div class="groupe">
+											{s.plusieursEquipes && <h3>{groupe.libelle}</h3>}
 
-									{groupe.classement && (
-										<dl class="classement">
-											<div>
-												<dt>Place</dt>
-												<dd>{groupe.classement.place}</dd>
-											</div>
-											<div>
-												<dt>Points</dt>
-												<dd>{groupe.classement.point}</dd>
-											</div>
-											<div>
-												<dt>J / G / N / P</dt>
-												<dd>
-													{groupe.classement.joue} / {groupe.classement.gagne} / {groupe.classement.nul} /{" "}
-													{groupe.classement.perdu}
-												</dd>
-											</div>
-											<div>
-												<dt>Buts pour / contre</dt>
-												<dd>
-													{groupe.classement.butPlus} / {groupe.classement.butMoins}
-												</dd>
-											</div>
-											<div>
-												<dt>Différence</dt>
-												<dd>
-													{groupe.classement.diff > 0 ? "+" : ""}
-													{groupe.classement.diff}
-												</dd>
-											</div>
-										</dl>
-									)}
+											<dl class="bilan">
+												<div>
+													<dt>J / G / N / P</dt>
+													<dd>
+														{groupe.bilan.matchsJoues} / {groupe.bilan.victoires} / {groupe.bilan.nuls} /{" "}
+														{groupe.bilan.defaites}
+													</dd>
+												</div>
+												<div>
+													<dt>Buts pour / contre</dt>
+													<dd>
+														{groupe.bilan.butsPour} / {groupe.bilan.butsContre}
+													</dd>
+												</div>
+												<div>
+													<dt>Différence</dt>
+													<dd>
+														{groupe.bilan.diff > 0 ? "+" : ""}
+														{groupe.bilan.diff}
+													</dd>
+												</div>
+											</dl>
 
-									{groupe.joueurs.length > 0 && (
-										<table class="joueurs">
-											<thead>
-												<tr>
-													<th scope="col">Joueur·se</th>
-													<th scope="col">Matchs</th>
-													<th scope="col">Buts</th>
-													<th scope="col">Arrêts</th>
-												</tr>
-											</thead>
-											<tbody>
-												{groupe.joueurs.map((j) => (
-													<tr>
-														<td>{j.label}</td>
-														<td>{j.matchCount}</td>
-														<td>{j.totalButs}</td>
-														<td>{j.totalArrets}</td>
-													</tr>
-												))}
-											</tbody>
-										</table>
-									)}
-								</div>
-							))}
-						</section>
-					))}
-				</div>
+											{groupe.joueurs.length > 0 && (
+												<div class="table-scroll">
+													<table class="joueurs">
+														<thead>
+															<tr>
+																<th scope="col">Joueur·se</th>
+																<th scope="col">Matchs</th>
+																<th scope="col">Buts</th>
+																<th scope="col">7m</th>
+																<th scope="col">Tirs</th>
+																<th scope="col">Arrêts</th>
+																<th scope="col">Avert.</th>
+																<th scope="col">Excl.</th>
+																<th scope="col">Disq.</th>
+															</tr>
+														</thead>
+														<tbody>
+															{groupe.joueurs.map((j) => (
+																<tr>
+																	<td>{j.label}</td>
+																	<td>{j.matchsJoues}</td>
+																	<td>{j.buts}</td>
+																	<td>{j.sept_m}</td>
+																	<td>{j.tirs}</td>
+																	<td>{j.arrets}</td>
+																	<td>{j.avertissements}</td>
+																	<td>{j.exclusions}</td>
+																	<td>{j.disqualifications}</td>
+																</tr>
+															))}
+														</tbody>
+													</table>
+												</div>
+											)}
+										</div>
+									))}
+								</section>
+							)),
+						)}
+					</div>
 				</section>
 			)
 		}
@@ -140,25 +158,55 @@ const blocs = await Promise.all(
 		<Footer />
 
 		<script>
-			const select = document.querySelector<HTMLSelectElement>("#filtre-equipe");
-			const blocs = document.querySelectorAll<HTMLElement>(".equipe-bloc");
+			const selectEquipe = document.querySelector<HTMLSelectElement>("#filtre-equipe");
+			const selectSaison = document.querySelector<HTMLSelectElement>("#filtre-saison");
+			const blocs = document.querySelectorAll<HTMLElement>(".saison-bloc");
 
-			function afficherEquipe(slug: string) {
+			function saisonsDe(slug: string): string[] {
+				const vues = new Set<string>();
+				const saisons: string[] = [];
 				for (const bloc of blocs) {
-					bloc.hidden = bloc.dataset.equipeSlug !== slug;
+					if (bloc.dataset.equipeSlug !== slug) continue;
+					const saison = bloc.dataset.saison!;
+					if (!vues.has(saison)) {
+						vues.add(saison);
+						saisons.push(saison);
+					}
+				}
+				return saisons;
+			}
+
+			function afficher(slug: string, saison: string) {
+				for (const bloc of blocs) {
+					bloc.hidden = bloc.dataset.equipeSlug !== slug || bloc.dataset.saison !== saison;
 				}
 			}
 
-			if (select && blocs.length > 0) {
-				// Lien discret depuis la fiche équipe (ex. #equipe-seniors-masculins) :
-				// présélectionne cette équipe dans le filtre, en plus du saut
-				// d'ancre natif du navigateur (qui fonctionne même sans JS).
-				const slugDepuisAncre = location.hash.replace(/^#equipe-/, "");
-				const optionCorrespondante = slugDepuisAncre && select.querySelector(`option[value="${slugDepuisAncre}"]`);
-				if (optionCorrespondante) select.value = slugDepuisAncre;
+			function peuplerSaisons(slug: string, saisonPreferee?: string) {
+				if (!selectSaison) return;
+				const saisons = saisonsDe(slug);
+				selectSaison.innerHTML = saisons.map((s) => `<option value="${s}">${s}</option>`).join("");
+				selectSaison.value = saisonPreferee && saisons.includes(saisonPreferee) ? saisonPreferee : (saisons[0] ?? "");
+			}
 
-				afficherEquipe(select.value);
-				select.addEventListener("change", () => afficherEquipe(select.value));
+			if (selectEquipe && selectSaison && blocs.length > 0) {
+				// Lien discret depuis la fiche équipe (ex. #equipe-seniors-masculins,
+				// sans saison précisée -> saison en cours) : présélectionne cette
+				// équipe (et, si présente, la saison) dans les filtres, en plus du
+				// saut d'ancre natif du navigateur (qui fonctionne même sans JS).
+				const cible = location.hash.replace(/^#equipe-/, "");
+				const [slugDepuisAncre, saisonDepuisAncre] = cible.includes("-20") ? [cible.replace(/-\d{4}-\d{4}$/, ""), cible.match(/(\d{4}-\d{4})$/)?.[1]] : [cible, undefined];
+				const optionCorrespondante = slugDepuisAncre && selectEquipe.querySelector(`option[value="${slugDepuisAncre}"]`);
+				if (optionCorrespondante) selectEquipe.value = slugDepuisAncre;
+
+				peuplerSaisons(selectEquipe.value, saisonDepuisAncre);
+				afficher(selectEquipe.value, selectSaison.value);
+
+				selectEquipe.addEventListener("change", () => {
+					peuplerSaisons(selectEquipe.value);
+					afficher(selectEquipe.value, selectSaison.value);
+				});
+				selectSaison.addEventListener("change", () => afficher(selectEquipe.value, selectSaison.value));
 			}
 		</script>
 	</body>
@@ -176,6 +224,12 @@ const blocs = await Promise.all(
 	.empty p {
 		color: rgba(255, 255, 255, 0.75);
 		text-align: center;
+	}
+	.filtres {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+		margin-bottom: 1.5rem;
 	}
 	.filtre-label {
 		display: block;
@@ -195,12 +249,16 @@ const blocs = await Promise.all(
 		border: 1px solid rgba(255, 255, 255, 0.3);
 		background: var(--color-navy-deep);
 		color: var(--color-white);
-		margin-bottom: 1.5rem;
 	}
-	.equipe-bloc h2 {
+	.saison-bloc h2 {
 		color: var(--color-white);
 		font-size: 1.4rem;
 		margin: 0 0 0.75rem;
+	}
+	.saison-label {
+		color: rgba(255, 255, 255, 0.55);
+		font-size: 1rem;
+		font-weight: 400;
 	}
 	.groupe {
 		margin-bottom: 1.5rem;
@@ -212,7 +270,7 @@ const blocs = await Promise.all(
 		letter-spacing: 0.04em;
 		margin: 0 0 0.5rem;
 	}
-	.classement {
+	.bilan {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 		gap: 0.75rem;
@@ -221,7 +279,7 @@ const blocs = await Promise.all(
 		background: rgba(255, 255, 255, 0.06);
 		border-left: 3px solid var(--color-crimson);
 	}
-	.classement dt {
+	.bilan dt {
 		color: rgba(255, 255, 255, 0.55);
 		font-size: 0.68rem;
 		text-transform: uppercase;
@@ -229,11 +287,14 @@ const blocs = await Promise.all(
 		font-weight: 700;
 		margin: 0 0 0.15rem;
 	}
-	.classement dd {
+	.bilan dd {
 		color: var(--color-white);
 		font-size: 0.95rem;
 		font-weight: 700;
 		margin: 0;
+	}
+	.table-scroll {
+		overflow-x: auto;
 	}
 	table.joueurs {
 		width: 100%;
@@ -246,6 +307,7 @@ const blocs = await Promise.all(
 		padding: 0.5rem 0.6rem;
 		color: var(--color-white);
 		border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+		white-space: nowrap;
 	}
 	table.joueurs th {
 		color: rgba(255, 255, 255, 0.55);
