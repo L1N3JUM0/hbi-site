@@ -11,6 +11,7 @@ calendriers:
     repere: Handball Islois
     libelle: U15 Excellence
     classementUrl: ''
+    statistiquesUrl: https://www.ffhandball.fr/competitions/saison-2026-2027-22/regional/championnat-u15-excellence-masculin-32450/poule-190653/classements/
   - url: https://competition-calendar.ffhandball.fr/c-33206/s-3577.ics
     repere: Handball Islois
     libelle: ''

@@ -11,12 +11,12 @@ calendriers:
     repere: Handball Islois 1
     libelle: '1'
     classementUrl: ''
-    statistiquesUrl: https://www.ffhandball.fr/competitions/saison-2025-2026-21/departemental/division-1-masculins-28675/poule-169893/classements/
+    statistiquesUrl: https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-masculins-32649/poule-192119/classements/
   - url: https://competition-calendar.ffhandball.fr/c-32649/s-3577.ics
     repere: Handball Islois 2
     libelle: '2'
     classementUrl: ''
-    statistiquesUrl: https://www.ffhandball.fr/competitions/saison-2025-2026-21/departemental/division-1-masculins-28675/poule-169893/classements/
+    statistiquesUrl: https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-masculins-32649/poule-192119/classements/
 horaires: Mardi et jeudi 20h30-22h30
 encadrants: Christophe
 tarif: 220 €
