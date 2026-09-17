@@ -11,8 +11,6 @@ adversaire: "HANDBALL CLUB ORANGE"
 salle: "6313 - BERTHOIRE"
 scoreDomicile: 4
 scoreExterieur: 4
-scoreMiTempsDomicile: 4
-scoreMiTempsExterieur: 4
 chronologie: [{"temps":"00:23","scoreDomicile":0,"scoreExterieur":1,"type":"but"},{"temps":"01:14","scoreDomicile":1,"scoreExterieur":1,"type":"but"},{"temps":"03:26","scoreDomicile":2,"scoreExterieur":1,"type":"but"},{"temps":"04:11","scoreDomicile":2,"scoreExterieur":1,"type":"avertissement"},{"temps":"09:12","scoreDomicile":2,"scoreExterieur":2,"type":"but"},{"temps":"09:40","scoreDomicile":2,"scoreExterieur":3,"type":"but"},{"temps":"09:55","scoreDomicile":3,"scoreExterieur":3,"type":"but"},{"temps":"10:11","scoreDomicile":3,"scoreExterieur":4,"type":"but"},{"temps":"11:24","scoreDomicile":4,"scoreExterieur":4,"type":"but"}]
 statsEquipeDomicile: {"buts":4,"tirs":4,"arrets":0,"exclusions":0,"avertissements":0}
 statsEquipeExterieur: {"buts":4,"tirs":4,"arrets":0,"exclusions":0,"avertissements":1}
