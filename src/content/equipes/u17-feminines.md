@@ -11,6 +11,7 @@ calendriers:
     repere: Handball Islois
     libelle: ''
     classementUrl: ''
+    statistiquesUrl: https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u17-feminines-inter-dep-poule-1-33205/poule-196082/statistiques/
 horaires: Mercredi 18h30-20h / vendredi 19h-20h30
 encadrants: Léa et Caroline
 tarif: 210 €

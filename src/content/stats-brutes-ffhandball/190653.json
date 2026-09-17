@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
 	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/regional/championnat-u15-excellence-masculin-32450/poule-190653/classements/",
 	"fetchedAt": "2026-09-17T09:39:39.198Z",
+=======
+	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/regional/championnat-u15-excellence-masculin-32450/poule-190653/statistiques/",
+	"fetchedAt": "2026-09-17T09:10:11.528Z",
+>>>>>>> origin/main
 	"classement": [
 		{
 			"id": "10545588",
