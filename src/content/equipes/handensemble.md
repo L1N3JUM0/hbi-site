@@ -11,7 +11,8 @@ horaires: Mercredi 18h-19h
 encadrants: Lydie
 tarif: 100 €
 description: Handball adapté, ouvert à tous, tous les mercredis de 18h à 19h avec Lydie.
-photoProfil: ../../assets/vie-club-2.jpg
+photoProfil: /src/assets/handesemble.webp
 galerie:
-  - ../../assets/vie-club-2.jpg
+  - /src/assets/handesemble.webp
+  - /src/assets/handensemble.webp
 ---

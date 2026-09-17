@@ -6,7 +6,11 @@ slug: u18-masculins
 categorieAge: U18
 genre: masculin
 ordre: null
-calendriers: []
+calendriers:
+  - url: https://competition-calendar.ffhandball.fr/c-33194/s-3577.ics
+    repere: Handball Islois
+    libelle: ''
+    classementUrl: ''
 horaires: Mercredi et vendredi 19h-20h30
 encadrants: Jérôme et Cyril
 tarif: 210 €

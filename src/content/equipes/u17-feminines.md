@@ -6,7 +6,11 @@ slug: u17-feminines
 categorieAge: U17
 genre: feminin
 ordre: null
-calendriers: []
+calendriers:
+  - url: https://competition-calendar.ffhandball.fr/c-33205/s-3577.ics
+    repere: Handball Islois
+    libelle: ''
+    classementUrl: ''
 horaires: Mercredi 18h30-20h / vendredi 19h-20h30
 encadrants: Léa et Caroline
 tarif: 210 €
