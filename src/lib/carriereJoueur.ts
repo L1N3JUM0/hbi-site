@@ -7,6 +7,27 @@ export interface EtapeCarriere {
 	equipeNom: string;
 }
 
+/** Détail d'une étape de carrière (une saison dans une équipe donnée) avec
+ * ses propres statistiques -- contrairement à `EtapeCarriere` ci-dessus, qui
+ * ne sert qu'à afficher le fil du parcours. Uniquement construit quand
+ * `affichageStats` vaut "nominatif" (voir `agregerCarriere`) : jamais pour un
+ * affichage pseudonymisé, où un détail saison par saison, même sans nom
+ * complet, risquerait de permettre une ré-identification par recoupement. */
+export interface EtapeDetailCarriere {
+	saison: string;
+	equipeNom: string;
+	matchsJoues: number;
+	buts: number;
+	sept_m: number;
+	tirs: number;
+	arrets: number;
+	avertissements: number;
+	exclusions: number;
+	disqualifications: number;
+	/** Buts / matchs joués, arrondi à une décimale -- `null` si aucun match. */
+	ratio: number | null;
+}
+
 export interface JoueurCarriere {
 	label: string | null;
 	matchsJoues: number;
@@ -17,10 +38,21 @@ export interface JoueurCarriere {
 	avertissements: number;
 	exclusions: number;
 	disqualifications: number;
+	/** Buts / matchs joués, arrondi à une décimale -- `null` si aucun match. */
+	ratio: number | null;
 	/** Saisons/équipes traversées, de la plus ancienne à la plus récente --
 	 * un cumul de carrière n'a de sens que si la progression qui le compose
 	 * reste visible, jamais un total seul sans contexte. */
 	parcours: EtapeCarriere[];
+	/** Libellé du groupe de rattachement (voir `GroupeCarriere.libelle`),
+	 * porté sur chaque joueur pour permettre un tri par "catégorie" dans un
+	 * tableau qui fusionnerait tous les groupes d'une équipe. */
+	groupeLibelle: string;
+	/** Détail saison par saison / catégorie par catégorie -- `null` si
+	 * l'affichage n'est pas nominatif (voir `EtapeDetailCarriere`) : c'est ce
+	 * qui empêche toute vue individuelle pour un·e joueur·se encore affiché·e
+	 * en mode pseudonymisé. */
+	detail: EtapeDetailCarriere[] | null;
 }
 
 export interface GroupeCarriere {
@@ -35,6 +67,19 @@ export interface CarriereEquipe {
 	groupes: GroupeCarriere[];
 }
 
+type DetailBucket = {
+	saison: string;
+	equipeSlug: string;
+	matchsJoues: number;
+	buts: number;
+	sept_m: number;
+	tirs: number;
+	arrets: number;
+	avertissements: number;
+	exclusions: number;
+	disqualifications: number;
+};
+
 type Agregat = {
 	nom: string;
 	prenom: string;
@@ -47,7 +92,16 @@ type Agregat = {
 	exclusions: number;
 	disqualifications: number;
 	parcours: Map<string, string>;
+	/** Une entrée par (saison, équipe) traversée -- clé `${saison}\0${equipeSlug}`
+	 * pour distinguer un double surclassement la même saison, ce que `parcours`
+	 * ci-dessus ne fait volontairement pas (voir son commentaire). */
+	detail: Map<string, DetailBucket>;
 };
+
+function arrondiRatio(buts: number, matchsJoues: number): number | null {
+	if (matchsJoues === 0) return null;
+	return Math.round((buts / matchsJoues) * 10) / 10;
+}
 
 /** Cumule, pour un ensemble donné de `licenceHash` (l'effectif actuel d'une
  * équipe -- voir `getCarriereParEquipe`), leurs stats sur TOUTE la
@@ -63,6 +117,7 @@ function agregerCarriere(
 	tousLesResultats: Resultat[],
 	nomEquipe: Map<string, string>,
 	affichageStats: "nominatif" | "pseudonymise" | "masque",
+	groupeLibelle: string,
 ): JoueurCarriere[] {
 	if (affichageStats === "masque" || hashesEffectifActuel.size === 0) return [];
 
@@ -80,6 +135,7 @@ function agregerCarriere(
 			exclusions: 0,
 			disqualifications: 0,
 			parcours: new Map(),
+			detail: new Map(),
 		});
 	}
 
@@ -103,6 +159,37 @@ function agregerCarriere(
 			// progression, un double surclassement la même saison resterait un
 			// cas limite non distingué ici.
 			if (!a.parcours.has(r.data.saison)) a.parcours.set(r.data.saison, r.data.equipeSlug);
+
+			// Détail par (saison, équipe) -- contrairement à `parcours`
+			// ci-dessus, distingue un double surclassement la même saison, et
+			// porte ses propres stats. Construit pour tout le monde ici (peu
+			// coûteux) ; c'est seulement à la sortie, plus bas, qu'il est
+			// jeté pour un affichage non nominatif.
+			const cleDetail = `${r.data.saison}\0${r.data.equipeSlug}`;
+			let bucket = a.detail.get(cleDetail);
+			if (!bucket) {
+				bucket = {
+					saison: r.data.saison,
+					equipeSlug: r.data.equipeSlug,
+					matchsJoues: 0,
+					buts: 0,
+					sept_m: 0,
+					tirs: 0,
+					arrets: 0,
+					avertissements: 0,
+					exclusions: 0,
+					disqualifications: 0,
+				};
+				a.detail.set(cleDetail, bucket);
+			}
+			bucket.matchsJoues++;
+			bucket.buts += j.buts;
+			bucket.sept_m += j.sept_m;
+			bucket.tirs += j.tirs;
+			bucket.arrets += j.arrets;
+			bucket.avertissements += j.avertissements;
+			bucket.exclusions += j.exclusions;
+			if (j.disqualification) bucket.disqualifications++;
 		}
 	}
 
@@ -127,9 +214,35 @@ function agregerCarriere(
 			avertissements: j.avertissements,
 			exclusions: j.exclusions,
 			disqualifications: j.disqualifications,
+			ratio: arrondiRatio(j.buts, j.matchsJoues),
+			groupeLibelle,
 			parcours: [...j.parcours.entries()]
 				.sort(([a], [b]) => (a < b ? -1 : 1))
 				.map(([saison, slug]) => ({ saison, equipeNom: nomEquipe.get(slug) ?? slug })),
+			// Confidentialité : jamais construit hors du mode "nominatif" --
+			// un détail saison par saison, même pseudonymisé, pourrait
+			// permettre de ré-identifier quelqu'un par recoupement (ex. un·e
+			// seul·e "Théo M." dans une petite catégorie sur plusieurs
+			// saisons). Voir la page /statistiques-carriere, qui n'ouvre
+			// aucune vue individuelle quand `detail` est `null`.
+			detail:
+				affichageStats === "nominatif"
+					? [...j.detail.values()]
+							.sort((a, b) => (a.saison < b.saison ? -1 : a.saison > b.saison ? 1 : a.equipeSlug.localeCompare(b.equipeSlug)))
+							.map((b) => ({
+								saison: b.saison,
+								equipeNom: nomEquipe.get(b.equipeSlug) ?? b.equipeSlug,
+								matchsJoues: b.matchsJoues,
+								buts: b.buts,
+								sept_m: b.sept_m,
+								tirs: b.tirs,
+								arrets: b.arrets,
+								avertissements: b.avertissements,
+								exclusions: b.exclusions,
+								disqualifications: b.disqualifications,
+								ratio: arrondiRatio(b.buts, b.matchsJoues),
+							}))
+					: null,
 		}));
 }
 
@@ -161,7 +274,7 @@ export async function getCarriereParEquipe(
 	const groupes = groupesEffectif.map((g) => {
 		const hashes = new Set<string>();
 		for (const r of g.resultats) for (const j of r.data.statsJoueurs ?? []) if (j.licenceHash) hashes.add(j.licenceHash);
-		return { libelle: g.libelle, joueurs: agregerCarriere(hashes, tousLesResultats, nomEquipe, affichageStats) };
+		return { libelle: g.libelle, joueurs: agregerCarriere(hashes, tousLesResultats, nomEquipe, affichageStats, g.libelle) };
 	});
 
 	return { plusieursEquipes, groupes };

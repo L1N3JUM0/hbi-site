@@ -37,7 +37,7 @@ const MASCULIN_PATTERN = /masculin|\bgar[çc]ons?\b/i;
 const COUPE_PATTERN = /\bcoupe\b/i;
 
 /**
- * @typedef {{ url: string, libelle?: string }} CalendrierEquipe
+ * @typedef {{ url: string, libelle?: string, repere?: string }} CalendrierEquipe
  * @typedef {{ slug: string, categorieAge: string, genre: "mixte" | "feminin" | "masculin", calendriers?: CalendrierEquipe[] }} EquipeCompetition
  *
  * @param {string} competitionText
@@ -97,6 +97,40 @@ export function detectEquipe(competitionText, equipesCompetition) {
  * ("HANDBALL ISLOIS", "HANDBALL ISLOIS 1"...). */
 export const CLUB_CODE = "6384006";
 export const CLUB_NAME_PATTERN = /handball\s*islois/i;
+
+/**
+ * Vrai si ce texte d'équipe (nom domicile/extérieur brut d'une feuille de
+ * match) désigne le HBI -- soit via le nom habituel ("Handball Islois", voir
+ * CLUB_NAME_PATTERN ci-dessus), soit via un nom d'ENTENTE avec un autre club
+ * déclaré comme `repere` d'un calendrier dans le CMS (ex. "L'Isle - Le Thor"
+ * pour l'entente U17F 2026-2027 avec le Handball Club du Thor, dont le nom
+ * d'équipe sur les feuilles/flux FFHandball -- "L'ISLE - LE THOR (U17F)" --
+ * ne contient ni "Handball" ni "Islois", voir CLAUDE.md et
+ * src/content/equipes/u17-feminines.md).
+ *
+ * On regarde les `repere` de TOUTES les équipes de compétition, pas
+ * seulement celle déjà identifiée par `detectEquipe()` : à ce stade du
+ * parsing (voir parseFeuille.mjs), on ne sait pas encore quelle équipe a
+ * joué, seulement quel camp de la feuille est le HBI. Un `repere` qui vaut
+ * encore la valeur par défaut ("Handball Islois", voir content.config.ts)
+ * n'apporte aucun signal de plus que CLUB_NAME_PATTERN ; seuls les reperes
+ * qui s'en écartent (une vraie entente) sont testés ici.
+ *
+ * @param {string} nomEquipe
+ * @param {EquipeCompetition[]} [equipesCompetition]
+ * @returns {boolean}
+ */
+export function estNomEquipeHBI(nomEquipe, equipesCompetition = []) {
+	if (CLUB_NAME_PATTERN.test(nomEquipe)) return true;
+	const texte = normaliserTexte(nomEquipe);
+	return equipesCompetition.some((e) =>
+		(e.calendriers ?? []).some((c) => {
+			const repere = c.repere?.trim();
+			if (!repere || CLUB_NAME_PATTERN.test(repere)) return false;
+			return texte.includes(normaliserTexte(repere));
+		}),
+	);
+}
 
 /** Quand plusieurs équipes du club sont engagées dans la même poule (ex.
  * Seniors masculins 1 et 2), la feuille de match les distingue -- pour la

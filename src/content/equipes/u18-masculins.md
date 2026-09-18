@@ -20,4 +20,5 @@ galerie:
   - /src/assets/u18M.jpg
   - /src/assets/u18m-3.webp
   - /src/assets/u18m-2.webp
+affichageStats: nominatif
 ---

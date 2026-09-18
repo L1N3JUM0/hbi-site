@@ -50,7 +50,6 @@ export interface Competition {
 	classementUrl?: string;
 }
 
-const CLUB_PATTERN = /handball\s*islois/i;
 const HOME_LOCATION_PATTERN = /emile avy/i;
 const JOURNEE_PATTERN = /journ[ée]e\s*(\d+)/i;
 
@@ -201,8 +200,15 @@ export async function getAgendaMatches(): Promise<AgendaMatch[]> {
 
 		for (const event of events) {
 			if (event.start < now) continue;
-			if (!CLUB_PATTERN.test(event.summary)) continue;
 
+			// Pas de filtre générique "handball islois" ici : une équipe engagée
+			// dans une entente avec un autre club (ex. U17F 2026-2027, "L'ISLE -
+			// LE THOR") n'a aucune occurrence de "Handball"/"Islois" dans son nom
+			// sur le flux -- seul le `matchLabel` (repere du CMS) de chaque
+			// équipe déclarée pour CE flux permet de savoir si l'événement la
+			// concerne, via matchedA/matchedB juste en dessous. Un événement qui
+			// ne correspond à aucune équipe connue reste ignoré comme avant (voir
+			// le commentaire en fin de boucle).
 			const sides = splitTeams(event.summary);
 			if (!sides) continue;
 			const [sideA, sideB] = sides;

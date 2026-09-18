@@ -1,6 +1,6 @@
 import { extractRows, rowText, nearestItem } from "./pdfRows.mjs";
 import { stripBirthName, splitNomPrenom } from "./noms.mjs";
-import { detectEquipe, extraireNumeroEquipe, detecterLibelleCompetition, CLUB_CODE, CLUB_NAME_PATTERN } from "./equipeMatch.mjs";
+import { detectEquipe, extraireNumeroEquipe, detecterLibelleCompetition, CLUB_CODE, estNomEquipeHBI } from "./equipeMatch.mjs";
 import { hashLicence } from "./licenceHash.mjs";
 
 /** Erreur levée quand une feuille ne correspond pas au format attendu --
@@ -459,8 +459,8 @@ export async function parseFeuilleDeMatch(pdfBytes, equipesCompetition = []) {
 	const rows = await extractRows(pdfBytes);
 	const header = parseHeaderFields(rows);
 
-	const domicileEstHBI = CLUB_NAME_PATTERN.test(header.equipeDomicile);
-	const exterieurEstHBI = CLUB_NAME_PATTERN.test(header.equipeExterieur);
+	const domicileEstHBI = estNomEquipeHBI(header.equipeDomicile, equipesCompetition);
+	const exterieurEstHBI = estNomEquipeHBI(header.equipeExterieur, equipesCompetition);
 	if (!domicileEstHBI && !exterieurEstHBI) {
 		throw new FeuilleFormatError(`Aucune des deux équipes ("${header.equipeDomicile}" / "${header.equipeExterieur}") ne semble être le HBI.`);
 	}

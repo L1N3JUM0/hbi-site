@@ -7,7 +7,7 @@ import Favicon from "../components/Favicon.astro";
 import { getCollection } from "astro:content";
 import { trierEquipes } from "../lib/equipes";
 import { slugsAvecResultats } from "../lib/statistiques";
-import { getCarriereParEquipe } from "../lib/carriereJoueur";
+import { getCarriereParEquipe, type JoueurCarriere } from "../lib/carriereJoueur";
 
 const slugsDisponibles = await slugsAvecResultats();
 const equipes = trierEquipes(await getCollection("equipes")).filter((e) => slugsDisponibles.has(e.data.slug));
@@ -18,6 +18,17 @@ const blocs = await Promise.all(
 		carriere: await getCarriereParEquipe(e.data.slug, e.data.calendriers, e.data.affichageStats),
 	})),
 );
+
+// Table fusionnée : quand une équipe partage sa poule (plusieursEquipes), les
+// groupes ("Équipe 1"/"Équipe 2"...) deviennent une colonne "Catégorie"
+// triable au lieu de sous-tableaux séparés -- c'est la seule notion de
+// "catégorie" qui existe dans ce modèle de données pour une page qui est déjà
+// elle-même organisée par équipe/catégorie d'âge (voir CLAUDE.md).
+function joueursAffiches(carriere: { plusieursEquipes: boolean; groupes: { joueurs: JoueurCarriere[] }[] }): JoueurCarriere[] {
+	return carriere.groupes.flatMap((g) => g.joueurs);
+}
+
+const formatRatio = (r: number | null) => (r == null ? "—" : r.toFixed(1));
 ---
 
 <html lang="fr">
@@ -67,57 +78,179 @@ const blocs = await Promise.all(
 								))}
 						</select>
 
-						{blocs.map(({ equipe, carriere }) => (
-							<section class="equipe-bloc" id={`equipe-${equipe.data.slug}`} data-equipe-slug={equipe.data.slug}>
-								<h2>{equipe.data.nom}</h2>
-								<p class="note">Effectif actuel -- cumul toutes saisons et catégories confondues.</p>
-								{carriere.groupes.map((groupe) => (
-									<div class="groupe">
-										{carriere.plusieursEquipes && <h3>{groupe.libelle}</h3>}
+						{blocs.map(({ equipe, carriere }) => {
+							const joueurs = joueursAffiches(carriere);
+							return (
+								<section class="equipe-bloc" id={`equipe-${equipe.data.slug}`} data-equipe-slug={equipe.data.slug}>
+									<h2>{equipe.data.nom}</h2>
+									<p class="note">Effectif actuel -- cumul toutes saisons et catégories confondues.</p>
 
-										{groupe.joueurs.length > 0 && (
-											<div class="table-scroll">
-												<table class="joueurs">
-													<thead>
-														<tr>
-															<th scope="col">Joueur·se</th>
-															<th scope="col">Matchs</th>
-															<th scope="col">Buts</th>
-															<th scope="col">7m</th>
-															<th scope="col">Tirs</th>
-															<th scope="col">Arrêts</th>
-															<th scope="col">Avert.</th>
-															<th scope="col">Excl.</th>
-															<th scope="col">Disq.</th>
-														</tr>
-													</thead>
-													<tbody>
-														{groupe.joueurs.map((j) => (
-															<tr>
-																<td>
-																	{j.label}
-																	{j.parcours.length > 1 && (
-																		<div class="parcours">{j.parcours.map((e) => `${e.saison} ${e.equipeNom}`).join(" → ")}</div>
-																	)}
-																</td>
-																<td>{j.matchsJoues}</td>
-																<td>{j.buts}</td>
-																<td>{j.sept_m}</td>
-																<td>{j.tirs}</td>
-																<td>{j.arrets}</td>
-																<td>{j.avertissements}</td>
-																<td>{j.exclusions}</td>
-																<td>{j.disqualifications}</td>
-															</tr>
-														))}
-													</tbody>
-												</table>
-											</div>
-										)}
-									</div>
-								))}
-							</section>
-						))}
+									{joueurs.length > 0 && (
+										<div class="table-scroll">
+											<table class="joueurs">
+												<thead>
+													<tr>
+														<th scope="col" aria-sort="none">
+															<button type="button" class="sort-btn" data-key="joueur" data-type="text">
+																Joueur·se
+																<span class="sort-indicator" aria-hidden="true" />
+															</button>
+														</th>
+														{carriere.plusieursEquipes && (
+															<th scope="col" aria-sort="none">
+																<button type="button" class="sort-btn" data-key="categorie" data-type="text">
+																	Catégorie
+																	<span class="sort-indicator" aria-hidden="true" />
+																</button>
+															</th>
+														)}
+														<th scope="col" aria-sort="none">
+															<button type="button" class="sort-btn" data-key="matchs" data-type="num">
+																Matchs
+																<span class="sort-indicator" aria-hidden="true" />
+															</button>
+														</th>
+														<th scope="col" aria-sort="none">
+															<button type="button" class="sort-btn" data-key="buts" data-type="num">
+																Buts
+																<span class="sort-indicator" aria-hidden="true" />
+															</button>
+														</th>
+														<th scope="col" aria-sort="none">
+															<button type="button" class="sort-btn" data-key="ratio" data-type="num">
+																Buts/match
+																<span class="sort-indicator" aria-hidden="true" />
+															</button>
+														</th>
+														<th scope="col" aria-sort="none">
+															<button type="button" class="sort-btn" data-key="sept_m" data-type="num">
+																7m
+																<span class="sort-indicator" aria-hidden="true" />
+															</button>
+														</th>
+														<th scope="col" aria-sort="none">
+															<button type="button" class="sort-btn" data-key="tirs" data-type="num">
+																Tirs
+																<span class="sort-indicator" aria-hidden="true" />
+															</button>
+														</th>
+														<th scope="col" aria-sort="none">
+															<button type="button" class="sort-btn" data-key="arrets" data-type="num">
+																Arrêts
+																<span class="sort-indicator" aria-hidden="true" />
+															</button>
+														</th>
+														<th scope="col" aria-sort="none">
+															<button type="button" class="sort-btn" data-key="avertissements" data-type="num">
+																Avert.
+																<span class="sort-indicator" aria-hidden="true" />
+															</button>
+														</th>
+														<th scope="col" aria-sort="none">
+															<button type="button" class="sort-btn" data-key="exclusions" data-type="num">
+																Excl.
+																<span class="sort-indicator" aria-hidden="true" />
+															</button>
+														</th>
+														<th scope="col" aria-sort="none">
+															<button type="button" class="sort-btn" data-key="disqualifications" data-type="num">
+																Disq.
+																<span class="sort-indicator" aria-hidden="true" />
+															</button>
+														</th>
+													</tr>
+												</thead>
+												<tbody>
+													{joueurs.map((j, i) => {
+														const aDetail = j.detail !== null && j.detail.length > 0;
+														const detailId = `detail-${equipe.data.slug}-${i}`;
+														return (
+															<>
+																<tr
+																	class="joueur-row"
+																	data-value-joueur={(j.label ?? "").toLowerCase()}
+																	data-value-categorie={j.groupeLibelle.toLowerCase()}
+																	data-value-matchs={j.matchsJoues}
+																	data-value-buts={j.buts}
+																	data-value-ratio={j.ratio ?? -1}
+																	data-value-sept_m={j.sept_m}
+																	data-value-tirs={j.tirs}
+																	data-value-arrets={j.arrets}
+																	data-value-avertissements={j.avertissements}
+																	data-value-exclusions={j.exclusions}
+																	data-value-disqualifications={j.disqualifications}
+																	{...(aDetail
+																		? { tabindex: "0", role: "button", "aria-expanded": "false", "aria-controls": detailId, "data-has-detail": "true" }
+																		: {})}
+																>
+																	<td>
+																		{j.label}
+																		{j.parcours.length > 1 && (
+																			<div class="parcours">{j.parcours.map((e) => `${e.saison} ${e.equipeNom}`).join(" → ")}</div>
+																		)}
+																	</td>
+																	{carriere.plusieursEquipes && <td>{j.groupeLibelle}</td>}
+																	<td>{j.matchsJoues}</td>
+																	<td>{j.buts}</td>
+																	<td>{formatRatio(j.ratio)}</td>
+																	<td>{j.sept_m}</td>
+																	<td>{j.tirs}</td>
+																	<td>{j.arrets}</td>
+																	<td>{j.avertissements}</td>
+																	<td>{j.exclusions}</td>
+																	<td>{j.disqualifications}</td>
+																</tr>
+																{aDetail && (
+																	<tr class="detail-row" id={detailId} hidden>
+																		<td colspan={carriere.plusieursEquipes ? 11 : 10}>
+																			<table class="detail">
+																				<caption>Détail saison par saison de {j.label}</caption>
+																				<thead>
+																					<tr>
+																						<th scope="col">Saison</th>
+																						<th scope="col">Catégorie</th>
+																						<th scope="col">Matchs</th>
+																						<th scope="col">Buts</th>
+																						<th scope="col">Buts/match</th>
+																						<th scope="col">7m</th>
+																						<th scope="col">Tirs</th>
+																						<th scope="col">Arrêts</th>
+																						<th scope="col">Avert.</th>
+																						<th scope="col">Excl.</th>
+																						<th scope="col">Disq.</th>
+																					</tr>
+																				</thead>
+																				<tbody>
+																					{j.detail!.map((e) => (
+																						<tr>
+																							<td>{e.saison}</td>
+																							<td>{e.equipeNom}</td>
+																							<td>{e.matchsJoues}</td>
+																							<td>{e.buts}</td>
+																							<td>{formatRatio(e.ratio)}</td>
+																							<td>{e.sept_m}</td>
+																							<td>{e.tirs}</td>
+																							<td>{e.arrets}</td>
+																							<td>{e.avertissements}</td>
+																							<td>{e.exclusions}</td>
+																							<td>{e.disqualifications}</td>
+																						</tr>
+																					))}
+																				</tbody>
+																			</table>
+																		</td>
+																	</tr>
+																)}
+															</>
+														);
+													})}
+												</tbody>
+											</table>
+										</div>
+									)}
+								</section>
+							);
+						})}
 					</div>
 				</section>
 			)
@@ -145,6 +278,90 @@ const blocs = await Promise.all(
 
 				afficherEquipe(select.value);
 				select.addEventListener("change", () => afficherEquipe(select.value));
+			}
+
+			// --- Tri par colonne -------------------------------------------------
+			// Chaque table.joueurs est triée indépendamment. Le tri déplace les
+			// paires [ligne joueur, ligne détail éventuelle] ensemble pour que le
+			// détail reste toujours juste sous son joueur après un tri.
+			function ligneEtDetail(tbody: HTMLTableSectionElement) {
+				const groupes: { main: HTMLTableRowElement; detail: HTMLTableRowElement | null }[] = [];
+				const rows = [...tbody.rows];
+				for (let i = 0; i < rows.length; i++) {
+					const row = rows[i];
+					if (row.classList.contains("detail-row")) continue; // déjà rattachée à la ligne précédente
+					const next = rows[i + 1];
+					const detail = next && next.classList.contains("detail-row") ? next : null;
+					groupes.push({ main: row, detail });
+				}
+				return groupes;
+			}
+
+			function valeurTri(row: HTMLTableRowElement, key: string, type: string): string | number {
+				const brut = row.dataset[`value${key.charAt(0).toUpperCase()}${key.slice(1)}`];
+				if (type === "num") return Number(brut ?? 0);
+				return brut ?? "";
+			}
+
+			for (const table of document.querySelectorAll<HTMLTableElement>("table.joueurs")) {
+				const tbody = table.tBodies[0];
+				if (!tbody) continue;
+				const headers = [...table.querySelectorAll<HTMLButtonElement>("thead .sort-btn")];
+
+				let triActuel: { key: string; sens: 1 | -1 } | null = null;
+
+				for (const bouton of headers) {
+					bouton.addEventListener("click", () => {
+						const key = bouton.dataset.key!;
+						const type = bouton.dataset.type ?? "text";
+						const sens: 1 | -1 = triActuel?.key === key && triActuel.sens === 1 ? -1 : 1;
+						triActuel = { key, sens };
+
+						const groupes = ligneEtDetail(tbody);
+						groupes.sort((a, b) => {
+							const va = valeurTri(a.main, key, type);
+							const vb = valeurTri(b.main, key, type);
+							if (typeof va === "number" && typeof vb === "number") return (va - vb) * sens;
+							return String(va).localeCompare(String(vb), "fr") * sens;
+						});
+
+						for (const { main, detail } of groupes) {
+							tbody.append(main);
+							if (detail) tbody.append(detail);
+						}
+						// Un tri qui laisse la fenêtre de défilement où elle était montrerait
+						// une ligne quelconque en haut plutôt que la nouvelle tête de tri.
+						table.closest<HTMLElement>(".table-scroll")?.scrollTo(0, 0);
+
+						for (const th of table.querySelectorAll("thead th")) th.setAttribute("aria-sort", "none");
+						bouton.closest("th")?.setAttribute("aria-sort", sens === 1 ? "ascending" : "descending");
+						for (const autre of headers) autre.classList.toggle("is-sorted", autre === bouton);
+						bouton.dataset.sens = String(sens);
+					});
+				}
+			}
+
+			// --- Détail par joueur (clic sur une ligne nominative) ---------------
+			// Seules les lignes marquées `data-has-detail` (affichage nominatif,
+			// voir carriereJoueur.ts) sont cliquables : une ligne pseudonymisée
+			// n'ouvre jamais de détail individuel.
+			function toggleDetail(row: HTMLTableRowElement) {
+				const id = row.getAttribute("aria-controls");
+				const detailRow = id && document.getElementById(id);
+				if (!detailRow) return;
+				const ouvert = row.getAttribute("aria-expanded") === "true";
+				row.setAttribute("aria-expanded", String(!ouvert));
+				detailRow.hidden = ouvert;
+			}
+
+			for (const row of document.querySelectorAll<HTMLTableRowElement>("tr.joueur-row[data-has-detail]")) {
+				row.addEventListener("click", () => toggleDetail(row));
+				row.addEventListener("keydown", (e) => {
+					if (e.key === "Enter" || e.key === " ") {
+						e.preventDefault();
+						toggleDetail(row);
+					}
+				});
 			}
 		</script>
 	</body>
@@ -193,18 +410,13 @@ const blocs = await Promise.all(
 		font-size: 0.8rem;
 		margin: 0 0 1rem;
 	}
-	.groupe {
-		margin-bottom: 1.5rem;
-	}
-	.groupe h3 {
-		color: rgba(255, 255, 255, 0.75);
-		font-size: 0.9rem;
-		text-transform: uppercase;
-		letter-spacing: 0.04em;
-		margin: 0 0 0.5rem;
-	}
 	.table-scroll {
 		overflow-x: auto;
+		/* Limite de hauteur pour que l'en-tête sticky ait un intérêt sur cette
+		   page (sinon la table entière tient déjà à l'écran) : au-delà, la
+		   table défile dans son propre cadre plutôt que la page entière. */
+		max-height: 70vh;
+		overflow-y: auto;
 	}
 	table.joueurs {
 		width: 100%;
@@ -225,15 +437,106 @@ const blocs = await Promise.all(
 		text-transform: uppercase;
 		letter-spacing: 0.04em;
 		font-weight: 700;
+		padding: 0;
+		/* En-tête fixe au défilement du tableau (voir .table-scroll ci-dessus) :
+		   position: sticky suffit, pas de mécanisme JS. */
+		position: sticky;
+		top: 0;
+		background: var(--color-navy-deep);
+		z-index: 1;
 	}
 	table.joueurs td:not(:first-child),
 	table.joueurs th:not(:first-child) {
 		text-align: right;
+	}
+	.sort-btn {
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		width: 100%;
+		/* Cible tactile >= 44px (voir CLAUDE.md) même si le texte de l'en-tête
+		   reste petit : la hauteur vient du bouton, pas de la taille de police. */
+		min-height: 44px;
+		box-sizing: border-box;
+		font: inherit;
+		text-transform: inherit;
+		letter-spacing: inherit;
+		color: inherit;
+		background: transparent;
+		border: 0;
+		padding: 0.5rem 0.6rem;
+		cursor: pointer;
+		text-align: inherit;
+	}
+	table.joueurs th:not(:first-child) .sort-btn {
+		justify-content: flex-end;
+	}
+	.sort-btn:hover,
+	.sort-btn:focus-visible {
+		color: var(--color-white);
+	}
+	.sort-btn:focus-visible {
+		outline: 2px solid var(--color-crimson);
+		outline-offset: -2px;
+	}
+	.sort-indicator {
+		display: inline-block;
+		width: 0.8em;
+		margin-left: 0.15rem;
+	}
+	th[aria-sort="ascending"] .sort-indicator::after {
+		content: "▲";
+	}
+	th[aria-sort="descending"] .sort-indicator::after {
+		content: "▼";
 	}
 	.parcours {
 		color: rgba(255, 255, 255, 0.5);
 		font-size: 0.72rem;
 		white-space: normal;
 		margin-top: 0.15rem;
+	}
+	tr.joueur-row[data-has-detail] {
+		cursor: pointer;
+	}
+	tr.joueur-row[data-has-detail]:hover {
+		background: rgba(255, 255, 255, 0.06);
+	}
+	tr.joueur-row[data-has-detail]:focus-visible {
+		outline: 2px solid var(--color-crimson);
+		outline-offset: -2px;
+	}
+	tr.detail-row > td {
+		padding: 0.6rem 0.6rem 1rem;
+		background: rgba(255, 255, 255, 0.04);
+	}
+	table.detail {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 0.78rem;
+	}
+	table.detail caption {
+		text-align: left;
+		color: rgba(255, 255, 255, 0.55);
+		font-size: 0.7rem;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		margin-bottom: 0.4rem;
+	}
+	table.detail th,
+	table.detail td {
+		text-align: left;
+		padding: 0.35rem 0.5rem;
+		color: rgba(255, 255, 255, 0.85);
+		white-space: nowrap;
+	}
+	table.detail th {
+		color: rgba(255, 255, 255, 0.5);
+		font-weight: 700;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+	}
+	table.detail td:not(:first-child):not(:nth-child(2)),
+	table.detail th:not(:first-child):not(:nth-child(2)) {
+		text-align: right;
 	}
 </style>
