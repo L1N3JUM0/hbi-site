@@ -31,6 +31,16 @@ import { join } from "node:path";
 import { parseFeuilleDeMatch, FeuilleFormatError } from "../src/lib/fdme/parseFeuille.mjs";
 import { lireFrontmatter } from "./frontmatter.mjs";
 
+// Charge le pépin de hachage des licences (voir src/lib/fdme/licenceHash.mjs)
+// depuis .env.local en local -- en CI, il est injecté directement comme
+// variable d'environnement (secret GitHub Actions), pas de fichier à lire.
+try {
+	process.loadEnvFile(".env.local");
+} catch {
+	// Pas de .env.local : normal en CI, ou si le pépin est déjà exporté
+	// autrement dans l'environnement courant.
+}
+
 const FEUILLES_DIR = "src/content/feuilles-match";
 const RESULTATS_DIR = "src/content/resultats";
 const EQUIPES_DIR = "src/content/equipes";

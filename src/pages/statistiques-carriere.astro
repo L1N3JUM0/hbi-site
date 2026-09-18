@@ -1,0 +1,239 @@
+---
+import "../styles/tokens.css";
+import Header from "../components/Header.astro";
+import PageBanner from "../components/PageBanner.astro";
+import Footer from "../components/Footer.astro";
+import Favicon from "../components/Favicon.astro";
+import { getCollection } from "astro:content";
+import { trierEquipes } from "../lib/equipes";
+import { slugsAvecResultats } from "../lib/statistiques";
+import { getCarriereParEquipe } from "../lib/carriereJoueur";
+
+const slugsDisponibles = await slugsAvecResultats();
+const equipes = trierEquipes(await getCollection("equipes")).filter((e) => slugsDisponibles.has(e.data.slug));
+
+const blocs = await Promise.all(
+	equipes.map(async (e) => ({
+		equipe: e,
+		carriere: await getCarriereParEquipe(e.data.slug, e.data.calendriers, e.data.affichageStats),
+	})),
+);
+---
+
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<Favicon />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Statistiques carrière — Handball Islois</title>
+		<meta
+			name="description"
+			content="Cumul des statistiques de chaque joueur·se de l'effectif actuel, toutes saisons et catégories confondues."
+		/>
+		{
+			/* Page destinée aux joueurs/coachs/dirigeants, accessible uniquement
+			via un lien discret depuis /equipes -- volontairement absente du menu
+			de navigation ET non indexée, comme /statistiques (voir
+			src/pages/statistiques.astro). */
+		}
+		<meta name="robots" content="noindex, nofollow" />
+	</head>
+	<body>
+		<Header />
+		<PageBanner
+			title="Statistiques carrière"
+			subtitle="Cumul des statistiques de l'effectif actuel, toutes saisons et catégories confondues."
+		/>
+
+		{
+			blocs.every(({ carriere }) => carriere.groupes.every((g) => g.joueurs.length === 0)) ? (
+				<section class="carriere-content">
+					<div class="wrap empty">
+						<p>Aucune statistique disponible pour le moment.</p>
+					</div>
+				</section>
+			) : (
+				<section class="carriere-content">
+					<div class="wrap">
+						<label class="filtre-label" for="filtre-equipe">
+							Choisir une équipe
+						</label>
+						<select id="filtre-equipe">
+							{blocs
+								.filter(({ carriere }) => carriere.groupes.some((g) => g.joueurs.length > 0))
+								.map(({ equipe }) => (
+									<option value={equipe.data.slug}>{equipe.data.nom}</option>
+								))}
+						</select>
+
+						{blocs.map(({ equipe, carriere }) => (
+							<section class="equipe-bloc" id={`equipe-${equipe.data.slug}`} data-equipe-slug={equipe.data.slug}>
+								<h2>{equipe.data.nom}</h2>
+								<p class="note">Effectif actuel -- cumul toutes saisons et catégories confondues.</p>
+								{carriere.groupes.map((groupe) => (
+									<div class="groupe">
+										{carriere.plusieursEquipes && <h3>{groupe.libelle}</h3>}
+
+										{groupe.joueurs.length > 0 && (
+											<div class="table-scroll">
+												<table class="joueurs">
+													<thead>
+														<tr>
+															<th scope="col">Joueur·se</th>
+															<th scope="col">Matchs</th>
+															<th scope="col">Buts</th>
+															<th scope="col">7m</th>
+															<th scope="col">Tirs</th>
+															<th scope="col">Arrêts</th>
+															<th scope="col">Avert.</th>
+															<th scope="col">Excl.</th>
+															<th scope="col">Disq.</th>
+														</tr>
+													</thead>
+													<tbody>
+														{groupe.joueurs.map((j) => (
+															<tr>
+																<td>
+																	{j.label}
+																	{j.parcours.length > 1 && (
+																		<div class="parcours">{j.parcours.map((e) => `${e.saison} ${e.equipeNom}`).join(" → ")}</div>
+																	)}
+																</td>
+																<td>{j.matchsJoues}</td>
+																<td>{j.buts}</td>
+																<td>{j.sept_m}</td>
+																<td>{j.tirs}</td>
+																<td>{j.arrets}</td>
+																<td>{j.avertissements}</td>
+																<td>{j.exclusions}</td>
+																<td>{j.disqualifications}</td>
+															</tr>
+														))}
+													</tbody>
+												</table>
+											</div>
+										)}
+									</div>
+								))}
+							</section>
+						))}
+					</div>
+				</section>
+			)
+		}
+
+		<Footer />
+
+		<script>
+			const select = document.querySelector<HTMLSelectElement>("#filtre-equipe");
+			const blocs = document.querySelectorAll<HTMLElement>(".equipe-bloc");
+
+			function afficherEquipe(slug: string) {
+				for (const bloc of blocs) {
+					bloc.hidden = bloc.dataset.equipeSlug !== slug;
+				}
+			}
+
+			if (select && blocs.length > 0) {
+				// Lien discret depuis la fiche équipe (ex. #equipe-seniors-masculins) :
+				// présélectionne cette équipe dans le filtre, en plus du saut
+				// d'ancre natif du navigateur (qui fonctionne même sans JS).
+				const slugDepuisAncre = location.hash.replace(/^#equipe-/, "");
+				const optionCorrespondante = slugDepuisAncre && select.querySelector(`option[value="${slugDepuisAncre}"]`);
+				if (optionCorrespondante) select.value = slugDepuisAncre;
+
+				afficherEquipe(select.value);
+				select.addEventListener("change", () => afficherEquipe(select.value));
+			}
+		</script>
+	</body>
+</html>
+
+<style>
+	.carriere-content {
+		background: var(--color-navy-deep);
+	}
+	.wrap {
+		max-width: 900px;
+		margin: 0 auto;
+		padding: 2rem 1.5rem 3rem;
+	}
+	.empty p {
+		color: rgba(255, 255, 255, 0.75);
+		text-align: center;
+	}
+	.filtre-label {
+		display: block;
+		color: var(--color-white);
+		font-size: 0.8rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		margin-bottom: 0.4rem;
+	}
+	select {
+		width: 100%;
+		min-height: 44px;
+		padding: 0.6rem 0.8rem;
+		font-size: 1rem;
+		border-radius: 4px;
+		border: 1px solid rgba(255, 255, 255, 0.3);
+		background: var(--color-navy-deep);
+		color: var(--color-white);
+		margin-bottom: 1.5rem;
+	}
+	.equipe-bloc h2 {
+		color: var(--color-white);
+		font-size: 1.4rem;
+		margin: 0 0 0.25rem;
+	}
+	.note {
+		color: rgba(255, 255, 255, 0.55);
+		font-size: 0.8rem;
+		margin: 0 0 1rem;
+	}
+	.groupe {
+		margin-bottom: 1.5rem;
+	}
+	.groupe h3 {
+		color: rgba(255, 255, 255, 0.75);
+		font-size: 0.9rem;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		margin: 0 0 0.5rem;
+	}
+	.table-scroll {
+		overflow-x: auto;
+	}
+	table.joueurs {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 0.85rem;
+	}
+	table.joueurs th,
+	table.joueurs td {
+		text-align: left;
+		padding: 0.5rem 0.6rem;
+		color: var(--color-white);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+		white-space: nowrap;
+	}
+	table.joueurs th {
+		color: rgba(255, 255, 255, 0.55);
+		font-size: 0.68rem;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		font-weight: 700;
+	}
+	table.joueurs td:not(:first-child),
+	table.joueurs th:not(:first-child) {
+		text-align: right;
+	}
+	.parcours {
+		color: rgba(255, 255, 255, 0.5);
+		font-size: 0.72rem;
+		white-space: normal;
+		margin-top: 0.15rem;
+	}
+</style>

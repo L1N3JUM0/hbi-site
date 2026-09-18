@@ -40,6 +40,12 @@ jobs:
         run: npm ci
 
       - name: Build Astro
+        # LICENCE_HASH_PEPPER : pépin secret du hachage des numéros de
+        # licence (voir src/lib/fdme/licenceHash.mjs) -- injecté ici comme
+        # variable d'environnement (secret du dépôt), jamais commité. En
+        # local, le même pépin vit dans .env.local (gitignoré).
+        env:
+          LICENCE_HASH_PEPPER: ${{ secrets.LICENCE_HASH_PEPPER }}
         run: npm run build
 
       - name: Committer les résultats et statistiques importés automatiquement

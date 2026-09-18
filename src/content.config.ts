@@ -383,12 +383,19 @@ const statsEquipeMatch = z.object({
  * adverse (aucune raison de publier les stats nominatives d'enfants d'un
  * autre club). Le prénom/nom complet est toujours stocké ; c'est
  * l'affichage qui dépend du réglage `affichageStats` de l'équipe (voir
- * content.config.ts > equipes). Jamais de numéro de licence ni de nom de
- * naissance, ni ici ni ailleurs. */
+ * content.config.ts > equipes). Jamais de numéro de licence en clair ni de
+ * nom de naissance, ni ici ni ailleurs -- `licenceHash` est une empreinte à
+ * sens unique du numéro de licence (HMAC-SHA256 pépiné, voir
+ * src/lib/fdme/licenceHash.mjs), jamais le numéro lui-même : elle sert
+ * uniquement à cumuler les stats d'un·e même joueur·se sur plusieurs
+ * saisons/catégories (voir src/lib/carriereJoueur.ts) sans jamais
+ * l'identifier nommément dans les données stockées. Absente pour une entrée
+ * saisie à la main (pas de feuille de match à parser). */
 const statJoueurMatch = z.object({
 	numero: z.number(),
 	prenom: z.string(),
 	nom: z.string(),
+	licenceHash: champFacultatif(z.string()),
 	buts: z.number(),
 	sept_m: z.number(),
 	tirs: z.number(),

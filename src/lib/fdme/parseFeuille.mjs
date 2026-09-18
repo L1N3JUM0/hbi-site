@@ -1,6 +1,7 @@
 import { extractRows, rowText, nearestItem } from "./pdfRows.mjs";
 import { stripBirthName, splitNomPrenom } from "./noms.mjs";
 import { detectEquipe, extraireNumeroEquipe, detecterLibelleCompetition, CLUB_CODE, CLUB_NAME_PATTERN } from "./equipeMatch.mjs";
+import { hashLicence } from "./licenceHash.mjs";
 
 /** Erreur levée quand une feuille ne correspond pas au format attendu --
  * l'appelant (scripts/import-fdme.mjs) l'attrape pour ignorer ce PDF avec un
@@ -258,6 +259,11 @@ function parsePlayerTable(rows, headerIndex, stopIndex) {
 			numero: Number(jerseyItem.str),
 			nom: parsed.nom,
 			prenom: parsed.prenom,
+			// Empreinte à sens unique du numéro de licence (jamais le numéro
+			// lui-même, voir licenceHash.mjs) -- clé stable de cumul de carrière
+			// d'une feuille à l'autre, y compris d'une catégorie/saison à
+			// l'autre, contrairement au numéro de maillot ou au nom (homonymes).
+			licenceHash: hashLicence(licenceItem.str),
 			buts: stats.buts,
 			sept_m: stats.sept_m,
 			tirs: stats.tirs,

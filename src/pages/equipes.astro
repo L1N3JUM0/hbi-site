@@ -144,9 +144,14 @@ function photosFor(team: CollectionEntry<"equipes">) {
 									)}
 									<ResultatsEquipe equipeSlug={t.data.slug} affichageStats={t.data.affichageStats} calendriers={t.data.calendriers} />
 									{slugsStats.has(t.data.slug) && (
-										<a class="stats-link" href={withBase(`/statistiques#equipe-${t.data.slug}`)}>
-											Statistiques de la saison →
-										</a>
+										<div class="stats-links">
+											<a class="stats-link" href={withBase(`/statistiques#equipe-${t.data.slug}`)}>
+												Statistiques de la saison →
+											</a>
+											<a class="stats-link" href={withBase(`/statistiques-carriere#equipe-${t.data.slug}`)}>
+												Statistiques carrière →
+											</a>
+										</div>
 									)}
 								</div>
 							);
@@ -238,9 +243,14 @@ function photosFor(team: CollectionEntry<"equipes">) {
 										<h3>{t.data.nom}</h3>
 										<ResultatsEquipe equipeSlug={t.data.slug} affichageStats={t.data.affichageStats} calendriers={t.data.calendriers} />
 										{slugsStats.has(t.data.slug) && (
-											<a class="stats-link" href={withBase(`/statistiques#equipe-${t.data.slug}`)}>
-												Statistiques de la saison →
-											</a>
+											<div class="stats-links">
+												<a class="stats-link" href={withBase(`/statistiques#equipe-${t.data.slug}`)}>
+													Statistiques de la saison →
+												</a>
+												<a class="stats-link" href={withBase(`/statistiques-carriere#equipe-${t.data.slug}`)}>
+													Statistiques carrière →
+												</a>
+											</div>
 										)}
 									</div>
 								))}
@@ -452,10 +462,15 @@ function photosFor(team: CollectionEntry<"equipes">) {
 		color: var(--color-crimson);
 	}
 	/* Volontairement discret (voir le commentaire sur slugsStats plus haut) :
-	 * pas un bouton, une simple ligne de texte en bas de carte. */
+	 * pas des boutons, deux simples lignes de texte en bas de carte. */
+	.stats-links {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		margin-top: 0.75rem;
+	}
 	.stats-link {
 		display: block;
-		margin-top: 0.75rem;
 		color: rgba(255, 255, 255, 0.45);
 		font-size: 0.75rem;
 		text-decoration: none;
