@@ -1,13 +1,33 @@
 {
 	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-feminines-32648/poule-192108/classements/",
-	"fetchedAt": "2026-09-18T08:41:00.573Z",
+	"fetchedAt": "2026-09-18T22:21:46.842Z",
 	"classement": [
+		{
+			"id": "10589848",
+			"ext_classementId": "59717960",
+			"pouleId": "239793",
+			"equipeId": "1791856",
+			"place": "1",
+			"point": "6",
+			"joue": "2",
+			"gagne": "2",
+			"nul": "0",
+			"perdu": "0",
+			"butPlus": "59",
+			"butMoins": "38",
+			"diff": "21",
+			"dernieresRencontres": "1;1",
+			"equipe_libelle": "BOLLENE HANDBALL CLUB 1",
+			"equipe_logoActif": "1",
+			"structure_logo": "2015-04-24-5122cd2a-de1c-48cc-a5a4-bd12530e8316.jpg",
+			"ext_structureId": "3585"
+		},
 		{
 			"id": "10589849",
 			"ext_classementId": "59717955",
 			"pouleId": "239793",
 			"equipeId": "1791857",
-			"place": "1",
+			"place": "2",
 			"point": "3",
 			"joue": "1",
 			"gagne": "1",
@@ -27,7 +47,7 @@
 			"ext_classementId": "59717962",
 			"pouleId": "239793",
 			"equipeId": "1791860",
-			"place": "2",
+			"place": "3",
 			"point": "3",
 			"joue": "1",
 			"gagne": "1",
@@ -41,26 +61,6 @@
 			"equipe_logoActif": "1",
 			"structure_logo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg",
 			"ext_structureId": "3577"
-		},
-		{
-			"id": "10589848",
-			"ext_classementId": "59717960",
-			"pouleId": "239793",
-			"equipeId": "1791856",
-			"place": "3",
-			"point": "3",
-			"joue": "1",
-			"gagne": "1",
-			"nul": "0",
-			"perdu": "0",
-			"butPlus": "26",
-			"butMoins": "17",
-			"diff": "9",
-			"dernieresRencontres": "1",
-			"equipe_libelle": "BOLLENE HANDBALL CLUB 1",
-			"equipe_logoActif": "1",
-			"structure_logo": "2015-04-24-5122cd2a-de1c-48cc-a5a4-bd12530e8316.jpg",
-			"ext_structureId": "3585"
 		},
 		{
 			"id": "10589847",
@@ -123,11 +123,31 @@
 			"ext_structureId": "3581"
 		},
 		{
+			"id": "10589853",
+			"ext_classementId": "59717961",
+			"pouleId": "239793",
+			"equipeId": "1791861",
+			"place": "7",
+			"point": "1",
+			"joue": "1",
+			"gagne": "0",
+			"nul": "0",
+			"perdu": "1",
+			"butPlus": "21",
+			"butMoins": "33",
+			"diff": "-12",
+			"dernieresRencontres": "-1",
+			"equipe_libelle": "BOLLENE HANDBALL CLUB 2",
+			"equipe_logoActif": "1",
+			"structure_logo": "2015-04-24-5122cd2a-de1c-48cc-a5a4-bd12530e8316.jpg",
+			"ext_structureId": "3585"
+		},
+		{
 			"id": "10589854",
 			"ext_classementId": "59717958",
 			"pouleId": "239793",
 			"equipeId": "1791862",
-			"place": "7",
+			"place": "8",
 			"point": "1",
 			"joue": "1",
 			"gagne": "0",
@@ -147,7 +167,7 @@
 			"ext_classementId": "59717959",
 			"pouleId": "239793",
 			"equipeId": "1791854",
-			"place": "8",
+			"place": "9",
 			"point": "0",
 			"joue": "0",
 			"gagne": "0",
@@ -167,7 +187,7 @@
 			"ext_classementId": "59717953",
 			"pouleId": "239793",
 			"equipeId": "1791858",
-			"place": "9",
+			"place": "10",
 			"point": "0",
 			"joue": "0",
 			"gagne": "0",
@@ -187,7 +207,7 @@
 			"ext_classementId": "59717956",
 			"pouleId": "239793",
 			"equipeId": "1791864",
-			"place": "10",
+			"place": "11",
 			"point": "0",
 			"joue": "1",
 			"gagne": "0",
@@ -201,26 +221,6 @@
 			"equipe_logoActif": "1",
 			"structure_logo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG",
 			"ext_structureId": "3579"
-		},
-		{
-			"id": "10589853",
-			"ext_classementId": "59717961",
-			"pouleId": "239793",
-			"equipeId": "1791861",
-			"place": "11",
-			"point": "0",
-			"joue": "0",
-			"gagne": "0",
-			"nul": "0",
-			"perdu": "0",
-			"butPlus": "0",
-			"butMoins": "0",
-			"diff": "0",
-			"dernieresRencontres": "",
-			"equipe_libelle": "BOLLENE HANDBALL CLUB 2",
-			"equipe_logoActif": "1",
-			"structure_logo": "2015-04-24-5122cd2a-de1c-48cc-a5a4-bd12530e8316.jpg",
-			"ext_structureId": "3585"
 		}
 	],
 	"statsJoueurs": [
@@ -314,8 +314,8 @@
 		},
 		{
 			"individuId": "315217",
-			"matchCount": "1",
-			"totalButs": "4",
+			"matchCount": "2",
+			"totalButs": "11",
 			"totalArrets": "0",
 			"nom": "PAGES",
 			"prenom": "LAURA",
@@ -347,8 +347,8 @@
 		},
 		{
 			"individuId": "326419",
-			"matchCount": "1",
-			"totalButs": "8",
+			"matchCount": "2",
+			"totalButs": "11",
 			"totalArrets": "0",
 			"nom": "MILLIOT",
 			"prenom": "OPHELIE",
@@ -358,9 +358,9 @@
 		},
 		{
 			"individuId": "388299",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "0",
-			"totalArrets": "23",
+			"totalArrets": "36",
 			"nom": "RUET",
 			"prenom": "FLORINE",
 			"showEquipeLogo": "1",
@@ -456,6 +456,17 @@
 			"structureLogo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG"
 		},
 		{
+			"individuId": "1372463",
+			"matchCount": "1",
+			"totalButs": "3",
+			"totalArrets": "0",
+			"nom": "LEBAS",
+			"prenom": "MANON",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "BOLLENE HANDBALL CLUB 1",
+			"structureLogo": "2015-04-24-5122cd2a-de1c-48cc-a5a4-bd12530e8316.jpg"
+		},
+		{
 			"individuId": "1379693",
 			"matchCount": "1",
 			"totalButs": "2",
@@ -479,8 +490,8 @@
 		},
 		{
 			"individuId": "1408777",
-			"matchCount": "1",
-			"totalButs": "4",
+			"matchCount": "2",
+			"totalButs": "9",
 			"totalArrets": "0",
 			"nom": "MARCILLAT",
 			"prenom": "VICTORIA",
@@ -490,8 +501,8 @@
 		},
 		{
 			"individuId": "1820029",
-			"matchCount": "1",
-			"totalButs": "3",
+			"matchCount": "2",
+			"totalButs": "11",
 			"totalArrets": "0",
 			"nom": "ALLAIS",
 			"prenom": "MAILYS",
@@ -512,13 +523,24 @@
 		},
 		{
 			"individuId": "1862547",
-			"matchCount": "1",
-			"totalButs": "1",
+			"matchCount": "2",
+			"totalButs": "9",
 			"totalArrets": "0",
 			"nom": "PERRAUD",
 			"prenom": "KILLIANE",
 			"showEquipeLogo": "1",
 			"equipeLibelle": "BOLLENE HANDBALL CLUB 1",
+			"structureLogo": "2015-04-24-5122cd2a-de1c-48cc-a5a4-bd12530e8316.jpg"
+		},
+		{
+			"individuId": "1862563",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "17",
+			"nom": "PERRAUD",
+			"prenom": "FIONA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "BOLLENE HANDBALL CLUB 2",
 			"structureLogo": "2015-04-24-5122cd2a-de1c-48cc-a5a4-bd12530e8316.jpg"
 		},
 		{
@@ -545,8 +567,8 @@
 		},
 		{
 			"individuId": "2519440",
-			"matchCount": "1",
-			"totalButs": "2",
+			"matchCount": "2",
+			"totalButs": "3",
 			"totalArrets": "0",
 			"nom": "BERNARD",
 			"prenom": "CELIA",
@@ -556,8 +578,8 @@
 		},
 		{
 			"individuId": "2531967",
-			"matchCount": "1",
-			"totalButs": "2",
+			"matchCount": "2",
+			"totalButs": "6",
 			"totalArrets": "0",
 			"nom": "BRINGER",
 			"prenom": "PERRYNE",
@@ -586,6 +608,17 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "OLYMPIQUE CLUB SORGUAIS",
 			"structureLogo": "2025-09-19-e78c2c9a-7f7d-402a-853b-5d174ddb9404.png"
+		},
+		{
+			"individuId": "2745682",
+			"matchCount": "1",
+			"totalButs": "4",
+			"totalArrets": "0",
+			"nom": "MAURICE",
+			"prenom": "JESSICA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "BOLLENE HANDBALL CLUB 1",
+			"structureLogo": "2015-04-24-5122cd2a-de1c-48cc-a5a4-bd12530e8316.jpg"
 		},
 		{
 			"individuId": "2788542",
@@ -619,6 +652,17 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "OLYMPIQUE CLUB SORGUAIS",
 			"structureLogo": "2025-09-19-e78c2c9a-7f7d-402a-853b-5d174ddb9404.png"
+		},
+		{
+			"individuId": "2853070",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "10",
+			"nom": "MILLET",
+			"prenom": "PRISCILLIA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "BOLLENE HANDBALL CLUB 1",
+			"structureLogo": "2015-04-24-5122cd2a-de1c-48cc-a5a4-bd12530e8316.jpg"
 		},
 		{
 			"individuId": "2927622",
@@ -677,8 +721,8 @@
 		},
 		{
 			"individuId": "3199247",
-			"matchCount": "1",
-			"totalButs": "2",
+			"matchCount": "2",
+			"totalButs": "3",
 			"totalArrets": "0",
 			"nom": "BRINGER",
 			"prenom": "LARA",
@@ -786,6 +830,17 @@
 			"structureLogo": "2022-10-09-786141e3-0823-48c5-8b45-dddd8e700f13.jpeg"
 		},
 		{
+			"individuId": "3406818",
+			"matchCount": "1",
+			"totalButs": "3",
+			"totalArrets": "0",
+			"nom": "PORTAL",
+			"prenom": "EVA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "BOLLENE HANDBALL CLUB 2",
+			"structureLogo": "2015-04-24-5122cd2a-de1c-48cc-a5a4-bd12530e8316.jpg"
+		},
+		{
 			"individuId": "3426286",
 			"matchCount": "1",
 			"totalButs": "8",
@@ -841,6 +896,17 @@
 			"structureLogo": "2026-08-01-1307c0ce-4a94-4e91-ac41-15b6c8e3282e.jpg"
 		},
 		{
+			"individuId": "3670238",
+			"matchCount": "1",
+			"totalButs": "6",
+			"totalArrets": "0",
+			"nom": "SAROUTI",
+			"prenom": "RANYA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "BOLLENE HANDBALL CLUB 2",
+			"structureLogo": "2015-04-24-5122cd2a-de1c-48cc-a5a4-bd12530e8316.jpg"
+		},
+		{
 			"individuId": "3723455",
 			"matchCount": "1",
 			"totalButs": "0",
@@ -872,6 +938,17 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "CO CHATEAURENARDAIS",
 			"structureLogo": "2022-10-09-786141e3-0823-48c5-8b45-dddd8e700f13.jpeg"
+		},
+		{
+			"individuId": "3762120",
+			"matchCount": "1",
+			"totalButs": "1",
+			"totalArrets": "0",
+			"nom": "VANDEOL",
+			"prenom": "LUNA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "BOLLENE HANDBALL CLUB 2",
+			"structureLogo": "2015-04-24-5122cd2a-de1c-48cc-a5a4-bd12530e8316.jpg"
 		},
 		{
 			"individuId": "3937936",
