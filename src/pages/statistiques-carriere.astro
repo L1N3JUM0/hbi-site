@@ -183,12 +183,7 @@ const formatRatio = (r: number | null) => (r == null ? "—" : r.toFixed(1));
 																		? { tabindex: "0", role: "button", "aria-expanded": "false", "aria-controls": detailId, "data-has-detail": "true" }
 																		: {})}
 																>
-																	<td>
-																		{j.label}
-																		{j.parcours.length > 1 && (
-																			<div class="parcours">{j.parcours.map((e) => `${e.saison} ${e.equipeNom}`).join(" → ")}</div>
-																		)}
-																	</td>
+																	<td>{j.label}</td>
 																	{carriere.plusieursEquipes && <td>{j.groupeLibelle}</td>}
 																	<td>{j.matchsJoues}</td>
 																	<td>{j.buts}</td>
@@ -203,6 +198,9 @@ const formatRatio = (r: number | null) => (r == null ? "—" : r.toFixed(1));
 																{aDetail && (
 																	<tr class="detail-row" id={detailId} hidden>
 																		<td colspan={carriere.plusieursEquipes ? 11 : 10}>
+																			{j.parcours.length > 1 && (
+																				<div class="parcours">{j.parcours.map((e) => `${e.saison} ${e.equipeNom}`).join(" → ")}</div>
+																			)}
 																			<table class="detail">
 																				<caption>Détail saison par saison de {j.label}</caption>
 																				<thead>
@@ -314,7 +312,11 @@ const formatRatio = (r: number | null) => (r == null ? "—" : r.toFixed(1));
 					bouton.addEventListener("click", () => {
 						const key = bouton.dataset.key!;
 						const type = bouton.dataset.type ?? "text";
-						const sens: 1 | -1 = triActuel?.key === key && triActuel.sens === 1 ? -1 : 1;
+						// Un nouveau tri démarre décroissant pour un chiffre (la meilleure
+						// valeur en tête, ce qu'on veut voir en premier) et croissant pour
+						// du texte (ordre alphabétique) ; un second clic sur la même colonne
+						// bascule simplement le sens en cours, quel qu'il soit.
+						const sens: 1 | -1 = triActuel?.key === key ? (triActuel.sens === 1 ? -1 : 1) : type === "num" ? -1 : 1;
 						triActuel = { key, sens };
 
 						const groupes = ligneEtDetail(tbody);
@@ -494,7 +496,7 @@ const formatRatio = (r: number | null) => (r == null ? "—" : r.toFixed(1));
 		color: rgba(255, 255, 255, 0.5);
 		font-size: 0.72rem;
 		white-space: normal;
-		margin-top: 0.15rem;
+		margin: 0 0 0.5rem;
 	}
 	tr.joueur-row[data-has-detail] {
 		cursor: pointer;
