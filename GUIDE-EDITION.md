@@ -196,6 +196,66 @@ l'agenda, sans erreur ni bloc vide sur le site. Revenez compléter le champ
 dès que la fédération publie le nouveau calendrier (voir "Changement de
 saison" ci-dessous).
 
+## Ajouter un événement du club (loto, assemblée générale...)
+
+Un événement du club s'affiche sur `/agenda`, dans la même liste que les
+matchs, à sa place chronologique. Il se reconnaît d'un coup d'œil : carte
+**blanche** avec le badge « Événement du club » (les matchs sont sur fond
+bleu ou marine).
+
+1. Cliquez sur **Événements du club**, puis sur **Nouvel événement**.
+2. Renseignez le **Titre** et la **Date et heure** (heure de France).
+3. Facultatif : **Lieu**, **Description**, et **Lien** (par exemple le lien
+   HelloAsso pour réserver un loto — il s'affiche sous la forme d'un bouton
+   « Plus d'infos »).
+4. **Enregistrer**. L'événement apparaît sur `/agenda` dans les minutes qui
+   suivent.
+
+Inutile de supprimer un événement une fois passé : il quitte l'agenda tout
+seul au premier rebuild après son heure de début.
+
+## Signaler un match reporté
+
+Les matchs de `/agenda` viennent du calendrier de la fédération : on ne les
+modifie pas directement. La rubrique **Matchs reportés** sert à *décrire* le
+match concerné, pour que le site le retrouve et le marque « Reporté ».
+
+1. Repérez le match sur `/agenda` : notez l'équipe, l'adversaire, la date et
+   si le HBI recevait.
+2. Cliquez sur **Matchs reportés**, puis **Nouveau match reporté**.
+3. Renseignez **Équipe**, **Adversaire** (recopié tel qu'affiché sur
+   `/agenda`), **Le HBI recevait** et **Date d'origine du match**.
+   Le **Libellé** ne sert que pour les Seniors masculins (1 ou 2).
+4. Laissez **Nouvelle date et heure** vide si elle n'est pas connue : la carte
+   indique « Nouvelle date à venir ». Sinon, renseignez-la sans attendre la
+   fédération.
+5. **Enregistrer**.
+
+Sur `/agenda`, le match porte un badge « Reporté » et sa date d'origine
+apparaît barrée. Il reste en haut de la liste tant qu'il n'est pas
+replanifié — même une fois la date d'origine passée. Il apparaît aussi, avec
+la mention « Reporté », dans la fiche de l'équipe sur `/equipes`, et sur la
+page d'accueil (bandeau « Prochaine journée ») seulement s'il a une nouvelle
+date proche.
+
+**Quand la fédération publie la nouvelle date**, il n'y a rien à faire : le
+site détecte que le match est réapparu dans son calendrier à une autre date,
+ignore l'entrée devenue inutile et affiche le match normalement. Vous pouvez
+supprimer l'entrée pour ranger la liste, mais ce n'est jamais nécessaire.
+Une entrée sans nouvelle date est aussi ignorée automatiquement à la fin de
+la saison.
+
+**Le match apparaît deux fois sur `/agenda` ?** Cela veut dire que le site
+n'a pas retrouvé le match dans le calendrier de la fédération — presque
+toujours une faute dans **Adversaire**, ou un **Le HBI recevait** à l'envers.
+Corrigez l'entrée : le doublon disparaît. (Le site préfère afficher un doublon
+visible plutôt que de faire disparaître un match par erreur.)
+
+**Limites.** Le derby entre deux équipes du club n'est pas pris en charge.
+Et les personnes abonnées directement au calendrier de la fédération (boutons
+« S'abonner ») ne verront pas la mention « Reporté » : ce calendrier n'est pas
+le nôtre.
+
 ## Ajouter le résultat d'un match
 
 Après un match, la feuille de match officielle (score, chronologie,
@@ -339,7 +399,7 @@ reste propre entre-temps (voir "Pendant l'été" plus bas).
 ### Pendant l'été (aucun match, calendriers pas encore publiés)
 
 Le site n'a besoin d'aucune intervention pendant la trêve : sans match à
-venir, `/agenda` affiche simplement « Aucun match à venir pour le moment »
+venir, `/agenda` affiche simplement « Aucun match ni événement à venir pour le moment »
 et le bandeau de la page d'accueil (« Prochaine journée ») ne s'affiche pas
 du tout. Aucun message d'erreur, aucun bloc vide disgracieux. Vous pouvez
 donc traiter les points ci-dessus à votre rythme au fil de l'été et de

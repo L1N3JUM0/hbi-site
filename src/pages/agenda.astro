@@ -7,8 +7,17 @@ import AjouterAgendaButton from "../components/AjouterAgendaButton.astro";
 import Favicon from "../components/Favicon.astro";
 import { withBase } from "../utils/links";
 import { getAgendaMatches, getAgendaTeams, getCompetitionLinks, formatMatchDate, formatMatchTime } from "../lib/agenda";
+import { getUpcomingEvenements } from "../lib/evenements";
 
-const matches = await getAgendaMatches();
+// Matchs (flux FFHandball) et événements du club (CMS) dans UNE seule liste
+// chronologique : la personne qui consulte l'agenda cherche "ce qui vient",
+// pas "quel type de chose vient" -- deux blocs séparés l'obligeraient à
+// faire elle-même la fusion dans sa tête.
+const [matches, evenements] = await Promise.all([getAgendaMatches(), getUpcomingEvenements()]);
+const entries = [
+	...matches.map((match) => ({ kind: "match" as const, start: match.start, match })),
+	...evenements.map((evenement) => ({ kind: "evenement" as const, start: evenement.start, evenement })),
+].sort((a, b) => a.start.getTime() - b.start.getTime());
 const competitions = await getCompetitionLinks();
 const agendaTeams = await getAgendaTeams();
 ---
@@ -22,15 +31,76 @@ const agendaTeams = await getAgendaTeams();
 		<title>Agenda — Handball Islois</title>
 		<meta
 			name="description"
-			content="Tous les prochains matchs du Handball Islois, toutes équipes confondues : dates, horaires, lieux, et liens pour ajouter le calendrier officiel FFHandball à votre agenda."
+			content="Tous les prochains matchs et événements du Handball Islois, toutes équipes confondues : dates, horaires, lieux, et liens pour ajouter le calendrier officiel FFHandball à votre agenda."
 		/>
 	</head>
 	<body>
 		<Header />
 		<PageBanner
 			title="Agenda"
-			subtitle="Tous les prochains matchs du HBI, toutes équipes confondues, à partir des calendriers officiels FFHandball."
+			subtitle="Tous les prochains matchs et événements du HBI, toutes équipes confondues, à partir des calendriers officiels FFHandball."
 		/>
+
+		<section class="matches">
+			<div class="wrap">
+				<h2>À venir</h2>
+				{entries.length === 0 && <p class="empty">Aucun match ni événement à venir pour le moment.</p>}
+				<ul class="match-list">
+					{
+						entries.map((entry) =>
+							entry.kind === "evenement" ? (
+								<li class="match-card event-card">
+									<div class="match-top">
+										<span class="event-title">{entry.evenement.titre}</span>
+										<span class="badge badge--event">Événement du club</span>
+									</div>
+									<p class="event-meta">
+										{formatMatchDate(entry.start)} à {formatMatchTime(entry.start)}
+									</p>
+									{entry.evenement.lieu && <p class="event-meta">{entry.evenement.lieu}</p>}
+									{entry.evenement.description && <p class="event-desc">{entry.evenement.description}</p>}
+									{entry.evenement.lien && (
+										<a class="event-link" href={entry.evenement.lien} target="_blank" rel="noopener noreferrer">
+											Plus d&rsquo;infos →
+										</a>
+									)}
+								</li>
+							) : (
+								<li class={`match-card ${entry.match.isHome ? "match-card--home" : ""}`}>
+									<div class="match-top">
+										<span class="team">{entry.match.teamLabel}</span>
+										<span class="badges">
+											{entry.match.reporte && <span class="badge badge--reporte">Reporté</span>}
+											<span class={`badge ${entry.match.isHome ? "badge--home" : "badge--away"}`}>
+												{entry.match.isHome ? "Domicile" : "Extérieur"}
+											</span>
+										</span>
+									</div>
+									<p class="opponent">{entry.match.isDerby ? "Derby interne au club" : `vs ${entry.match.opponent}`}</p>
+									{entry.match.reporte ? (
+										<>
+											<p class="meta meta--reporte">
+												{entry.match.reporte.nouvelleDate
+													? `Nouvelle date : ${formatMatchDate(entry.match.reporte.nouvelleDate).toLowerCase()} à ${formatMatchTime(entry.match.reporte.nouvelleDate)}`
+													: "Nouvelle date à venir"}
+											</p>
+											<p class="meta meta--origine">Initialement prévu le {formatMatchDate(entry.match.reporte.dateOrigine).toLowerCase()}</p>
+										</>
+									) : (
+										<>
+											<p class="meta">
+												{formatMatchDate(entry.start)} à {formatMatchTime(entry.start)}
+											</p>
+											<p class="meta meta--location">{entry.match.location}</p>
+										</>
+									)}
+								</li>
+							),
+						)
+					}
+				</ul>
+			</div>
+		</section>
 
 		{
 			agendaTeams.length > 0 && (
@@ -51,32 +121,6 @@ const agendaTeams = await getAgendaTeams();
 				</section>
 			)
 		}
-
-		<section class="matches">
-			<div class="wrap">
-				<h2>Prochains matchs</h2>
-				{matches.length === 0 && <p class="empty">Aucun match à venir pour le moment.</p>}
-				<ul class="match-list">
-					{
-						matches.map((m) => (
-							<li class={`match-card ${m.isHome ? "match-card--home" : ""}`}>
-								<div class="match-top">
-									<span class="team">{m.teamLabel}</span>
-									<span class={`badge ${m.isHome ? "badge--home" : "badge--away"}`}>
-										{m.isHome ? "Domicile" : "Extérieur"}
-									</span>
-								</div>
-								<p class="opponent">{m.isDerby ? "Derby interne au club" : `vs ${m.opponent}`}</p>
-								<p class="meta">
-									{formatMatchDate(m.start)} à {formatMatchTime(m.start)}
-								</p>
-								<p class="meta meta--location">{m.location}</p>
-							</li>
-						))
-					}
-				</ul>
-			</div>
-		</section>
 
 		{
 			competitions.length > 0 && (
@@ -194,13 +238,75 @@ const agendaTeams = await getAgendaTeams();
 		padding: 0.25rem 0.6rem;
 		border-radius: 999px;
 	}
+	.badges {
+		display: inline-flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+	}
 	.badge--home {
 		background: var(--color-crimson);
 		color: var(--color-white);
 	}
+	/* Blanc sur fond bleu/marine : le seul badge "plein" clair de la liste,
+	   donc visible d'un coup d'œil, sans entrer en concurrence avec le crimson
+	   du domicile (les deux badges peuvent se côtoyer sur une même carte). */
+	.badge--reporte {
+		background: var(--color-white);
+		color: var(--color-crimson);
+	}
+	.meta--reporte {
+		color: var(--color-white);
+		font-weight: 700;
+	}
+	.meta--origine {
+		text-decoration: line-through;
+	}
 	.badge--away {
 		background: rgba(255, 255, 255, 0.15);
 		color: rgba(255, 255, 255, 0.85);
+	}
+	/* Événement du club : carte BLANCHE, seule de la liste à ne pas être sur
+	   fond bleu/marine -- se repère au premier coup d'œil, sans nouvelle
+	   couleur. Le crimson reste réservé aux matchs à domicile, le bleu de
+	   marque sert ici de liseré et le marine de texte/badge (contraste
+	   largement > AA sur blanc). */
+	.event-card {
+		background: var(--color-white);
+		border-left-color: var(--color-blue);
+	}
+	.event-title {
+		color: var(--color-navy-deep);
+		font-weight: 800;
+		font-size: 1.05rem;
+	}
+	.badge--event {
+		background: var(--color-navy);
+		color: var(--color-white);
+	}
+	.event-meta {
+		color: var(--color-navy);
+		font-size: 0.9rem;
+		margin: 0;
+	}
+	.event-desc {
+		color: var(--color-navy-deep);
+		font-size: 1rem;
+		line-height: 1.5;
+		margin: 0.6rem 0 0;
+		white-space: pre-line;
+	}
+	.event-link {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+		margin-top: 0.4rem;
+		color: var(--color-navy);
+		font-weight: 800;
+		text-decoration: none;
+		border-bottom: 2px solid var(--color-crimson);
+	}
+	.event-link:hover {
+		color: var(--color-crimson);
 	}
 	.opponent {
 		color: var(--color-white);
@@ -213,8 +319,11 @@ const agendaTeams = await getAgendaTeams();
 		margin: 0;
 	}
 
+	/* Suit directement le bloc "S'abonner" (même fond marine) : un filet les
+	   sépare pour qu'ils ne se lisent pas comme une seule section. */
 	.classements {
 		background: var(--color-navy);
+		border-top: 1px solid rgba(255, 255, 255, 0.15);
 		padding: 3rem 1.5rem 3.5rem;
 	}
 	.classement-list {

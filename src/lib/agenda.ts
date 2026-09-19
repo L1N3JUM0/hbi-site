@@ -1,12 +1,17 @@
 import ical from "node-ical";
 import type { VEvent } from "node-ical";
 import { getCollection } from "astro:content";
+import { appliquerReports, type MatchReporte } from "./matchsReportes";
 
 export interface AgendaTeamConfig {
 	/** Nom affiché sur le site (page /equipes, page /agenda) : le nom de
 	 * l'équipe, complété par son "libelle" (ex. "1"/"2") si plusieurs
 	 * équipes du club partagent la même poule. */
 	nomAffiche: string;
+	/** Le "libelle" du calendrier tel que saisi dans le CMS (ex. "1"/"2"),
+	 * absent pour une équipe seule dans sa catégorie. Sert à retrouver l'équipe
+	 * visée par une annotation "match reporté". */
+	libelle?: string;
 	/** `slug` de l'entrée correspondante dans la collection "equipes". */
 	equipeSlug: string;
 	/** Flux iCal officiel FFHandball de la compétition (peut être partagé par
@@ -32,6 +37,12 @@ export interface AgendaMatch {
 	opponent: string | null;
 	isDerby: boolean;
 	isHome: boolean;
+	/** Libellé du calendrier de l'équipe HBI concernée (voir
+	 * AgendaTeamConfig.libelle). Absent pour un derby interne. */
+	equipeLibelle?: string;
+	/** Date de début. Pour un match reporté : la nouvelle date si elle est
+	 * connue, sinon la date d'origine (sert uniquement à le classer dans la
+	 * liste -- ne pas l'afficher comme une date de match, voir `reporte`). */
 	start: Date;
 	location: string;
 	matchUrl?: string;
@@ -42,6 +53,10 @@ export interface AgendaMatch {
 	 * l'événement iCal quand le flux le fournit (ex: "Journée 3"). Sert à
 	 * regrouper de façon fiable les matchs d'une même journée. */
 	journee: number | null;
+	/** Présent uniquement si ce match est signalé comme reporté dans le CMS
+	 * (collection "matchsReportes", voir src/lib/matchsReportes.ts). Sans
+	 * `nouvelleDate`, la fédération n'a pas encore replanifié le match. */
+	reporte?: { dateOrigine: Date; nouvelleDate?: Date };
 }
 
 export interface Competition {
@@ -162,6 +177,7 @@ export async function getAgendaTeams(): Promise<AgendaTeamConfig[]> {
 				for (const cal of equipe.data.calendriers) {
 					teams.push({
 						nomAffiche: cal.libelle ? `${equipe.data.nom} ${cal.libelle}`.trim() : equipe.data.nom,
+						libelle: cal.libelle,
 						equipeSlug: equipe.data.slug,
 						urlIcs: cal.url,
 						matchLabel: cal.repere,
@@ -186,8 +202,9 @@ async function groupTeamsByFeed(): Promise<Map<string, AgendaTeamConfig[]>> {
 	return byUrl;
 }
 
-export async function getAgendaMatches(): Promise<AgendaMatch[]> {
-	const now = new Date();
+/** Les matchs à venir tels que publiés par la fédération, SANS les
+ * annotations "match reporté" du CMS -- voir getAgendaMatches(). */
+async function getMatchsDuFlux(now: Date): Promise<AgendaMatch[]> {
 	const matches: AgendaMatch[] = [];
 
 	for (const [url, teams] of await groupTeamsByFeed()) {
@@ -240,6 +257,7 @@ export async function getAgendaMatches(): Promise<AgendaMatch[]> {
 					...base,
 					equipeSlugs: [matchedA.equipeSlug],
 					teamLabel: matchedA.nomAffiche,
+					equipeLibelle: matchedA.libelle,
 					opponent: sideB,
 					isDerby: false,
 					isHome: true,
@@ -249,6 +267,7 @@ export async function getAgendaMatches(): Promise<AgendaMatch[]> {
 					...base,
 					equipeSlugs: [matchedB.equipeSlug],
 					teamLabel: matchedB.nomAffiche,
+					equipeLibelle: matchedB.libelle,
 					opponent: sideA,
 					isDerby: false,
 					isHome: false,
@@ -262,6 +281,44 @@ export async function getAgendaMatches(): Promise<AgendaMatch[]> {
 
 	matches.sort((a, b) => a.start.getTime() - b.start.getTime());
 	return matches;
+}
+
+/** Chaque avertissement n'est écrit qu'une fois par build, même si
+ * getAgendaMatches() est appelée par plusieurs pages. */
+const avertissementsDejaEcrits = new Set<string>();
+function avertirUneFois(message: string) {
+	if (avertissementsDejaEcrits.has(message)) return;
+	avertissementsDejaEcrits.add(message);
+	console.warn(`[agenda] ${message}`);
+}
+
+async function getMatchsReportes(): Promise<MatchReporte[]> {
+	const entrees = await getCollection("matchsReportes");
+	return entrees.map((e) => ({
+		id: e.id,
+		equipeSlug: e.data.equipeSlug,
+		equipeLibelle: e.data.equipeLibelle,
+		adversaire: e.data.adversaire,
+		domicile: e.data.domicile,
+		dateOrigine: e.data.dateOrigine,
+		nouvelleDate: e.data.nouvelleDate,
+	}));
+}
+
+/** Tous les matchs à venir du club : ceux du flux fédéral, avec les matchs
+ * signalés comme reportés dans le CMS superposés (voir
+ * src/lib/matchsReportes.ts pour la logique de correspondance). Un match
+ * reporté sans nouvelle date reste dans la liste même une fois sa date
+ * d'origine passée -- il ne disparaît que quand il est replanifié ou que sa
+ * saison se termine. */
+export async function getAgendaMatches(): Promise<AgendaMatch[]> {
+	const now = new Date();
+	const [matchsFlux, reports, equipes] = await Promise.all([
+		getMatchsDuFlux(now),
+		getMatchsReportes(),
+		getAgendaTeams(),
+	]);
+	return appliquerReports(matchsFlux, reports, equipes, now, avertirUneFois);
 }
 
 /** Tous les matchs de la prochaine journée de championnat, toutes équipes et
@@ -281,7 +338,15 @@ export async function getAgendaMatches(): Promise<AgendaMatch[]> {
  * chaque match affiché correspond bien à la prochaine échéance de son
  * équipe. */
 export async function getNextMatchday(): Promise<AgendaMatch[]> {
-	const matches = await getAgendaMatches();
+	const all = await getAgendaMatches();
+	// Les matchs reportés ne servent jamais à DÉTERMINER la prochaine journée :
+	// leur date (nouvelle ou d'origine) n'a rien à voir avec le calendrier de
+	// la poule, ils décaleraient toute la fenêtre. Ils sont réintégrés plus bas
+	// s'ils ont une nouvelle date qui tombe avant la fin de cette journée ;
+	// sans nouvelle date, ils ne sont jamais affichés ici (le match ne se joue
+	// pas ce week-end-là) -- ils restent visibles sur /agenda.
+	const matches = all.filter((m) => !m.reporte);
+	const reportes = all.filter((m) => m.reporte?.nouvelleDate);
 
 	const byCompetition = new Map<string, AgendaMatch[]>();
 	for (const match of matches) {
@@ -295,13 +360,18 @@ export async function getNextMatchday(): Promise<AgendaMatch[]> {
 		const next = competitionMatches[0];
 		if (!next) continue;
 
+		let groupe: AgendaMatch[];
 		if (next.journee != null) {
-			result.push(...competitionMatches.filter((m) => m.journee === next.journee));
+			groupe = competitionMatches.filter((m) => m.journee === next.journee);
 		} else {
 			const windowMs = FALLBACK_MATCHDAY_WINDOW_DAYS * 24 * 60 * 60 * 1000;
 			const cutoff = next.start.getTime() + windowMs;
-			result.push(...competitionMatches.filter((m) => m.start.getTime() <= cutoff));
+			groupe = competitionMatches.filter((m) => m.start.getTime() <= cutoff);
 		}
+		result.push(...groupe);
+
+		const finDeJournee = Math.max(...groupe.map((m) => m.start.getTime()));
+		result.push(...reportes.filter((m) => m.icsUrl === next.icsUrl && m.start.getTime() <= finDeJournee));
 	}
 
 	result.sort((a, b) => a.start.getTime() - b.start.getTime());
@@ -344,6 +414,15 @@ export async function getCompetitionLinks(): Promise<Competition[]> {
 	}
 
 	return competitions;
+}
+
+/** "Samedi 26 septembre à 20:30" -- ou, pour un match reporté, "Reporté au
+ * samedi 3 octobre à 18:00" / "Reporté, nouvelle date à venir". */
+export function formatMatchQuand(match: AgendaMatch): string {
+	if (!match.reporte) return `${formatMatchDate(match.start)} à ${formatMatchTime(match.start)}`;
+	const { nouvelleDate } = match.reporte;
+	if (!nouvelleDate) return "Reporté, nouvelle date à venir";
+	return `Reporté au ${formatMatchDate(nouvelleDate).toLowerCase()} à ${formatMatchTime(nouvelleDate)}`;
 }
 
 export function formatMatchDate(date: Date): string {

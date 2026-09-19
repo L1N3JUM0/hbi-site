@@ -1,6 +1,7 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
 import { saisonPour } from "./lib/saison";
+import { lireDateParis } from "./lib/dateParis";
 
 /**
  * Corrige un chemin d'image "nu" (ex. `src/assets/x.png`) que Sveltia CMS
@@ -66,6 +67,15 @@ function champFacultatif<T extends z.ZodTypeAny>(schema: T) {
  * d'une équipe, vide à tort, doit redevenir "active", pas disparaître. */
 function champAvecDefaut<T extends z.ZodTypeAny>(schema: T, defaut: z.infer<T>) {
 	return z.preprocess(videVersAbsent, schema.default(defaut).catch(defaut));
+}
+
+/** Date/heure saisie depuis le CMS : voir lireDateParis() -- une heure sans
+ * fuseau est lue comme une heure de Paris, pas du fuseau de la machine qui
+ * construit le site. Une valeur illisible fait échouer le build de CETTE
+ * entrée (message clair) plutôt que de s'afficher à une mauvaise date en
+ * silence. */
+function dateParis(message: string) {
+	return z.preprocess((valeur) => lireDateParis(valeur) ?? valeur, z.date({ error: message }));
 }
 
 /** Coordonnée (en % de la largeur ou de la hauteur de la photo) du point à
@@ -348,6 +358,57 @@ const histoireClub = defineCollection({
 		}),
 });
 
+/**
+ * Un événement du club (loto, assemblée générale, tournoi...), affiché sur
+ * /agenda dans la même liste chronologique que les matchs mais avec un
+ * habillage distinct. Un fichier par événement, comme les autres
+ * collections. Volontairement minimaliste : seuls le titre et la date sont
+ * obligatoires.
+ */
+const evenements = defineCollection({
+	loader: glob({ pattern: "*.md", base: "./src/content/evenements" }),
+	schema: z.object({
+		titre: z.string(),
+		/** Instant de début. */
+		date: dateParis("La date de l'événement est illisible."),
+		lieu: champFacultatif(z.string()),
+		description: champFacultatif(z.string()),
+		/** Lien externe (ex. inscription HelloAsso pour un loto). */
+		lien: champFacultatif(z.string().url()),
+	}),
+});
+
+/**
+ * Une annotation "match reporté", superposée à un match du flux iCal de la
+ * fédération. Les matchs de /agenda ne sont pas des fichiers éditables (ils
+ * sont recalculés à chaque build depuis le flux) : cette collection décrit
+ * donc le match à reporter (équipe + adversaire + camp + date d'origine)
+ * plutôt que de le désigner par un identifiant. Toute la logique de
+ * correspondance et d'obsolescence est dans src/lib/matchsReportes.ts.
+ */
+const matchsReportes = defineCollection({
+	loader: glob({ pattern: "*.md", base: "./src/content/matchs-reportes" }),
+	schema: z.object({
+		/** `slug` de la collection "equipes". */
+		equipeSlug: z.string(),
+		/** Même valeur que le "libellé" du calendrier de l'équipe (ex. "1"/"2"
+		 * pour les Seniors masculins) : distingue deux équipes du club dans la
+		 * même catégorie. Vide dans le cas courant d'une équipe seule. */
+		equipeLibelle: champFacultatif(z.string()),
+		adversaire: z.string(),
+		/** true si le HBI recevait. Aller et retour contre un même adversaire
+		 * ont des camps inverses : c'est ce qui empêche le match retour, déjà
+		 * présent dans le flux, de passer pour le match reporté qui vient
+		 * d'être replanifié. */
+		domicile: z.boolean(),
+		/** Jour où le match était prévu à l'origine (l'heure n'a pas
+		 * d'importance : le match du flux est retrouvé par son jour). */
+		dateOrigine: dateParis("La date d'origine du match reporté est illisible."),
+		/** Vide tant que la fédération n'a pas replanifié le match. */
+		nouvelleDate: champFacultatif(dateParis("La nouvelle date du match est illisible.")),
+	}),
+});
+
 /** Un point de la chronologie d'un match : le score cumulé au moment de
  * l'événement, pour tracer le graphique d'évolution du score. `mi_temps` et
  * `fin_match` sont des points de repère recalés sur le score officiel
@@ -555,6 +616,8 @@ export const collections = {
 	equipes,
 	articles,
 	partenaires,
+	evenements,
+	matchsReportes,
 	photosAccueil,
 	photosHero,
 	leClub,

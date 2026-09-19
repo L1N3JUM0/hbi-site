@@ -435,6 +435,105 @@ collections:
         widget: "markdown"
         hint: "Le texte de l'article. Vous pouvez aussi insérer des photos directement dans le texte avec le bouton image de la barre d'outils."
 
+  - name: "evenements"
+    label: "Événements du club"
+    label_singular: "Événement"
+    description: "Les rendez-vous du club (loto, assemblée générale, tournoi...) affichés sur la page /agenda, mêlés aux matchs. Un événement disparaît tout seul de l'agenda une fois passé : pas besoin de le supprimer."
+    folder: "src/content/evenements"
+    create: true
+    delete: true
+    extension: "md"
+    format: "frontmatter"
+    identifier_field: "titre"
+    summary: "{{date}} — {{titre}}"
+    # Tri par date décroissante dans la liste du CMS : le prochain événement
+    # à préparer est en haut, les anciens s'éloignent vers le bas.
+    sortable_fields:
+      fields: ["date", "titre"]
+      default:
+        field: "date"
+        direction: "Descending"
+    fields:
+      - label: "Titre"
+        name: "titre"
+        widget: "string"
+        hint: "Exemple : Loto du HBI, Assemblée générale."
+
+      - label: "Date et heure"
+        name: "date"
+        widget: "datetime"
+        hint: "Le jour et l'heure de début, en heure de France."
+
+      - label: "Lieu"
+        name: "lieu"
+        widget: "string"
+        required: false
+        hint: "Optionnel. Exemple : Salle des fêtes, L'Isle-sur-la-Sorgue."
+
+      - label: "Description"
+        name: "description"
+        widget: "text"
+        required: false
+        hint: "Optionnelle. Une ou deux phrases pour donner envie ou préciser l'essentiel."
+
+      - label: "Lien"
+        name: "lien"
+        widget: "string"
+        required: false
+        pattern: ["^https?://.+", "L'adresse doit commencer par http:// ou https://"]
+        hint: "Optionnel. Affiché sous la forme d'un bouton « Plus d'infos ». Utile par exemple pour un lien HelloAsso (réservation d'un loto)."
+
+  - name: "matchsReportes"
+    label: "Matchs reportés"
+    label_singular: "Match reporté"
+    description: "Signalez ici un match reporté : il s'affiche sur /agenda avec la mention « Reporté ». Les matchs de l'agenda viennent du calendrier de la fédération et ne se modifient pas directement : cette rubrique décrit le match concerné pour que le site le retrouve. Quand la fédération publie la nouvelle date, l'entrée devient inutile toute seule (elle est ignorée automatiquement) : vous pouvez la supprimer, mais rien ne casse si vous l'oubliez. Voir GUIDE-EDITION.md."
+    folder: "src/content/matchs-reportes"
+    create: true
+    delete: true
+    extension: "md"
+    format: "frontmatter"
+    slug: "{{equipeSlug}}-{{adversaire}}-{{dateOrigine}}"
+    summary: "{{equipeSlug}} vs {{adversaire}} — {{dateOrigine}}"
+    fields:
+      - label: "Équipe"
+        name: "equipeSlug"
+        widget: "relation"
+        collection: "equipes"
+        search_fields: ["nom"]
+        value_field: "slug"
+        display_fields: ["nom"]
+
+      - label: "Libellé de l'équipe (si plusieurs équipes du club dans cette catégorie)"
+        name: "equipeLibelle"
+        widget: "string"
+        required: false
+        hint: "Uniquement si l'équipe a plusieurs calendriers : indiquez le même libellé que dans sa fiche « Équipes » (ex. 1 ou 2 pour les Seniors masculins). Laissez vide pour toute autre équipe."
+
+      - label: "Adversaire"
+        name: "adversaire"
+        widget: "string"
+        hint: "Recopiez le nom tel qu'il s'affiche sur /agenda (les majuscules et les accents n'ont pas d'importance ; un morceau du nom suffit, ex. « Carpentras »). Une faute d'orthographe empêcherait le site de retrouver le match : il afficherait alors le match deux fois."
+
+      - label: "Le HBI recevait"
+        name: "domicile"
+        widget: "boolean"
+        default: true
+        hint: "Cochez si le match était à domicile (au COSEC Émile Avy), décochez s'il était à l'extérieur. Indispensable : c'est ce qui distingue ce match de celui contre le même adversaire au match retour."
+
+      - label: "Date d'origine du match"
+        name: "dateOrigine"
+        widget: "datetime"
+        format: "YYYY-MM-DD"
+        date_format: "DD/MM/YYYY"
+        time_format: false
+        hint: "Le jour où le match était prévu à l'origine, tel qu'affiché sur /agenda."
+
+      - label: "Nouvelle date et heure"
+        name: "nouvelleDate"
+        widget: "datetime"
+        required: false
+        hint: "Laissez vide tant que la nouvelle date n'est pas connue : /agenda affichera « Nouvelle date à venir ». Renseignez-la dès qu'elle l'est, sans attendre la fédération (heure de France)."
+
   - name: "partenaires"
     label: "Partenaires"
     label_singular: "Partenaire"

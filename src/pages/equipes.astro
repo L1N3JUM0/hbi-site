@@ -9,7 +9,7 @@ import ResultatsEquipe from "../components/resultats/ResultatsEquipe.astro";
 import Favicon from "../components/Favicon.astro";
 import { withBase } from "../utils/links";
 import { getCollection, type CollectionEntry } from "astro:content";
-import { getAgendaTeams, getMatchesForEquipe, hasAgendaFeed, formatMatchDate, formatMatchTime } from "../lib/agenda";
+import { getAgendaTeams, getMatchesForEquipe, hasAgendaFeed, formatMatchQuand } from "../lib/agenda";
 import { saisonActuelle } from "../lib/saison";
 import { trierEquipes } from "../lib/equipes";
 import { slugsAvecResultats } from "../lib/statistiques";
@@ -122,7 +122,7 @@ function photosFor(team: CollectionEntry<"equipes">) {
 															{m.isHome ? "D" : "E"}
 														</span>
 														<span class="next-matches__text">
-															{m.isDerby ? m.teamLabel : `vs ${m.opponent}`} — {formatMatchDate(m.start)} à {formatMatchTime(m.start)}
+															{m.isDerby ? m.teamLabel : `vs ${m.opponent}`} — {formatMatchQuand(m)}
 														</span>
 													</li>
 												))}
