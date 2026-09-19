@@ -1,6 +1,6 @@
 {
 	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/regional/championnat-u15-excellence-masculin-32450/poule-190653/statistiques/",
-	"fetchedAt": "2026-09-19T08:27:47.615Z",
+	"fetchedAt": "2026-09-19T16:32:15.573Z",
 	"classement": [
 		{
 			"id": "10545588",
@@ -166,8 +166,8 @@
 	"statsJoueurs": [
 		{
 			"individuId": "2341924",
-			"matchCount": "1",
-			"totalButs": "8",
+			"matchCount": "2",
+			"totalButs": "14",
 			"totalArrets": "0",
 			"nom": "BOYER",
 			"prenom": "HUGO",
@@ -177,8 +177,8 @@
 		},
 		{
 			"individuId": "2461188",
-			"matchCount": "1",
-			"totalButs": "8",
+			"matchCount": "2",
+			"totalButs": "15",
 			"totalArrets": "0",
 			"nom": "AUZIER TROUVE",
 			"prenom": "ROBIN",
@@ -188,8 +188,8 @@
 		},
 		{
 			"individuId": "2461194",
-			"matchCount": "1",
-			"totalButs": "5",
+			"matchCount": "2",
+			"totalButs": "9",
 			"totalArrets": "0",
 			"nom": "BOURDELIN",
 			"prenom": "CLEMENT",
@@ -199,8 +199,8 @@
 		},
 		{
 			"individuId": "2504636",
-			"matchCount": "1",
-			"totalButs": "2",
+			"matchCount": "2",
+			"totalButs": "7",
 			"totalArrets": "0",
 			"nom": "MAMNAYAL",
 			"prenom": "TIM",
@@ -210,8 +210,8 @@
 		},
 		{
 			"individuId": "2516886",
-			"matchCount": "1",
-			"totalButs": "1",
+			"matchCount": "2",
+			"totalButs": "4",
 			"totalArrets": "0",
 			"nom": "MARTEL",
 			"prenom": "LOGAN",
@@ -232,14 +232,25 @@
 		},
 		{
 			"individuId": "2548866",
-			"matchCount": "1",
-			"totalButs": "2",
+			"matchCount": "2",
+			"totalButs": "3",
 			"totalArrets": "0",
 			"nom": "BELLA",
 			"prenom": "MILHAN",
 			"showEquipeLogo": "1",
 			"equipeLibelle": "HANDBALL ISLOIS",
 			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
+			"individuId": "2559110",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "GIORDANENGO",
+			"prenom": "NOE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "GARDANNE SIMIANE HANDBALL",
+			"structureLogo": "2017-07-17-92f39fc7-dfd0-4130-b25f-3dfc18890327.jpg"
 		},
 		{
 			"individuId": "2728722",
@@ -265,8 +276,8 @@
 		},
 		{
 			"individuId": "2782103",
-			"matchCount": "1",
-			"totalButs": "3",
+			"matchCount": "2",
+			"totalButs": "6",
 			"totalArrets": "0",
 			"nom": "MERLE",
 			"prenom": "NOLAN",
@@ -276,8 +287,8 @@
 		},
 		{
 			"individuId": "2785896",
-			"matchCount": "1",
-			"totalButs": "3",
+			"matchCount": "2",
+			"totalButs": "9",
 			"totalArrets": "0",
 			"nom": "MASSON",
 			"prenom": "ALBAN",
@@ -287,8 +298,8 @@
 		},
 		{
 			"individuId": "2808375",
-			"matchCount": "1",
-			"totalButs": "5",
+			"matchCount": "2",
+			"totalButs": "10",
 			"totalArrets": "0",
 			"nom": "CEDRIC LE HUU NHO",
 			"prenom": "TIMEO",
@@ -298,7 +309,7 @@
 		},
 		{
 			"individuId": "2810590",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "3",
 			"totalArrets": "0",
 			"nom": "BONNEFOY",
@@ -331,8 +342,8 @@
 		},
 		{
 			"individuId": "2877136",
-			"matchCount": "1",
-			"totalButs": "3",
+			"matchCount": "2",
+			"totalButs": "8",
 			"totalArrets": "0",
 			"nom": "GUICHARD",
 			"prenom": "SACHA",
@@ -342,8 +353,8 @@
 		},
 		{
 			"individuId": "2944620",
-			"matchCount": "1",
-			"totalButs": "0",
+			"matchCount": "2",
+			"totalButs": "3",
 			"totalArrets": "0",
 			"nom": "DESMIER",
 			"prenom": "ROMEO",
@@ -353,8 +364,8 @@
 		},
 		{
 			"individuId": "2948494",
-			"matchCount": "1",
-			"totalButs": "3",
+			"matchCount": "2",
+			"totalButs": "9",
 			"totalArrets": "0",
 			"nom": "VAUDRON-APPOO",
 			"prenom": "ARTHUR",
@@ -364,9 +375,9 @@
 		},
 		{
 			"individuId": "2965737",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "0",
-			"totalArrets": "7",
+			"totalArrets": "17",
 			"nom": "LOCATELLI",
 			"prenom": "LINO",
 			"showEquipeLogo": "0",
@@ -419,8 +430,8 @@
 		},
 		{
 			"individuId": "3138072",
-			"matchCount": "1",
-			"totalButs": "1",
+			"matchCount": "2",
+			"totalButs": "5",
 			"totalArrets": "0",
 			"nom": "CAMBOULIVES DUFFEAL",
 			"prenom": "BASILE",
@@ -463,8 +474,8 @@
 		},
 		{
 			"individuId": "3162277",
-			"matchCount": "1",
-			"totalButs": "0",
+			"matchCount": "2",
+			"totalButs": "4",
 			"totalArrets": "0",
 			"nom": "REQUET",
 			"prenom": "MATHIS",
@@ -496,8 +507,8 @@
 		},
 		{
 			"individuId": "3179831",
-			"matchCount": "1",
-			"totalButs": "1",
+			"matchCount": "2",
+			"totalButs": "6",
 			"totalArrets": "0",
 			"nom": "PERSYN",
 			"prenom": "ARTHUR",
@@ -540,8 +551,8 @@
 		},
 		{
 			"individuId": "3234687",
-			"matchCount": "1",
-			"totalButs": "4",
+			"matchCount": "2",
+			"totalButs": "14",
 			"totalArrets": "0",
 			"nom": "TCHAO",
 			"prenom": "DYLAN",
@@ -562,8 +573,8 @@
 		},
 		{
 			"individuId": "3269733",
-			"matchCount": "1",
-			"totalButs": "2",
+			"matchCount": "2",
+			"totalButs": "6",
 			"totalArrets": "0",
 			"nom": "CLEMENT",
 			"prenom": "CESAR",
@@ -584,8 +595,8 @@
 		},
 		{
 			"individuId": "3272806",
-			"matchCount": "1",
-			"totalButs": "0",
+			"matchCount": "2",
+			"totalButs": "2",
 			"totalArrets": "0",
 			"nom": "CABIOCH",
 			"prenom": "SOREN",
@@ -595,8 +606,8 @@
 		},
 		{
 			"individuId": "3277411",
-			"matchCount": "1",
-			"totalButs": "5",
+			"matchCount": "2",
+			"totalButs": "9",
 			"totalArrets": "0",
 			"nom": "LEFEBVRE",
 			"prenom": "TITOUAN",
@@ -617,7 +628,7 @@
 		},
 		{
 			"individuId": "3283979",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "0",
 			"totalArrets": "0",
 			"nom": "FOURNIER",
@@ -639,8 +650,8 @@
 		},
 		{
 			"individuId": "3336788",
-			"matchCount": "1",
-			"totalButs": "4",
+			"matchCount": "2",
+			"totalButs": "7",
 			"totalArrets": "0",
 			"nom": "REGNAULT",
 			"prenom": "QUENTIN",
@@ -650,7 +661,7 @@
 		},
 		{
 			"individuId": "3346036",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "4",
 			"totalArrets": "0",
 			"nom": "HOUILLON",
@@ -658,6 +669,17 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "GARDANNE SIMIANE HANDBALL",
 			"structureLogo": "2017-07-17-92f39fc7-dfd0-4130-b25f-3dfc18890327.jpg"
+		},
+		{
+			"individuId": "3354946",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "10",
+			"nom": "MUGEMANGANGO",
+			"prenom": "LOUIS",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL ISLOIS",
+			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
 		},
 		{
 			"individuId": "3358150",
@@ -672,9 +694,9 @@
 		},
 		{
 			"individuId": "3358340",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "0",
-			"totalArrets": "9",
+			"totalArrets": "17",
 			"nom": "KALFALLI",
 			"prenom": "LORIC",
 			"showEquipeLogo": "1",
@@ -683,8 +705,8 @@
 		},
 		{
 			"individuId": "3359818",
-			"matchCount": "1",
-			"totalButs": "0",
+			"matchCount": "2",
+			"totalButs": "1",
 			"totalArrets": "0",
 			"nom": "FLIPPE",
 			"prenom": "ROMAIN",
@@ -727,8 +749,8 @@
 		},
 		{
 			"individuId": "3371808",
-			"matchCount": "1",
-			"totalButs": "1",
+			"matchCount": "2",
+			"totalButs": "2",
 			"totalArrets": "0",
 			"nom": "FOURNIER PREDA",
 			"prenom": "MAELL",
@@ -738,8 +760,8 @@
 		},
 		{
 			"individuId": "3372556",
-			"matchCount": "1",
-			"totalButs": "7",
+			"matchCount": "2",
+			"totalButs": "11",
 			"totalArrets": "0",
 			"nom": "KUDLINSKI",
 			"prenom": "MAREK",
@@ -760,8 +782,8 @@
 		},
 		{
 			"individuId": "3389161",
-			"matchCount": "1",
-			"totalButs": "1",
+			"matchCount": "2",
+			"totalButs": "2",
 			"totalArrets": "0",
 			"nom": "EL ASRI",
 			"prenom": "NAHIL",
@@ -771,8 +793,8 @@
 		},
 		{
 			"individuId": "3430137",
-			"matchCount": "1",
-			"totalButs": "3",
+			"matchCount": "2",
+			"totalButs": "11",
 			"totalArrets": "0",
 			"nom": "LOPEZ",
 			"prenom": "NATHAN",
@@ -826,8 +848,8 @@
 		},
 		{
 			"individuId": "3473847",
-			"matchCount": "1",
-			"totalButs": "6",
+			"matchCount": "2",
+			"totalButs": "8",
 			"totalArrets": "0",
 			"nom": "BONNEMAIN",
 			"prenom": "RAPHAEL",
@@ -881,14 +903,25 @@
 		},
 		{
 			"individuId": "3513493",
-			"matchCount": "1",
-			"totalButs": "6",
+			"matchCount": "2",
+			"totalButs": "10",
 			"totalArrets": "0",
 			"nom": "RIBET",
 			"prenom": "LUCAS",
 			"showEquipeLogo": "0",
 			"equipeLibelle": "CONV. CAVAILLON SUD DURANCE (U15M EXC.)",
 			"structureLogo": "2015-06-29-a64622b5-b271-4872-bc6b-3b0ece75630e.png"
+		},
+		{
+			"individuId": "3515558",
+			"matchCount": "1",
+			"totalButs": "1",
+			"totalArrets": "0",
+			"nom": "CARUSO",
+			"prenom": "NOA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL COTE BLEUE",
+			"structureLogo": "2017-07-01-5b65bd2e-08d4-4c71-b102-8f80725da967.png"
 		},
 		{
 			"individuId": "3518193",
@@ -903,8 +936,8 @@
 		},
 		{
 			"individuId": "3524996",
-			"matchCount": "1",
-			"totalButs": "1",
+			"matchCount": "2",
+			"totalButs": "8",
 			"totalArrets": "0",
 			"nom": "CHASTIN-VALDES",
 			"prenom": "RAFAEL",
@@ -914,8 +947,8 @@
 		},
 		{
 			"individuId": "3528418",
-			"matchCount": "1",
-			"totalButs": "1",
+			"matchCount": "2",
+			"totalButs": "4",
 			"totalArrets": "0",
 			"nom": "GARCIN",
 			"prenom": "THOMAS",
@@ -980,7 +1013,7 @@
 		},
 		{
 			"individuId": "3620163",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "0",
 			"totalArrets": "0",
 			"nom": "HOUBE",
@@ -988,6 +1021,17 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "HANDBALL ISLOIS",
 			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
+			"individuId": "3631079",
+			"matchCount": "1",
+			"totalButs": "3",
+			"totalArrets": "0",
+			"nom": "ZEGHARI MOUHIB",
+			"prenom": "MEHDI",
+			"showEquipeLogo": "0",
+			"equipeLibelle": "CONV. CAVAILLON SUD DURANCE (U15M EXC.)",
+			"structureLogo": "2015-06-29-a64622b5-b271-4872-bc6b-3b0ece75630e.png"
 		},
 		{
 			"individuId": "3663072",
@@ -1002,8 +1046,8 @@
 		},
 		{
 			"individuId": "3691661",
-			"matchCount": "1",
-			"totalButs": "3",
+			"matchCount": "2",
+			"totalButs": "5",
 			"totalArrets": "0",
 			"nom": "MOREL",
 			"prenom": "LUCAS",
@@ -1024,7 +1068,7 @@
 		},
 		{
 			"individuId": "3715471",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "0",
 			"totalArrets": "0",
 			"nom": "CANTAREL",
@@ -1046,9 +1090,9 @@
 		},
 		{
 			"individuId": "3720549",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "0",
-			"totalArrets": "1",
+			"totalArrets": "7",
 			"nom": "GAOUA",
 			"prenom": "ALI",
 			"showEquipeLogo": "1",
@@ -1079,14 +1123,36 @@
 		},
 		{
 			"individuId": "3747425",
-			"matchCount": "1",
-			"totalButs": "6",
+			"matchCount": "2",
+			"totalButs": "9",
 			"totalArrets": "0",
 			"nom": "NGOMATEKE",
 			"prenom": "LOIC",
 			"showEquipeLogo": "1",
 			"equipeLibelle": "GARDANNE SIMIANE HANDBALL",
 			"structureLogo": "2017-07-17-92f39fc7-dfd0-4130-b25f-3dfc18890327.jpg"
+		},
+		{
+			"individuId": "3870173",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "14",
+			"nom": "SPERANZA",
+			"prenom": "SANDRO",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL COTE BLEUE",
+			"structureLogo": "2017-07-01-5b65bd2e-08d4-4c71-b102-8f80725da967.png"
+		},
+		{
+			"individuId": "3937502",
+			"matchCount": "1",
+			"totalButs": "2",
+			"totalArrets": "0",
+			"nom": "ROUX",
+			"prenom": "ANTOINE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL COTE BLEUE",
+			"structureLogo": "2017-07-01-5b65bd2e-08d4-4c71-b102-8f80725da967.png"
 		},
 		{
 			"individuId": "3955674",
@@ -1142,6 +1208,17 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "OLYMPIQUE CLUB SORGUAIS",
 			"structureLogo": "2025-09-19-e78c2c9a-7f7d-402a-853b-5d174ddb9404.png"
+		},
+		{
+			"individuId": "4279011",
+			"matchCount": "1",
+			"totalButs": "1",
+			"totalArrets": "0",
+			"nom": "CHIRI LISCIANDRA",
+			"prenom": "FLAVIO",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL ISLOIS",
+			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
 		},
 		{
 			"individuId": "4282912",
