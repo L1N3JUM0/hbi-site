@@ -1,6 +1,6 @@
 {
 	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-feminines-32648/poule-192108/classements/",
-	"fetchedAt": "2026-09-19T21:02:29.902Z",
+	"fetchedAt": "2026-09-20T08:59:28.071Z",
 	"classement": [
 		{
 			"id": "10589848",
@@ -201,26 +201,6 @@
 			"equipe_logoActif": "1",
 			"structure_logo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png",
 			"ext_structureId": "3580"
-		},
-		{
-			"id": "10589856",
-			"ext_classementId": "59717956",
-			"pouleId": "239793",
-			"equipeId": "1791864",
-			"place": "11",
-			"point": "0",
-			"joue": "1",
-			"gagne": "0",
-			"nul": "0",
-			"perdu": "1",
-			"butPlus": "0",
-			"butMoins": "0",
-			"diff": "0",
-			"dernieresRencontres": "-1",
-			"equipe_libelle": "HANDBALL CLUB MONTEUX 2",
-			"equipe_logoActif": "1",
-			"structure_logo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG",
-			"ext_structureId": "3579"
 		}
 	],
 	"statsJoueurs": [
