@@ -1,6 +1,6 @@
 {
 	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-masculins-32649/poule-192119/classements/",
-	"fetchedAt": "2026-09-20T16:28:39.696Z",
+	"fetchedAt": "2026-09-21T09:31:03.708Z",
 	"classement": [
 		{
 			"id": "10589859",
@@ -23,31 +23,11 @@
 			"ext_structureId": "3577"
 		},
 		{
-			"id": "10589865",
-			"ext_classementId": "59718016",
-			"pouleId": "239794",
-			"equipeId": "1791873",
-			"place": "2",
-			"point": "3",
-			"joue": "1",
-			"gagne": "1",
-			"nul": "0",
-			"perdu": "0",
-			"butPlus": "28",
-			"butMoins": "24",
-			"diff": "4",
-			"dernieresRencontres": "1",
-			"equipe_libelle": "SUD DURANCE - PLANAIS CAVAILLON",
-			"equipe_logoActif": "0",
-			"structure_logo": "2026-08-01-1307c0ce-4a94-4e91-ac41-15b6c8e3282e.jpg",
-			"ext_structureId": "4117"
-		},
-		{
 			"id": "10589862",
 			"ext_classementId": "59718010",
 			"pouleId": "239794",
 			"equipeId": "1791870",
-			"place": "3",
+			"place": "2",
 			"point": "4",
 			"joue": "2",
 			"gagne": "0",
@@ -63,11 +43,51 @@
 			"ext_structureId": "3574"
 		},
 		{
+			"id": "10589865",
+			"ext_classementId": "59718016",
+			"pouleId": "239794",
+			"equipeId": "1791873",
+			"place": "3",
+			"point": "4",
+			"joue": "2",
+			"gagne": "1",
+			"nul": "0",
+			"perdu": "1",
+			"butPlus": "39",
+			"butMoins": "65",
+			"diff": "-26",
+			"dernieresRencontres": "1;-1",
+			"equipe_libelle": "SUD DURANCE - PLANAIS CAVAILLON",
+			"equipe_logoActif": "0",
+			"structure_logo": "2026-08-01-1307c0ce-4a94-4e91-ac41-15b6c8e3282e.jpg",
+			"ext_structureId": "4117"
+		},
+		{
+			"id": "10589860",
+			"ext_classementId": "59718011",
+			"pouleId": "239794",
+			"equipeId": "1791868",
+			"place": "4",
+			"point": "3",
+			"joue": "1",
+			"gagne": "1",
+			"nul": "0",
+			"perdu": "0",
+			"butPlus": "39",
+			"butMoins": "21",
+			"diff": "18",
+			"dernieresRencontres": "1",
+			"equipe_libelle": "AVIGNON HANDBALL",
+			"equipe_logoActif": "1",
+			"structure_logo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png",
+			"ext_structureId": "3580"
+		},
+		{
 			"id": "10589858",
 			"ext_classementId": "59718018",
 			"pouleId": "239794",
 			"equipeId": "1791866",
-			"place": "4",
+			"place": "5",
 			"point": "1",
 			"joue": "1",
 			"gagne": "0",
@@ -83,11 +103,31 @@
 			"ext_structureId": "3925"
 		},
 		{
+			"id": "10589861",
+			"ext_classementId": "59718015",
+			"pouleId": "239794",
+			"equipeId": "1791869",
+			"place": "6",
+			"point": "1",
+			"joue": "2",
+			"gagne": "0",
+			"nul": "0",
+			"perdu": "2",
+			"butPlus": "21",
+			"butMoins": "39",
+			"diff": "-18",
+			"dernieresRencontres": "-1;-1",
+			"equipe_libelle": "HANDBALL ISLOIS 2",
+			"equipe_logoActif": "1",
+			"structure_logo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg",
+			"ext_structureId": "3577"
+		},
+		{
 			"id": "10589864",
 			"ext_classementId": "59718017",
 			"pouleId": "239794",
 			"equipeId": "1791872",
-			"place": "5",
+			"place": "7",
 			"point": "1",
 			"joue": "1",
 			"gagne": "0",
@@ -103,60 +143,20 @@
 			"ext_structureId": "3585"
 		},
 		{
-			"id": "10589860",
-			"ext_classementId": "59718011",
-			"pouleId": "239794",
-			"equipeId": "1791868",
-			"place": "6",
-			"point": "0",
-			"joue": "0",
-			"gagne": "0",
-			"nul": "0",
-			"perdu": "0",
-			"butPlus": "0",
-			"butMoins": "0",
-			"diff": "0",
-			"dernieresRencontres": "",
-			"equipe_libelle": "AVIGNON HANDBALL",
-			"equipe_logoActif": "1",
-			"structure_logo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png",
-			"ext_structureId": "3580"
-		},
-		{
-			"id": "10589861",
-			"ext_classementId": "59718015",
-			"pouleId": "239794",
-			"equipeId": "1791869",
-			"place": "7",
-			"point": "0",
-			"joue": "1",
-			"gagne": "0",
-			"nul": "0",
-			"perdu": "1",
-			"butPlus": "0",
-			"butMoins": "0",
-			"diff": "0",
-			"dernieresRencontres": "-1",
-			"equipe_libelle": "HANDBALL ISLOIS 2",
-			"equipe_logoActif": "1",
-			"structure_logo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg",
-			"ext_structureId": "3577"
-		},
-		{
 			"id": "10589857",
 			"ext_classementId": "59718012",
 			"pouleId": "239794",
 			"equipeId": "1791865",
 			"place": "8",
-			"point": "0",
-			"joue": "0",
-			"gagne": "0",
+			"point": "3",
+			"joue": "1",
+			"gagne": "1",
 			"nul": "0",
 			"perdu": "0",
-			"butPlus": "0",
-			"butMoins": "0",
-			"diff": "0",
-			"dernieresRencontres": "",
+			"butPlus": "41",
+			"butMoins": "11",
+			"diff": "30",
+			"dernieresRencontres": "1",
 			"equipe_libelle": "HANDBALL CLUB ORANGE",
 			"equipe_logoActif": "1",
 			"structure_logo": "2024-06-12-f09f9018-5fbb-48ab-ba11-dcc688a9aa24.png",
@@ -184,6 +184,28 @@
 		}
 	],
 	"statsJoueurs": [
+		{
+			"individuId": "191407",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "REYNAUD",
+			"prenom": "VINCENT",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB ORANGE",
+			"structureLogo": "2024-06-12-f09f9018-5fbb-48ab-ba11-dcc688a9aa24.png"
+		},
+		{
+			"individuId": "205599",
+			"matchCount": "1",
+			"totalButs": "4",
+			"totalArrets": "0",
+			"nom": "DIERKENS",
+			"prenom": "ELIE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB ORANGE",
+			"structureLogo": "2024-06-12-f09f9018-5fbb-48ab-ba11-dcc688a9aa24.png"
+		},
 		{
 			"individuId": "275977",
 			"matchCount": "1",
@@ -252,8 +274,8 @@
 		},
 		{
 			"individuId": "313651",
-			"matchCount": "1",
-			"totalButs": "1",
+			"matchCount": "2",
+			"totalButs": "3",
 			"totalArrets": "0",
 			"nom": "FERREN",
 			"prenom": "LAURENT",
@@ -273,6 +295,17 @@
 			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
 		},
 		{
+			"individuId": "313941",
+			"matchCount": "1",
+			"totalButs": "3",
+			"totalArrets": "0",
+			"nom": "ETIENNE",
+			"prenom": "KEVIN",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL ISLOIS 2",
+			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
 			"individuId": "313949",
 			"matchCount": "2",
 			"totalButs": "5",
@@ -281,6 +314,17 @@
 			"prenom": "NICOLAS",
 			"showEquipeLogo": "1",
 			"equipeLibelle": "HANDBALL ISLOIS 1",
+			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
+			"individuId": "313953",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "RANCELLI",
+			"prenom": "DAVID",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL ISLOIS 2",
 			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
 		},
 		{
@@ -296,14 +340,69 @@
 		},
 		{
 			"individuId": "313997",
-			"matchCount": "1",
-			"totalButs": "0",
+			"matchCount": "2",
+			"totalButs": "1",
 			"totalArrets": "0",
 			"nom": "OMET",
 			"prenom": "CORENTIN",
 			"showEquipeLogo": "1",
 			"equipeLibelle": "HANDBALL ISLOIS 1",
 			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
+			"individuId": "314383",
+			"matchCount": "1",
+			"totalButs": "10",
+			"totalArrets": "0",
+			"nom": "LORENZI",
+			"prenom": "BASTIEN",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "AVIGNON HANDBALL",
+			"structureLogo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png"
+		},
+		{
+			"individuId": "314989",
+			"matchCount": "1",
+			"totalButs": "8",
+			"totalArrets": "0",
+			"nom": "BRISCO",
+			"prenom": "GUILLAUME",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB ORANGE",
+			"structureLogo": "2024-06-12-f09f9018-5fbb-48ab-ba11-dcc688a9aa24.png"
+		},
+		{
+			"individuId": "315025",
+			"matchCount": "1",
+			"totalButs": "4",
+			"totalArrets": "0",
+			"nom": "BOUVIER",
+			"prenom": "ROMAIN",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB ORANGE",
+			"structureLogo": "2024-06-12-f09f9018-5fbb-48ab-ba11-dcc688a9aa24.png"
+		},
+		{
+			"individuId": "315514",
+			"matchCount": "1",
+			"totalButs": "6",
+			"totalArrets": "0",
+			"nom": "BEHEREC-PRADIER",
+			"prenom": "KILIAN",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "AVIGNON HANDBALL",
+			"structureLogo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png"
+		},
+		{
+			"individuId": "353073",
+			"matchCount": "1",
+			"totalButs": "8",
+			"totalArrets": "0",
+			"nom": "PONTES DE MORAIS",
+			"prenom": "JULIO",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB ORANGE",
+			"structureLogo": "2024-06-12-f09f9018-5fbb-48ab-ba11-dcc688a9aa24.png"
 		},
 		{
 			"individuId": "364839",
@@ -315,6 +414,28 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "HANDBALL ISLOIS 1",
 			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
+			"individuId": "369683",
+			"matchCount": "1",
+			"totalButs": "4",
+			"totalArrets": "0",
+			"nom": "DAVILA",
+			"prenom": "UGO",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "AVIGNON HANDBALL",
+			"structureLogo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png"
+		},
+		{
+			"individuId": "375689",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "16",
+			"nom": "ROUMETTE",
+			"prenom": "EMILIEN",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB ORANGE",
+			"structureLogo": "2024-06-12-f09f9018-5fbb-48ab-ba11-dcc688a9aa24.png"
 		},
 		{
 			"individuId": "386929",
@@ -329,14 +450,25 @@
 		},
 		{
 			"individuId": "394813",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "0",
-			"totalArrets": "2",
+			"totalArrets": "9",
 			"nom": "PINEDA",
 			"prenom": "JEAN-FRANCOIS",
 			"showEquipeLogo": "1",
 			"equipeLibelle": "HANDBALL ISLOIS 1",
 			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
+			"individuId": "409858",
+			"matchCount": "1",
+			"totalButs": "2",
+			"totalArrets": "0",
+			"nom": "BARBE",
+			"prenom": "NELSON",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "AVIGNON HANDBALL",
+			"structureLogo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png"
 		},
 		{
 			"individuId": "496786",
@@ -394,10 +526,32 @@
 			"structureLogo": "2015-08-17-3c5d5ea7-3296-42e1-a7bd-bd33284b9289.jpg"
 		},
 		{
-			"individuId": "1002027",
+			"individuId": "825600",
 			"matchCount": "1",
+			"totalButs": "1",
+			"totalArrets": "0",
+			"nom": "FERLAND",
+			"prenom": "GUILLAUME",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL ISLOIS 2",
+			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
+			"individuId": "993326",
+			"matchCount": "1",
+			"totalButs": "1",
+			"totalArrets": "0",
+			"nom": "MANCINONE",
+			"prenom": "VICTOR",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB ORANGE",
+			"structureLogo": "2024-06-12-f09f9018-5fbb-48ab-ba11-dcc688a9aa24.png"
+		},
+		{
+			"individuId": "1002027",
+			"matchCount": "2",
 			"totalButs": "0",
-			"totalArrets": "11",
+			"totalArrets": "19",
 			"nom": "ANDRE",
 			"prenom": "CYRIL",
 			"showEquipeLogo": "0",
@@ -406,8 +560,8 @@
 		},
 		{
 			"individuId": "1043727",
-			"matchCount": "1",
-			"totalButs": "6",
+			"matchCount": "2",
+			"totalButs": "9",
 			"totalArrets": "0",
 			"nom": "DANTAN",
 			"prenom": "JASON",
@@ -417,14 +571,25 @@
 		},
 		{
 			"individuId": "1147606",
-			"matchCount": "1",
-			"totalButs": "2",
+			"matchCount": "2",
+			"totalButs": "6",
 			"totalArrets": "0",
 			"nom": "ANDRE",
 			"prenom": "DYLAN",
 			"showEquipeLogo": "0",
 			"equipeLibelle": "SUD DURANCE - PLANAIS CAVAILLON",
 			"structureLogo": "2026-08-01-1307c0ce-4a94-4e91-ac41-15b6c8e3282e.jpg"
+		},
+		{
+			"individuId": "1207913",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "16",
+			"nom": "HENRY",
+			"prenom": "MICKAEL",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "AVIGNON HANDBALL",
+			"structureLogo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png"
 		},
 		{
 			"individuId": "1342252",
@@ -436,6 +601,28 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "BOLLENE HANDBALL CLUB",
 			"structureLogo": "2015-04-24-5122cd2a-de1c-48cc-a5a4-bd12530e8316.jpg"
+		},
+		{
+			"individuId": "1354459",
+			"matchCount": "1",
+			"totalButs": "4",
+			"totalArrets": "0",
+			"nom": "BOUDOUANI",
+			"prenom": "AKIM",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB ORANGE",
+			"structureLogo": "2024-06-12-f09f9018-5fbb-48ab-ba11-dcc688a9aa24.png"
+		},
+		{
+			"individuId": "1564940",
+			"matchCount": "1",
+			"totalButs": "1",
+			"totalArrets": "0",
+			"nom": "LENTZ",
+			"prenom": "THOMAS",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB ORANGE",
+			"structureLogo": "2024-06-12-f09f9018-5fbb-48ab-ba11-dcc688a9aa24.png"
 		},
 		{
 			"individuId": "1592470",
@@ -493,6 +680,17 @@
 			"structureLogo": "2024-05-23-e369fad5-1df8-488d-a160-80766caecb4f.png"
 		},
 		{
+			"individuId": "1834652",
+			"matchCount": "1",
+			"totalButs": "2",
+			"totalArrets": "0",
+			"nom": "CARRIERE",
+			"prenom": "ALEXIS",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL ISLOIS 2",
+			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
 			"individuId": "1860210",
 			"matchCount": "1",
 			"totalButs": "4",
@@ -502,6 +700,28 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "BOLLENE HANDBALL CLUB",
 			"structureLogo": "2015-04-24-5122cd2a-de1c-48cc-a5a4-bd12530e8316.jpg"
+		},
+		{
+			"individuId": "1895946",
+			"matchCount": "1",
+			"totalButs": "3",
+			"totalArrets": "0",
+			"nom": "JABOULET",
+			"prenom": "NICOLAS",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "AVIGNON HANDBALL",
+			"structureLogo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png"
+		},
+		{
+			"individuId": "1945268",
+			"matchCount": "1",
+			"totalButs": "4",
+			"totalArrets": "0",
+			"nom": "JACONELLI",
+			"prenom": "ALEXIS",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL ISLOIS 2",
+			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
 		},
 		{
 			"individuId": "2067530",
@@ -516,7 +736,7 @@
 		},
 		{
 			"individuId": "2068384",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "2",
 			"totalArrets": "0",
 			"nom": "BOUNIAS",
@@ -524,6 +744,39 @@
 			"showEquipeLogo": "0",
 			"equipeLibelle": "SUD DURANCE - PLANAIS CAVAILLON",
 			"structureLogo": "2026-08-01-1307c0ce-4a94-4e91-ac41-15b6c8e3282e.jpg"
+		},
+		{
+			"individuId": "2118449",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "VOLUIZAN",
+			"prenom": "REMI",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL ISLOIS 2",
+			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
+			"individuId": "2121591",
+			"matchCount": "1",
+			"totalButs": "4",
+			"totalArrets": "0",
+			"nom": "BOUVIER",
+			"prenom": "VINCENT",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB ORANGE",
+			"structureLogo": "2024-06-12-f09f9018-5fbb-48ab-ba11-dcc688a9aa24.png"
+		},
+		{
+			"individuId": "2127269",
+			"matchCount": "1",
+			"totalButs": "3",
+			"totalArrets": "0",
+			"nom": "BARBOT--MARIE-LOUISE",
+			"prenom": "DYLAN",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "AVIGNON HANDBALL",
+			"structureLogo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png"
 		},
 		{
 			"individuId": "2137980",
@@ -535,6 +788,17 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "HANDBALL ISLOIS 1",
 			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
+			"individuId": "2143507",
+			"matchCount": "1",
+			"totalButs": "7",
+			"totalArrets": "0",
+			"nom": "DELHOMME",
+			"prenom": "BERTRAND",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "AVIGNON HANDBALL",
+			"structureLogo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png"
 		},
 		{
 			"individuId": "2181510",
@@ -647,6 +911,28 @@
 			"structureLogo": "2015-04-24-5122cd2a-de1c-48cc-a5a4-bd12530e8316.jpg"
 		},
 		{
+			"individuId": "3163124",
+			"matchCount": "1",
+			"totalButs": "8",
+			"totalArrets": "0",
+			"nom": "XITRA",
+			"prenom": "MATHIEU",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL ISLOIS 2",
+			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
+			"individuId": "3268618",
+			"matchCount": "1",
+			"totalButs": "1",
+			"totalArrets": "0",
+			"nom": "LOISEAU",
+			"prenom": "VIRGILE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL ISLOIS 2",
+			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
 			"individuId": "3323063",
 			"matchCount": "2",
 			"totalButs": "13",
@@ -658,8 +944,30 @@
 			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
 		},
 		{
-			"individuId": "3705093",
+			"individuId": "3389139",
 			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "SANCHEZ",
+			"prenom": "STEPHANE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB ORANGE",
+			"structureLogo": "2024-06-12-f09f9018-5fbb-48ab-ba11-dcc688a9aa24.png"
+		},
+		{
+			"individuId": "3689525",
+			"matchCount": "1",
+			"totalButs": "5",
+			"totalArrets": "0",
+			"nom": "VAN NIEUWERBURGH",
+			"prenom": "CLEMENT",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB ORANGE",
+			"structureLogo": "2024-06-12-f09f9018-5fbb-48ab-ba11-dcc688a9aa24.png"
+		},
+		{
+			"individuId": "3705093",
+			"matchCount": "2",
 			"totalButs": "4",
 			"totalArrets": "0",
 			"nom": "FLIPPE",
@@ -670,8 +978,8 @@
 		},
 		{
 			"individuId": "3896605",
-			"matchCount": "1",
-			"totalButs": "4",
+			"matchCount": "2",
+			"totalButs": "5",
 			"totalArrets": "0",
 			"nom": "LEGRAND",
 			"prenom": "GABRIEL",
@@ -691,9 +999,20 @@
 			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
 		},
 		{
-			"individuId": "4110663",
+			"individuId": "4103951",
 			"matchCount": "1",
-			"totalButs": "2",
+			"totalButs": "1",
+			"totalArrets": "0",
+			"nom": "MELONI",
+			"prenom": "LIONEL",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL ISLOIS 2",
+			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
+			"individuId": "4110663",
+			"matchCount": "2",
+			"totalButs": "3",
 			"totalArrets": "0",
 			"nom": "BRANCHU",
 			"prenom": "ALEXIS",
@@ -711,6 +1030,17 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "HANDBALL CONCERNADE",
 			"structureLogo": "2015-08-17-3c5d5ea7-3296-42e1-a7bd-bd33284b9289.jpg"
+		},
+		{
+			"individuId": "4140569",
+			"matchCount": "1",
+			"totalButs": "2",
+			"totalArrets": "0",
+			"nom": "CARTERET",
+			"prenom": "BENJAMIN",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "AVIGNON HANDBALL",
+			"structureLogo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png"
 		},
 		{
 			"individuId": "4166747",
@@ -766,6 +1096,17 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "BOLLENE HANDBALL CLUB",
 			"structureLogo": "2015-04-24-5122cd2a-de1c-48cc-a5a4-bd12530e8316.jpg"
+		},
+		{
+			"individuId": "4289230",
+			"matchCount": "1",
+			"totalButs": "2",
+			"totalArrets": "0",
+			"nom": "RADOSAVLJEVIC",
+			"prenom": "THIBAUT",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "AVIGNON HANDBALL",
+			"structureLogo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png"
 		}
 	]
 }
