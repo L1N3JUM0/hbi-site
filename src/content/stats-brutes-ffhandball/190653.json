@@ -1,12 +1,12 @@
 {
 	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/regional/championnat-u15-excellence-masculin-32450/poule-190653/statistiques/",
-	"fetchedAt": "2026-09-23T09:00:44.211Z",
+	"fetchedAt": "2026-09-24T08:56:10.256Z",
 	"classement": [
 		{
-			"id": "10545586",
+			"id": "10611615",
 			"ext_classementId": "59712234",
-			"pouleId": "239170",
-			"equipeId": "1766545",
+			"pouleId": "244144",
+			"equipeId": "1821195",
 			"place": "1",
 			"point": "6",
 			"joue": "2",
@@ -23,10 +23,10 @@
 			"ext_structureId": "3556"
 		},
 		{
-			"id": "10545590",
+			"id": "10611619",
 			"ext_classementId": "59712232",
-			"pouleId": "239170",
-			"equipeId": "1766549",
+			"pouleId": "244144",
+			"equipeId": "1821199",
 			"place": "2",
 			"point": "6",
 			"joue": "2",
@@ -43,10 +43,10 @@
 			"ext_structureId": "3514"
 		},
 		{
-			"id": "10545588",
+			"id": "10611617",
 			"ext_classementId": "59712233",
-			"pouleId": "239170",
-			"equipeId": "1766547",
+			"pouleId": "244144",
+			"equipeId": "1821197",
 			"place": "3",
 			"point": "4",
 			"joue": "2",
@@ -63,10 +63,10 @@
 			"ext_structureId": "3543"
 		},
 		{
-			"id": "10545587",
+			"id": "10611616",
 			"ext_classementId": "59712235",
-			"pouleId": "239170",
-			"equipeId": "1766546",
+			"pouleId": "244144",
+			"equipeId": "1821196",
 			"place": "4",
 			"point": "4",
 			"joue": "2",
@@ -83,10 +83,10 @@
 			"ext_structureId": "3528"
 		},
 		{
-			"id": "10545589",
+			"id": "10611618",
 			"ext_classementId": "59712239",
-			"pouleId": "239170",
-			"equipeId": "1766548",
+			"pouleId": "244144",
+			"equipeId": "1821198",
 			"place": "5",
 			"point": "4",
 			"joue": "2",
@@ -103,10 +103,10 @@
 			"ext_structureId": "3512"
 		},
 		{
-			"id": "10545584",
+			"id": "10611613",
 			"ext_classementId": "59712238",
-			"pouleId": "239170",
-			"equipeId": "1766543",
+			"pouleId": "244144",
+			"equipeId": "1821193",
 			"place": "6",
 			"point": "2",
 			"joue": "2",
@@ -123,10 +123,10 @@
 			"ext_structureId": "3577"
 		},
 		{
-			"id": "10545585",
+			"id": "10611614",
 			"ext_classementId": "59712237",
-			"pouleId": "239170",
-			"equipeId": "1766544",
+			"pouleId": "244144",
+			"equipeId": "1821194",
 			"place": "7",
 			"point": "2",
 			"joue": "2",
@@ -143,10 +143,10 @@
 			"ext_structureId": "3576"
 		},
 		{
-			"id": "10545583",
+			"id": "10611612",
 			"ext_classementId": "59712236",
-			"pouleId": "239170",
-			"equipeId": "1766542",
+			"pouleId": "244144",
+			"equipeId": "1821192",
 			"place": "8",
 			"point": "4",
 			"joue": "2",

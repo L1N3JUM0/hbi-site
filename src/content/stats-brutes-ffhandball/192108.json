@@ -1,12 +1,12 @@
 {
 	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-feminines-32648/poule-192108/classements/",
-	"fetchedAt": "2026-09-23T09:00:35.342Z",
+	"fetchedAt": "2026-09-24T08:56:02.466Z",
 	"classement": [
 		{
-			"id": "10589848",
+			"id": "10615049",
 			"ext_classementId": "59717960",
-			"pouleId": "239793",
-			"equipeId": "1791856",
+			"pouleId": "244766",
+			"equipeId": "1825496",
 			"place": "1",
 			"point": "6",
 			"joue": "2",
@@ -23,10 +23,10 @@
 			"ext_structureId": "3585"
 		},
 		{
-			"id": "10589852",
+			"id": "10615053",
 			"ext_classementId": "59717962",
-			"pouleId": "239793",
-			"equipeId": "1791860",
+			"pouleId": "244766",
+			"equipeId": "1825500",
 			"place": "2",
 			"point": "6",
 			"joue": "2",
@@ -43,10 +43,10 @@
 			"ext_structureId": "3577"
 		},
 		{
-			"id": "10589849",
+			"id": "10615050",
 			"ext_classementId": "59717955",
-			"pouleId": "239793",
-			"equipeId": "1791857",
+			"pouleId": "244766",
+			"equipeId": "1825497",
 			"place": "3",
 			"point": "4",
 			"joue": "2",
@@ -63,10 +63,10 @@
 			"ext_structureId": "3579"
 		},
 		{
-			"id": "10589851",
+			"id": "10615052",
 			"ext_classementId": "59717954",
-			"pouleId": "239793",
-			"equipeId": "1791859",
+			"pouleId": "244766",
+			"equipeId": "1825499",
 			"place": "4",
 			"point": "1",
 			"joue": "1",
@@ -83,10 +83,10 @@
 			"ext_structureId": "3535"
 		},
 		{
-			"id": "10589855",
+			"id": "10615056",
 			"ext_classementId": "59717952",
-			"pouleId": "239793",
-			"equipeId": "1791863",
+			"pouleId": "244766",
+			"equipeId": "1825503",
 			"place": "5",
 			"point": "1",
 			"joue": "1",
@@ -103,10 +103,10 @@
 			"ext_structureId": "3581"
 		},
 		{
-			"id": "10589853",
+			"id": "10615054",
 			"ext_classementId": "59717961",
-			"pouleId": "239793",
-			"equipeId": "1791861",
+			"pouleId": "244766",
+			"equipeId": "1825501",
 			"place": "6",
 			"point": "1",
 			"joue": "1",
@@ -123,10 +123,10 @@
 			"ext_structureId": "3585"
 		},
 		{
-			"id": "10589854",
+			"id": "10615055",
 			"ext_classementId": "59717958",
-			"pouleId": "239793",
-			"equipeId": "1791862",
+			"pouleId": "244766",
+			"equipeId": "1825502",
 			"place": "7",
 			"point": "1",
 			"joue": "1",
@@ -143,10 +143,10 @@
 			"ext_structureId": "4117"
 		},
 		{
-			"id": "10589846",
+			"id": "10615047",
 			"ext_classementId": "59717959",
-			"pouleId": "239793",
-			"equipeId": "1791854",
+			"pouleId": "244766",
+			"equipeId": "1825494",
 			"place": "8",
 			"point": "0",
 			"joue": "0",
@@ -163,10 +163,10 @@
 			"ext_structureId": "3925"
 		},
 		{
-			"id": "10589847",
+			"id": "10615048",
 			"ext_classementId": "59717957",
-			"pouleId": "239793",
-			"equipeId": "1791855",
+			"pouleId": "244766",
+			"equipeId": "1825495",
 			"place": "9",
 			"point": "0",
 			"joue": "0",
@@ -183,10 +183,10 @@
 			"ext_structureId": "4117"
 		},
 		{
-			"id": "10589850",
+			"id": "10615051",
 			"ext_classementId": "59717953",
-			"pouleId": "239793",
-			"equipeId": "1791858",
+			"pouleId": "244766",
+			"equipeId": "1825498",
 			"place": "10",
 			"point": "0",
 			"joue": "0",

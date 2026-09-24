@@ -1,12 +1,12 @@
 {
 	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u17-feminines-inter-dep-poule-1-33205/poule-196082/statistiques/",
-	"fetchedAt": "2026-09-23T09:00:48.144Z",
+	"fetchedAt": "2026-09-24T08:56:14.250Z",
 	"classement": [
 		{
-			"id": "10599583",
+			"id": "10621238",
 			"ext_classementId": "59733276",
-			"pouleId": "241889",
-			"equipeId": "1804980",
+			"pouleId": "246163",
+			"equipeId": "1833735",
 			"place": "1",
 			"point": "0",
 			"joue": "0",
@@ -23,10 +23,10 @@
 			"ext_structureId": "3582"
 		},
 		{
-			"id": "10599582",
+			"id": "10621237",
 			"ext_classementId": "59733277",
-			"pouleId": "241889",
-			"equipeId": "1804979",
+			"pouleId": "246163",
+			"equipeId": "1833734",
 			"place": "2",
 			"point": "0",
 			"joue": "0",
@@ -43,10 +43,10 @@
 			"ext_structureId": "3579"
 		},
 		{
-			"id": "10599580",
+			"id": "10621235",
 			"ext_classementId": "59733278",
-			"pouleId": "241889",
-			"equipeId": "1804977",
+			"pouleId": "246163",
+			"equipeId": "1833732",
 			"place": "3",
 			"point": "0",
 			"joue": "0",
@@ -63,10 +63,10 @@
 			"ext_structureId": "3577"
 		},
 		{
-			"id": "10599584",
+			"id": "10621239",
 			"ext_classementId": "59733279",
-			"pouleId": "241889",
-			"equipeId": "1804981",
+			"pouleId": "246163",
+			"equipeId": "1833736",
 			"place": "4",
 			"point": "0",
 			"joue": "0",
@@ -83,10 +83,10 @@
 			"ext_structureId": "3543"
 		},
 		{
-			"id": "10599587",
+			"id": "10621242",
 			"ext_classementId": "59733281",
-			"pouleId": "241889",
-			"equipeId": "1804984",
+			"pouleId": "246163",
+			"equipeId": "1833739",
 			"place": "5",
 			"point": "0",
 			"joue": "0",
@@ -103,10 +103,10 @@
 			"ext_structureId": "3560"
 		},
 		{
-			"id": "10599585",
+			"id": "10621240",
 			"ext_classementId": "59733280",
-			"pouleId": "241889",
-			"equipeId": "1804982",
+			"pouleId": "246163",
+			"equipeId": "1833737",
 			"place": "6",
 			"point": "0",
 			"joue": "0",
@@ -123,10 +123,10 @@
 			"ext_structureId": "3544"
 		},
 		{
-			"id": "10599581",
+			"id": "10621236",
 			"ext_classementId": "59733282",
-			"pouleId": "241889",
-			"equipeId": "1804978",
+			"pouleId": "246163",
+			"equipeId": "1833733",
 			"place": "7",
 			"point": "0",
 			"joue": "0",
@@ -143,10 +143,10 @@
 			"ext_structureId": "10479"
 		},
 		{
-			"id": "10599586",
+			"id": "10621241",
 			"ext_classementId": "59733283",
-			"pouleId": "241889",
-			"equipeId": "1804983",
+			"pouleId": "246163",
+			"equipeId": "1833738",
 			"place": "8",
 			"point": "0",
 			"joue": "0",
