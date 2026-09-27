@@ -29,6 +29,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # Toujours construire la POINTE de main, jamais le commit qui a
+          # déclenché ce run. Quand plusieurs feuilles sont déposées coup sur
+          # coup, GitHub met les exécutions en file (voir "concurrency"
+          # ci-dessus) et une exécution ancienne peut se TERMINER après une
+          # plus récente : elle écrasait alors le site déployé avec un état
+          # périmé (incident du 27/09/2026 -- la feuille déposée en dernier
+          # avait disparu du site après un tel dépassement). Avec `ref: main`,
+          # une exécution en retard redéploie l'état complet du dépôt : le
+          # résultat final ne dépend plus de l'ordre d'arrivée des builds.
+          ref: main
 
       - name: Installer Node.js
         uses: actions/setup-node@v4
