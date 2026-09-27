@@ -1,13 +1,33 @@
 {
 	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u17-feminines-inter-dep-poule-1-33205/poule-196082/statistiques/",
-	"fetchedAt": "2026-09-27T17:42:53.781Z",
+	"fetchedAt": "2026-09-27T20:15:52.887Z",
 	"classement": [
+		{
+			"id": "10621237",
+			"ext_classementId": "59733277",
+			"pouleId": "246163",
+			"equipeId": "1833734",
+			"place": "1",
+			"point": "3",
+			"joue": "1",
+			"gagne": "1",
+			"nul": "0",
+			"perdu": "0",
+			"butPlus": "24",
+			"butMoins": "11",
+			"diff": "13",
+			"dernieresRencontres": "1",
+			"equipe_libelle": "HANDBALL CLUB MONTEUX",
+			"equipe_logoActif": "1",
+			"structure_logo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG",
+			"ext_structureId": "3579"
+		},
 		{
 			"id": "10621242",
 			"ext_classementId": "59733281",
 			"pouleId": "246163",
 			"equipeId": "1833739",
-			"place": "1",
+			"place": "2",
 			"point": "3",
 			"joue": "1",
 			"gagne": "1",
@@ -23,11 +43,31 @@
 			"ext_structureId": "3560"
 		},
 		{
+			"id": "10621238",
+			"ext_classementId": "59733276",
+			"pouleId": "246163",
+			"equipeId": "1833735",
+			"place": "3",
+			"point": "3",
+			"joue": "1",
+			"gagne": "1",
+			"nul": "0",
+			"perdu": "0",
+			"butPlus": "33",
+			"butMoins": "24",
+			"diff": "9",
+			"dernieresRencontres": "1",
+			"equipe_libelle": "HANDBALL CLUB VALREAS",
+			"equipe_logoActif": "1",
+			"structure_logo": "2026-06-05-700b853c-4af0-4959-a4c0-ea4e44299bb2.png",
+			"ext_structureId": "3582"
+		},
+		{
 			"id": "10621236",
 			"ext_classementId": "59733282",
 			"pouleId": "246163",
 			"equipeId": "1833733",
-			"place": "2",
+			"place": "4",
 			"point": "3",
 			"joue": "1",
 			"gagne": "1",
@@ -47,7 +87,7 @@
 			"ext_classementId": "59733283",
 			"pouleId": "246163",
 			"equipeId": "1833738",
-			"place": "3",
+			"place": "5",
 			"point": "1",
 			"joue": "1",
 			"gagne": "0",
@@ -67,7 +107,7 @@
 			"ext_classementId": "59733278",
 			"pouleId": "246163",
 			"equipeId": "1833732",
-			"place": "4",
+			"place": "6",
 			"point": "1",
 			"joue": "1",
 			"gagne": "0",
@@ -83,59 +123,19 @@
 			"ext_structureId": "3577"
 		},
 		{
-			"id": "10621237",
-			"ext_classementId": "59733277",
-			"pouleId": "246163",
-			"equipeId": "1833734",
-			"place": "5",
-			"point": "3",
-			"joue": "1",
-			"gagne": "1",
-			"nul": "0",
-			"perdu": "0",
-			"butPlus": "24",
-			"butMoins": "11",
-			"diff": "13",
-			"dernieresRencontres": "1",
-			"equipe_libelle": "HANDBALL CLUB MONTEUX",
-			"equipe_logoActif": "1",
-			"structure_logo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG",
-			"ext_structureId": "3579"
-		},
-		{
-			"id": "10621238",
-			"ext_classementId": "59733276",
-			"pouleId": "246163",
-			"equipeId": "1833735",
-			"place": "6",
-			"point": "0",
-			"joue": "0",
-			"gagne": "0",
-			"nul": "0",
-			"perdu": "0",
-			"butPlus": "0",
-			"butMoins": "0",
-			"diff": "0",
-			"dernieresRencontres": "-1",
-			"equipe_libelle": "HANDBALL CLUB VALREAS",
-			"equipe_logoActif": "1",
-			"structure_logo": "2026-06-05-700b853c-4af0-4959-a4c0-ea4e44299bb2.png",
-			"ext_structureId": "3582"
-		},
-		{
 			"id": "10621239",
 			"ext_classementId": "59733279",
 			"pouleId": "246163",
 			"equipeId": "1833736",
 			"place": "7",
-			"point": "0",
-			"joue": "0",
+			"point": "1",
+			"joue": "1",
 			"gagne": "0",
 			"nul": "0",
-			"perdu": "0",
-			"butPlus": "0",
-			"butMoins": "0",
-			"diff": "0",
+			"perdu": "1",
+			"butPlus": "24",
+			"butMoins": "33",
+			"diff": "-9",
 			"dernieresRencontres": "-1",
 			"equipe_libelle": "SALON HANDBALL CLUB PROVENCE",
 			"equipe_logoActif": "1",
@@ -253,6 +253,17 @@
 			"structureLogo": "2022-01-27-dc1960c2-c08c-44a2-8c06-01c5c6b4469b.png"
 		},
 		{
+			"individuId": "2817679",
+			"matchCount": "1",
+			"totalButs": "5",
+			"totalArrets": "0",
+			"nom": "GAUTHIER",
+			"prenom": "EMY",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB VALREAS",
+			"structureLogo": "2026-06-05-700b853c-4af0-4959-a4c0-ea4e44299bb2.png"
+		},
+		{
 			"individuId": "2822321",
 			"matchCount": "1",
 			"totalButs": "0",
@@ -262,6 +273,17 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "HANDBALL CLUB MONTEUX",
 			"structureLogo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG"
+		},
+		{
+			"individuId": "2938703",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "9",
+			"nom": "FRAYSSE",
+			"prenom": "LOUISA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "SALON HANDBALL CLUB PROVENCE",
+			"structureLogo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg"
 		},
 		{
 			"individuId": "2941675",
@@ -306,6 +328,61 @@
 			"showEquipeLogo": "0",
 			"equipeLibelle": "L'ISLE - LE THOR (U17F)",
 			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
+			"individuId": "3127670",
+			"matchCount": "1",
+			"totalButs": "5",
+			"totalArrets": "0",
+			"nom": "CAYUELA",
+			"prenom": "ELENA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "SALON HANDBALL CLUB PROVENCE",
+			"structureLogo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg"
+		},
+		{
+			"individuId": "3134933",
+			"matchCount": "1",
+			"totalButs": "1",
+			"totalArrets": "0",
+			"nom": "BLANQUET",
+			"prenom": "EMIE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "SALON HANDBALL CLUB PROVENCE",
+			"structureLogo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg"
+		},
+		{
+			"individuId": "3148617",
+			"matchCount": "1",
+			"totalButs": "2",
+			"totalArrets": "0",
+			"nom": "CHANDRE",
+			"prenom": "NINON",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "SALON HANDBALL CLUB PROVENCE",
+			"structureLogo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg"
+		},
+		{
+			"individuId": "3151203",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "POTELLERET",
+			"prenom": "EMMY",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "SALON HANDBALL CLUB PROVENCE",
+			"structureLogo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg"
+		},
+		{
+			"individuId": "3274824",
+			"matchCount": "1",
+			"totalButs": "4",
+			"totalArrets": "0",
+			"nom": "TOURTAY",
+			"prenom": "YNES",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB VALREAS",
+			"structureLogo": "2026-06-05-700b853c-4af0-4959-a4c0-ea4e44299bb2.png"
 		},
 		{
 			"individuId": "3275747",
@@ -363,6 +440,17 @@
 			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
 		},
 		{
+			"individuId": "3358078",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "DAUCHEZ",
+			"prenom": "EMMA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "SALON HANDBALL CLUB PROVENCE",
+			"structureLogo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg"
+		},
+		{
 			"individuId": "3359703",
 			"matchCount": "1",
 			"totalButs": "1",
@@ -374,6 +462,17 @@
 			"structureLogo": "2022-01-27-dc1960c2-c08c-44a2-8c06-01c5c6b4469b.png"
 		},
 		{
+			"individuId": "3360857",
+			"matchCount": "1",
+			"totalButs": "1",
+			"totalArrets": "0",
+			"nom": "BARBAUX",
+			"prenom": "MADIE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "SALON HANDBALL CLUB PROVENCE",
+			"structureLogo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg"
+		},
+		{
 			"individuId": "3367184",
 			"matchCount": "1",
 			"totalButs": "2",
@@ -383,6 +482,17 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "LANCON HANDBALL",
 			"structureLogo": "2022-01-27-dc1960c2-c08c-44a2-8c06-01c5c6b4469b.png"
+		},
+		{
+			"individuId": "3377804",
+			"matchCount": "1",
+			"totalButs": "4",
+			"totalArrets": "0",
+			"nom": "BURLES",
+			"prenom": "MAEVA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "SALON HANDBALL CLUB PROVENCE",
+			"structureLogo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg"
 		},
 		{
 			"individuId": "3382115",
@@ -451,6 +561,17 @@
 			"structureLogo": "2022-01-27-dc1960c2-c08c-44a2-8c06-01c5c6b4469b.png"
 		},
 		{
+			"individuId": "3460972",
+			"matchCount": "1",
+			"totalButs": "10",
+			"totalArrets": "0",
+			"nom": "COIPEL",
+			"prenom": "JADE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB VALREAS",
+			"structureLogo": "2026-06-05-700b853c-4af0-4959-a4c0-ea4e44299bb2.png"
+		},
+		{
 			"individuId": "3495526",
 			"matchCount": "1",
 			"totalButs": "0",
@@ -460,6 +581,28 @@
 			"showEquipeLogo": "0",
 			"equipeLibelle": "L'ISLE - LE THOR (U17F)",
 			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
+			"individuId": "3507118",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "9",
+			"nom": "TIMAHIEU-RIVIERE",
+			"prenom": "ZAHO",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB VALREAS",
+			"structureLogo": "2026-06-05-700b853c-4af0-4959-a4c0-ea4e44299bb2.png"
+		},
+		{
+			"individuId": "3521029",
+			"matchCount": "1",
+			"totalButs": "6",
+			"totalArrets": "0",
+			"nom": "SIMON",
+			"prenom": "LEANE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB VALREAS",
+			"structureLogo": "2026-06-05-700b853c-4af0-4959-a4c0-ea4e44299bb2.png"
 		},
 		{
 			"individuId": "3523396",
@@ -506,6 +649,17 @@
 			"structureLogo": "2026-07-16-885c7b46-4733-4c24-b320-3ce37156cb58.jpg"
 		},
 		{
+			"individuId": "3531157",
+			"matchCount": "1",
+			"totalButs": "3",
+			"totalArrets": "0",
+			"nom": "GUYOT MAZZETTA",
+			"prenom": "ROMANE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "SALON HANDBALL CLUB PROVENCE",
+			"structureLogo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg"
+		},
+		{
 			"individuId": "3540065",
 			"matchCount": "1",
 			"totalButs": "3",
@@ -526,6 +680,28 @@
 			"showEquipeLogo": "0",
 			"equipeLibelle": "L'ISLE - LE THOR (U17F)",
 			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
+			"individuId": "3549957",
+			"matchCount": "1",
+			"totalButs": "5",
+			"totalArrets": "0",
+			"nom": "BOUTAUD",
+			"prenom": "SARAH",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "SALON HANDBALL CLUB PROVENCE",
+			"structureLogo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg"
+		},
+		{
+			"individuId": "3552959",
+			"matchCount": "1",
+			"totalButs": "7",
+			"totalArrets": "0",
+			"nom": "POUIZIN",
+			"prenom": "JULIA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB VALREAS",
+			"structureLogo": "2026-06-05-700b853c-4af0-4959-a4c0-ea4e44299bb2.png"
 		},
 		{
 			"individuId": "3582519",
@@ -570,6 +746,17 @@
 			"showEquipeLogo": "0",
 			"equipeLibelle": "L'ISLE - LE THOR (U17F)",
 			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
+			"individuId": "3721548",
+			"matchCount": "1",
+			"totalButs": "1",
+			"totalArrets": "0",
+			"nom": "LAGUERRE",
+			"prenom": "LUCY",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "SALON HANDBALL CLUB PROVENCE",
+			"structureLogo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg"
 		},
 		{
 			"individuId": "3742865",
@@ -682,6 +869,17 @@
 			"structureLogo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG"
 		},
 		{
+			"individuId": "3912638",
+			"matchCount": "1",
+			"totalButs": "1",
+			"totalArrets": "0",
+			"nom": "VOLOSCUK",
+			"prenom": "CHARLOTTE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB VALREAS",
+			"structureLogo": "2026-06-05-700b853c-4af0-4959-a4c0-ea4e44299bb2.png"
+		},
+		{
 			"individuId": "3917121",
 			"matchCount": "1",
 			"totalButs": "4",
@@ -702,6 +900,17 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "MIRAMAS HANDBALL OUEST PROVENCE",
 			"structureLogo": "2020-09-08-153081ff-5dc4-44c9-988a-c559c99d80a5.jpg"
+		},
+		{
+			"individuId": "4110362",
+			"matchCount": "1",
+			"totalButs": "2",
+			"totalArrets": "0",
+			"nom": "BOUTAUD",
+			"prenom": "LEA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "SALON HANDBALL CLUB PROVENCE",
+			"structureLogo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg"
 		},
 		{
 			"individuId": "4133305",
