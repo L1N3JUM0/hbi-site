@@ -1,6 +1,6 @@
 {
 	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u17-feminines-inter-dep-poule-1-33205/poule-196082/statistiques/",
-	"fetchedAt": "2026-09-27T09:44:13.337Z",
+	"fetchedAt": "2026-09-27T17:42:53.781Z",
 	"classement": [
 		{
 			"id": "10621242",
@@ -23,11 +23,51 @@
 			"ext_structureId": "3560"
 		},
 		{
+			"id": "10621236",
+			"ext_classementId": "59733282",
+			"pouleId": "246163",
+			"equipeId": "1833733",
+			"place": "2",
+			"point": "3",
+			"joue": "1",
+			"gagne": "1",
+			"nul": "0",
+			"perdu": "0",
+			"butPlus": "20",
+			"butMoins": "17",
+			"diff": "3",
+			"dernieresRencontres": "1",
+			"equipe_libelle": "HANDBALL CLUB VEDENAIS",
+			"equipe_logoActif": "1",
+			"structure_logo": "2026-07-16-885c7b46-4733-4c24-b320-3ce37156cb58.jpg",
+			"ext_structureId": "10479"
+		},
+		{
+			"id": "10621241",
+			"ext_classementId": "59733283",
+			"pouleId": "246163",
+			"equipeId": "1833738",
+			"place": "3",
+			"point": "1",
+			"joue": "1",
+			"gagne": "0",
+			"nul": "0",
+			"perdu": "1",
+			"butPlus": "17",
+			"butMoins": "20",
+			"diff": "-3",
+			"dernieresRencontres": "-1",
+			"equipe_libelle": "MIRAMAS HANDBALL OUEST PROVENCE",
+			"equipe_logoActif": "1",
+			"structure_logo": "2020-09-08-153081ff-5dc4-44c9-988a-c559c99d80a5.jpg",
+			"ext_structureId": "3540"
+		},
+		{
 			"id": "10621235",
 			"ext_classementId": "59733278",
 			"pouleId": "246163",
 			"equipeId": "1833732",
-			"place": "2",
+			"place": "4",
 			"point": "1",
 			"joue": "1",
 			"gagne": "0",
@@ -47,16 +87,16 @@
 			"ext_classementId": "59733277",
 			"pouleId": "246163",
 			"equipeId": "1833734",
-			"place": "3",
-			"point": "0",
-			"joue": "0",
-			"gagne": "0",
+			"place": "5",
+			"point": "3",
+			"joue": "1",
+			"gagne": "1",
 			"nul": "0",
 			"perdu": "0",
-			"butPlus": "0",
-			"butMoins": "0",
-			"diff": "0",
-			"dernieresRencontres": "",
+			"butPlus": "24",
+			"butMoins": "11",
+			"diff": "13",
+			"dernieresRencontres": "1",
 			"equipe_libelle": "HANDBALL CLUB MONTEUX",
 			"equipe_logoActif": "1",
 			"structure_logo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG",
@@ -67,7 +107,7 @@
 			"ext_classementId": "59733276",
 			"pouleId": "246163",
 			"equipeId": "1833735",
-			"place": "4",
+			"place": "6",
 			"point": "0",
 			"joue": "0",
 			"gagne": "0",
@@ -76,7 +116,7 @@
 			"butPlus": "0",
 			"butMoins": "0",
 			"diff": "0",
-			"dernieresRencontres": "",
+			"dernieresRencontres": "-1",
 			"equipe_libelle": "HANDBALL CLUB VALREAS",
 			"equipe_logoActif": "1",
 			"structure_logo": "2026-06-05-700b853c-4af0-4959-a4c0-ea4e44299bb2.png",
@@ -87,46 +127,6 @@
 			"ext_classementId": "59733279",
 			"pouleId": "246163",
 			"equipeId": "1833736",
-			"place": "5",
-			"point": "0",
-			"joue": "0",
-			"gagne": "0",
-			"nul": "0",
-			"perdu": "0",
-			"butPlus": "0",
-			"butMoins": "0",
-			"diff": "0",
-			"dernieresRencontres": "",
-			"equipe_libelle": "SALON HANDBALL CLUB PROVENCE",
-			"equipe_logoActif": "1",
-			"structure_logo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg",
-			"ext_structureId": "3543"
-		},
-		{
-			"id": "10621240",
-			"ext_classementId": "59733280",
-			"pouleId": "246163",
-			"equipeId": "1833737",
-			"place": "6",
-			"point": "0",
-			"joue": "0",
-			"gagne": "0",
-			"nul": "0",
-			"perdu": "0",
-			"butPlus": "0",
-			"butMoins": "0",
-			"diff": "0",
-			"dernieresRencontres": "",
-			"equipe_libelle": "HANDBALL SAINT MARTINOIS",
-			"equipe_logoActif": "1",
-			"structure_logo": "2015-09-23-941c58ce-ddb6-42ea-8bb0-144fa8e05287.jpg",
-			"ext_structureId": "3544"
-		},
-		{
-			"id": "10621241",
-			"ext_classementId": "59733283",
-			"pouleId": "246163",
-			"equipeId": "1833738",
 			"place": "7",
 			"point": "0",
 			"joue": "0",
@@ -137,33 +137,55 @@
 			"butMoins": "0",
 			"diff": "0",
 			"dernieresRencontres": "-1",
-			"equipe_libelle": "MIRAMAS HANDBALL OUEST PROVENCE",
+			"equipe_libelle": "SALON HANDBALL CLUB PROVENCE",
 			"equipe_logoActif": "1",
-			"structure_logo": "2020-09-08-153081ff-5dc4-44c9-988a-c559c99d80a5.jpg",
-			"ext_structureId": "3540"
+			"structure_logo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg",
+			"ext_structureId": "3543"
 		},
 		{
-			"id": "10621236",
-			"ext_classementId": "59733282",
+			"id": "10621240",
+			"ext_classementId": "59733280",
 			"pouleId": "246163",
-			"equipeId": "1833733",
+			"equipeId": "1833737",
 			"place": "8",
-			"point": "0",
-			"joue": "0",
+			"point": "1",
+			"joue": "1",
 			"gagne": "0",
 			"nul": "0",
-			"perdu": "0",
-			"butPlus": "0",
-			"butMoins": "0",
-			"diff": "0",
-			"dernieresRencontres": "1",
-			"equipe_libelle": "HANDBALL CLUB VEDENAIS",
+			"perdu": "1",
+			"butPlus": "11",
+			"butMoins": "24",
+			"diff": "-13",
+			"dernieresRencontres": "-1",
+			"equipe_libelle": "HANDBALL SAINT MARTINOIS",
 			"equipe_logoActif": "1",
-			"structure_logo": "2026-07-16-885c7b46-4733-4c24-b320-3ce37156cb58.jpg",
-			"ext_structureId": "10479"
+			"structure_logo": "2015-09-23-941c58ce-ddb6-42ea-8bb0-144fa8e05287.jpg",
+			"ext_structureId": "3544"
 		}
 	],
 	"statsJoueurs": [
+		{
+			"individuId": "2157166",
+			"matchCount": "1",
+			"totalButs": "2",
+			"totalArrets": "0",
+			"nom": "DUBRAC",
+			"prenom": "OLIVIA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL SAINT MARTINOIS",
+			"structureLogo": "2015-09-23-941c58ce-ddb6-42ea-8bb0-144fa8e05287.jpg"
+		},
+		{
+			"individuId": "2263268",
+			"matchCount": "1",
+			"totalButs": "7",
+			"totalArrets": "0",
+			"nom": "OMAIRAT",
+			"prenom": "NAELYS",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB MONTEUX",
+			"structureLogo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG"
+		},
 		{
 			"individuId": "2374683",
 			"matchCount": "1",
@@ -231,6 +253,17 @@
 			"structureLogo": "2022-01-27-dc1960c2-c08c-44a2-8c06-01c5c6b4469b.png"
 		},
 		{
+			"individuId": "2822321",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "DOUA",
+			"prenom": "LENA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB MONTEUX",
+			"structureLogo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG"
+		},
+		{
 			"individuId": "2941675",
 			"matchCount": "1",
 			"totalButs": "7",
@@ -253,6 +286,17 @@
 			"structureLogo": "2022-01-27-dc1960c2-c08c-44a2-8c06-01c5c6b4469b.png"
 		},
 		{
+			"individuId": "3010401",
+			"matchCount": "1",
+			"totalButs": "1",
+			"totalArrets": "0",
+			"nom": "PALERMO",
+			"prenom": "MANLIA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB MONTEUX",
+			"structureLogo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG"
+		},
+		{
 			"individuId": "3055436",
 			"matchCount": "1",
 			"totalButs": "1",
@@ -262,6 +306,17 @@
 			"showEquipeLogo": "0",
 			"equipeLibelle": "L'ISLE - LE THOR (U17F)",
 			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
+			"individuId": "3275747",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "16",
+			"nom": "MAIRE",
+			"prenom": "KASSANDRA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB MONTEUX",
+			"structureLogo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG"
 		},
 		{
 			"individuId": "3287160",
@@ -352,6 +407,28 @@
 			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
 		},
 		{
+			"individuId": "3397558",
+			"matchCount": "1",
+			"totalButs": "5",
+			"totalArrets": "0",
+			"nom": "SANCHEZ",
+			"prenom": "CHLOE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB MONTEUX",
+			"structureLogo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG"
+		},
+		{
+			"individuId": "3421902",
+			"matchCount": "1",
+			"totalButs": "3",
+			"totalArrets": "0",
+			"nom": "LAUZEN",
+			"prenom": "LILY",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB MONTEUX",
+			"structureLogo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG"
+		},
+		{
 			"individuId": "3452642",
 			"matchCount": "1",
 			"totalButs": "11",
@@ -383,6 +460,17 @@
 			"showEquipeLogo": "0",
 			"equipeLibelle": "L'ISLE - LE THOR (U17F)",
 			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
+			"individuId": "3523396",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "ROMAN",
+			"prenom": "LEA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL SAINT MARTINOIS",
+			"structureLogo": "2015-09-23-941c58ce-ddb6-42ea-8bb0-144fa8e05287.jpg"
 		},
 		{
 			"individuId": "3526612",
@@ -418,6 +506,17 @@
 			"structureLogo": "2026-07-16-885c7b46-4733-4c24-b320-3ce37156cb58.jpg"
 		},
 		{
+			"individuId": "3540065",
+			"matchCount": "1",
+			"totalButs": "3",
+			"totalArrets": "0",
+			"nom": "DE PRAETER",
+			"prenom": "CASSY",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB MONTEUX",
+			"structureLogo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG"
+		},
+		{
 			"individuId": "3542855",
 			"matchCount": "1",
 			"totalButs": "3",
@@ -427,6 +526,39 @@
 			"showEquipeLogo": "0",
 			"equipeLibelle": "L'ISLE - LE THOR (U17F)",
 			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
+			"individuId": "3582519",
+			"matchCount": "1",
+			"totalButs": "1",
+			"totalArrets": "0",
+			"nom": "ASSEUM",
+			"prenom": "LILIA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL SAINT MARTINOIS",
+			"structureLogo": "2015-09-23-941c58ce-ddb6-42ea-8bb0-144fa8e05287.jpg"
+		},
+		{
+			"individuId": "3584725",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "15",
+			"nom": "KOUKOUCH",
+			"prenom": "NESRIN",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL SAINT MARTINOIS",
+			"structureLogo": "2015-09-23-941c58ce-ddb6-42ea-8bb0-144fa8e05287.jpg"
+		},
+		{
+			"individuId": "3705863",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "FORNERONE",
+			"prenom": "PAULINE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB MONTEUX",
+			"structureLogo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG"
 		},
 		{
 			"individuId": "3712619",
@@ -473,6 +605,17 @@
 			"structureLogo": "2026-07-16-885c7b46-4733-4c24-b320-3ce37156cb58.jpg"
 		},
 		{
+			"individuId": "3743434",
+			"matchCount": "1",
+			"totalButs": "7",
+			"totalArrets": "0",
+			"nom": "ROUSSIN",
+			"prenom": "LILOU",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL SAINT MARTINOIS",
+			"structureLogo": "2015-09-23-941c58ce-ddb6-42ea-8bb0-144fa8e05287.jpg"
+		},
+		{
 			"individuId": "3744505",
 			"matchCount": "1",
 			"totalButs": "1",
@@ -482,6 +625,28 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "MIRAMAS HANDBALL OUEST PROVENCE",
 			"structureLogo": "2020-09-08-153081ff-5dc4-44c9-988a-c559c99d80a5.jpg"
+		},
+		{
+			"individuId": "3753267",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "ASSIER",
+			"prenom": "JUSTINE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL SAINT MARTINOIS",
+			"structureLogo": "2015-09-23-941c58ce-ddb6-42ea-8bb0-144fa8e05287.jpg"
+		},
+		{
+			"individuId": "3765808",
+			"matchCount": "1",
+			"totalButs": "1",
+			"totalArrets": "0",
+			"nom": "MEISTERMANN",
+			"prenom": "LANA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL SAINT MARTINOIS",
+			"structureLogo": "2015-09-23-941c58ce-ddb6-42ea-8bb0-144fa8e05287.jpg"
 		},
 		{
 			"individuId": "3810640",
@@ -506,6 +671,17 @@
 			"structureLogo": "2026-07-16-885c7b46-4733-4c24-b320-3ce37156cb58.jpg"
 		},
 		{
+			"individuId": "3895108",
+			"matchCount": "1",
+			"totalButs": "5",
+			"totalArrets": "0",
+			"nom": "ROBERT",
+			"prenom": "JULIE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB MONTEUX",
+			"structureLogo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG"
+		},
+		{
 			"individuId": "3917121",
 			"matchCount": "1",
 			"totalButs": "4",
@@ -526,6 +702,17 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "MIRAMAS HANDBALL OUEST PROVENCE",
 			"structureLogo": "2020-09-08-153081ff-5dc4-44c9-988a-c559c99d80a5.jpg"
+		},
+		{
+			"individuId": "4133305",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "THUBE MOLLA",
+			"prenom": "MAE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB MONTEUX",
+			"structureLogo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG"
 		},
 		{
 			"individuId": "4143639",
@@ -570,6 +757,28 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "LANCON HANDBALL",
 			"structureLogo": "2022-01-27-dc1960c2-c08c-44a2-8c06-01c5c6b4469b.png"
+		},
+		{
+			"individuId": "4271102",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "BOHLINGER",
+			"prenom": "CLEMENCE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL SAINT MARTINOIS",
+			"structureLogo": "2015-09-23-941c58ce-ddb6-42ea-8bb0-144fa8e05287.jpg"
+		},
+		{
+			"individuId": "4299249",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "VATINEL",
+			"prenom": "ALIX",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB MONTEUX",
+			"structureLogo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG"
 		}
 	]
 }
