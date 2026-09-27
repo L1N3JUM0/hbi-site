@@ -68,6 +68,18 @@ export interface Competition {
 const HOME_LOCATION_PATTERN = /emile avy/i;
 const JOURNEE_PATTERN = /journ[ée]e\s*(\d+)/i;
 
+/** Nom d'équipe non renseigné côté fédération sur le flux ("SANS LIBELLE"
+ * plutôt qu'un vrai nom de club) -- motif générique, pas propre à une équipe
+ * précise : constaté sur le flux U15 féminines 2026-2027 (c-33207), mais
+ * rien n'empêche qu'une autre équipe soit un jour touchée par le même défaut
+ * de saisie fédéral. Voir estNomEquipeNonRenseigne() ci-dessous. */
+const NOM_EQUIPE_NON_RENSEIGNE_PATTERN = /^sans\s*libell[ée]?$/i;
+
+function estNomEquipeNonRenseigne(nom: string): boolean {
+	const texte = nom.trim();
+	return texte === "" || NOM_EQUIPE_NON_RENSEIGNE_PATTERN.test(texte);
+}
+
 /** Nombre de jours d'écart maximum entre deux matchs d'une même compétition
  * pour les considérer comme faisant partie de la même journée, quand le
  * flux iCal ne fournit pas de numéro de journée exploitable. Une journée de
@@ -272,6 +284,53 @@ async function getMatchsDuFlux(now: Date): Promise<AgendaMatch[]> {
 					isDerby: false,
 					isHome: false,
 				});
+			} else if (teams.length === 1) {
+				// Aucun nom ne correspond, mais UNE SEULE équipe du club est
+				// déclarée sur ce flux (pas de partage de poule, contrairement aux
+				// Seniors masculins 1/2 -- voir la branche matchedA/matchedB
+				// ci-dessus, inchangée pour ce cas) : les flux de compétition
+				// FFHandball (c-<poule>/s-3577.ics, où "s-3577" identifie la
+				// STRUCTURE du club, pas seulement la saison) sont déjà filtrés
+				// côté serveur pour ne renvoyer QUE les matchs du club -- vérifié
+				// sur les 10 flux utilisés par le club (36 événements, aucun match
+				// entre deux équipes tierces, le 28/09/2026). Pas besoin de
+				// retrouver le nom du club dans le texte pour savoir que cet
+				// événement le concerne : seulement pour déterminer qui, des deux
+				// noms, est le HBI -- utile quand ce nom n'est pas seulement mal
+				// orthographié mais carrément vide côté fédération (ex. "SANS
+				// LIBELLE vs SALON HANDBALL CLUB PROVENCE", flux U15F 2026-2027).
+				// Le camp HBI est repéré comme celui dont le nom est vide/non
+				// renseigné ; la POSITION dans le titre (le recevant est toujours
+				// listé en premier, même constat que sur les feuilles de match PDF
+				// anciennes -- voir src/lib/fdme/) donne alors domicile/extérieur,
+				// sans avoir besoin d'y faire correspondre le nom du club.
+				const team = teams[0];
+				const aVide = estNomEquipeNonRenseigne(sideA);
+				const bVide = estNomEquipeNonRenseigne(sideB);
+				if (aVide && !bVide) {
+					matches.push({
+						...base,
+						equipeSlugs: [team.equipeSlug],
+						teamLabel: team.nomAffiche,
+						equipeLibelle: team.libelle,
+						opponent: sideB,
+						isDerby: false,
+						isHome: true,
+					});
+				} else if (bVide && !aVide) {
+					matches.push({
+						...base,
+						equipeSlugs: [team.equipeSlug],
+						teamLabel: team.nomAffiche,
+						equipeLibelle: team.libelle,
+						opponent: sideA,
+						isDerby: false,
+						isHome: false,
+					});
+				}
+				// Sinon (aucun nom vide des deux côtés, ou les deux) : aucun signal
+				// fiable pour savoir qui est le club -- ignoré plutôt que deviné,
+				// comme le cas juste en dessous.
 			}
 			// Sinon : variante d'équipe présente dans le flux mais pas encore
 			// déclarée dans les "Calendriers" de la fiche équipe correspondante
