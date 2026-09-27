@@ -442,3 +442,22 @@ export function formatMatchTime(date: Date): string {
 		timeZone: "Europe/Paris",
 	}).format(date);
 }
+
+/** Lien de recherche cartographique pour le lieu d'un match, construit depuis
+ * l'adresse que le flux iCal fournit déjà dans LOCATION (ex. "EMILE AVY,
+ * AVENUE JEAN BOUIN 84800, L ISLE SUR LA SORGUE") -- aucune saisie
+ * supplémentaire côté CMS.
+ *
+ * Volontairement une URL de RECHERCHE Google Maps générique, et non un lien
+ * "itinéraire" propre à une application : sur mobile, le système propose
+ * alors l'application de navigation installée (Maps, Waze, Plans...) au lieu
+ * d'en imposer une. C'est aussi un simple lien sortant au clic -- aucun
+ * script ni cookie tiers chargé sur nos pages.
+ *
+ * Renvoie undefined quand le flux ne donne aucun lieu : à l'appelant de ne
+ * rien afficher plutôt que d'ouvrir une recherche vide. */
+export function mapsSearchUrl(location: string): string | undefined {
+	const adresse = location.trim();
+	if (!adresse) return undefined;
+	return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(adresse)}`;
+}

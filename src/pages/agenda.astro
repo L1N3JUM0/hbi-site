@@ -6,7 +6,7 @@ import Footer from "../components/Footer.astro";
 import AjouterAgendaButton from "../components/AjouterAgendaButton.astro";
 import Favicon from "../components/Favicon.astro";
 import { withBase } from "../utils/links";
-import { getAgendaMatches, getAgendaTeams, getCompetitionLinks, formatMatchDate, formatMatchTime } from "../lib/agenda";
+import { getAgendaMatches, getAgendaTeams, getCompetitionLinks, formatMatchDate, formatMatchTime, mapsSearchUrl } from "../lib/agenda";
 import { getUpcomingEvenements } from "../lib/evenements";
 
 // Matchs (flux FFHandball) et événements du club (CMS) dans UNE seule liste
@@ -15,7 +15,7 @@ import { getUpcomingEvenements } from "../lib/evenements";
 // faire elle-même la fusion dans sa tête.
 const [matches, evenements] = await Promise.all([getAgendaMatches(), getUpcomingEvenements()]);
 const entries = [
-	...matches.map((match) => ({ kind: "match" as const, start: match.start, match })),
+	...matches.map((match) => ({ kind: "match" as const, start: match.start, match, mapsUrl: mapsSearchUrl(match.location) })),
 	...evenements.map((evenement) => ({ kind: "evenement" as const, start: evenement.start, evenement })),
 ].sort((a, b) => a.start.getTime() - b.start.getTime());
 const competitions = await getCompetitionLinks();
@@ -91,7 +91,26 @@ const agendaTeams = await getAgendaTeams();
 											<p class="meta">
 												{formatMatchDate(entry.start)} à {formatMatchTime(entry.start)}
 											</p>
-											<p class="meta meta--location">{entry.match.location}</p>
+											<p class="meta meta--location">
+												<span>{entry.match.location}</span>
+												{entry.mapsUrl && (
+													<a
+														class="map-link"
+														href={entry.mapsUrl}
+														target="_blank"
+														rel="noopener noreferrer"
+														aria-label={`Voir ${entry.match.location} sur une carte`}
+													>
+														<svg class="map-pin" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+															<path
+																d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"
+																fill="currentColor"
+															/>
+														</svg>
+														Carte
+													</a>
+												)}
+											</p>
 										</>
 									)}
 								</li>
@@ -317,6 +336,35 @@ const agendaTeams = await getAgendaTeams();
 		color: rgba(255, 255, 255, 0.7);
 		font-size: 0.9rem;
 		margin: 0;
+	}
+	.meta--location {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.15rem 0.6rem;
+	}
+	/* Le lien porte un libellé "Carte" en plus de l'épingle : une icône seule
+	   n'annonce pas ce qu'elle fait, et la zone cliquable atteint les 44px
+	   demandés sans grossir la ligne d'adresse. */
+	.map-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3rem;
+		min-height: 44px;
+		color: var(--color-white);
+		font-weight: 800;
+		font-size: 0.85rem;
+		text-decoration: none;
+		border-bottom: 2px solid var(--color-crimson);
+	}
+	.map-link:hover,
+	.map-link:focus-visible {
+		color: var(--color-crimson);
+	}
+	.map-pin {
+		width: 1rem;
+		height: 1rem;
+		flex: none;
 	}
 
 	/* Suit directement le bloc "S'abonner" (même fond marine) : un filet les
