@@ -6,7 +6,7 @@ import Footer from "../components/Footer.astro";
 import AjouterAgendaButton from "../components/AjouterAgendaButton.astro";
 import Favicon from "../components/Favicon.astro";
 import { withBase } from "../utils/links";
-import { getAgendaMatches, getAgendaTeams, getCompetitionLinks, formatMatchDate, formatMatchTime, mapsSearchUrl } from "../lib/agenda";
+import { getAgendaMatches, getAgendaTeams, getCompetitionLinks, formatMatchDate, formatMatchTime, mapsSearchUrl, androidGeoUri } from "../lib/agenda";
 import { getUpcomingEvenements } from "../lib/evenements";
 
 // Matchs (flux FFHandball) et événements du club (CMS) dans UNE seule liste
@@ -15,7 +15,19 @@ import { getUpcomingEvenements } from "../lib/evenements";
 // faire elle-même la fusion dans sa tête.
 const [matches, evenements] = await Promise.all([getAgendaMatches(), getUpcomingEvenements()]);
 const entries = [
-	...matches.map((match) => ({ kind: "match" as const, start: match.start, match, mapsUrl: mapsSearchUrl(match.location) })),
+	...matches.map((match) => ({
+		kind: "match" as const,
+		start: match.start,
+		match,
+		mapsUrl: mapsSearchUrl(match.location),
+		// Lien par défaut (voir mapsSearchUrl) : fonctionne partout, y compris
+		// sans JavaScript. Sur Android, le script en bas de page le remplace
+		// par androidGeoUri() -- seul format qui déclenche le sélecteur natif
+		// entre applications de navigation (Maps, Waze, Géoportail...). Jamais
+		// l'inverse : en cas de doute sur l'appareil, ce lien Google Maps reste
+		// affiché, jamais un lien mort.
+		geoUri: androidGeoUri(match.location, match.geo),
+	})),
 	...evenements.map((evenement) => ({ kind: "evenement" as const, start: evenement.start, evenement })),
 ].sort((a, b) => a.start.getTime() - b.start.getTime());
 const competitions = await getCompetitionLinks();
@@ -97,6 +109,7 @@ const agendaTeams = await getAgendaTeams();
 													<a
 														class="map-link"
 														href={entry.mapsUrl}
+														data-geo-href={entry.geoUri}
 														target="_blank"
 														rel="noopener noreferrer"
 														aria-label={`Voir ${entry.match.location} sur une carte`}
@@ -163,6 +176,28 @@ const agendaTeams = await getAgendaTeams();
 		<Footer />
 	</body>
 </html>
+
+<script>
+	// Bascule les liens "Carte" vers le format "geo:" sur Android UNIQUEMENT :
+	// c'est le seul format qui déclenche, sur cet OS, le sélecteur natif entre
+	// applications de navigation installées (Maps, Waze, Géoportail...) --
+	// voir androidGeoUri() dans src/lib/agenda.ts pour le détail et les
+	// limites (notamment : rien ne garantit qu'une application donnée soit
+	// enregistrée pour répondre à ce type de lien). Un lien Google Maps
+	// classique (déjà présent par défaut dans le HTML, voir mapsSearchUrl())
+	// ouvre toujours Google Maps spécifiquement, y compris sur Android.
+	//
+	// Détection au chargement, pas au clic : la personne ne voit qu'un seul
+	// lien, jamais un choix entre deux formats. En cas de doute sur
+	// l'appareil (UA absent, inhabituel...), on ne touche à rien -- le lien
+	// Google Maps par défaut reste affiché, jamais de lien mort.
+	if (/android/i.test(navigator.userAgent)) {
+		for (const lien of document.querySelectorAll<HTMLAnchorElement>(".map-link[data-geo-href]")) {
+			const geoHref = lien.dataset.geoHref;
+			if (geoHref) lien.href = geoHref;
+		}
+	}
+</script>
 
 <style is:global>
 	* {

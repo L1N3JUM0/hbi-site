@@ -45,6 +45,10 @@ export interface AgendaMatch {
 	 * liste -- ne pas l'afficher comme une date de match, voir `reporte`). */
 	start: Date;
 	location: string;
+	/** Coordonnées GPS du gymnase, quand le flux les fournit (voir
+	 * FeedEvent.geo) -- sert à construire un lien "geo:" plus précis
+	 * qu'une recherche par adresse, voir androidGeoUri(). */
+	geo?: { lat: number; lon: number };
 	matchUrl?: string;
 	/** Flux iCal d'origine (pour le bouton "Ajouter à mon agenda"). */
 	icsUrl: string;
@@ -122,6 +126,10 @@ interface FeedEvent {
 	start: Date;
 	summary: string;
 	location: string;
+	/** Coordonnées GPS du gymnase, quand le flux les fournit (champ iCal
+	 * GEO -- voir androidGeoUri() plus bas) : la fédération les renseigne
+	 * systématiquement en pratique, mais rien ne l'y oblige. */
+	geo?: { lat: number; lon: number };
 	matchUrl?: string;
 	journee: number | null;
 }
@@ -152,6 +160,10 @@ async function fetchFeed(url: string): Promise<FeedData> {
 						start: event.start,
 						summary: textValue(event.summary),
 						location: textValue(event.location),
+						geo:
+							event.geo && typeof event.geo.lat === "number" && typeof event.geo.lon === "number"
+								? { lat: event.geo.lat, lon: event.geo.lon }
+								: undefined,
 						matchUrl: event.url,
 						journee: parseJournee(textValue(event.description)),
 					}));
@@ -249,6 +261,7 @@ async function getMatchsDuFlux(now: Date): Promise<AgendaMatch[]> {
 				id: event.uid,
 				start: event.start,
 				location: event.location,
+				geo: event.geo,
 				matchUrl: event.matchUrl,
 				icsUrl: url,
 				classementUrl,
@@ -507,11 +520,11 @@ export function formatMatchTime(date: Date): string {
  * AVENUE JEAN BOUIN 84800, L ISLE SUR LA SORGUE") -- aucune saisie
  * supplémentaire côté CMS.
  *
- * Volontairement une URL de RECHERCHE Google Maps générique, et non un lien
- * "itinéraire" propre à une application : sur mobile, le système propose
- * alors l'application de navigation installée (Maps, Waze, Plans...) au lieu
- * d'en imposer une. C'est aussi un simple lien sortant au clic -- aucun
- * script ni cookie tiers chargé sur nos pages.
+ * Lien qui fonctionne PARTOUT (Android, iPhone, ordinateur, sans JavaScript)
+ * : c'est le lien par défaut affiché dans le HTML, gardé tel quel comme
+ * secours si androidGeoUri() ci-dessous ne s'applique pas -- voir le script
+ * dans agenda.astro qui choisit lequel des deux afficher. Un simple lien
+ * sortant au clic -- aucun script ni cookie tiers chargé sur nos pages.
  *
  * Renvoie undefined quand le flux ne donne aucun lieu : à l'appelant de ne
  * rien afficher plutôt que d'ouvrir une recherche vide. */
@@ -519,4 +532,34 @@ export function mapsSearchUrl(location: string): string | undefined {
 	const adresse = location.trim();
 	if (!adresse) return undefined;
 	return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(adresse)}`;
+}
+
+/** Lien au format "geo:", reconnu UNIQUEMENT par Android : c'est le seul des
+ * deux formats qui déclenche, sur cet OS, le sélecteur natif entre toutes
+ * les applications de navigation installées et enregistrées pour ce type de
+ * lien (Maps, Waze, Géoportail...) -- une URL Google Maps classique (voir
+ * mapsSearchUrl() ci-dessus) ouvre toujours Google Maps spécifiquement, y
+ * compris sur Android. Sur iPhone, Safari ne reconnaît pas "geo:" du tout :
+ * il n'existe pas d'équivalent à ce sélecteur natif pour ce format --
+ * mapsSearchUrl() y reste donc le seul lien pertinent. Le choix entre les
+ * deux se fait côté navigateur (voir le script dans agenda.astro), jamais
+ * ici : on ne sait rien de l'appareil qui affichera la page au moment du
+ * build.
+ *
+ * Utilise les coordonnées GPS du flux iCal (champ GEO) quand elles sont
+ * disponibles -- une recherche par coordonnées est plus fiable pour un
+ * sélecteur d'applications qu'une recherche par adresse texte. Repli sur
+ * l'adresse texte sinon (mêmes données que mapsSearchUrl()).
+ *
+ * Renvoie undefined dans les mêmes cas que mapsSearchUrl() (aucun lieu) :
+ * l'appelant garde alors le lien Google Maps par défaut -- jamais de lien
+ * mort, même en cas de doute sur l'appareil (voir le script). */
+export function androidGeoUri(location: string, geo?: { lat: number; lon: number }): string | undefined {
+	const adresse = location.trim();
+	if (geo) {
+		const label = encodeURIComponent(adresse || `${geo.lat},${geo.lon}`);
+		return `geo:${geo.lat},${geo.lon}?q=${geo.lat},${geo.lon}(${label})`;
+	}
+	if (!adresse) return undefined;
+	return `geo:0,0?q=${encodeURIComponent(adresse)}`;
 }
