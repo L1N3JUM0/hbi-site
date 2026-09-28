@@ -263,11 +263,30 @@ le nôtre.
 
 ## Ajouter le résultat d'un match
 
-Après un match, la feuille de match officielle (score, chronologie,
-statistiques des joueur·se·s) est publiée par la fédération quelques
-heures après la rencontre. Le site peut la récupérer automatiquement :
-vous n'avez qu'à déposer le PDF, tout le reste (résultat, graphique
-d'évolution du score, statistiques) est ajouté seul.
+**En temps normal, il n'y a rien à faire.** Le site récupère tout seul les
+feuilles de match des équipes dont le calendrier FFHandball est renseigné
+dans leur fiche (champ « Calendriers de compétition ») : chaque nuit à 6h,
+et aussi le samedi vers 23h et le dimanche vers 22h pour les matchs du
+week-end. Le résultat, le graphique d'évolution du score et les
+statistiques apparaissent seuls, dès que la fédération a publié la feuille
+(en général quelques heures après le match).
+
+Quelques cas particuliers, gérés automatiquement :
+
+- **Forfait** : le résultat est créé seul si la fédération indique
+  clairement quelle équipe a déclaré forfait ; sinon, le bandeau le signale
+  et c'est à vous de saisir le résultat (voir « En secours » plus bas).
+- **Match reporté ou pas encore joué** : rien ne se passe tant que la
+  fédération n'affiche pas de score, sans aucune alerte.
+- **Feuille jamais publiée** : si le score est affiché mais que la feuille
+  reste introuvable 21 jours après, le bandeau vous demande de la déposer à
+  la main (étapes ci-dessous).
+- **Loisirs et tournois ETF** : jamais récupérés automatiquement.
+
+**Le dépôt manuel reste possible en secours** : pour un match absent des
+calendriers (certaines coupes, finalités, matchs amicaux), ou quand le
+bandeau le demande. Tout le reste (résultat, graphique d'évolution du
+score, statistiques) est ajouté seul à partir du PDF déposé.
 
 ### 1. Récupérer le PDF sur le site de la FFHandball
 

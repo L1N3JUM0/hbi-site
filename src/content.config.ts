@@ -489,8 +489,11 @@ const resultats = defineCollection({
 			/** "archive" : extrait d'une feuille de match, PDF consommé.
 			 * "pdf" : ancien fonctionnement (régénéré tant que le PDF était dans
 			 * le dépôt), ne subsiste que jusqu'au premier build qui consomme
-			 * ce PDF. "manuel" : saisi en secours dans le CMS. */
-			source: champAvecDefaut(z.enum(["archive", "pdf", "manuel"]), "manuel"),
+			 * ce PDF. "ffhandball" : forfait créé par la récupération automatique
+			 * depuis la page de la rencontre (pas de feuille, voir
+			 * scripts/recuperer-feuilles.mjs). "manuel" : saisi en secours dans
+			 * le CMS. */
+			source: champAvecDefaut(z.enum(["archive", "pdf", "ffhandball", "manuel"]), "manuel"),
 			/** Identifiant FFHandball de la rencontre (ex. "VAGEXGV") -- clé de
 			 * déduplication pour les entrées générées depuis une feuille de match.
 			 * Absent pour une entrée saisie à la main. */

@@ -38,11 +38,12 @@
  * l'ancien fonctionnement : il ne reste que pour les fiches écrites avant ce
  * changement, et disparaît au premier build qui consomme leur PDF.
  */
-import { existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseFeuilleDeMatch, FeuilleFormatError } from "../src/lib/fdme/parseFeuille.mjs";
 import { libellesCompetitionIncomplets } from "../src/lib/fdme/equipeMatch.mjs";
 import { categorieIgnoree } from "../src/lib/fdme/categoriesIgnorees.mjs";
+import { DOSSIER_TEMPORAIRE, DUREE_ALERTE_DIVERGENCE_MS, ETAT_PATH } from "../src/lib/fdme/recuperation.mjs";
 import { lireFrontmatter } from "./frontmatter.mjs";
 
 // Charge le pépin de hachage des licences (voir src/lib/fdme/licenceHash.mjs)
@@ -216,22 +217,60 @@ for (const equipe of equipesCompetition) {
 	});
 }
 
-for (const entryPath of entries) {
-	const nomEntree = extractPdfFieldValue(entryPath)?.split("/").pop() ?? entryPath;
+/** Suivi de la récupération automatique (voir scripts/recuperer-feuilles.mjs) :
+ * mis à jour ici pour les feuilles qu'elle a téléchargées, et source des
+ * alertes qui doivent rester affichées d'un build à l'autre. */
+const etatAuto = existsSync(ETAT_PATH) ? JSON.parse(readFileSync(ETAT_PATH, "utf-8")) : { rencontres: {} };
+let etatAutoModifie = false;
+function suivreAuto(uid, changements) {
+	if (!uid) return;
+	etatAuto.rencontres[uid] = { ...etatAuto.rencontres[uid], ...changements };
+	etatAutoModifie = true;
+}
 
-	const pdfFieldValue = extractPdfFieldValue(entryPath);
-	if (!pdfFieldValue) {
-		console.warn(`[import-fdme] ${entryPath} : aucun champ "pdf" trouvé, ignoré.`);
-		erreurs.push({ fichier: entryPath, raison: "Aucun fichier PDF associé à cette entrée." });
-		ignorees++;
-		continue;
-	}
-	const pdfPath = resolvePdfFilePath(pdfFieldValue);
-	if (!existsSync(pdfPath)) {
-		console.warn(`[import-fdme] ${entryPath} : fichier PDF introuvable (${pdfPath}), ignoré.`);
-		erreurs.push({ fichier: nomEntree, raison: "Le fichier PDF déposé est introuvable (problème technique de dépôt)." });
-		ignorees++;
-		continue;
+/** Deux provenances, un seul traitement : les dépôts du CMS, et les PDF
+ * téléchargés par la récupération automatique (dossier temporaire ignoré par
+ * git). Seule différence : une feuille automatique illisible ou refusée est
+ * simplement supprimée (elle sera retéléchargée ou signalée via le suivi),
+ * alors qu'un dépôt manuel reste dans le CMS pour que la personne voie le
+ * problème. */
+const sources = [
+	...entries.map((entryPath) => ({ entryPath, auto: null })),
+	...(existsSync(DOSSIER_TEMPORAIRE) ? readdirSync(DOSSIER_TEMPORAIRE) : [])
+		.filter((f) => f.endsWith(".pdf"))
+		.map((f) => {
+			const meta = join(DOSSIER_TEMPORAIRE, f.replace(/\.pdf$/, ".json"));
+			return { pdfPath: join(DOSSIER_TEMPORAIRE, f), auto: existsSync(meta) ? JSON.parse(readFileSync(meta, "utf-8")) : {} };
+		}),
+];
+
+for (const source of sources) {
+	const { entryPath, auto } = source;
+	let pdfPath = source.pdfPath;
+	const nomEntree = auto
+		? `${pdfPath.split(/[\\/]/).pop()} (récupérée automatiquement)`
+		: (extractPdfFieldValue(entryPath)?.split("/").pop() ?? entryPath);
+	const consommer = () => {
+		unlinkSync(pdfPath);
+		if (entryPath) unlinkSync(entryPath);
+		else if (existsSync(pdfPath.replace(/\.pdf$/, ".json"))) unlinkSync(pdfPath.replace(/\.pdf$/, ".json"));
+	};
+
+	if (!auto) {
+		const pdfFieldValue = extractPdfFieldValue(entryPath);
+		if (!pdfFieldValue) {
+			console.warn(`[import-fdme] ${entryPath} : aucun champ "pdf" trouvé, ignoré.`);
+			erreurs.push({ fichier: entryPath, raison: "Aucun fichier PDF associé à cette entrée." });
+			ignorees++;
+			continue;
+		}
+		pdfPath = resolvePdfFilePath(pdfFieldValue);
+		if (!existsSync(pdfPath)) {
+			console.warn(`[import-fdme] ${entryPath} : fichier PDF introuvable (${pdfPath}), ignoré.`);
+			erreurs.push({ fichier: nomEntree, raison: "Le fichier PDF déposé est introuvable (problème technique de dépôt)." });
+			ignorees++;
+			continue;
+		}
 	}
 
 	try {
@@ -243,9 +282,29 @@ for (const entryPath of entries) {
 		const ignoree = categorieIgnoree(data.competition);
 		if (ignoree?.refuseeAImport) {
 			console.warn(`[import-fdme] ${pdfPath} : catégorie « ${ignoree.libelle} » refusée à l'import (${data.competition}).`);
-			erreurs.push({ fichier: `${data.codeRencontre} (${nomEntree})`, raison: ignoree.raison });
+			if (auto) {
+				consommer();
+				suivreAuto(auto.uid, { statut: "ignoree" });
+			} else {
+				erreurs.push({ fichier: `${data.codeRencontre} (${nomEntree})`, raison: ignoree.raison });
+			}
 			ignorees++;
 			continue;
+		}
+		// Feuille récupérée automatiquement : l'équipe du calendrier dont elle
+		// provient fait foi (décision du club) ; la détection par nom de
+		// compétition ne sert plus que de contrôle, signalé s'il diverge.
+		if (auto?.equipe?.equipeSlug) {
+			const detectee = data.equipeSlug;
+			if (detectee && detectee !== auto.equipe.equipeSlug) {
+				console.warn(`[import-fdme] ${pdfPath} : équipe du calendrier (${auto.equipe.equipeSlug}) ≠ détection (${detectee}).`);
+				suivreAuto(auto.uid, { divergence: { calendrier: auto.equipe.equipeSlug, detectee, le: new Date().toISOString() } });
+			}
+			data.equipeSlug = auto.equipe.equipeSlug;
+			if (auto.equipe.equipeNumero) {
+				data.equipeNumero = auto.equipe.equipeNumero;
+				data.equipeNumeroAmbigu = false;
+			}
 		}
 		const cible = join(RESULTATS_DIR, `pdf-${data.codeRencontre.toLowerCase()}.md`);
 		preserverCorrectionsManuelles(cible, data);
@@ -258,17 +317,23 @@ for (const entryPath of entries) {
 		codesGeneres.add(`pdf-${data.codeRencontre.toLowerCase()}.md`);
 		// Consommation : le résultat est archivé, le PDF (noms et licences en
 		// clair) et son entrée CMS n'ont plus de raison d'exister.
-		unlinkSync(pdfPath);
-		unlinkSync(entryPath);
+		consommer();
+		if (auto) suivreAuto(auto.uid, { statut: "importee", code: data.codeRencontre });
 		consommees++;
 		ok++;
 	} catch (error) {
-		if (error instanceof FeuilleFormatError) {
-			console.warn(`[import-fdme] ${pdfPath} : feuille non reconnue (${error.message}) -- ignorée.`);
-			erreurs.push({ fichier: nomEntree, raison: "Format de feuille non reconnu (voir le PDF déposé : est-ce bien un export du site FFHandball, pas un scan ?)." });
+		const formatInconnu = error instanceof FeuilleFormatError;
+		console.warn(`[import-fdme] ${pdfPath} : ${formatInconnu ? "feuille non reconnue" : "erreur inattendue"} (${error.message}) -- ignorée.`);
+		if (auto) {
+			consommer();
+			suivreAuto(auto.uid, { statut: "echec_lecture", raison: error.message });
 		} else {
-			console.warn(`[import-fdme] ${pdfPath} : erreur inattendue (${error.message}) -- ignorée.`);
-			erreurs.push({ fichier: nomEntree, raison: "Erreur inattendue à la lecture du PDF." });
+			erreurs.push({
+				fichier: nomEntree,
+				raison: formatInconnu
+					? "Format de feuille non reconnu (voir le PDF déposé : est-ce bien un export du site FFHandball, pas un scan ?)."
+					: "Erreur inattendue à la lecture du PDF.",
+			});
 		}
 		ignorees++;
 	}
@@ -307,8 +372,43 @@ for (const fichier of existsSync(RESULTATS_DIR) ? readdirSync(RESULTATS_DIR).fil
 	}
 }
 
+// Alertes de la récupération automatique, relues depuis son suivi. Jamais
+// pour un match sans score (non joué ou reporté) : rien à demander tant que
+// la fédération n'affiche pas de résultat.
+for (const r of Object.values(etatAuto.rencontres)) {
+	const libelle = `${r.code ?? "?"} (${r.adversaire ?? "?"}, ${r.date ? DATE_COURTE.format(new Date(r.date)) : "?"})`;
+	if (r.statut === "abandon") {
+		erreurs.push({
+			fichier: libelle,
+			raison: "Feuille de match toujours introuvable sur le site de la FFHandball plus de 21 jours après le match (le score, lui, est publié). Déposez-la à la main dans « Feuilles de match » si vous l'avez. La récupération automatique continue d'essayer.",
+		});
+	} else if (r.statut === "forfait_ambigu") {
+		erreurs.push({
+			fichier: libelle,
+			raison: `Forfait sans indication claire de l'équipe fautive sur la FFHandball (${r.raison ?? "?"}) : aucun résultat créé. Saisissez-le à la main dans « Résultats » si besoin.`,
+		});
+	} else if (r.statut === "echec_lecture") {
+		erreurs.push({
+			fichier: libelle,
+			raison: "Feuille récupérée automatiquement mais illisible (format inattendu). Nouvel essai à chaque reconstruction ; si le problème persiste, signalez-le.",
+		});
+	}
+	if (r.divergence && Date.now() - new Date(r.divergence.le).getTime() < DUREE_ALERTE_DIVERGENCE_MS) {
+		avertissementsAffiches.push({
+			fichier: libelle,
+			raison: `Résultat rattaché à « ${r.divergence.calendrier} » (calendrier dont vient le match), alors que le nom de la compétition sur la feuille évoque « ${r.divergence.detectee} ». Vérifiez la fiche Résultat ; si l'équipe est la bonne, rien à faire (cette alerte disparaît d'elle-même).`,
+		});
+	}
+}
+
+// Rien ne doit survivre au build dans le dossier temporaire (feuilles
+// récupérées mais non traitées pour une raison inattendue) : il n'est de
+// toute façon jamais commité.
+if (existsSync(DOSSIER_TEMPORAIRE)) rmSync(DOSSIER_TEMPORAIRE, { recursive: true, force: true });
+if (etatAutoModifie) writeFileSync(ETAT_PATH, JSON.stringify(etatAuto, null, "\t") + "\n", "utf-8");
+
 writeFileSync(ERREURS_PATH, JSON.stringify({ erreurs, avertissements: avertissementsAffiches }, null, "\t") + "\n", "utf-8");
 
 console.log(
-	`[import-fdme] ${ok} feuille(s) importée(s) dont ${consommees} consommée(s) (PDF supprimé), ${ignorees} ignorée(s) sur ${entries.length} déposée(s).`,
+	`[import-fdme] ${ok} feuille(s) importée(s) dont ${consommees} consommée(s) (PDF supprimé), ${ignorees} ignorée(s) sur ${sources.length} (dont ${sources.length - entries.length} récupérée(s) automatiquement).`,
 );

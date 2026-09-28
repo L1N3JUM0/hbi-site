@@ -10,6 +10,11 @@ dist/
 # besoin : elle reste locale/éphémère.
 src/data/import-erreurs.generated.json
 
+# Feuilles de match téléchargées par la récupération automatique, extraites
+# puis supprimées dans le même build (voir scripts/recuperer-feuilles.mjs) :
+# elles portent noms et licences en clair, jamais dans le dépôt.
+.feuilles-auto/
+
 # dependencies
 node_modules/
 

@@ -9,6 +9,13 @@ on:
     # Rebuild quotidien pour garder l'agenda des matchs (flux iCal
     # FFHandball, récupérés au moment du build) à jour même sans commit.
     - cron: "0 4 * * *"
+    # Soirs de match : récupère les feuilles du week-end dès leur
+    # publication (voir scripts/recuperer-feuilles.mjs). Le cron de GitHub
+    # est en UTC, sans heure d'été : réglés sur l'heure d'hiver (l'essentiel
+    # de la saison), soit samedi 23h / dimanche 22h de fin octobre à fin
+    # mars, et une heure plus tard en été (samedi minuit, dimanche 23h).
+    - cron: "0 22 * * 6"
+    - cron: "0 21 * * 0"
 
 permissions:
   # "write" (au lieu de "read") : le build commite les résultats importés
@@ -59,6 +66,31 @@ jobs:
           LICENCE_HASH_PEPPER: ${{ secrets.LICENCE_HASH_PEPPER }}
         run: npm run build
 
+      - name: Vérifier qu'aucune feuille de match (PDF) ne sera commitée
+        # Les feuilles portent noms et numéros de licence en clair : aucune
+        # ne doit entrer dans le dépôt par ce workflow (décision du club).
+        # Échec VOLONTAIRE du workflow (pas de "continue-on-error") : ni
+        # commit, ni déploiement tant que ce n'est pas corrigé. Seuls les PDF
+        # déposés à la main via le CMS, pas encore lus (illisibles, Loisirs
+        # refusés), peuvent exister dans feuilles-match/files -- ils y sont
+        # arrivés par le CMS, pas par ce workflow.
+        run: |
+          git add -A src/content/resultats src/content/feuilles-match src/content/statistiques-poules src/content/stats-brutes-ffhandball src/data/feuilles-auto.json
+          ajoutes=$(git diff --cached --name-only --diff-filter=AM | grep -i '\.pdf$' || true)
+          if [ -n "$ajoutes" ]; then
+            echo "::error::PDF sur le point d'être commité : $ajoutes"
+            exit 1
+          fi
+          hors_cms=$(git ls-files | grep -i '\.pdf$' | grep -v '^src/content/feuilles-match/files/' || true)
+          if [ -n "$hors_cms" ]; then
+            echo "::error::PDF suivi par git hors du dossier des dépôts CMS : $hors_cms"
+            exit 1
+          fi
+          if ! git check-ignore -q .feuilles-auto/controle.pdf; then
+            echo "::error::Le dossier temporaire .feuilles-auto/ n'est plus ignoré par git (.gitignore)."
+            exit 1
+          fi
+
       - name: Committer les résultats et statistiques importés automatiquement
         # ATTENTION en modifiant ce fichier : le marqueur "[skip ci]" utilisé
         # dans le message du commit ci-dessous (git commit -m) est scanné par
@@ -80,6 +112,9 @@ jobs:
         #   commite ces suppressions ;
         # - le retrait des lignes joueur·se des personnes absentes depuis
         #   plus de 3 saisons (voir scripts/retention-joueurs.mjs) ;
+        # - src/data/feuilles-auto.json : suivi de la récupération
+        #   automatique des feuilles (voir scripts/recuperer-feuilles.mjs),
+        #   et les résultats de forfait qu'elle crée (resultats/ffh-*.md) ;
         # - src/content/statistiques-poules/*.md (extraction HBI) et
         #   src/content/stats-brutes-ffhandball/*.json (JSON brut complet,
         #   conservé pour un futur script de contrôle) depuis les pages
@@ -103,7 +138,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A src/content/resultats src/content/feuilles-match src/content/statistiques-poules src/content/stats-brutes-ffhandball
+          git add -A src/content/resultats src/content/feuilles-match src/content/statistiques-poules src/content/stats-brutes-ffhandball src/data/feuilles-auto.json
           if git diff --cached --quiet; then
             echo "Aucun résultat modifié."
           else
