@@ -138,8 +138,10 @@ function chargerEquipesCompetition() {
  * existante avait déjà une valeur corrigée à la main, on la garde plutôt que
  * d'écraser avec du vide. */
 function preserverCorrectionsManuelles(cible, data) {
-	if (!existsSync(cible)) return;
-	const existant = lireFrontmatter(cible);
+	// Jamais `null` dans le fichier : le schéma exige une chaîne (vide =
+	// équipe à rattacher à la main, signalée par le bandeau), sinon le
+	// build entier échoue sur une simple équipe non détectée.
+	const existant = existsSync(cible) ? lireFrontmatter(cible) : {};
 	if (!data.equipeSlug) data.equipeSlug = existant.equipeSlug || "";
 	if (!data.equipeNumero && existant.equipeNumero) {
 		data.equipeNumero = existant.equipeNumero;
