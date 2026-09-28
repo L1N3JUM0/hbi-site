@@ -75,7 +75,13 @@ jobs:
         # refusés), peuvent exister dans feuilles-match/files -- ils y sont
         # arrivés par le CMS, pas par ce workflow.
         run: |
-          git add -A src/content/resultats src/content/feuilles-match src/content/statistiques-poules src/content/stats-brutes-ffhandball src/data/feuilles-auto.json
+          # Seulement les chemins présents ou suivis : un dossier vide
+          # (feuilles-match une fois toutes les feuilles consommées) n'existe
+          # pas dans un checkout, et `git add` échouerait sur lui (incident
+          # du 28/09/2026 : commit des résultats en échec silencieux).
+          for p in src/content/resultats src/content/feuilles-match src/content/statistiques-poules src/content/stats-brutes-ffhandball src/data/feuilles-auto.json; do
+            if [ -e "$p" ] || [ -n "$(git ls-files -- "$p")" ]; then git add -A -- "$p"; fi
+          done
           ajoutes=$(git diff --cached --name-only --diff-filter=AM | grep -i '\.pdf$' || true)
           if [ -n "$ajoutes" ]; then
             echo "::error::PDF sur le point d'être commité : $ajoutes"
@@ -138,7 +144,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A src/content/resultats src/content/feuilles-match src/content/statistiques-poules src/content/stats-brutes-ffhandball src/data/feuilles-auto.json
+          # Même liste que l'étape de vérification ci-dessus (même précaution
+          # sur les dossiers vides).
+          for p in src/content/resultats src/content/feuilles-match src/content/statistiques-poules src/content/stats-brutes-ffhandball src/data/feuilles-auto.json; do
+            if [ -e "$p" ] || [ -n "$(git ls-files -- "$p")" ]; then git add -A -- "$p"; fi
+          done
           if git diff --cached --quiet; then
             echo "Aucun résultat modifié."
           else
