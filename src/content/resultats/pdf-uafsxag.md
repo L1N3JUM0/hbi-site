@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFSXAG"
 equipeSlug: "u15-masculins"
 date: "2024-12-07T15:15:00.000Z"

@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFPOUU"
 equipeSlug: "u15-feminines"
 date: "2025-04-27T08:00:00.000Z"

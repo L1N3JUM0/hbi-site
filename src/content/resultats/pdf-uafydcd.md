@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFYDCD"
 equipeSlug: "seniors-feminines"
 date: "2025-04-06T14:00:00.000Z"

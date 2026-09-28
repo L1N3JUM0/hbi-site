@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFJIJI"
 equipeSlug: "seniors-masculins"
 date: "2024-09-21T19:00:00.000Z"

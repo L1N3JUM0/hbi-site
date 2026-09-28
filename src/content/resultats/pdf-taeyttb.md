@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAEYTTB"
 equipeSlug: "u17-masculins-historique"
 date: "2023-12-09T15:30:00.000Z"

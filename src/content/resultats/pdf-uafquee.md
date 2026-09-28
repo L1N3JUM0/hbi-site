@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFQUEE"
 equipeSlug: ""
 date: "2024-11-04T19:00:00.000Z"

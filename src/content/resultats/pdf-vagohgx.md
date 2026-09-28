@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGOHGX"
 equipeSlug: "u15-masculins"
 date: "2026-03-21T16:00:00.000Z"

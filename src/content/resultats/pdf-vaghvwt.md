@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGHVWT"
 equipeSlug: "u13-masculins"
 date: "2026-05-10T09:30:00.000Z"

@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAEVWDY"
 equipeSlug: "seniors-masculins"
 date: "2023-12-10T13:30:00.000Z"

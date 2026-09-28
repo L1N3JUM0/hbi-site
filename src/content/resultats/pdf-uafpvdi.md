@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFPVDI"
 equipeSlug: "u15-masculins"
 date: "2024-11-23T15:00:00.000Z"

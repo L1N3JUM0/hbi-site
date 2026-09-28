@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAEVYNM"
 equipeSlug: "seniors-feminines"
 date: "2024-04-06T18:00:00.000Z"

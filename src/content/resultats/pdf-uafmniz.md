@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFMNIZ"
 equipeSlug: "u11-mixtes"
 equipeNumero: "1"

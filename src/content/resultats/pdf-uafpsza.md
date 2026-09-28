@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFPSZA"
 equipeSlug: "u17-masculins-historique"
 date: "2025-01-11T17:00:00.000Z"

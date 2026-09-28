@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAEZSNU"
 equipeSlug: "u13-mixte-historique"
 equipeNumero: "2"

@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGOHNK"
 equipeSlug: "u13-masculins"
 date: "2026-02-07T14:00:00.000Z"

@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFQUFQ"
 equipeSlug: ""
 date: "2025-03-17T20:00:00.000Z"

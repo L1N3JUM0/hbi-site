@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFSPJL"
 equipeSlug: "seniors-masculins"
 date: "2025-03-23T15:00:00.000Z"

@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFXNQH"
 equipeSlug: "u17-masculins-historique"
 date: "2025-03-16T15:00:00.000Z"

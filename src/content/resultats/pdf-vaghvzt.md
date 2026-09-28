@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGHVZT"
 equipeSlug: "u13-feminines"
 date: "2025-11-15T13:30:00.000Z"

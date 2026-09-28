@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAFBCFG"
 equipeSlug: "u11-mixtes"
 equipeNumero: "2"

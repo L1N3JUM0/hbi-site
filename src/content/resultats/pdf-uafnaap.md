@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFNAAP"
 equipeSlug: "seniors-masculins"
 date: "2025-03-08T20:00:00.000Z"

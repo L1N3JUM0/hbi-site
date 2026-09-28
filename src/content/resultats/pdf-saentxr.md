@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "SAENTXR"
 equipeSlug: "seniors-masculins"
 date: "2023-01-21T20:00:00.000Z"

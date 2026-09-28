@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFZBFE"
 equipeSlug: "u13-feminines"
 date: "2025-06-08T11:00:00.000Z"

@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "WAGTHZV"
 equipeSlug: "seniors-feminines"
 date: "2026-09-13T15:00:00.000Z"

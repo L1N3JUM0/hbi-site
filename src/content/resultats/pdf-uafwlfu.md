@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFWLFU"
 equipeSlug: "seniors-feminines"
 date: "2025-03-16T15:30:00.000Z"

@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFPXAP"
 equipeSlug: "u11-mixtes"
 date: "2024-10-13T09:30:00.000Z"

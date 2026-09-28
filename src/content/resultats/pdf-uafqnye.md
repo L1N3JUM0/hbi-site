@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFQNYE"
 equipeSlug: "u13-mixte-historique"
 date: "2024-12-01T13:30:00.000Z"

@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFJIKD"
 equipeSlug: "seniors-masculins"
 date: "2024-10-27T14:00:00.000Z"

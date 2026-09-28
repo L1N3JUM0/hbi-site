@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGCDGV"
 equipeSlug: "u13-mixte-historique"
 date: "2025-09-27T11:30:00.000Z"

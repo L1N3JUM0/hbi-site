@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFYKMG"
 equipeSlug: "u15-masculins"
 date: "2025-05-03T13:30:00.000Z"

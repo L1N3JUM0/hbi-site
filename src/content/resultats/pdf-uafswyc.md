@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFSWYC"
 equipeSlug: "u15-feminines"
 date: "2024-11-17T15:30:00.000Z"

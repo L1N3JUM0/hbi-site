@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "SAEDAXG"
 equipeSlug: "seniors-masculins"
 date: "2022-11-05T20:00:00.000Z"

@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGOLWF"
 equipeSlug: "u13-feminines"
 date: "2026-03-21T14:30:00.000Z"

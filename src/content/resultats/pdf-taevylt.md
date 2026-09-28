@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAEVYLT"
 equipeSlug: "seniors-feminines"
 date: "2023-12-02T19:30:00.000Z"

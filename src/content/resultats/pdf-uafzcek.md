@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFZCEK"
 equipeSlug: "u15-feminines"
 date: "2025-06-21T14:45:00.000Z"

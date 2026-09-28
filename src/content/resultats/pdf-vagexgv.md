@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGEXGV"
 equipeSlug: "u15-feminines"
 date: "2025-09-20T12:30:00.000Z"

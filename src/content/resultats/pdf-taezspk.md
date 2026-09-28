@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAEZSPK"
 equipeSlug: "u13-mixte-historique"
 date: "2023-11-18T14:30:00.000Z"

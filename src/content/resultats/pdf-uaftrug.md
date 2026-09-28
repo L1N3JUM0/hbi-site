@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFTRUG"
 equipeSlug: "u15-masculins"
 date: "2025-02-02T09:00:00.000Z"

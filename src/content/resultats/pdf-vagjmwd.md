@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGJMWD"
 equipeSlug: "seniors-feminines"
 date: "2025-11-22T17:00:00.000Z"

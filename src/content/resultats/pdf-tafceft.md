@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAFCEFT"
 equipeSlug: "u17-masculins-historique"
 date: "2023-11-19T12:00:00.000Z"

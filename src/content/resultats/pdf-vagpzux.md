@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGPZUX"
 equipeSlug: "seniors-masculins"
 date: "2026-05-23T18:30:00.000Z"

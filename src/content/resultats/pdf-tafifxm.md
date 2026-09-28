@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAFIFXM"
 equipeSlug: "u13-mixte-historique"
 date: "2024-05-25T15:00:00.000Z"

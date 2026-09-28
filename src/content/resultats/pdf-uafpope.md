@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFPOPE"
 equipeSlug: "u17-masculins-historique"
 date: "2025-03-22T14:30:00.000Z"

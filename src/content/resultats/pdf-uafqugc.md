@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFQUGC"
 equipeSlug: ""
 date: "2025-04-28T18:00:00.000Z"

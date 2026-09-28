@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "SAEPIRA"
 equipeSlug: "seniors-masculins"
 date: "2023-05-21T14:30:00.000Z"

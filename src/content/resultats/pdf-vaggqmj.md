@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGGQMJ"
 equipeSlug: "u13-mixte-historique"
 date: "2025-10-04T12:30:00.000Z"

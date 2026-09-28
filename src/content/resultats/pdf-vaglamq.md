@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGLAMQ"
 equipeSlug: "u15-feminines"
 date: "2026-01-10T16:00:00.000Z"

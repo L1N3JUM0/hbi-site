@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "WAGWJIE"
 equipeSlug: "u15-feminines"
 date: "2026-09-26T16:00:00.000Z"

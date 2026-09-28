@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFWFON"
 equipeSlug: "seniors-masculins"
 date: "2025-04-05T18:00:00.000Z"

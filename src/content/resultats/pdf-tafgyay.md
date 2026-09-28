@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAFGYAY"
 equipeSlug: "seniors-feminines"
 date: "2024-03-15T19:30:00.000Z"

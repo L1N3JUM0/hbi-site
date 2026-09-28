@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFPLPS"
 equipeSlug: "u15-masculins"
 date: "2024-11-30T17:00:00.000Z"

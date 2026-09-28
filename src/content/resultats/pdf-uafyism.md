@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFYISM"
 equipeSlug: "u17-masculins-historique"
 date: "2025-05-03T15:30:00.000Z"

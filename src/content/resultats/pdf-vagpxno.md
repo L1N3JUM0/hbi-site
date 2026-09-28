@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGPXNO"
 equipeSlug: "seniors-feminines"
 date: "2026-05-30T17:30:00.000Z"

@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAEVWEX"
 equipeSlug: "seniors-masculins"
 date: "2024-02-10T18:00:00.000Z"

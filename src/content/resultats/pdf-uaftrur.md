@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFTRUR"
 equipeSlug: "u15-masculins"
 date: "2025-03-15T16:30:00.000Z"

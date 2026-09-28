@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFPONM"
 equipeSlug: "u17-masculins-historique"
 date: "2024-11-09T15:30:00.000Z"

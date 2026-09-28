@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAETJUA"
 equipeSlug: "seniors-masculins"
 date: "2024-04-14T12:00:00.000Z"

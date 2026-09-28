@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAFHYPA"
 equipeSlug: "seniors-masculins"
 date: "2024-05-07T19:00:00.000Z"

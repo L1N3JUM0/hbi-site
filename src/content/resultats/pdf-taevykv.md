@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAEVYKV"
 equipeSlug: "seniors-feminines"
 date: "2023-09-30T18:30:00.000Z"

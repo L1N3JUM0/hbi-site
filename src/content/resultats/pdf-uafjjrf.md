@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFJJRF"
 equipeSlug: "seniors-feminines"
 date: "2025-02-08T18:00:00.000Z"

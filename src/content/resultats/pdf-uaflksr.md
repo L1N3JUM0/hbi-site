@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFLKSR"
 equipeSlug: "seniors-masculins"
 date: "2025-02-02T13:30:00.000Z"

@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFPONS"
 equipeSlug: "u17-masculins-historique"
 date: "2024-11-23T18:00:00.000Z"

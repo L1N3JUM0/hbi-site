@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFJILW"
 equipeSlug: "seniors-masculins"
 date: "2025-02-08T20:00:00.000Z"

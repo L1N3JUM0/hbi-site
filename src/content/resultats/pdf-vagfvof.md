@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGFVOF"
 equipeSlug: "seniors-feminines"
 date: "2026-01-17T20:00:00.000Z"

@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAEZSQR"
 equipeSlug: "u13-mixte-historique"
 date: "2024-03-16T16:00:00.000Z"

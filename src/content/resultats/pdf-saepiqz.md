@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "SAEPIQZ"
 equipeSlug: "seniors-masculins"
 date: "2023-03-12T13:00:00.000Z"

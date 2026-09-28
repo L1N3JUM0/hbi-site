@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAEVRPJ"
 equipeSlug: "u13-mixte-historique"
 date: "2023-09-24T11:30:00.000Z"

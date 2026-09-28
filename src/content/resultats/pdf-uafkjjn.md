@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFKJJN"
 equipeSlug: "seniors-feminines"
 date: "2025-02-01T19:00:00.000Z"

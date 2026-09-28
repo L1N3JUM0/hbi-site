@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "WAGWDMQ"
 equipeSlug: "u17-feminines"
 date: "2026-09-26T11:30:00.000Z"

@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "WAGRINB"
 equipeSlug: "u15-masculins"
 equipeNumero: "U15 Excellence"

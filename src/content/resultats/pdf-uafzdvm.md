@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFZDVM"
 equipeSlug: "u15-masculins"
 date: "2025-06-22T11:15:00.000Z"

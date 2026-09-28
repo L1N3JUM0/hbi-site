@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "WAGWDZY"
 equipeSlug: "u15-masculins"
 equipeNumero: "Inter Dép"

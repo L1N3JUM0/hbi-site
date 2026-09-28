@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFQNSI"
 equipeSlug: "u11-mixtes"
 equipeNumero: "2"

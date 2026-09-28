@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFNYIA"
 equipeSlug: "u17-masculins-historique"
 date: "2024-09-22T07:30:00.000Z"

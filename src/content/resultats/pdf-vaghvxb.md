@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGHVXB"
 equipeSlug: "u13-masculins"
 equipeNumero: "2"

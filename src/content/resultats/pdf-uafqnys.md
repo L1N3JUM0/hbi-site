@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFQNYS"
 equipeSlug: "u13-mixte-historique"
 date: "2025-01-18T14:30:00.000Z"

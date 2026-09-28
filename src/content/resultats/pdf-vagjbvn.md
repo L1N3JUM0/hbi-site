@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGJBVN"
 equipeSlug: "seniors-masculins"
 date: "2025-11-08T19:00:00.000Z"

@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGPBRI"
 equipeSlug: "u13-feminines"
 date: "2026-03-13T17:00:00.000Z"

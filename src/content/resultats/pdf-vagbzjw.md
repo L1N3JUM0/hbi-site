@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGBZJW"
 equipeSlug: "seniors-masculins"
 equipeNumero: "2"

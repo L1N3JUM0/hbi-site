@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGONMV"
 equipeSlug: "u15-feminines"
 date: "2026-04-11T12:00:00.000Z"

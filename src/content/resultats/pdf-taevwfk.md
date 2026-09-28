@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAEVWFK"
 equipeSlug: "seniors-masculins"
 date: "2024-03-24T15:45:00.000Z"

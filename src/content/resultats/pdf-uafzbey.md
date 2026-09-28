@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFZBEY"
 equipeSlug: "u11-mixtes"
 date: "2025-06-07T09:00:00.000Z"

@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFRQDH"
 equipeSlug: "seniors-feminines"
 date: "2024-11-08T20:00:00.000Z"

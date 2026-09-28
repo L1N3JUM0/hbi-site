@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAETJUO"
 equipeSlug: "seniors-masculins"
 date: "2024-05-18T18:00:00.000Z"

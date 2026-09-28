@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGCDFF"
 equipeSlug: "u13-feminines"
 date: "2025-09-27T14:00:00.000Z"

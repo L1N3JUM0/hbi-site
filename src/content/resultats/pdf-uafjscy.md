@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFJSCY"
 equipeSlug: "seniors-masculins"
 date: "2025-04-27T15:00:00.000Z"

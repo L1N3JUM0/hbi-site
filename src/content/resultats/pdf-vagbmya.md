@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGBMYA"
 equipeSlug: "seniors-feminines"
 date: "2026-02-01T15:30:00.000Z"

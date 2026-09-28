@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGBMWO"
 equipeSlug: "seniors-feminines"
 date: "2025-11-08T20:00:00.000Z"

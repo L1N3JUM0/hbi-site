@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGNSRB"
 equipeSlug: "seniors-masculins"
 date: "2026-01-31T19:30:00.000Z"

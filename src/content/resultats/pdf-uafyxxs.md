@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFYXXS"
 equipeSlug: "u13-feminines"
 date: "2025-05-18T12:00:00.000Z"

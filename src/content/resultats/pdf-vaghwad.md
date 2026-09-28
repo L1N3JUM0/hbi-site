@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGHWAD"
 equipeSlug: "u13-feminines"
 date: "2025-12-06T16:00:00.000Z"

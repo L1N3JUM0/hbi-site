@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "WAGTILR"
 equipeSlug: "seniors-masculins"
 equipeNumero: "1"

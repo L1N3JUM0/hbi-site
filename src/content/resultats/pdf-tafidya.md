@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAFIDYA"
 equipeSlug: "seniors-feminines"
 date: "2024-05-12T12:30:00.000Z"

@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "SAEKBZZ"
 equipeSlug: "seniors-masculins"
 date: "2022-12-11T15:00:00.000Z"

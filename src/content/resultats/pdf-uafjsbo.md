@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFJSBO"
 equipeSlug: "seniors-masculins"
 date: "2025-01-19T13:30:00.000Z"

@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGOLPA"
 equipeSlug: "u15-masculins"
 date: "2026-04-11T13:45:00.000Z"

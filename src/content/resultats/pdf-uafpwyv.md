@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFPWYV"
 equipeSlug: "u13-mixte-historique"
 date: "2024-10-13T07:00:00.000Z"

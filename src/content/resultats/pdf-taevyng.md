@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAEVYNG"
 equipeSlug: "seniors-feminines"
 date: "2024-03-24T15:30:00.000Z"

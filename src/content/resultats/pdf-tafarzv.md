@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAFARZV"
 equipeSlug: "u13-mixte-historique"
 date: "2023-11-12T08:15:00.000Z"

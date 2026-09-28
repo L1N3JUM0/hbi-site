@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFJINL"
 equipeSlug: "seniors-masculins"
 date: "2025-04-26T17:00:00.000Z"

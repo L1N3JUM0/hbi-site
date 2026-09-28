@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFWYAC"
 equipeSlug: "u11-mixtes"
 equipeNumero: "2"

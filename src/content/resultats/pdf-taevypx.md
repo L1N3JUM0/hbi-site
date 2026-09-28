@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAEVYPX"
 equipeSlug: "u17-masculins-historique"
 date: "2023-09-23T11:00:00.000Z"

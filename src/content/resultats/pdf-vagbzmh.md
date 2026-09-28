@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGBZMH"
 equipeSlug: "seniors-masculins"
 date: "2026-03-14T18:00:00.000Z"

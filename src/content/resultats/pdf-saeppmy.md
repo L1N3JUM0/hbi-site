@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "SAEPPMY"
 equipeSlug: "seniors-masculins"
 date: "2023-03-18T18:00:00.000Z"

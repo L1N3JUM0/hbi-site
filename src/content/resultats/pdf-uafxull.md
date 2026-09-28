@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFXULL"
 equipeSlug: "u9-mixtes"
 date: "2025-04-26T12:00:00.000Z"

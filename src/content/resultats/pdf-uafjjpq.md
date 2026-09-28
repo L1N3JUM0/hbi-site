@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFJJPQ"
 equipeSlug: "seniors-feminines"
 date: "2024-11-24T15:00:00.000Z"

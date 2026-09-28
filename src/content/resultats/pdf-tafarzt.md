@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAFARZT"
 equipeSlug: "u17-masculins-historique"
 date: "2023-11-26T14:00:00.000Z"

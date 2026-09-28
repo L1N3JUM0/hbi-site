@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "SAEPHUM"
 equipeSlug: "u11-mixtes"
 equipeNumero: "2"

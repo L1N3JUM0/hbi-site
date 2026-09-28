@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAETJRT"
 equipeSlug: "seniors-masculins"
 date: "2023-12-09T20:00:00.000Z"

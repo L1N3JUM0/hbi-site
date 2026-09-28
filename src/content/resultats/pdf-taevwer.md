@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAEVWER"
 equipeSlug: "seniors-masculins"
 date: "2024-01-27T19:00:00.000Z"

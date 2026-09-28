@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "WAGTIMD"
 equipeSlug: "seniors-masculins"
 equipeNumero: "2"

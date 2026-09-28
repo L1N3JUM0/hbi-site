@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAFBBYX"
 equipeSlug: "u11-mixtes"
 date: "2024-04-06T13:00:00.000Z"

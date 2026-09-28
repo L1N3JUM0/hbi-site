@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFMNKP"
 equipeSlug: "u13-mixte-historique"
 date: "2024-09-28T12:00:00.000Z"

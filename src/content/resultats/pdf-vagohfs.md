@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGOHFS"
 equipeSlug: "u15-feminines"
 date: "2026-05-02T12:00:00.000Z"

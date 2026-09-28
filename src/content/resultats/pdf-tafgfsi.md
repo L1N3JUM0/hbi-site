@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAFGFSI"
 equipeSlug: "u15-feminines"
 date: "2024-02-18T12:30:00.000Z"

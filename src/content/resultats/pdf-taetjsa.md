@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAETJSA"
 equipeSlug: "seniors-masculins"
 date: "2024-01-21T15:00:00.000Z"

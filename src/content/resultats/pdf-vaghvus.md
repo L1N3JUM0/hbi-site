@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGHVUS"
 equipeSlug: "u13-mixte-historique"
 date: "2025-11-08T14:30:00.000Z"

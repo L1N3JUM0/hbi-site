@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGBZLA"
 equipeSlug: "seniors-masculins"
 date: "2025-12-06T17:30:00.000Z"

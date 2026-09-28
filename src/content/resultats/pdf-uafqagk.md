@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFQAGK"
 equipeSlug: "u15-masculins"
 date: "2024-10-13T14:00:00.000Z"

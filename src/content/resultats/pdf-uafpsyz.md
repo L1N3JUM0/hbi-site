@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFPSYZ"
 equipeSlug: "u17-masculins-historique"
 date: "2024-10-12T16:00:00.000Z"

@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFQNPK"
 equipeSlug: "u11-mixtes"
 date: "2024-11-16T15:15:00.000Z"

@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "SAELULR"
 equipeSlug: "u11-mixtes"
 date: "2023-04-01T12:00:00.000Z"

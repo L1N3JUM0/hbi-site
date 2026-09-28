@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGEXQI"
 equipeSlug: "u15-masculins"
 date: "2025-11-09T13:00:00.000Z"

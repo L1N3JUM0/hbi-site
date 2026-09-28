@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFMVXY"
 equipeSlug: "u15-masculins"
 date: "2024-09-22T07:00:00.000Z"

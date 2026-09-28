@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGPVSS"
 equipeSlug: "seniors-masculins"
 date: "2026-05-02T18:15:00.000Z"

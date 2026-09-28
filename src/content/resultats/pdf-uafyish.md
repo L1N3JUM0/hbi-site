@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFYISH"
 equipeSlug: "u17-masculins-historique"
 date: "2025-04-27T09:00:00.000Z"

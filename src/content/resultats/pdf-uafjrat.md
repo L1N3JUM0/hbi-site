@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFJRAT"
 equipeSlug: "seniors-masculins"
 date: "2025-02-02T15:30:00.000Z"

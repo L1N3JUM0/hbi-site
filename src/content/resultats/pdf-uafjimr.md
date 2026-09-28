@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFJIMR"
 equipeSlug: "seniors-masculins"
 date: "2025-03-15T19:00:00.000Z"

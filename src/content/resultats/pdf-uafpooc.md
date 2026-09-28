@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFPOOC"
 equipeSlug: "u17-masculins-historique"
 date: "2024-12-07T17:00:00.000Z"

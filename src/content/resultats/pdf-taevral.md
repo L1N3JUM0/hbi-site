@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAEVRAL"
 equipeSlug: "u11-mixtes"
 date: "2023-09-23T12:00:00.000Z"

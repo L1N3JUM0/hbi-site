@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFTYAH"
 equipeSlug: "u13-mixte-historique"
 date: "2024-12-14T14:30:00.000Z"

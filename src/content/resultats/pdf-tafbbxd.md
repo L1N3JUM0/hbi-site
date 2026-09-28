@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "TAFBBXD"
 equipeSlug: "u11-mixtes"
 date: "2023-11-18T12:30:00.000Z"

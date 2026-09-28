@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFWSVR"
 equipeSlug: "seniors-masculins"
 date: "2025-01-25T20:00:00.000Z"

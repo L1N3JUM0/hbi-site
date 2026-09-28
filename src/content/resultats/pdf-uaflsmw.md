@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFLSMW"
 equipeSlug: "seniors-masculins"
 date: "2024-09-15T15:00:00.000Z"

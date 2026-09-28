@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFXYNU"
 equipeSlug: "seniors-masculins"
 date: "2025-04-05T16:00:00.000Z"

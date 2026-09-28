@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFYYVK"
 equipeSlug: "u11-mixtes"
 date: "2025-05-24T12:30:00.000Z"

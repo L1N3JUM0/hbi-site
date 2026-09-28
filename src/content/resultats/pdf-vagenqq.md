@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "VAGENQQ"
 equipeSlug: "seniors-masculins"
 date: "2025-09-28T14:00:00.000Z"

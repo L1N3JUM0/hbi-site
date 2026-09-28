@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "SAEPHDO"
 equipeSlug: "seniors-masculins"
 date: "2023-04-02T13:00:00.000Z"

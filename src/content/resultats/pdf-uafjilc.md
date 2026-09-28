@@ -1,5 +1,5 @@
 ---
-source: "pdf"
+source: "archive"
 codeRencontre: "UAFJILC"
 equipeSlug: "seniors-masculins"
 date: "2024-12-14T19:00:00.000Z"
