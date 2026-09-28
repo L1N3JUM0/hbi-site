@@ -1,3 +1,143 @@
 {
-	"rencontres": {}
+	"rencontres": {
+		"2996912": {
+			"date": "2026-09-12T12:00:00.000Z",
+			"competition": "CHAMPIONNAT U15 EXCELLENCE MASCULIN",
+			"adversaire": "EP MANOSQUE 04 HB",
+			"equipeSlug": "u15-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/regional/championnat-u15-excellence-masculin-32450/poule-190653/rencontre-2635271/",
+			"derniereTentative": "2026-09-28T15:23:53.579Z",
+			"code": "WAGRIMW",
+			"statut": "importee"
+		},
+		"2996917": {
+			"date": "2026-09-19T14:00:00.000Z",
+			"competition": "CHAMPIONNAT U15 EXCELLENCE MASCULIN",
+			"adversaire": "GARDANNE SIMIANE HANDBALL",
+			"equipeSlug": "u15-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/regional/championnat-u15-excellence-masculin-32450/poule-190653/rencontre-2635276/",
+			"derniereTentative": "2026-09-28T15:23:53.579Z",
+			"code": "WAGRINB",
+			"statut": "importee"
+		},
+		"2996922": {
+			"date": "2026-09-27T13:00:00.000Z",
+			"competition": "CHAMPIONNAT U15 EXCELLENCE MASCULIN",
+			"adversaire": "CONV. CAVAILLON SUD DURANCE (U15M EXC.)",
+			"equipeSlug": "u15-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/regional/championnat-u15-excellence-masculin-32450/poule-190653/rencontre-2635281/",
+			"derniereTentative": "2026-09-28T15:23:53.579Z",
+			"code": "WAGRING",
+			"scoreVuLe": "2026-09-28T15:23:53.579Z",
+			"statut": "importee"
+		},
+		"3017764": {
+			"date": "2026-09-13T15:00:00.000Z",
+			"competition": "DIVISION 1 FEMININES",
+			"adversaire": "CO CHATEAURENARDAIS",
+			"equipeSlug": "seniors-feminines",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-feminines-32648/poule-192108/rencontre-2669802/",
+			"derniereTentative": "2026-09-28T15:23:53.579Z",
+			"code": "WAGTHZV",
+			"statut": "importee"
+		},
+		"3017767": {
+			"date": "2026-09-20T12:00:00.000Z",
+			"competition": "DIVISION 1 FEMININES",
+			"adversaire": "HANDBALL CLUB MONTEUX",
+			"equipeSlug": "seniors-feminines",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-feminines-32648/poule-192108/rencontre-2669807/",
+			"derniereTentative": "2026-09-28T15:23:53.579Z",
+			"code": "WAGTIAA",
+			"statut": "importee"
+		},
+		"3017770": {
+			"date": "2026-09-27T15:00:00.000Z",
+			"competition": "DIVISION 1 FEMININES",
+			"adversaire": "HBC PLANAIS 1",
+			"equipeSlug": "seniors-feminines",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-feminines-32648/poule-192108/rencontre-2669812/",
+			"derniereTentative": "2026-09-28T15:23:53.579Z",
+			"code": "WAGTIAF",
+			"statut": "importee"
+		},
+		"3017851": {
+			"date": "2026-09-13T13:00:00.000Z",
+			"competition": "DIVISION 1 MASCULINS",
+			"adversaire": "BOLLENE HANDBALL CLUB",
+			"equipeSlug": "seniors-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-masculins-32649/poule-192119/rencontre-2670110/",
+			"derniereTentative": "2026-09-28T15:23:53.579Z",
+			"code": "WAGTILR",
+			"statut": "importee"
+		},
+		"3017852": {
+			"date": "2026-09-13T09:00:00.000Z",
+			"competition": "DIVISION 1 MASCULINS",
+			"adversaire": "HANDBALL CLUB CARPENTRAS",
+			"equipeSlug": "seniors-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-masculins-32649/poule-192119/rencontre-2670111/",
+			"derniereTentative": "2026-09-28T15:23:53.579Z",
+			"code": "WAGTILS",
+			"statut": "forfait_cree"
+		},
+		"3017857": {
+			"date": "2026-09-20T15:00:00.000Z",
+			"competition": "DIVISION 1 MASCULINS",
+			"adversaire": "AVIGNON HANDBALL",
+			"equipeSlug": "seniors-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-masculins-32649/poule-192119/rencontre-2670117/",
+			"derniereTentative": "2026-09-28T15:23:53.579Z",
+			"code": "WAGVDDK",
+			"statut": "importee"
+		},
+		"3017858": {
+			"date": "2026-09-19T18:30:00.000Z",
+			"competition": "DIVISION 1 MASCULINS",
+			"adversaire": "HANDBALL CLUB CARPENTRAS",
+			"equipeSlug": "seniors-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-masculins-32649/poule-192119/rencontre-2670118/",
+			"derniereTentative": "2026-09-28T15:23:53.579Z",
+			"code": "WAGTILZ",
+			"statut": "importee"
+		},
+		"3017861": {
+			"date": "2026-09-26T18:30:00.000Z",
+			"competition": "DIVISION 1 MASCULINS",
+			"adversaire": "HANDBALL CONCERNADE",
+			"equipeSlug": "seniors-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-masculins-32649/poule-192119/rencontre-2670122/",
+			"derniereTentative": "2026-09-28T15:23:53.579Z",
+			"code": "WAGTIMD",
+			"statut": "importee"
+		},
+		"3043197": {
+			"date": "2026-09-26T11:30:00.000Z",
+			"competition": "U17 FEMININES INTER DEP POULE 1",
+			"adversaire": "LANCON HANDBALL",
+			"equipeSlug": "u17-feminines",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u17-feminines-inter-dep-poule-1-33205/poule-196082/rencontre-2716851/",
+			"derniereTentative": "2026-09-28T15:23:53.579Z",
+			"code": "WAGWDMQ",
+			"statut": "importee"
+		},
+		"3043253": {
+			"date": "2026-09-27T09:00:00.000Z",
+			"competition": "U15 MASCULINS INTER DEP 1&2",
+			"adversaire": "AVIGNON HANDBALL",
+			"equipeSlug": "u15-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u15-masculins-inter-dep-1-2-33206/poule-196090/rencontre-2717191/",
+			"derniereTentative": "2026-09-28T15:23:53.579Z",
+			"code": "WAGWDZY",
+			"statut": "importee"
+		},
+		"3043369": {
+			"date": "2026-09-26T16:00:00.000Z",
+			"competition": "U15 FEMININES INTER DEP POULE 1",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u15-feminines-inter-dep-poule-1-33207/poule-196377/rencontre-2720659/",
+			"derniereTentative": "2026-09-28T15:23:53.579Z",
+			"code": "WAGWJIE",
+			"statut": "importee"
+		}
+	}
 }
