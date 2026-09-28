@@ -208,3 +208,27 @@ export function detecterLibelleCompetition(competitionText, calendriers) {
 	if (correspondances.length === 1) return { libelle: correspondances[0].libelle.trim(), ambigu: false };
 	return { libelle: null, ambigu: true };
 }
+
+/**
+ * Vrai si cette équipe est dans le piège qui a caché 16 résultats U15
+ * masculins jusqu'au 28/09/2026 : plusieurs calendriers dans des
+ * compétitions VRAIMENT différentes (urls distinctes -- la condition qui
+ * déclenche detecterLibelleCompetition() ci-dessus, voir parseFeuille.mjs)
+ * mais moins de deux d'entre eux ont un `libelle` renseigné. Dans ce cas,
+ * `candidats.length` reste < 2 pour TOUJOURS dans detecterLibelleCompetition()
+ * -- aucune feuille de cette équipe, quel que soit son texte de compétition,
+ * ne pourra jamais être distinguée par sous-équipe tant que ça dure. Ce
+ * n'est pas une feuille précise qui pose problème : c'est la configuration
+ * de l'équipe elle-même, à signaler une fois par équipe (voir l'appelant,
+ * scripts/import-fdme.mjs), indépendamment de toute feuille de match.
+ *
+ * @param {{ calendriers?: { url: string, libelle?: string }[] }} equipe
+ * @returns {boolean}
+ */
+export function libellesCompetitionIncomplets(equipe) {
+	const calendriers = equipe.calendriers ?? [];
+	const urlsDistinctes = new Set(calendriers.map((c) => c.url)).size;
+	if (urlsDistinctes < 2) return false;
+	const libellesRenseignes = calendriers.filter((c) => c.libelle?.trim()).length;
+	return libellesRenseignes < 2;
+}

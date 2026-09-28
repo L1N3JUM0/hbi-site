@@ -29,6 +29,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseFeuilleDeMatch, FeuilleFormatError } from "../src/lib/fdme/parseFeuille.mjs";
+import { libellesCompetitionIncomplets } from "../src/lib/fdme/equipeMatch.mjs";
 import { lireFrontmatter } from "./frontmatter.mjs";
 
 // Charge le pépin de hachage des licences (voir src/lib/fdme/licenceHash.mjs)
@@ -106,6 +107,7 @@ function chargerEquipesCompetition() {
 		.map((f) => lireFrontmatter(join(EQUIPES_DIR, f)))
 		.map((data) => ({
 			slug: data.slug,
+			nom: data.nom,
 			categorieAge: data.categorieAge,
 			genre: data.genre,
 			// Calendriers (url + libelle + repere) : `libelle` sert à distinguer
@@ -171,6 +173,24 @@ const erreurs = [];
  * résultat est bien publié, juste incomplet.
  * @type {{ fichier: string, raison: string }[]} */
 const avertissementsAffiches = [];
+
+// Vérification de configuration, indépendante de toute feuille précise : une
+// équipe engagée dans plusieurs compétitions vraiment différentes (urls de
+// calendrier distinctes) mais dont moins de deux calendriers ont un
+// "Libellé" renseigné ne pourra JAMAIS être distinguée par sous-équipe (voir
+// libellesCompetitionIncomplets() dans src/lib/fdme/equipeMatch.mjs) -- pas
+// un problème de feuille, mais de la fiche équipe elle-même (c'est ce qui a
+// caché 16 résultats U15 masculins jusqu'au 28/09/2026, avant que le second
+// calendrier ait son libellé renseigné). Signalé une fois par équipe
+// concernée, avant même de traiter la moindre feuille.
+for (const equipe of equipesCompetition) {
+	if (!libellesCompetitionIncomplets(equipe)) continue;
+	avertissementsAffiches.push({
+		fichier: `Configuration : fiche équipe « ${equipe.nom} »`,
+		raison:
+			`Cette équipe a plusieurs calendriers dans des compétitions différentes, mais moins de deux d'entre eux ont un champ "Libellé" renseigné : la distinction par sous-équipe restera impossible pour TOUTE feuille de cette catégorie tant que chacun de ses calendriers actifs (compétitions différentes) n'a pas son propre libellé. Renseignez le champ "Libellé" de chaque calendrier concerné dans la fiche équipe du CMS.`,
+	});
+}
 
 for (const entryPath of entries) {
 	const nomEntree = extractPdfFieldValue(entryPath)?.split("/").pop() ?? entryPath;

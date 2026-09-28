@@ -396,6 +396,30 @@ reste propre entre-temps (voir "Pendant l'été" plus bas).
    elle n'apparaît simplement pas dans l'agenda (ou garde l'ancien s'il
    fonctionne encore) — jamais d'erreur ni de bloc vide.
 
+6. **Pour une catégorie qui a plusieurs équipes du club engagées dans des
+   compétitions différentes** (ex. U15 masculins Excellence et
+   Départemental) : revérifiez le champ **Libellé** de CHAQUE calendrier
+   concerné une fois les nouveaux calendriers en place. Ce champ sert aussi
+   de mot-clé pour rattacher automatiquement les feuilles de match à la
+   bonne équipe (voir son aide dans le CMS) — mais le nom des compétitions
+   change chaque saison (« Excellence » peut devenir « Région »,
+   « Départemental » devenir « Interdépartemental »...), donc un libellé qui
+   fonctionnait l'an dernier peut ne plus correspondre à rien cette saison.
+   Deux pièges à vérifier :
+   - **Chaque calendrier concerné doit avoir SON PROPRE libellé rempli** —
+     s'il n'y en a qu'un seul de rempli sur les deux (ou plus), la
+     distinction ne fonctionne pour AUCUNE des deux équipes, silencieusement
+     (déjà arrivé : 16 résultats U15 masculins sont restés sans distinction
+     tout un été sans qu'aucune alerte ne le signale, avant qu'un second
+     libellé soit ajouté fin septembre 2026). Si ce piège se reproduit,
+     `/import-erreurs` le signale maintenant directement sur la fiche
+     équipe concernée — plus besoin d'attendre de le remarquer par hasard.
+   - **Le mot choisi doit apparaître tel quel** (accents/majuscules ignorés,
+     mais pas les espaces) **dans le texte de la compétition sur les
+     feuilles de match de la nouvelle saison** — vérifiez sur une première
+     feuille déposée si possible, plutôt que de réutiliser le mot de l'an
+     dernier sans le revérifier.
+
 ### Pendant l'été (aucun match, calendriers pas encore publiés)
 
 Le site n'a besoin d'aucune intervention pendant la trêve : sans match à

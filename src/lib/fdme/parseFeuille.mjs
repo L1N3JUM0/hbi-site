@@ -2,6 +2,7 @@ import { extractRows, rowText, nearestItem } from "./pdfRows.mjs";
 import { stripBirthName, splitNomPrenom } from "./noms.mjs";
 import { detectEquipe, extraireNumeroEquipe, detecterLibelleCompetition, CLUB_CODE, estNomEquipeHBI } from "./equipeMatch.mjs";
 import { hashLicence } from "./licenceHash.mjs";
+import { saisonPour, saisonActuelle } from "./saison.mjs";
 
 /** Erreur levée quand une feuille ne correspond pas au format attendu --
  * l'appelant (scripts/import-fdme.mjs) l'attrape pour ignorer ce PDF avec un
@@ -514,7 +515,16 @@ export async function parseFeuilleDeMatch(pdfBytes, equipesCompetition = []) {
 	// l'appelant (scripts/import-fdme.mjs) l'affiche alors dans le bandeau
 	// d'erreurs d'import plutôt que de deviner (voir detecterLibelleCompetition()).
 	let equipeNumeroAmbigu = false;
-	if (!equipeNumero && equipeSlug) {
+	// La distinction par libellé dépend d'une configuration CMS qui ne
+	// reflète que l'état ACTUEL des calendriers -- les intitulés de
+	// compétition changent chaque saison (voir GUIDE-EDITION.md, section
+	// "Changement de saison"), donc un libellé d'aujourd'hui n'a aucune
+	// raison de correspondre au texte de compétition d'une saison passée.
+	// On ne la tente donc que pour la saison EN COURS ; pour toute saison
+	// close, on rattache silencieusement à la catégorie sans sous-équipe
+	// (equipeNumero reste vide), sans avertissement -- un avertissement par
+	// saison close s'accumulerait sans fin (voir la demande du 28/09/2026).
+	if (!equipeNumero && equipeSlug && saisonPour(header.date) === saisonActuelle()) {
 		const equipe = equipesCompetition.find((e) => e.slug === equipeSlug);
 		const urlsDistinctes = new Set((equipe?.calendriers ?? []).map((c) => c.url)).size;
 		if (urlsDistinctes > 1) {

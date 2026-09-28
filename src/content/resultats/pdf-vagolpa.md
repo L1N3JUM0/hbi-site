@@ -2,7 +2,6 @@
 source: "pdf"
 codeRencontre: "VAGOLPA"
 equipeSlug: "u15-masculins"
-equipeNumero: "U15 Excellence"
 date: "2026-04-11T13:45:00.000Z"
 journee: "J1"
 competition: "CHAMPIONNAT U15 EXCELLENCE MASCULIN U15M EXCELLENCE PHASE 2"

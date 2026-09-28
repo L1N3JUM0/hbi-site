@@ -2,7 +2,6 @@
 source: "pdf"
 codeRencontre: "VAGOHGX"
 equipeSlug: "u15-masculins"
-equipeNumero: "U15 Excellence"
 date: "2026-03-21T16:00:00.000Z"
 journee: "J3"
 competition: "CHAMPIONNAT U15 EXCELLENCE MASCULIN U15M EXCELLENCE PHASE 2"
