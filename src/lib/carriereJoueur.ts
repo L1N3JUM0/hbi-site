@@ -111,18 +111,26 @@ function arrondiRatio(buts: number, matchsJoues: number): number | null {
  * ci-dessous, celui de l'équipe consultée), jamais une restriction sur les
  * données cumulées elles-mêmes : un·e joueur·se qui a changé de catégorie
  * voit ses stats des catégories précédentes comptées tout autant que celles
- * de la catégorie actuelle. */
+ * de la catégorie actuelle.
+ *
+ * `hashesVersLibelle` associe chaque empreinte de licence à SON libellé de
+ * groupe ("Équipe 1", "Équipe 1 & Équipe 2"...) -- une seule entrée par
+ * empreinte, jamais un hash traité deux fois pour deux groupes différents :
+ * c'est ce qui empêche un·e même joueur·se de ressortir dupliqué·e avec des
+ * totaux identiques quand il/elle a joué dans plusieurs groupes de la même
+ * catégorie cette saison (voir getCarriereParEquipe, qui construit ce libellé
+ * combiné AVANT d'appeler cette fonction, une seule fois par catégorie plutôt
+ * qu'une fois par groupe). */
 function agregerCarriere(
-	hashesEffectifActuel: Set<string>,
+	hashesVersLibelle: Map<string, string>,
 	tousLesResultats: Resultat[],
 	nomEquipe: Map<string, string>,
 	affichageStats: "nominatif" | "pseudonymise" | "masque",
-	groupeLibelle: string,
 ): JoueurCarriere[] {
-	if (affichageStats === "masque" || hashesEffectifActuel.size === 0) return [];
+	if (affichageStats === "masque" || hashesVersLibelle.size === 0) return [];
 
 	const parHash = new Map<string, Agregat>();
-	for (const hash of hashesEffectifActuel) {
+	for (const hash of hashesVersLibelle.keys()) {
 		parHash.set(hash, {
 			nom: "",
 			prenom: "",
@@ -193,18 +201,18 @@ function agregerCarriere(
 		}
 	}
 
-	const joueurs = [...parHash.values()];
+	const joueurs = [...parHash.entries()];
 	// disambiguateDisplayNames() attend une clé "numero" numérique stable pour
 	// distinguer les homonymes au sein de l'appel : un simple index suffit,
 	// ce n'est qu'une clé de Map, jamais un vrai numéro de maillot affiché
 	// (voir la même construction dans src/lib/statistiques.ts).
-	const pourDisambiguation = joueurs.map((j, i) => ({ numero: i, prenom: j.prenom, nom: j.nom }));
+	const pourDisambiguation = joueurs.map(([, j], i) => ({ numero: i, prenom: j.prenom, nom: j.nom }));
 	const labels = disambiguateDisplayNames(pourDisambiguation, affichageStats);
 
 	return joueurs
-		.map((j, i) => ({ j, label: labels.get(i) ?? `${j.prenom} ${j.nom}` }))
+		.map(([hash, j], i) => ({ hash, j, label: labels.get(i) ?? `${j.prenom} ${j.nom}` }))
 		.sort((a, b) => b.j.buts - a.j.buts || b.j.arrets - a.j.arrets)
-		.map(({ j, label }) => ({
+		.map(({ hash, j, label }) => ({
 			label,
 			matchsJoues: j.matchsJoues,
 			buts: j.buts,
@@ -215,7 +223,7 @@ function agregerCarriere(
 			exclusions: j.exclusions,
 			disqualifications: j.disqualifications,
 			ratio: arrondiRatio(j.buts, j.matchsJoues),
-			groupeLibelle,
+			groupeLibelle: hashesVersLibelle.get(hash) ?? "",
 			parcours: [...j.parcours.entries()]
 				.sort(([a], [b]) => (a < b ? -1 : 1))
 				.map(([saison, slug]) => ({ saison, equipeNom: nomEquipe.get(slug) ?? slug })),
@@ -271,11 +279,50 @@ export async function getCarriereParEquipe(
 	const [toutesEquipes, tousLesResultats] = await Promise.all([getCollection("equipes"), getCollection("resultats")]);
 	const nomEquipe = new Map(toutesEquipes.map((e) => [e.data.slug, e.data.nom]));
 
-	const groupes = groupesEffectif.map((g) => {
-		const hashes = new Set<string>();
-		for (const r of g.resultats) for (const j of r.data.statsJoueurs ?? []) if (j.licenceHash) hashes.add(j.licenceHash);
-		return { libelle: g.libelle, joueurs: agregerCarriere(hashes, tousLesResultats, nomEquipe, affichageStats, g.libelle) };
-	});
+	// Un·e même joueur·se peut avoir joué cette saison dans PLUSIEURS groupes
+	// de cette catégorie (ex. un gardien qui dépanne Équipe 1 ET Équipe 2) :
+	// cette page parle du parcours d'une PERSONNE, pas de quelle équipe
+	// numérotée l'a accueilli·e un soir donné -- une seule ligne par
+	// joueur·se, jamais éclatée par groupe (voir la demande du 28/09/2026,
+	// constatée sur Jean-François Pineda et Thierry Duclaux, apparus deux
+	// fois avec des totaux identiques). On construit donc d'abord, PAR
+	// EMPREINTE DE LICENCE, la liste des groupes traversés cette saison (dans
+	// l'ordre canonique de `ordre`), puis on n'appelle agregerCarriere()
+	// qu'UNE SEULE FOIS pour toute la catégorie (plutôt qu'une fois par
+	// groupe) avec un libellé qui les combine ("Équipe 1 & Équipe 2") quand
+	// plusieurs s'appliquent -- jamais un choix arbitraire entre les deux.
+	const groupesParHash = new Map<string, string[]>();
+	for (const g of groupesEffectif) {
+		for (const r of g.resultats) {
+			for (const j of r.data.statsJoueurs ?? []) {
+				if (!j.licenceHash) continue;
+				const libelles = groupesParHash.get(j.licenceHash) ?? [];
+				if (!libelles.includes(g.libelle)) libelles.push(g.libelle);
+				groupesParHash.set(j.licenceHash, libelles);
+			}
+		}
+	}
+	const hashesVersLibelle = new Map<string, string>();
+	for (const [hash, libelles] of groupesParHash) hashesVersLibelle.set(hash, libelles.join(" & "));
+
+	const joueurs = agregerCarriere(hashesVersLibelle, tousLesResultats, nomEquipe, affichageStats);
+
+	// Rebucketé par libellé de groupe pour l'affichage (voir GroupeCarriere) :
+	// un·e joueur·se au libellé combiné ("Équipe 1 & Équipe 2") forme son
+	// propre groupe, distinct des deux groupes d'origine -- jamais rangé·e
+	// arbitrairement dans l'un des deux. `ordre` ci-dessus ne connaît pas ces
+	// libellés combinés (calculés seulement ici) : ils sont ajoutés à la
+	// suite, dans l'ordre où ils apparaissent parmi les joueur·se·s déjà
+	// triés par agregerCarriere().
+	const parGroupeLibelle = new Map<string, JoueurCarriere[]>();
+	for (const j of joueurs) {
+		const liste = parGroupeLibelle.get(j.groupeLibelle) ?? [];
+		liste.push(j);
+		parGroupeLibelle.set(j.groupeLibelle, liste);
+	}
+	const libellesConnus = new Set(ordre.map((g) => g.libelle));
+	const ordreAffichage = [...ordre.map((g) => g.libelle), ...[...parGroupeLibelle.keys()].filter((l) => !libellesConnus.has(l))];
+	const groupes = ordreAffichage.filter((l) => parGroupeLibelle.has(l)).map((libelle) => ({ libelle, joueurs: parGroupeLibelle.get(libelle)! }));
 
 	return { plusieursEquipes, groupes };
 }

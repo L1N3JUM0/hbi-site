@@ -2,6 +2,7 @@
 source: "pdf"
 codeRencontre: "VAGEXQE"
 equipeSlug: "u15-masculins"
+equipeNumero: "U15 Excellence"
 date: "2025-10-12T13:30:00.000Z"
 journee: "J3"
 competition: "CHAMPIONNAT U15 EXCELLENCE MASCULIN U15M EXC"

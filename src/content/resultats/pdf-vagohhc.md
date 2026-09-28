@@ -2,6 +2,7 @@
 source: "pdf"
 codeRencontre: "VAGOHHC"
 equipeSlug: "u15-masculins"
+equipeNumero: "U15 Excellence"
 date: "2026-05-02T14:30:00.000Z"
 journee: "J5"
 competition: "CHAMPIONNAT U15 EXCELLENCE MASCULIN U15M EXCELLENCE PHASE 2"

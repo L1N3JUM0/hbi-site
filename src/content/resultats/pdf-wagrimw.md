@@ -2,6 +2,7 @@
 source: "pdf"
 codeRencontre: "WAGRIMW"
 equipeSlug: "u15-masculins"
+equipeNumero: "U15 Excellence"
 date: "2026-09-12T12:00:00.000Z"
 journee: "J1"
 competition: "CHAMPIONNAT U15 EXCELLENCE MASCULIN U15M EXC"

@@ -2,6 +2,7 @@
 source: "pdf"
 codeRencontre: "VAGEXRB"
 equipeSlug: "u15-masculins"
+equipeNumero: "U15 Excellence"
 date: "2026-01-31T13:00:00.000Z"
 journee: "J10"
 competition: "CHAMPIONNAT U15 EXCELLENCE MASCULIN U15M EXC"

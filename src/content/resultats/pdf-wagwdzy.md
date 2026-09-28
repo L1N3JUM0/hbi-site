@@ -2,6 +2,7 @@
 source: "pdf"
 codeRencontre: "WAGWDZY"
 equipeSlug: "u15-masculins"
+equipeNumero: "Inter Dép"
 date: "2026-09-27T09:00:00.000Z"
 journee: "J1"
 competition: "U15 MASCULINS INTER DEP 1&2 U15 MASCULINS INTER DEP POULES"
