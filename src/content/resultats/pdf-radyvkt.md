@@ -1,0 +1,21 @@
+---
+source: "archive"
+codeRencontre: "RADYVKT"
+equipeSlug: "u11-mixtes"
+equipeNumero: "2"
+date: "2022-01-22T12:00:00.000Z"
+journee: "J2"
+competition: "CHAMPIONNATS SECONDE PHASE -11 ANS MIXTES CHAMPIONNATS SECONDE PHASE -11 ANS MIXTES"
+typeMatch: "championnat"
+domicile: true
+adversaire: "HANDBALL CLUB ORANGE 2"
+salle: "6384 - EMILE AVY"
+scoreDomicile: 6
+scoreExterieur: 20
+scoreMiTempsDomicile: 5
+scoreMiTempsExterieur: 8
+chronologie: [{"temps":"00:27","scoreDomicile":1,"scoreExterieur":0,"type":"but"},{"temps":"01:06","scoreDomicile":2,"scoreExterieur":0,"type":"but"},{"temps":"01:37","scoreDomicile":2,"scoreExterieur":1,"type":"but"},{"temps":"01:49","scoreDomicile":2,"scoreExterieur":1,"type":"arret"},{"temps":"02:29","scoreDomicile":2,"scoreExterieur":1,"type":"arret"},{"temps":"03:11","scoreDomicile":2,"scoreExterieur":2,"type":"but"},{"temps":"03:50","scoreDomicile":2,"scoreExterieur":2,"type":"arret"},{"temps":"04:02","scoreDomicile":2,"scoreExterieur":3,"type":"but"},{"temps":"05:05","scoreDomicile":2,"scoreExterieur":3,"type":"arret"},{"temps":"05:55","scoreDomicile":2,"scoreExterieur":3,"type":"arret"},{"temps":"06:50","scoreDomicile":2,"scoreExterieur":4,"type":"but"},{"temps":"07:17","scoreDomicile":2,"scoreExterieur":4,"type":"arret"},{"temps":"07:34","scoreDomicile":2,"scoreExterieur":4,"type":"arret"},{"temps":"07:58","scoreDomicile":2,"scoreExterieur":4,"type":"arret"},{"temps":"08:23","scoreDomicile":3,"scoreExterieur":4,"type":"but"},{"temps":"09:27","scoreDomicile":3,"scoreExterieur":5,"type":"but"},{"temps":"10:14","scoreDomicile":3,"scoreExterieur":6,"type":"but"},{"temps":"11:17","scoreDomicile":3,"scoreExterieur":7,"type":"but"},{"temps":"11:52","scoreDomicile":4,"scoreExterieur":7,"type":"but"},{"temps":"12:00","scoreDomicile":4,"scoreExterieur":8,"type":"but"},{"temps":"12:00","scoreDomicile":4,"scoreExterieur":8,"type":"arret"},{"temps":"12:00","scoreDomicile":4,"scoreExterieur":8,"type":"arret"},{"temps":"12:00","scoreDomicile":4,"scoreExterieur":8,"type":"arret"},{"temps":"12:00","scoreDomicile":4,"scoreExterieur":8,"type":"arret"},{"temps":"12:00","scoreDomicile":5,"scoreExterieur":8,"type":"but"},{"temps":"12:22","scoreDomicile":5,"scoreExterieur":8,"type":"arret"},{"temps":"13:09","scoreDomicile":5,"scoreExterieur":9,"type":"but"},{"temps":"13:38","scoreDomicile":5,"scoreExterieur":10,"type":"but"},{"temps":"13:51","scoreDomicile":5,"scoreExterieur":11,"type":"but"},{"temps":"14:21","scoreDomicile":5,"scoreExterieur":12,"type":"but"},{"temps":"15:01","scoreDomicile":5,"scoreExterieur":13,"type":"but"},{"temps":"15:11","scoreDomicile":5,"scoreExterieur":13,"type":"avertissement"},{"temps":"15:48","scoreDomicile":5,"scoreExterieur":14,"type":"but"},{"temps":"16:19","scoreDomicile":5,"scoreExterieur":14,"type":"arret"},{"temps":"17:45","scoreDomicile":5,"scoreExterieur":14,"type":"arret"},{"temps":"18:20","scoreDomicile":5,"scoreExterieur":15,"type":"but"},{"temps":"20:19","scoreDomicile":5,"scoreExterieur":16,"type":"but"},{"temps":"20:40","scoreDomicile":5,"scoreExterieur":17,"type":"but"},{"temps":"22:19","scoreDomicile":5,"scoreExterieur":17,"type":"arret"},{"temps":"22:43","scoreDomicile":5,"scoreExterieur":18,"type":"but"},{"temps":"23:14","scoreDomicile":5,"scoreExterieur":19,"type":"but"},{"temps":"23:50","scoreDomicile":5,"scoreExterieur":20,"type":"but"},{"temps":"24:00","scoreDomicile":5,"scoreExterieur":20,"type":"arret"},{"temps":"24:00","scoreDomicile":6,"scoreExterieur":20,"type":"but"}]
+statsEquipeDomicile: {"buts":6,"tirs":6,"arrets":9,"exclusions":0,"avertissements":1}
+statsEquipeExterieur: {"buts":20,"tirs":20,"arrets":8,"exclusions":0,"avertissements":0}
+statsJoueurs: [{"numero":9,"nom":"AVY","prenom":"elsa","licenceHash":"664b99c402144fde7212e0f2b738cd1348c88967265e252bcf0afad65d6a750f","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":10,"nom":"COLLI","prenom":"anna","licenceHash":"1107be48301d284490a33c007b52e39778a441d125332a6fba54963803841c97","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":21,"nom":"VANADIA","prenom":"leona","licenceHash":"d9235a0d8313813c41b6ff41fe7286790f703fd2c9c0d1197a239b1496595066","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":1,"exclusions":0,"disqualification":false}]
+---

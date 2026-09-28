@@ -1,0 +1,20 @@
+---
+source: "archive"
+codeRencontre: "RADXNCO"
+equipeSlug: "u11-mixtes"
+date: "2022-03-26T12:30:00.000Z"
+journee: "J5"
+competition: "CHAMPIONNATS SECONDE PHASE -11 ANS MIXTES CHAMPIONNATS SECONDE PHASE -11 ANS MIXTES"
+typeMatch: "championnat"
+domicile: false
+adversaire: "AVIGNON HANDBALL 2"
+salle: "6384 - ANDRE GIMARD"
+scoreDomicile: 6
+scoreExterieur: 12
+scoreMiTempsDomicile: 3
+scoreMiTempsExterieur: 6
+chronologie: [{"temps":"01:01","scoreDomicile":1,"scoreExterieur":0,"type":"but"},{"temps":"01:23","scoreDomicile":1,"scoreExterieur":0,"type":"avertissement"},{"temps":"01:42","scoreDomicile":1,"scoreExterieur":1,"type":"but"},{"temps":"01:56","scoreDomicile":2,"scoreExterieur":1,"type":"but"},{"temps":"03:33","scoreDomicile":3,"scoreExterieur":1,"type":"but"},{"temps":"04:18","scoreDomicile":3,"scoreExterieur":2,"type":"but"},{"temps":"05:17","scoreDomicile":3,"scoreExterieur":3,"type":"but"},{"temps":"05:58","scoreDomicile":3,"scoreExterieur":4,"type":"but"},{"temps":"08:22","scoreDomicile":3,"scoreExterieur":5,"type":"but"},{"temps":"09:55","scoreDomicile":3,"scoreExterieur":5,"type":"exclusion"},{"temps":"10:30","scoreDomicile":3,"scoreExterieur":6,"type":"but"},{"temps":"13:09","scoreDomicile":3,"scoreExterieur":7,"type":"but"},{"temps":"13:46","scoreDomicile":3,"scoreExterieur":8,"type":"but"},{"temps":"15:59","scoreDomicile":4,"scoreExterieur":8,"type":"but"},{"temps":"16:35","scoreDomicile":4,"scoreExterieur":9,"type":"but"},{"temps":"17:44","scoreDomicile":5,"scoreExterieur":9,"type":"but"},{"temps":"18:14","scoreDomicile":5,"scoreExterieur":10,"type":"but"},{"temps":"18:36","scoreDomicile":5,"scoreExterieur":10,"type":"avertissement"},{"temps":"19:08","scoreDomicile":6,"scoreExterieur":10,"type":"but"},{"temps":"21:15","scoreDomicile":6,"scoreExterieur":11,"type":"but"},{"temps":"22:48","scoreDomicile":6,"scoreExterieur":12,"type":"but"}]
+statsEquipeDomicile: {"buts":6,"tirs":6,"arrets":0,"exclusions":1,"avertissements":1}
+statsEquipeExterieur: {"buts":12,"tirs":12,"arrets":0,"exclusions":0,"avertissements":1}
+statsJoueurs: [{"numero":5,"nom":"CAMBOULIVES DUFFEAL","prenom":"basile","licenceHash":"5f8144ecfae5f1516aff54eaaa884de4c1047db655f5e4942e54bc11e9e3e502","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":47,"nom":"FAVRE","prenom":"maelys","licenceHash":"812063b732cc85896a91bbe94cc74ba58a82fcbaa969d828d53371817ebc7906","buts":1,"sept_m":0,"tirs":1,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":10,"nom":"FONTIN","prenom":"jules","licenceHash":"2ec071f188d55330417a63f560788f5cf7351b77861aa051bba3d62aed59b6db","buts":4,"sept_m":0,"tirs":4,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":9,"nom":"JACQUART","prenom":"antoine","licenceHash":"17d91504bdf6a1e1ed5c18d057abd753197e7021f5a2beb8a79fbd4350b7935c","buts":1,"sept_m":0,"tirs":1,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":12,"nom":"LARUE","prenom":"antonin","licenceHash":"644e110c91a91bb744dd1635ecd2af259275443b5313708e0365741938120a45","buts":3,"sept_m":0,"tirs":3,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":11,"nom":"MAUREL HERRERA","prenom":"soline","licenceHash":"cbd7ec4332293dfe0c7c6d24fb2fab326d17169edbab96507df32dd298f5f23b","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":15,"nom":"PALERMO","prenom":"loris","licenceHash":"7e2fca40fb542424d8a389c69dbd00f8c8dff0760f36962dad4f3c869a9dffc1","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":1,"nom":"POUZOL","prenom":"lancelot","licenceHash":"d981af657836ba0c5db86d16ae0d9eb0e6d8182596f72bd36c640859a330e98e","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":39,"nom":"VENGEON","prenom":"noa","licenceHash":"6e1a09d140be9b8120f52ccf675a287da602303a63672160d95262dec6454576","buts":2,"sept_m":0,"tirs":2,"arrets":0,"avertissements":1,"exclusions":0,"disqualification":false}]
+---

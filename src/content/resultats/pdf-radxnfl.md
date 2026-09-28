@@ -1,0 +1,21 @@
+---
+source: "archive"
+codeRencontre: "RADXNFL"
+equipeSlug: "u11-mixtes"
+equipeNumero: "2"
+date: "2022-05-07T12:30:00.000Z"
+journee: "J7"
+competition: "CHAMPIONNATS SECONDE PHASE -11 ANS MIXTES CHAMPIONNATS SECONDE PHASE -11 ANS MIXTES"
+typeMatch: "championnat"
+domicile: false
+adversaire: "HANDBALL CLUB PERNOIS"
+salle: "6384 - PAUL DE VIVIE"
+scoreDomicile: 0
+scoreExterieur: 18
+scoreMiTempsDomicile: 0
+scoreMiTempsExterieur: 11
+chronologie: [{"temps":"00:23","scoreDomicile":0,"scoreExterieur":1,"type":"but"},{"temps":"02:12","scoreDomicile":0,"scoreExterieur":2,"type":"but"},{"temps":"03:19","scoreDomicile":0,"scoreExterieur":3,"type":"but"},{"temps":"04:00","scoreDomicile":0,"scoreExterieur":4,"type":"but"},{"temps":"05:21","scoreDomicile":0,"scoreExterieur":5,"type":"but"},{"temps":"07:12","scoreDomicile":0,"scoreExterieur":6,"type":"but"},{"temps":"07:52","scoreDomicile":0,"scoreExterieur":7,"type":"but"},{"temps":"08:24","scoreDomicile":0,"scoreExterieur":7,"type":"autre"},{"temps":"08:24","scoreDomicile":0,"scoreExterieur":8,"type":"but"},{"temps":"09:35","scoreDomicile":0,"scoreExterieur":9,"type":"but"},{"temps":"11:40","scoreDomicile":0,"scoreExterieur":10,"type":"but"},{"temps":"12:00","scoreDomicile":0,"scoreExterieur":11,"type":"but"},{"temps":"14:18","scoreDomicile":0,"scoreExterieur":12,"type":"but"},{"temps":"16:32","scoreDomicile":0,"scoreExterieur":13,"type":"but"},{"temps":"17:11","scoreDomicile":0,"scoreExterieur":14,"type":"but"},{"temps":"17:14","scoreDomicile":0,"scoreExterieur":14,"type":"autre"},{"temps":"17:48","scoreDomicile":0,"scoreExterieur":15,"type":"but"},{"temps":"18:22","scoreDomicile":0,"scoreExterieur":16,"type":"but"},{"temps":"19:12","scoreDomicile":0,"scoreExterieur":17,"type":"but"},{"temps":"24:00","scoreDomicile":0,"scoreExterieur":18,"type":"but"}]
+statsEquipeDomicile: {"buts":0,"tirs":0,"arrets":0,"exclusions":0,"avertissements":0}
+statsEquipeExterieur: {"buts":18,"tirs":18,"arrets":0,"exclusions":0,"avertissements":0}
+statsJoueurs: [{"numero":6,"nom":"AVY","prenom":"elsa","licenceHash":"664b99c402144fde7212e0f2b738cd1348c88967265e252bcf0afad65d6a750f","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":11,"nom":"COLLI","prenom":"anna","licenceHash":"1107be48301d284490a33c007b52e39778a441d125332a6fba54963803841c97","buts":1,"sept_m":0,"tirs":1,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":47,"nom":"FAVRE","prenom":"maelys","licenceHash":"812063b732cc85896a91bbe94cc74ba58a82fcbaa969d828d53371817ebc7906","buts":5,"sept_m":0,"tirs":5,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":10,"nom":"FONTIN","prenom":"jules","licenceHash":"2ec071f188d55330417a63f560788f5cf7351b77861aa051bba3d62aed59b6db","buts":3,"sept_m":0,"tirs":3,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":5,"nom":"JACQUART","prenom":"antoine","licenceHash":"17d91504bdf6a1e1ed5c18d057abd753197e7021f5a2beb8a79fbd4350b7935c","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":12,"nom":"MAUREL HERRERA","prenom":"soline","licenceHash":"cbd7ec4332293dfe0c7c6d24fb2fab326d17169edbab96507df32dd298f5f23b","buts":5,"sept_m":0,"tirs":5,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":1,"nom":"POUZOL","prenom":"lancelot","licenceHash":"d981af657836ba0c5db86d16ae0d9eb0e6d8182596f72bd36c640859a330e98e","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":15,"nom":"VANADIA","prenom":"leona","licenceHash":"d9235a0d8313813c41b6ff41fe7286790f703fd2c9c0d1197a239b1496595066","buts":0,"sept_m":0,"tirs":0,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false},{"numero":49,"nom":"VENGEON","prenom":"noa","licenceHash":"6e1a09d140be9b8120f52ccf675a287da602303a63672160d95262dec6454576","buts":2,"sept_m":0,"tirs":2,"arrets":0,"avertissements":0,"exclusions":0,"disqualification":false}]
+---
