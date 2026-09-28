@@ -473,22 +473,24 @@ const statJoueurMatch = z.object({
  * chaque build), soit saisie à la main en secours quand aucune feuille n'a
  * été récupérée (score et infos de base uniquement dans ce cas).
  *
- * Les entrées générées automatiquement sont *recalculées à chaque build*
- * depuis leur PDF source (fichier nommé `pdf-<codeRencontre>.md`, jamais
- * dupliqué), puis commitées par le workflow de déploiement (voir
- * .github/workflows/deploy.yml) pour rester visibles et corrigeables
- * depuis le CMS : les champs `chronologie`, `statsEquipeDomicile/Exterieur`
- * et `statsJoueurs` y sont donc écrasés à chaque reconstruction du site --
- * ne pas les modifier à la main, ce serait perdu au prochain build. Seul
- * `equipeSlug` est préservé si vous le corrigez à la main (voir
- * scripts/import-fdme.mjs) : utile quand l'équipe n'a pas été détectée
- * automatiquement à partir du nom de la compétition.
+ * Les entrées générées depuis une feuille (fichier nommé
+ * `pdf-<codeRencontre>.md`, jamais dupliqué) sont extraites UNE fois, puis
+ * le PDF est supprimé (`source: "archive"`, voir scripts/import-fdme.mjs) :
+ * le fichier de résultat fait alors foi, et une correction faite à la main
+ * dans le CMS y reste. Seule exception : les lignes de `statsJoueurs`
+ * d'une personne absente du club depuis plus de 3 saisons complètes sont
+ * retirées automatiquement à chaque build (voir
+ * src/lib/fdme/retention.mjs).
  */
 const resultats = defineCollection({
 	loader: glob({ pattern: "*.md", base: "./src/content/resultats" }),
 	schema: z
 		.object({
-			source: champAvecDefaut(z.enum(["pdf", "manuel"]), "manuel"),
+			/** "archive" : extrait d'une feuille de match, PDF consommé.
+			 * "pdf" : ancien fonctionnement (régénéré tant que le PDF était dans
+			 * le dépôt), ne subsiste que jusqu'au premier build qui consomme
+			 * ce PDF. "manuel" : saisi en secours dans le CMS. */
+			source: champAvecDefaut(z.enum(["archive", "pdf", "manuel"]), "manuel"),
 			/** Identifiant FFHandball de la rencontre (ex. "VAGEXGV") -- clé de
 			 * déduplication pour les entrées générées depuis une feuille de match.
 			 * Absent pour une entrée saisie à la main. */
@@ -509,6 +511,11 @@ const resultats = defineCollection({
 			 * uniquement quand `aPlusieursEquipes()` (même fichier) détecte qu'un
 			 * partage de poule existe bel et bien pour cette équipe. */
 			equipeNumero: champFacultatif(z.string()),
+			/** Posé par l'import quand la feuille ne permettait pas de savoir
+			 * laquelle des équipes du club a joué : le bandeau d'avertissement
+			 * reste affiché tant que `equipeNumero` n'est pas renseigné à la
+			 * main (voir scripts/import-fdme.mjs). */
+			equipeNumeroAVerifier: champFacultatif(z.boolean()),
 			date: z.coerce.date(),
 			/** Ex. "J1". Absent pour un match de coupe ou amical. */
 			journee: champFacultatif(z.string()),

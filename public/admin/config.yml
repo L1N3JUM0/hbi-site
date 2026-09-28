@@ -571,7 +571,7 @@ collections:
   - name: "feuillesMatch"
     label: "Feuilles de match"
     label_singular: "Feuille de match"
-    description: "Déposez ici le PDF de la feuille de match téléchargé sur le site de la FFHandball : le résultat, la chronologie et les statistiques sont ajoutés automatiquement au site lors de la prochaine reconstruction (quelques minutes, pas d'autre action nécessaire). Voir GUIDE-EDITION.md pour la marche à suivre complète."
+    description: "Déposez ici le PDF de la feuille de match téléchargé sur le site de la FFHandball : le résultat, la chronologie et les statistiques sont ajoutés automatiquement au site lors de la prochaine reconstruction (quelques minutes, pas d'autre action nécessaire). Une fois lue, la feuille disparaît d'elle-même de cette liste (le PDF contient les numéros de licence, il n'est pas conservé) et le match apparaît dans « Résultats ». Une feuille qui reste ici plus d'une dizaine de minutes n'a pas pu être lue : voir le bandeau sur /equipes. Voir GUIDE-EDITION.md pour la marche à suivre complète."
     folder: "src/content/feuilles-match"
     create: true
     delete: true
@@ -713,6 +713,15 @@ collections:
 
       - label: "Code rencontre (technique)"
         name: "codeRencontre"
+        widget: "hidden"
+        required: false
+
+      # Déclaré (même masqué) pour que Sveltia le conserve quand un
+      # résultat est réenregistré depuis le formulaire : sinon
+      # l'avertissement "numéro d'équipe à vérifier" disparaîtrait sans que
+      # personne ait renseigné le numéro.
+      - label: "Numéro d'équipe à vérifier (technique)"
+        name: "equipeNumeroAVerifier"
         widget: "hidden"
         required: false
 

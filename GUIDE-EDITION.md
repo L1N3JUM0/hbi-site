@@ -295,11 +295,21 @@ bloc **Résultats** (replié par défaut, à dérouler) de la fiche de l'équipe
 concernée sur `/equipes`, avec le graphique d'évolution du score, les
 statistiques d'équipe et les meilleur·e·s buteur·se·s.
 
+**La feuille disparaît ensuite d'elle-même de « Feuilles de match ».**
+C'est normal : le PDF contient les numéros de licence de tou·te·s les
+joueur·se·s, le site n'en garde que le résultat (visible et corrigeable
+dans la rubrique **Résultats**) et supprime le PDF. Pour corriger un
+résultat, c'est donc dans **Résultats** qu'il faut aller ; pour remplacer
+une feuille erronée, déposez simplement la bonne : elle remplace
+l'ancienne.
+
 Si le match n'apparaît toujours pas après une dizaine de minutes, il est
 possible que le PDF n'ait pas pu être lu automatiquement (feuille
 scannée au lieu d'un export du site FFHandball, format inhabituel...) :
 un bandeau apparaît alors en haut de `/equipes` pour le signaler
-clairement, avec le nom du fichier concerné.
+clairement, avec le nom du fichier concerné. Dans ce cas, la feuille reste
+dans « Feuilles de match » : supprimez-la une fois le problème réglé (ou
+déposez-en une autre).
 
 **Seuls les matchs de la saison en cours (septembre à juin) apparaissent
 dans le bloc Résultats.** C'est volontaire : l'effectif d'une équipe change
