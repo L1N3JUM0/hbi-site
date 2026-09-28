@@ -132,6 +132,11 @@ deux champs vides pour un créneau qui ne joue pas ce type de championnat
 s'il y en a, devront être saisis à la main (voir « Ajouter le résultat d'un
 match » plus bas).
 
+**Les feuilles de match Loisirs ne sont jamais importées** (règle du club :
+elles sont remplies après coup, leurs données ne sont pas fiables). Une
+feuille Loisirs déposée est refusée : elle reste dans « Feuilles de match »
+avec un message explicite dans le bandeau, supprimez-la simplement.
+
 **Si une feuille de match déposée ne se rattache à aucune équipe** (parce
 que la « Catégorie d'âge »/le « Genre » n'ont pas été remplis, ou ne
 correspondent pas exactement au texte de la compétition), un bandeau

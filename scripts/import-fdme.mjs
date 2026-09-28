@@ -42,6 +42,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFile
 import { join } from "node:path";
 import { parseFeuilleDeMatch, FeuilleFormatError } from "../src/lib/fdme/parseFeuille.mjs";
 import { libellesCompetitionIncomplets } from "../src/lib/fdme/equipeMatch.mjs";
+import { categorieIgnoree } from "../src/lib/fdme/categoriesIgnorees.mjs";
 import { lireFrontmatter } from "./frontmatter.mjs";
 
 // Charge le pépin de hachage des licences (voir src/lib/fdme/licenceHash.mjs)
@@ -236,6 +237,16 @@ for (const entryPath of entries) {
 	try {
 		const bytes = new Uint8Array(readFileSync(pdfPath));
 		const data = await parseFeuilleDeMatch(bytes, equipesCompetition);
+		// Refusée, pas consommée : la feuille reste visible dans le CMS avec
+		// le bandeau, pour que la personne qui l'a déposée comprenne pourquoi
+		// le match n'apparaît pas (voir src/lib/fdme/categoriesIgnorees.mjs).
+		const ignoree = categorieIgnoree(data.competition);
+		if (ignoree?.refuseeAImport) {
+			console.warn(`[import-fdme] ${pdfPath} : catégorie « ${ignoree.libelle} » refusée à l'import (${data.competition}).`);
+			erreurs.push({ fichier: `${data.codeRencontre} (${nomEntree})`, raison: ignoree.raison });
+			ignorees++;
+			continue;
+		}
 		const cible = join(RESULTATS_DIR, `pdf-${data.codeRencontre.toLowerCase()}.md`);
 		preserverCorrectionsManuelles(cible, data);
 
