@@ -45,13 +45,15 @@ const formatRatio = (r: number | null) => (r == null ? "—" : r.toFixed(1));
 // cours / Toute la carrière" choisit laquelle afficher et trier (voir le
 // script plus bas) -- aucun recalcul côté navigateur.
 type Totaux = Pick<JoueurCarriere, "matchsJoues" | "buts" | "sept_m" | "tirs" | "arrets" | "avertissements" | "exclusions" | "disqualifications" | "ratio">;
-const COLONNES: { key: string; titre: string; valeur: (t: Totaux) => number | null; texte?: (t: Totaux) => string }[] = [
-	{ key: "matchs", titre: "Matchs", valeur: (t) => t.matchsJoues },
-	{ key: "buts", titre: "Buts", valeur: (t) => t.buts },
-	{ key: "ratio", titre: "Buts/match", valeur: (t) => t.ratio, texte: (t) => formatRatio(t.ratio) },
+// `principale` : chiffres montrés d'emblée sur la carte mobile ; les autres
+// passent dans sa zone "Plus de détails" (décision du 30/09/2026).
+const COLONNES: { key: string; titre: string; valeur: (t: Totaux) => number | null; texte?: (t: Totaux) => string; principale?: boolean }[] = [
+	{ key: "matchs", titre: "Matchs", valeur: (t) => t.matchsJoues, principale: true },
+	{ key: "buts", titre: "Buts", valeur: (t) => t.buts, principale: true },
+	{ key: "ratio", titre: "Buts/match", valeur: (t) => t.ratio, texte: (t) => formatRatio(t.ratio), principale: true },
 	{ key: "sept_m", titre: "7m", valeur: (t) => t.sept_m },
 	{ key: "tirs", titre: "Tirs", valeur: (t) => t.tirs },
-	{ key: "arrets", titre: "Arrêts", valeur: (t) => t.arrets },
+	{ key: "arrets", titre: "Arrêts", valeur: (t) => t.arrets, principale: true },
 	{ key: "avertissements", titre: "Avert.", valeur: (t) => t.avertissements },
 	{ key: "exclusions", titre: "Excl.", valeur: (t) => t.exclusions },
 	{ key: "disqualifications", titre: "Disq.", valeur: (t) => t.disqualifications },
@@ -207,6 +209,18 @@ const comparables = blocs
 								<input id="recherche-joueur" type="search" autocomplete="off" placeholder="Nom tel qu'affiché" />
 								<p class="recherche-bilan" aria-live="polite"></p>
 							</div>
+							{/* Cartes mobiles : plus d'en-têtes de colonnes cliquables, le tri
+							passe par ce menu (masqué sur grand écran). */}
+							<div class="tri-mobile">
+								<label class="filtre-label" for="tri-mobile">Trier par</label>
+								<select id="tri-mobile">
+									<option value="buts">Buts</option>
+									<option value="matchs">Matchs</option>
+									<option value="ratio">Buts par match</option>
+									<option value="arrets">Arrêts</option>
+									<option value="joueur">Nom</option>
+								</select>
+							</div>
 						</div>
 
 						{comparables.length >= 2 && (
@@ -293,13 +307,37 @@ const comparables = blocs
 																		{j.nonVuCetteSaison && <span class="badge badge--discret">Non vu cette saison</span>}
 																		{j.plusieursCategoriesCetteSaison && <span class="badge">Plusieurs catégories cette saison</span>}
 																	</td>
-																	{carriere.plusieursEquipes && <td>{j.groupeLibelle}</td>}
+																	{carriere.plusieursEquipes && <td class="col-secondaire">{j.groupeLibelle}</td>}
 																	{COLONNES.map((c) => (
-																		<td>
+																		<td class={c.principale ? "col-principale" : "col-secondaire"} data-label={c.titre}>
 																			<span class="v-carriere">{texteCellule(c, j)}</span>
 																			<span class="v-saison">{texteCellule(c, j.saisonEnCours)}</span>
 																		</td>
 																	))}
+																	{/* Carte mobile uniquement (masqué sur grand écran) : les
+																	colonnes secondaires, repliées sous les chiffres clés. */}
+																	<td class="col-plus">
+																		<details class="plus-mobile">
+																			<summary>Plus de détails</summary>
+																			<dl>
+																				{carriere.plusieursEquipes && (
+																					<div>
+																						<dt>Catégorie</dt>
+																						<dd>{j.groupeLibelle}</dd>
+																					</div>
+																				)}
+																				{COLONNES.filter((c) => !c.principale).map((c) => (
+																					<div>
+																						<dt>{c.titre}</dt>
+																						<dd>
+																							<span class="v-carriere">{texteCellule(c, j)}</span>
+																							<span class="v-saison">{texteCellule(c, j.saisonEnCours)}</span>
+																						</dd>
+																					</div>
+																				))}
+																			</dl>
+																		</details>
+																	</td>
 																</tr>
 																{aDetail && (
 																	<tr class="detail-row" id={detailId} hidden>
@@ -443,6 +481,7 @@ const comparables = blocs
 			 * ça, l'ordre affiché correspondrait encore aux chiffres de l'autre
 			 * vue. */
 			const retris: (() => void)[] = [];
+			const trisImposes: ((key: string) => void)[] = [];
 
 			for (const table of document.querySelectorAll<HTMLTableElement>("table.joueurs")) {
 				const tbody = table.tBodies[0];
@@ -464,6 +503,16 @@ const comparables = blocs
 						trier(bouton, key, type, sens);
 					});
 				}
+
+				// Tri imposé depuis le menu "Trier par" des cartes mobiles : sens
+				// par défaut (décroissant pour un chiffre, alphabétique pour le nom).
+				trisImposes.push((key: string) => {
+					const bouton = headers.find((b) => b.dataset.key === key);
+					if (!bouton) return;
+					const type = bouton.dataset.type ?? "text";
+					triActuel = { key, sens: type === "num" ? -1 : 1 };
+					trier(bouton, key, type, triActuel.sens);
+				});
 
 				retris.push(() => {
 					const bouton = headers.find((b) => b.dataset.key === triActuel?.key);
@@ -567,6 +616,18 @@ const comparables = blocs
 						toggleDetail(row);
 					}
 				});
+			}
+
+			// --- Cartes mobiles ------------------------------------------------
+			document.querySelector<HTMLSelectElement>("#tri-mobile")?.addEventListener("change", (e) => {
+				const key = (e.target as HTMLSelectElement).value;
+				for (const imposer of trisImposes) imposer(key);
+			});
+			// Déplier "Plus de détails" ne doit pas aussi ouvrir la fiche détaillée
+			// (clic sur toute la ligne pour un·e joueur·se nominatif·ve).
+			for (const plus of document.querySelectorAll<HTMLElement>(".plus-mobile")) {
+				plus.addEventListener("click", (e) => e.stopPropagation());
+				plus.addEventListener("keydown", (e) => e.stopPropagation());
 			}
 
 			// --- Comparaison de deux joueur·se·s (nominatifs uniquement) --------
@@ -707,6 +768,125 @@ const comparables = blocs
 		background: var(--color-navy-deep);
 		color: var(--color-white);
 		margin-bottom: 1.5rem;
+	}
+	/* --- Cartes mobiles (décision du 30/09/2026) -------------------------
+	   Grand écran : tableau inchangé, éléments propres aux cartes masqués. */
+	.tri-mobile,
+	table.joueurs td.col-plus {
+		display: none;
+	}
+	@media (max-width: 600px) {
+		.tri-mobile {
+			display: block;
+			flex: 1 1 100%;
+		}
+		.tri-mobile select {
+			margin-bottom: 0;
+		}
+		/* Le tableau devient une pile de cartes : plus de défilement
+		   horizontal ni de cadre à défilement vertical imbriqué. */
+		.carriere-content .table-scroll {
+			overflow: visible;
+			max-height: none;
+		}
+		table.joueurs,
+		table.joueurs tbody {
+			display: block;
+		}
+		table.joueurs thead {
+			/* En-têtes remplacés par le menu "Trier par" et les libellés de
+			   chaque case ; masqués visuellement seulement. */
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			overflow: hidden;
+			clip-path: inset(50%);
+		}
+		table.joueurs tr.joueur-row {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 0.4rem;
+			margin: 0 0 0.75rem;
+			padding: 0.75rem;
+			background: var(--color-navy);
+			border-radius: 6px;
+		}
+		table.joueurs tr.joueur-row[hidden] {
+			display: none;
+		}
+		table.joueurs tr.joueur-row > td {
+			border: 0;
+			padding: 0;
+			white-space: normal;
+			text-align: left;
+		}
+		table.joueurs tr.joueur-row > td:first-child {
+			grid-column: 1 / -1;
+			font-size: 1rem;
+		}
+		table.joueurs tr.joueur-row > td:first-child .nom {
+			font-weight: 700;
+		}
+		table.joueurs td.col-secondaire {
+			display: none;
+		}
+		table.joueurs td.col-principale {
+			text-align: center;
+			background: color-mix(in srgb, var(--color-white) 6%, transparent);
+			border-radius: 4px;
+			padding: 0.35rem 0.2rem;
+			font-size: 1.1rem;
+			font-weight: 700;
+		}
+		table.joueurs td.col-principale::before {
+			content: attr(data-label);
+			display: block;
+			font-size: 0.65rem;
+			font-weight: 400;
+			text-transform: uppercase;
+			letter-spacing: 0.03em;
+			color: color-mix(in srgb, var(--color-white) 65%, transparent);
+		}
+		table.joueurs tr.joueur-row > td.col-plus {
+			display: block;
+			grid-column: 1 / -1;
+		}
+		.plus-mobile summary {
+			min-height: 44px;
+			display: flex;
+			align-items: center;
+			cursor: pointer;
+			font-size: 0.9rem;
+			color: color-mix(in srgb, var(--color-white) 80%, transparent);
+		}
+		.plus-mobile dl {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 0.4rem;
+			margin: 0.2rem 0 0;
+		}
+		.plus-mobile dt {
+			font-size: 0.65rem;
+			text-transform: uppercase;
+			color: color-mix(in srgb, var(--color-white) 65%, transparent);
+		}
+		.plus-mobile dd {
+			margin: 0;
+			font-weight: 700;
+		}
+		/* Fiche détaillée (nominatif) : juste sous sa carte, pleine largeur. */
+		table.joueurs tr.detail-row:not([hidden]) {
+			display: block;
+			margin: -0.5rem 0 0.75rem;
+		}
+		table.joueurs tr.detail-row > td {
+			display: block;
+			overflow-x: auto;
+		}
+		.carriere-content .graphe {
+			position: static;
+			width: 100%;
+		}
 	}
 	/* Graphique "buts par saison" (fiche détaillée) : sobre, couleurs des
 	   tokens uniquement. */
