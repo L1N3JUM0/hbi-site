@@ -7,15 +7,25 @@ import Favicon from "../components/Favicon.astro";
 import { getCollection } from "astro:content";
 import { trierEquipes } from "../lib/equipes";
 import { slugsAvecResultats } from "../lib/statistiques";
-import { getCarriereParEquipe, type JoueurCarriere } from "../lib/carriereJoueur";
+import { categorieActuelleParHash, getCarriereParEquipe, type JoueurCarriere } from "../lib/carriereJoueur";
 
 const slugsDisponibles = await slugsAvecResultats();
-const equipes = trierEquipes(await getCollection("equipes")).filter((e) => slugsDisponibles.has(e.data.slug));
+// Équipes archivées exclues (demande du 29/09/2026) : leur dernier effectif
+// faisait réapparaître des joueur·se·s déjà listé·e·s dans leur catégorie
+// actuelle ; leurs saisons restent comptées dans le total de chacun·e, et
+// leurs résultats visibles sur /equipes.
+const equipes = trierEquipes(await getCollection("equipes")).filter(
+	(e) => slugsDisponibles.has(e.data.slug) && e.data.statut !== "archivee",
+);
+// Une seule ligne par personne, dans sa catégorie actuelle (voir
+// categorieActuelleParHash) -- `trierEquipes` range déjà du plus jeune au
+// plus âgé, ordre attendu pour départager une égalité.
+const categorieActuelle = await categorieActuelleParHash(equipes.map((e) => e.data.slug));
 
 const blocs = await Promise.all(
 	equipes.map(async (e) => ({
 		equipe: e,
-		carriere: await getCarriereParEquipe(e.data.slug, e.data.calendriers, e.data.affichageStats),
+		carriere: await getCarriereParEquipe(e.data.slug, e.data.calendriers, e.data.affichageStats, categorieActuelle),
 	})),
 );
 

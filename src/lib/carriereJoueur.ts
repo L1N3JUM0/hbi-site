@@ -254,6 +254,46 @@ function agregerCarriere(
 		}));
 }
 
+/** Catégorie ACTUELLE de chaque joueur·se, pour qu'il/elle n'apparaisse
+ * qu'UNE fois sur /statistiques-carriere (demande du 29/09/2026 : jusque-là,
+ * une personne ayant joué dans deux catégories cette saison ressortait dans
+ * chacune avec le même total de carrière, jusqu'à trois fois avec les
+ * équipes archivées). C'est aussi cette catégorie qui fixe le mode
+ * d'affichage (nominatif ou pseudonymisé) de sa ligne.
+ *
+ * Parmi les équipes données (actives, du plus jeune au plus âgé), celle dont
+ * l'effectif de référence (saison en cours, sinon dernière saison jouée par
+ * l'équipe -- même règle que getCarriereParEquipe) est le plus récent ; à
+ * saison égale, celle où la personne a joué le plus de matchs ; à égalité
+ * encore, la catégorie la plus âgée -- un choix stable, jamais arbitraire
+ * d'un build à l'autre. */
+export async function categorieActuelleParHash(slugsDuPlusJeuneAuPlusAge: string[]): Promise<Map<string, string>> {
+	type Candidat = { slug: string; saison: string; matchs: number; rang: number };
+	const meilleur = new Map<string, Candidat>();
+	for (const [rang, slug] of slugsDuPlusJeuneAuPlusAge.entries()) {
+		const { saisonEnCours, saisonsPrecedentes } = resultatsParSaison(await getResultatsForEquipe(slug));
+		const effectif = saisonEnCours.length > 0 ? saisonEnCours : (saisonsPrecedentes[0]?.resultats ?? []);
+		if (effectif.length === 0) continue;
+		const saison = effectif[0].data.saison;
+		const matchs = new Map<string, number>();
+		for (const r of effectif) {
+			for (const j of r.data.statsJoueurs ?? []) {
+				if (j.licenceHash) matchs.set(j.licenceHash, (matchs.get(j.licenceHash) ?? 0) + 1);
+			}
+		}
+		for (const [hash, n] of matchs) {
+			const actuel = meilleur.get(hash);
+			const candidat = { slug, saison, matchs: n, rang };
+			const mieux =
+				!actuel ||
+				saison > actuel.saison ||
+				(saison === actuel.saison && (n > actuel.matchs || (n === actuel.matchs && rang > actuel.rang)));
+			if (mieux) meilleur.set(hash, candidat);
+		}
+	}
+	return new Map([...meilleur].map(([hash, c]) => [hash, c.slug]));
+}
+
 /** Statistiques de carrière (toutes saisons, toutes catégories confondues)
  * de l'effectif ACTUEL d'une équipe -- "actuel" au sens de la saison la plus
  * récente pour laquelle cette équipe a des résultats (la saison en cours si
@@ -265,6 +305,9 @@ export async function getCarriereParEquipe(
 	equipeSlug: string,
 	calendriers: { libelle?: string }[],
 	affichageStats: "nominatif" | "pseudonymise" | "masque",
+	/** Voir categorieActuelleParHash() : seules les personnes rattachées à
+	 * CETTE équipe y sont listées. */
+	categorieActuelle: Map<string, string>,
 ): Promise<CarriereEquipe> {
 	const tous = await getResultatsForEquipe(equipeSlug);
 	if (tous.length === 0) return { plusieursEquipes: false, groupes: [] };
@@ -295,7 +338,7 @@ export async function getCarriereParEquipe(
 	for (const g of groupesEffectif) {
 		for (const r of g.resultats) {
 			for (const j of r.data.statsJoueurs ?? []) {
-				if (!j.licenceHash) continue;
+				if (!j.licenceHash || categorieActuelle.get(j.licenceHash) !== equipeSlug) continue;
 				const libelles = groupesParHash.get(j.licenceHash) ?? [];
 				if (!libelles.includes(g.libelle)) libelles.push(g.libelle);
 				groupesParHash.set(j.licenceHash, libelles);
