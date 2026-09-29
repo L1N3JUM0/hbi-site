@@ -39,6 +39,42 @@ function joueursAffiches(carriere: { plusieursEquipes: boolean; groupes: { joueu
 }
 
 const formatRatio = (r: number | null) => (r == null ? "—" : r.toFixed(1));
+
+// Colonnes chiffrées du tableau, décrites une fois : chaque cellule porte
+// les DEUX valeurs (carrière et saison en cours) et la bascule "Saison en
+// cours / Toute la carrière" choisit laquelle afficher et trier (voir le
+// script plus bas) -- aucun recalcul côté navigateur.
+type Totaux = Pick<JoueurCarriere, "matchsJoues" | "buts" | "sept_m" | "tirs" | "arrets" | "avertissements" | "exclusions" | "disqualifications" | "ratio">;
+const COLONNES: { key: string; titre: string; valeur: (t: Totaux) => number | null; texte?: (t: Totaux) => string }[] = [
+	{ key: "matchs", titre: "Matchs", valeur: (t) => t.matchsJoues },
+	{ key: "buts", titre: "Buts", valeur: (t) => t.buts },
+	{ key: "ratio", titre: "Buts/match", valeur: (t) => t.ratio, texte: (t) => formatRatio(t.ratio) },
+	{ key: "sept_m", titre: "7m", valeur: (t) => t.sept_m },
+	{ key: "tirs", titre: "Tirs", valeur: (t) => t.tirs },
+	{ key: "arrets", titre: "Arrêts", valeur: (t) => t.arrets },
+	{ key: "avertissements", titre: "Avert.", valeur: (t) => t.avertissements },
+	{ key: "exclusions", titre: "Excl.", valeur: (t) => t.exclusions },
+	{ key: "disqualifications", titre: "Disq.", valeur: (t) => t.disqualifications },
+];
+const texteCellule = (c: (typeof COLONNES)[number], t: Totaux) => (c.texte ? c.texte(t) : String(c.valeur(t)));
+// Valeur de tri : -1 pour un ratio absent (aucun match), pour qu'il passe
+// toujours après un vrai 0.0.
+const valeurTri = (c: (typeof COLONNES)[number], t: Totaux) => c.valeur(t) ?? -1;
+const attributsTri = (j: JoueurCarriere) =>
+	Object.fromEntries(
+		COLONNES.flatMap((c) => [
+			[`data-value-${c.key}`, valeurTri(c, j)],
+			[`data-saison-${c.key}`, valeurTri(c, j.saisonEnCours)],
+		]),
+	);
+// La recherche ne porte que sur le nom AFFICHÉ (pseudonymisé le cas
+// échéant) : c'est le seul nom présent dans la page pour ces lignes, un
+// « Théo M. » n'est donc jamais retrouvable par son nom complet.
+const pourRecherche = (texte: string) =>
+	texte
+		.normalize("NFD")
+		.replace(/[̀-ͯ]/g, "")
+		.toLowerCase();
 ---
 
 <html lang="fr">
@@ -88,12 +124,30 @@ const formatRatio = (r: number | null) => (r == null ? "—" : r.toFixed(1));
 								))}
 						</select>
 
+						<div class="controles">
+							<div class="bascule" role="group" aria-label="Période des statistiques">
+								{/* Défaut "Toute la carrière" : c'est l'objet de la page ; la
+								saison en cours reste à un clic, et /statistiques en donne déjà
+								le bilan d'équipe. */}
+								<button type="button" class="bascule-btn" data-vue="carriere" aria-pressed="true">Toute la carrière</button>
+								<button type="button" class="bascule-btn" data-vue="saison" aria-pressed="false">Saison en cours</button>
+							</div>
+							<div class="recherche">
+								<label class="filtre-label" for="recherche-joueur">Rechercher un nom</label>
+								<input id="recherche-joueur" type="search" autocomplete="off" placeholder="Nom tel qu'affiché" />
+								<p class="recherche-bilan" aria-live="polite"></p>
+							</div>
+						</div>
+
 						{blocs.map(({ equipe, carriere }) => {
 							const joueurs = joueursAffiches(carriere);
 							return (
 								<section class="equipe-bloc" id={`equipe-${equipe.data.slug}`} data-equipe-slug={equipe.data.slug}>
 									<h2>{equipe.data.nom}</h2>
-									<p class="note">Effectif actuel -- cumul toutes saisons et catégories confondues.</p>
+									<p class="note">
+										<span class="v-carriere">Effectif actuel -- cumul toutes saisons et catégories confondues.</span>
+										<span class="v-saison">Effectif actuel -- statistiques de la saison en cours uniquement.</span>
+									</p>
 
 									{joueurs.length > 0 && (
 										<div class="table-scroll">
@@ -114,60 +168,14 @@ const formatRatio = (r: number | null) => (r == null ? "—" : r.toFixed(1));
 																</button>
 															</th>
 														)}
-														<th scope="col" aria-sort="none">
-															<button type="button" class="sort-btn" data-key="matchs" data-type="num">
-																Matchs
-																<span class="sort-indicator" aria-hidden="true" />
-															</button>
-														</th>
-														<th scope="col" aria-sort="none">
-															<button type="button" class="sort-btn" data-key="buts" data-type="num">
-																Buts
-																<span class="sort-indicator" aria-hidden="true" />
-															</button>
-														</th>
-														<th scope="col" aria-sort="none">
-															<button type="button" class="sort-btn" data-key="ratio" data-type="num">
-																Buts/match
-																<span class="sort-indicator" aria-hidden="true" />
-															</button>
-														</th>
-														<th scope="col" aria-sort="none">
-															<button type="button" class="sort-btn" data-key="sept_m" data-type="num">
-																7m
-																<span class="sort-indicator" aria-hidden="true" />
-															</button>
-														</th>
-														<th scope="col" aria-sort="none">
-															<button type="button" class="sort-btn" data-key="tirs" data-type="num">
-																Tirs
-																<span class="sort-indicator" aria-hidden="true" />
-															</button>
-														</th>
-														<th scope="col" aria-sort="none">
-															<button type="button" class="sort-btn" data-key="arrets" data-type="num">
-																Arrêts
-																<span class="sort-indicator" aria-hidden="true" />
-															</button>
-														</th>
-														<th scope="col" aria-sort="none">
-															<button type="button" class="sort-btn" data-key="avertissements" data-type="num">
-																Avert.
-																<span class="sort-indicator" aria-hidden="true" />
-															</button>
-														</th>
-														<th scope="col" aria-sort="none">
-															<button type="button" class="sort-btn" data-key="exclusions" data-type="num">
-																Excl.
-																<span class="sort-indicator" aria-hidden="true" />
-															</button>
-														</th>
-														<th scope="col" aria-sort="none">
-															<button type="button" class="sort-btn" data-key="disqualifications" data-type="num">
-																Disq.
-																<span class="sort-indicator" aria-hidden="true" />
-															</button>
-														</th>
+														{COLONNES.map((c) => (
+															<th scope="col" aria-sort="none">
+																<button type="button" class="sort-btn" data-key={c.key} data-type="num">
+																	{c.titre}
+																	<span class="sort-indicator" aria-hidden="true" />
+																</button>
+															</th>
+														))}
 													</tr>
 												</thead>
 												<tbody>
@@ -180,30 +188,24 @@ const formatRatio = (r: number | null) => (r == null ? "—" : r.toFixed(1));
 																	class="joueur-row"
 																	data-value-joueur={(j.label ?? "").toLowerCase()}
 																	data-value-categorie={j.groupeLibelle.toLowerCase()}
-																	data-value-matchs={j.matchsJoues}
-																	data-value-buts={j.buts}
-																	data-value-ratio={j.ratio ?? -1}
-																	data-value-sept_m={j.sept_m}
-																	data-value-tirs={j.tirs}
-																	data-value-arrets={j.arrets}
-																	data-value-avertissements={j.avertissements}
-																	data-value-exclusions={j.exclusions}
-																	data-value-disqualifications={j.disqualifications}
+																	data-recherche={pourRecherche(j.label ?? "")}
+																	{...attributsTri(j)}
 																	{...(aDetail
 																		? { tabindex: "0", role: "button", "aria-expanded": "false", "aria-controls": detailId, "data-has-detail": "true" }
 																		: {})}
 																>
-																	<td>{j.label}</td>
+																	<td>
+																		<span class="nom">{j.label}</span>
+																		{j.nonVuCetteSaison && <span class="badge badge--discret">Non vu cette saison</span>}
+																		{j.plusieursCategoriesCetteSaison && <span class="badge">Plusieurs catégories cette saison</span>}
+																	</td>
 																	{carriere.plusieursEquipes && <td>{j.groupeLibelle}</td>}
-																	<td>{j.matchsJoues}</td>
-																	<td>{j.buts}</td>
-																	<td>{formatRatio(j.ratio)}</td>
-																	<td>{j.sept_m}</td>
-																	<td>{j.tirs}</td>
-																	<td>{j.arrets}</td>
-																	<td>{j.avertissements}</td>
-																	<td>{j.exclusions}</td>
-																	<td>{j.disqualifications}</td>
+																	{COLONNES.map((c) => (
+																		<td>
+																			<span class="v-carriere">{texteCellule(c, j)}</span>
+																			<span class="v-saison">{texteCellule(c, j.saisonEnCours)}</span>
+																		</td>
+																	))}
 																</tr>
 																{aDetail && (
 																	<tr class="detail-row" id={detailId} hidden>
@@ -305,11 +307,23 @@ const formatRatio = (r: number | null) => (r == null ? "—" : r.toFixed(1));
 				return groupes;
 			}
 
+			// Vue affichée : "carriere" (défaut) ou "saison". Les chiffres des deux
+			// vues sont déjà dans la page (data-value-* / data-saison-*), seul le
+			// choix de lecture change.
+			let vue: "carriere" | "saison" = "carriere";
+			const contenu = document.querySelector<HTMLElement>(".carriere-content");
+
 			function valeurTri(row: HTMLTableRowElement, key: string, type: string): string | number {
-				const brut = row.dataset[`value${key.charAt(0).toUpperCase()}${key.slice(1)}`];
+				const suffixe = `${key.charAt(0).toUpperCase()}${key.slice(1)}`;
+				const brut = type === "num" && vue === "saison" ? row.dataset[`saison${suffixe}`] : row.dataset[`value${suffixe}`];
 				if (type === "num") return Number(brut ?? 0);
 				return brut ?? "";
 			}
+
+			/** Retrie chaque tableau déjà trié, après une bascule de vue : sans
+			 * ça, l'ordre affiché correspondrait encore aux chiffres de l'autre
+			 * vue. */
+			const retris: (() => void)[] = [];
 
 			for (const table of document.querySelectorAll<HTMLTableElement>("table.joueurs")) {
 				const tbody = table.tBodies[0];
@@ -328,30 +342,90 @@ const formatRatio = (r: number | null) => (r == null ? "—" : r.toFixed(1));
 						// bascule simplement le sens en cours, quel qu'il soit.
 						const sens: 1 | -1 = triActuel?.key === key ? (triActuel.sens === 1 ? -1 : 1) : type === "num" ? -1 : 1;
 						triActuel = { key, sens };
-
-						const groupes = ligneEtDetail(tbody);
-						groupes.sort((a, b) => {
-							const va = valeurTri(a.main, key, type);
-							const vb = valeurTri(b.main, key, type);
-							if (typeof va === "number" && typeof vb === "number") return (va - vb) * sens;
-							return String(va).localeCompare(String(vb), "fr") * sens;
-						});
-
-						for (const { main, detail } of groupes) {
-							tbody.append(main);
-							if (detail) tbody.append(detail);
-						}
-						// Un tri qui laisse la fenêtre de défilement où elle était montrerait
-						// une ligne quelconque en haut plutôt que la nouvelle tête de tri.
-						table.closest<HTMLElement>(".table-scroll")?.scrollTo(0, 0);
-
-						for (const th of table.querySelectorAll("thead th")) th.setAttribute("aria-sort", "none");
-						bouton.closest("th")?.setAttribute("aria-sort", sens === 1 ? "ascending" : "descending");
-						for (const autre of headers) autre.classList.toggle("is-sorted", autre === bouton);
-						bouton.dataset.sens = String(sens);
+						trier(bouton, key, type, sens);
 					});
 				}
+
+				retris.push(() => {
+					const bouton = headers.find((b) => b.dataset.key === triActuel?.key);
+					if (triActuel && bouton) trier(bouton, triActuel.key, bouton.dataset.type ?? "text", triActuel.sens);
+				});
+
+				function trier(bouton: HTMLButtonElement, key: string, type: string, sens: 1 | -1) {
+					const groupes = ligneEtDetail(tbody);
+					groupes.sort((a, b) => {
+						const va = valeurTri(a.main, key, type);
+						const vb = valeurTri(b.main, key, type);
+						if (typeof va === "number" && typeof vb === "number") return (va - vb) * sens;
+						return String(va).localeCompare(String(vb), "fr") * sens;
+					});
+
+					for (const { main, detail } of groupes) {
+						tbody.append(main);
+						if (detail) tbody.append(detail);
+					}
+					// Un tri qui laisse la fenêtre de défilement où elle était montrerait
+					// une ligne quelconque en haut plutôt que la nouvelle tête de tri.
+					table.closest<HTMLElement>(".table-scroll")?.scrollTo(0, 0);
+
+					for (const th of table.querySelectorAll("thead th")) th.setAttribute("aria-sort", "none");
+					bouton.closest("th")?.setAttribute("aria-sort", sens === 1 ? "ascending" : "descending");
+					for (const autre of headers) autre.classList.toggle("is-sorted", autre === bouton);
+					bouton.dataset.sens = String(sens);
+				}
 			}
+
+			// --- Bascule "Toute la carrière" / "Saison en cours" ------------------
+			const boutonsVue = [...document.querySelectorAll<HTMLButtonElement>(".bascule-btn")];
+			for (const bouton of boutonsVue) {
+				bouton.addEventListener("click", () => {
+					vue = bouton.dataset.vue === "saison" ? "saison" : "carriere";
+					contenu?.setAttribute("data-vue", vue);
+					for (const b of boutonsVue) b.setAttribute("aria-pressed", String(b === bouton));
+					for (const retrier of retris) retrier();
+				});
+			}
+
+			// --- Recherche par nom affiché ----------------------------------------
+			// Porte sur toutes les équipes à la fois (on ne sait pas toujours dans
+			// quelle catégorie joue quelqu'un) ; une recherche vide rend la main
+			// au filtre par équipe.
+			const recherche = document.querySelector<HTMLInputElement>("#recherche-joueur");
+			const bilan = document.querySelector<HTMLElement>(".recherche-bilan");
+			const normaliser = (t: string) =>
+				t
+					.normalize("NFD")
+					.replace(/[̀-ͯ]/g, "")
+					.toLowerCase()
+					.trim();
+
+			function appliquerRecherche() {
+				const terme = normaliser(recherche?.value ?? "");
+				let trouves = 0;
+				for (const bloc of blocs) {
+					let dansBloc = 0;
+					for (const row of bloc.querySelectorAll<HTMLTableRowElement>("tr.joueur-row")) {
+						const visible = !terme || (row.dataset.recherche ?? "").includes(terme);
+						row.hidden = !visible;
+						const detail = row.getAttribute("aria-controls") && document.getElementById(row.getAttribute("aria-controls")!);
+						if (detail && !visible) {
+							detail.hidden = true;
+							row.setAttribute("aria-expanded", "false");
+						}
+						if (visible) dansBloc++;
+					}
+					trouves += dansBloc;
+					bloc.hidden = terme ? dansBloc === 0 : bloc.dataset.equipeSlug !== select?.value;
+				}
+				if (bilan) bilan.textContent = terme ? (trouves === 0 ? "Aucun nom trouvé." : `${trouves} résultat${trouves > 1 ? "s" : ""}, toutes équipes confondues.`) : "";
+			}
+			recherche?.addEventListener("input", appliquerRecherche);
+			select?.addEventListener("change", () => {
+				if (recherche?.value) {
+					recherche.value = "";
+					appliquerRecherche();
+				}
+			});
 
 			// --- Détail par joueur (clic sur une ligne nominative) ---------------
 			// Seules les lignes marquées `data-has-detail` (affichage nominatif,
@@ -411,6 +485,94 @@ const formatRatio = (r: number | null) => (r == null ? "—" : r.toFixed(1));
 		background: var(--color-navy-deep);
 		color: var(--color-white);
 		margin-bottom: 1.5rem;
+	}
+	/* Bascule de vue : les deux valeurs sont dans chaque cellule, une seule
+	   est montrée selon data-vue (posé par le script sur .carriere-content). */
+	.v-saison {
+		display: none;
+	}
+	.carriere-content[data-vue="saison"] .v-saison {
+		display: inline;
+	}
+	.carriere-content[data-vue="saison"] .v-carriere {
+		display: none;
+	}
+	.controles {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem 1.5rem;
+		align-items: flex-end;
+		margin-bottom: 1.5rem;
+	}
+	.bascule {
+		display: inline-flex;
+		border: 1px solid color-mix(in srgb, var(--color-white) 30%, transparent);
+		border-radius: 4px;
+		overflow: hidden;
+	}
+	.bascule-btn {
+		min-height: 44px;
+		padding: 0.5rem 1rem;
+		font: inherit;
+		font-size: 1rem;
+		color: var(--color-white);
+		background: transparent;
+		border: 0;
+		cursor: pointer;
+	}
+	.bascule-btn + .bascule-btn {
+		border-left: 1px solid color-mix(in srgb, var(--color-white) 30%, transparent);
+	}
+	.bascule-btn[aria-pressed="true"] {
+		background: var(--color-crimson);
+		font-weight: 700;
+	}
+	.bascule-btn:focus-visible {
+		outline: 2px solid var(--color-white);
+		outline-offset: -3px;
+	}
+	.recherche {
+		flex: 1 1 14rem;
+	}
+	.recherche input {
+		width: 100%;
+		box-sizing: border-box;
+		min-height: 44px;
+		padding: 0.6rem 0.8rem;
+		font-size: 1rem;
+		border-radius: 4px;
+		border: 1px solid color-mix(in srgb, var(--color-white) 30%, transparent);
+		background: var(--color-navy-deep);
+		color: var(--color-white);
+	}
+	.recherche input::placeholder {
+		color: color-mix(in srgb, var(--color-white) 50%, transparent);
+	}
+	.recherche-bilan {
+		min-height: 1.2em;
+		margin: 0.35rem 0 0;
+		color: color-mix(in srgb, var(--color-white) 75%, transparent);
+		font-size: 0.85rem;
+	}
+	.badge {
+		display: inline-block;
+		margin-left: 0.4rem;
+		padding: 0.1rem 0.45rem;
+		border-radius: 999px;
+		font-size: 0.68rem;
+		font-weight: 700;
+		letter-spacing: 0.02em;
+		vertical-align: middle;
+		background: var(--color-blue);
+		color: var(--color-white);
+	}
+	/* "Non vu cette saison" : volontairement neutre (contour, pas d'aplat de
+	   couleur) -- une information, pas une alerte. */
+	.badge--discret {
+		background: transparent;
+		border: 1px solid color-mix(in srgb, var(--color-white) 40%, transparent);
+		color: color-mix(in srgb, var(--color-white) 80%, transparent);
+		font-weight: 400;
 	}
 	.equipe-bloc h2 {
 		color: var(--color-white);

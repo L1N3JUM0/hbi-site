@@ -1,6 +1,7 @@
 import { getCollection } from "astro:content";
 import { disambiguateDisplayNames } from "./fdme/noms.mjs";
 import { getResultatsForEquipe, resultatsParSaison, ordreGroupesEquipe, grouperResultats, aPlusieursEquipes, type Resultat } from "./resultats";
+import { saisonActuelle } from "./saison";
 
 export interface EtapeCarriere {
 	saison: string;
@@ -53,6 +54,31 @@ export interface JoueurCarriere {
 	 * qui empêche toute vue individuelle pour un·e joueur·se encore affiché·e
 	 * en mode pseudonymisé. */
 	detail: EtapeDetailCarriere[] | null;
+	/** Totaux de la seule saison en cours (bascule "Saison en cours" de la
+	 * page) : un agrégat, jamais un détail -- publié quel que soit le mode
+	 * d'affichage, comme les bilans de saison de /statistiques. */
+	saisonEnCours: TotauxSaison;
+	/** Aucun match cette saison. Formulé "non vu", jamais "parti" à
+	 * l'affichage : en début de saison ou après une blessure, une personne
+	 * peut ne pas encore avoir joué sans avoir quitté le club. */
+	nonVuCetteSaison: boolean;
+	/** Matchs dans au moins deux catégories d'âge DIFFÉRENTES cette saison
+	 * (ex. U15 et U17). Équipe 1 / Équipe 2 d'une même catégorie ne compte
+	 * pas. Jamais présenté comme un "surclassement" : les feuilles de match ne
+	 * donnent pas l'âge des joueur·se·s. */
+	plusieursCategoriesCetteSaison: boolean;
+}
+
+export interface TotauxSaison {
+	matchsJoues: number;
+	buts: number;
+	sept_m: number;
+	tirs: number;
+	arrets: number;
+	avertissements: number;
+	exclusions: number;
+	disqualifications: number;
+	ratio: number | null;
 }
 
 export interface GroupeCarriere {
@@ -126,8 +152,10 @@ function agregerCarriere(
 	tousLesResultats: Resultat[],
 	nomEquipe: Map<string, string>,
 	affichageStats: "nominatif" | "pseudonymise" | "masque",
+	categorieAgeParSlug: Map<string, string | undefined>,
 ): JoueurCarriere[] {
 	if (affichageStats === "masque" || hashesVersLibelle.size === 0) return [];
+	const saisonCourante = saisonActuelle();
 
 	const parHash = new Map<string, Agregat>();
 	for (const hash of hashesVersLibelle.keys()) {
@@ -251,7 +279,38 @@ function agregerCarriere(
 								ratio: arrondiRatio(b.buts, b.matchsJoues),
 							}))
 					: null,
+			...indicateursSaison(j, saisonCourante, categorieAgeParSlug),
 		}));
+}
+
+/** Totaux et indicateurs de la saison en cours, tirés du détail par
+ * (saison, équipe) -- donc Équipe 1 et Équipe 2 d'une même catégorie
+ * partagent la même `categorieAge` et ne comptent que pour une. */
+function indicateursSaison(
+	j: Agregat,
+	saisonCourante: string,
+	categorieAgeParSlug: Map<string, string | undefined>,
+): Pick<JoueurCarriere, "saisonEnCours" | "nonVuCetteSaison" | "plusieursCategoriesCetteSaison"> {
+	const t = { matchsJoues: 0, buts: 0, sept_m: 0, tirs: 0, arrets: 0, avertissements: 0, exclusions: 0, disqualifications: 0 };
+	const categories = new Set<string>();
+	for (const b of j.detail.values()) {
+		if (b.saison !== saisonCourante) continue;
+		t.matchsJoues += b.matchsJoues;
+		t.buts += b.buts;
+		t.sept_m += b.sept_m;
+		t.tirs += b.tirs;
+		t.arrets += b.arrets;
+		t.avertissements += b.avertissements;
+		t.exclusions += b.exclusions;
+		t.disqualifications += b.disqualifications;
+		const categorie = categorieAgeParSlug.get(b.equipeSlug);
+		if (categorie) categories.add(categorie);
+	}
+	return {
+		saisonEnCours: { ...t, ratio: arrondiRatio(t.buts, t.matchsJoues) },
+		nonVuCetteSaison: t.matchsJoues === 0,
+		plusieursCategoriesCetteSaison: categories.size > 1,
+	};
 }
 
 /** Catégorie ACTUELLE de chaque joueur·se, pour qu'il/elle n'apparaisse
@@ -348,7 +407,8 @@ export async function getCarriereParEquipe(
 	const hashesVersLibelle = new Map<string, string>();
 	for (const [hash, libelles] of groupesParHash) hashesVersLibelle.set(hash, libelles.join(" & "));
 
-	const joueurs = agregerCarriere(hashesVersLibelle, tousLesResultats, nomEquipe, affichageStats);
+	const categorieAgeParSlug = new Map(toutesEquipes.map((e) => [e.data.slug, e.data.categorieAge]));
+	const joueurs = agregerCarriere(hashesVersLibelle, tousLesResultats, nomEquipe, affichageStats, categorieAgeParSlug);
 
 	// Rebucketé par libellé de groupe pour l'affichage (voir GroupeCarriere) :
 	// un·e joueur·se au libellé combiné ("Équipe 1 & Équipe 2") forme son
