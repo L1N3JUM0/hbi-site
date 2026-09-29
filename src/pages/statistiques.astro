@@ -53,8 +53,6 @@ const blocs = await Promise.all(
 			) : (
 				<section class="stats-content">
 					<div class="wrap">
-						{/* Lien discret, seul accès à /records (hors menu, non indexée). */}
-						<p class="lien-records"><a href={withBase("/records")}>Voir les records et meilleures performances →</a></p>
 						<div class="filtres">
 							<div>
 								<label class="filtre-label" for="filtre-equipe">
@@ -153,6 +151,9 @@ const blocs = await Promise.all(
 								</section>
 							)),
 						)}
+						{/* Simple lien texte en bas de page, seul accès à /records (hors
+						menu et accueil, non indexée -- décision du 30/09/2026). */}
+						<p class="lien-records"><a href={withBase("/records")}>Records et meilleures performances</a></p>
 					</div>
 				</section>
 			)
@@ -225,7 +226,7 @@ const blocs = await Promise.all(
 		padding: 2rem 1.5rem 3rem;
 	}
 	.lien-records {
-		margin: 0 0 1rem;
+		margin: 2rem 0 0;
 	}
 	.lien-records a {
 		display: inline-block;
