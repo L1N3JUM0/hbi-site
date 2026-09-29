@@ -75,6 +75,76 @@ const pourRecherche = (texte: string) =>
 		.normalize("NFD")
 		.replace(/[̀-ͯ]/g, "")
 		.toLowerCase();
+
+// Première saison réellement présente dans les données (après la règle des
+// 3 saisons) : jamais "toutes saisons" écrit en dur, faux dès que les
+// données ne remontent pas à la création du club (voir src/lib/records.ts,
+// même principe).
+const saisonDebut = (await getCollection("resultats"))
+	.filter((r) => (r.data.statsJoueurs ?? []).length > 0)
+	.map((r) => r.data.saison)
+	.sort()[0];
+const periode = saisonDebut ? `depuis ${saisonDebut}` : "sur les saisons disponibles";
+
+// --- Graphique "buts par saison" (fiche détaillée, affichage nominatif
+// seulement : `detail` est null sinon, voir carriereJoueur.ts). SVG calculé
+// au build, sans bibliothèque ; le tableau détaillé juste en dessous reste la
+// version accessible des mêmes chiffres.
+type EtapeDetail = NonNullable<JoueurCarriere["detail"]>[number];
+function butsParSaison(detail: EtapeDetail[]): { saison: string; buts: number; matchs: number }[] {
+	const parSaison = new Map<string, { buts: number; matchs: number }>();
+	for (const e of detail) {
+		const s = parSaison.get(e.saison) ?? { buts: 0, matchs: 0 };
+		s.buts += e.buts;
+		s.matchs += e.matchsJoues;
+		parSaison.set(e.saison, s);
+	}
+	return [...parSaison].sort(([a], [b]) => (a < b ? -1 : 1)).map(([saison, s]) => ({ saison, ...s }));
+}
+const GRAPHE = { largeur: 320, hauteur: 140, marge: { haut: 18, bas: 30, gauche: 8, droite: 8 } };
+function barres(saisons: { saison: string; buts: number }[]) {
+	const { largeur, hauteur, marge } = GRAPHE;
+	const max = Math.max(1, ...saisons.map((s) => s.buts));
+	const pas = (largeur - marge.gauche - marge.droite) / saisons.length;
+	const utile = hauteur - marge.haut - marge.bas;
+	return saisons.map((s, i) => {
+		const h = Math.round((s.buts / max) * utile);
+		return {
+			...s,
+			x: marge.gauche + i * pas + pas * 0.2,
+			l: pas * 0.6,
+			y: marge.haut + utile - h,
+			h,
+			cx: marge.gauche + i * pas + pas / 2,
+			// "2024-2025" -> "24-25" : lisible sous une barre étroite sur mobile.
+			court: `${s.saison.slice(2, 4)}-${s.saison.slice(7, 9)}`,
+		};
+	});
+}
+
+// --- Comparaison de deux joueur·se·s : uniquement les lignes nominatives
+// (celles qui ont un détail), jamais un pseudonymisé -- aucune donnée des
+// autres n'est même envoyée au navigateur.
+const comparables = blocs
+	.flatMap(({ equipe, carriere }) =>
+		joueursAffiches(carriere)
+			.filter((j) => j.detail !== null && j.label)
+			.map((j) => ({
+				nom: j.label!,
+				equipe: equipe.data.nom,
+				matchs: j.matchsJoues,
+				buts: j.buts,
+				ratio: j.ratio,
+				sept_m: j.sept_m,
+				tirs: j.tirs,
+				arrets: j.arrets,
+				avertissements: j.avertissements,
+				exclusions: j.exclusions,
+				disqualifications: j.disqualifications,
+				saisons: butsParSaison(j.detail!),
+			})),
+	)
+	.sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
 ---
 
 <html lang="fr">
@@ -86,7 +156,7 @@ const pourRecherche = (texte: string) =>
 		<title>Statistiques carrière — Handball Islois</title>
 		<meta
 			name="description"
-			content="Cumul des statistiques de chaque joueur·se de l'effectif actuel, toutes saisons et catégories confondues."
+			content={`Cumul des statistiques de chaque joueur·se de l'effectif actuel, ${periode}, toutes catégories confondues.`}
 		/>
 		{
 			/* Page destinée aux joueurs/coachs/dirigeants, accessible uniquement
@@ -100,7 +170,7 @@ const pourRecherche = (texte: string) =>
 		<Header />
 		<PageBanner
 			title="Statistiques carrière"
-			subtitle="Cumul des statistiques de l'effectif actuel, toutes saisons et catégories confondues."
+			subtitle={`Cumul des statistiques de l'effectif actuel, ${periode}, toutes catégories confondues.`}
 		/>
 
 		{
@@ -139,13 +209,37 @@ const pourRecherche = (texte: string) =>
 							</div>
 						</div>
 
+						{comparables.length >= 2 && (
+							<details class="comparaison">
+								<summary>Comparer deux joueur·se·s</summary>
+								<p class="note">Cumul {periode}. Uniquement les joueur·se·s affiché·e·s en nom complet.</p>
+								<div class="comparaison-choix">
+									{[1, 2].map((n) => (
+										<div>
+											<label class="filtre-label" for={`comparer-${n}`}>Joueur·se {n}</label>
+											<select id={`comparer-${n}`} class="comparer-select">
+												<option value="">— Choisir —</option>
+												{comparables.map((c, i) => (
+													<option value={i}>
+														{c.nom} ({c.equipe})
+													</option>
+												))}
+											</select>
+										</div>
+									))}
+								</div>
+								<div class="comparaison-resultat" aria-live="polite" />
+								<script is:inline type="application/json" id="donnees-comparaison" set:html={JSON.stringify(comparables)} />
+							</details>
+						)}
+
 						{blocs.map(({ equipe, carriere }) => {
 							const joueurs = joueursAffiches(carriere);
 							return (
 								<section class="equipe-bloc" id={`equipe-${equipe.data.slug}`} data-equipe-slug={equipe.data.slug}>
 									<h2>{equipe.data.nom}</h2>
 									<p class="note">
-										<span class="v-carriere">Effectif actuel -- cumul toutes saisons et catégories confondues.</span>
+										<span class="v-carriere">Effectif actuel -- cumul {periode}, toutes catégories confondues.</span>
 										<span class="v-saison">Effectif actuel -- statistiques de la saison en cours uniquement.</span>
 									</p>
 
@@ -213,6 +307,31 @@ const pourRecherche = (texte: string) =>
 																			{j.parcours.length > 1 && (
 																				<div class="parcours">{j.parcours.map((e) => `${e.saison} ${e.equipeNom}`).join(" → ")}</div>
 																			)}
+																			{(() => {
+																				// Une seule saison : une barre seule n'apprend rien de plus que le tableau.
+																				const saisons = butsParSaison(j.detail!);
+																				if (saisons.length < 2) return null;
+																				const b = barres(saisons);
+																				return (
+																					<figure class="graphe">
+																						<figcaption>Buts par saison</figcaption>
+																						<svg
+																							viewBox={`0 0 ${GRAPHE.largeur} ${GRAPHE.hauteur}`}
+																							role="img"
+																							aria-label={`Buts par saison de ${j.label} : ${saisons.map((s) => `${s.saison}, ${s.buts}`).join(" ; ")}.`}
+																						>
+																							<line class="graphe-axe" x1={GRAPHE.marge.gauche} x2={GRAPHE.largeur - GRAPHE.marge.droite} y1={GRAPHE.hauteur - GRAPHE.marge.bas} y2={GRAPHE.hauteur - GRAPHE.marge.bas} />
+																							{b.map((s) => (
+																								<g>
+																									<rect class="graphe-barre" x={s.x} y={s.y} width={s.l} height={Math.max(s.h, 1)} rx="2" />
+																									<text class="graphe-valeur" x={s.cx} y={s.y - 4} text-anchor="middle">{s.buts}</text>
+																									<text class="graphe-saison" x={s.cx} y={GRAPHE.hauteur - GRAPHE.marge.bas + 16} text-anchor="middle">{s.court}</text>
+																								</g>
+																							))}
+																						</svg>
+																					</figure>
+																				);
+																			})()}
 																			<table class="detail">
 																				<caption>Détail saison par saison de {j.label}</caption>
 																				<thead>
@@ -449,6 +568,109 @@ const pourRecherche = (texte: string) =>
 					}
 				});
 			}
+
+			// --- Comparaison de deux joueur·se·s (nominatifs uniquement) --------
+			type Comparable = {
+				nom: string;
+				equipe: string;
+				matchs: number;
+				buts: number;
+				ratio: number | null;
+				sept_m: number;
+				tirs: number;
+				arrets: number;
+				avertissements: number;
+				exclusions: number;
+				disqualifications: number;
+				saisons: { saison: string; buts: number; matchs: number }[];
+			};
+			const donnees = document.querySelector<HTMLScriptElement>("#donnees-comparaison");
+			const comparables: Comparable[] = donnees ? JSON.parse(donnees.textContent ?? "[]") : [];
+			const choix = [...document.querySelectorAll<HTMLSelectElement>(".comparer-select")];
+			const resultat = document.querySelector<HTMLElement>(".comparaison-resultat");
+
+			// Mise en avant de la meilleure valeur seulement pour ce qui se lit
+			// "plus = mieux" ; jamais pour les sanctions, où ce serait un jugement.
+			const LIGNES: { titre: string; valeur: (c: Comparable) => number | null; texte?: (c: Comparable) => string; meilleur?: boolean }[] = [
+				{ titre: "Matchs", valeur: (c) => c.matchs, meilleur: true },
+				{ titre: "Buts", valeur: (c) => c.buts, meilleur: true },
+				{ titre: "Buts/match", valeur: (c) => c.ratio, texte: (c) => (c.ratio == null ? "—" : c.ratio.toFixed(1)), meilleur: true },
+				{ titre: "7m", valeur: (c) => c.sept_m, meilleur: true },
+				{ titre: "Tirs", valeur: (c) => c.tirs },
+				{ titre: "Arrêts", valeur: (c) => c.arrets, meilleur: true },
+				{ titre: "Avert.", valeur: (c) => c.avertissements },
+				{ titre: "Excl.", valeur: (c) => c.exclusions },
+				{ titre: "Disq.", valeur: (c) => c.disqualifications },
+			];
+
+			function cellule(balise: "th" | "td", texte: string, classe?: string) {
+				const el = document.createElement(balise);
+				el.textContent = texte;
+				if (classe) el.className = classe;
+				if (balise === "th") el.scope = "row";
+				return el;
+			}
+
+			function tableau(legende: string, entetes: string[], lignes: { titre: string; valeurs: string[]; meilleurs?: boolean[] }[]) {
+				const table = document.createElement("table");
+				table.className = "detail comparaison-table";
+				table.createCaption().textContent = legende;
+				const tr = table.createTHead().insertRow();
+				for (const e of entetes) {
+					const th = cellule("th", e);
+					th.scope = "col";
+					tr.append(th);
+				}
+				const tbody = table.createTBody();
+				for (const l of lignes) {
+					const row = tbody.insertRow();
+					row.append(cellule("th", l.titre));
+					l.valeurs.forEach((v, i) => row.append(cellule("td", v, l.meilleurs?.[i] ? "meilleur" : undefined)));
+				}
+				return table;
+			}
+
+			function comparer() {
+				if (!resultat) return;
+				resultat.replaceChildren();
+				const [a, b] = choix.map((s) => (s.value === "" ? null : comparables[Number(s.value)]));
+				if (!a || !b) return;
+				if (a === b) {
+					const p = document.createElement("p");
+					p.className = "note";
+					p.textContent = "Choisissez deux joueur·se·s différent·e·s.";
+					resultat.append(p);
+					return;
+				}
+				resultat.append(
+					tableau(
+						"Cumul",
+						["", `${a.nom} (${a.equipe})`, `${b.nom} (${b.equipe})`],
+						LIGNES.map((l) => {
+							const va = l.valeur(a) ?? -1;
+							const vb = l.valeur(b) ?? -1;
+							return {
+								titre: l.titre,
+								valeurs: [a, b].map((c) => (l.texte ? l.texte(c) : String(l.valeur(c)))),
+								meilleurs: l.meilleur && va !== vb ? [va > vb, vb > va] : undefined,
+							};
+						}),
+					),
+				);
+				const saisons = [...new Set([...a.saisons, ...b.saisons].map((s) => s.saison))].sort();
+				const buts = (c: Comparable, s: string) => {
+					const e = c.saisons.find((x) => x.saison === s);
+					return e ? `${e.buts} (${e.matchs} m.)` : "—";
+				};
+				resultat.append(
+					tableau(
+						"Buts par saison (matchs joués)",
+						["Saison", a.nom, b.nom],
+						saisons.map((s) => ({ titre: s, valeurs: [buts(a, s), buts(b, s)] })),
+					),
+				);
+			}
+			for (const s of choix) s.addEventListener("change", comparer);
 		</script>
 	</body>
 </html>
@@ -485,6 +707,124 @@ const pourRecherche = (texte: string) =>
 		background: var(--color-navy-deep);
 		color: var(--color-white);
 		margin-bottom: 1.5rem;
+	}
+	/* Graphique "buts par saison" (fiche détaillée) : sobre, couleurs des
+	   tokens uniquement. */
+	.graphe {
+		margin: 0 0 0.8rem;
+		/* Le graphique vit dans la ligne de détail d'un tableau qui défile
+		   horizontalement : sans ceci, sur mobile, la moitié des saisons
+		   sortait de l'écran. Collé à gauche, à la largeur de l'écran. */
+		position: sticky;
+		left: 0.6rem;
+		/* Largeur de la zone de défilement du tableau (voir container-type
+		   sur .table-scroll), pas celle de l'écran : marges et barre de
+		   défilement la rendent plus étroite. */
+		width: min(420px, calc(100cqw - 1.2rem));
+	}
+	.graphe figcaption {
+		color: color-mix(in srgb, var(--color-white) 55%, transparent);
+		font-size: 0.7rem;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		margin-bottom: 0.3rem;
+	}
+	.graphe svg {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+	.graphe-barre {
+		fill: var(--color-blue);
+	}
+	.graphe g:last-child .graphe-barre {
+		/* Saison la plus récente mise en avant. */
+		fill: var(--color-crimson);
+	}
+	.graphe-axe {
+		stroke: color-mix(in srgb, var(--color-white) 30%, transparent);
+		stroke-width: 1;
+	}
+	.graphe-valeur {
+		fill: var(--color-white);
+		font-size: 11px;
+		font-weight: 700;
+	}
+	.graphe-saison {
+		fill: color-mix(in srgb, var(--color-white) 70%, transparent);
+		font-size: 10px;
+	}
+	/* Comparaison de deux joueur·se·s. */
+	.comparaison {
+		margin: 0 0 1.5rem;
+		border: 1px solid color-mix(in srgb, var(--color-white) 20%, transparent);
+		border-radius: 4px;
+		padding: 0 1rem;
+	}
+	.comparaison summary {
+		min-height: 44px;
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+		color: var(--color-white);
+		font-weight: 700;
+	}
+	.comparaison summary:focus-visible {
+		outline: 2px solid var(--color-crimson);
+		outline-offset: 2px;
+	}
+	.comparaison[open] {
+		padding-bottom: 1rem;
+	}
+	.comparaison-choix {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+		gap: 0 1rem;
+	}
+	.comparaison-choix select {
+		margin-bottom: 1rem;
+	}
+	.comparaison-resultat {
+		overflow-x: auto;
+	}
+	/* Tableaux construits par le script (après le build) : les styles
+	   "scopés" d'Astro ne s'y appliquent pas, d'où :global(), limité au
+	   conteneur de la comparaison. */
+	.comparaison-resultat :global(table) {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 0.85rem;
+		margin-bottom: 1rem;
+	}
+	.comparaison-resultat :global(caption) {
+		text-align: left;
+		color: color-mix(in srgb, var(--color-white) 55%, transparent);
+		font-size: 0.7rem;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		margin-bottom: 0.4rem;
+	}
+	.comparaison-resultat :global(th),
+	.comparaison-resultat :global(td) {
+		padding: 0.4rem 0.6rem;
+		color: color-mix(in srgb, var(--color-white) 85%, transparent);
+		border-bottom: 1px solid color-mix(in srgb, var(--color-white) 12%, transparent);
+		text-align: right;
+	}
+	.comparaison-resultat :global(thead th) {
+		color: var(--color-white);
+		font-weight: 700;
+		font-size: 0.8rem;
+	}
+	.comparaison-resultat :global(th[scope="row"]) {
+		text-align: left;
+		font-weight: 400;
+		color: color-mix(in srgb, var(--color-white) 65%, transparent);
+	}
+	.comparaison-resultat :global(td.meilleur) {
+		color: var(--color-white);
+		font-weight: 700;
+		box-shadow: inset 0 -2px 0 var(--color-crimson);
 	}
 	/* Bascule de vue : les deux valeurs sont dans chaque cellule, une seule
 	   est montrée selon data-vue (posé par le script sur .carriere-content). */
@@ -586,6 +926,8 @@ const pourRecherche = (texte: string) =>
 	}
 	.table-scroll {
 		overflow-x: auto;
+		/* Référence de largeur (100cqw) du graphique des fiches détaillées. */
+		container-type: inline-size;
 		/* Limite de hauteur pour que l'en-tête sticky ait un intérêt sur cette
 		   page (sinon la table entière tient déjà à l'écran) : au-delà, la
 		   table défile dans son propre cadre plutôt que la page entière. */
