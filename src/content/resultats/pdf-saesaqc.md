@@ -1,7 +1,7 @@
 ---
 source: "archive"
 codeRencontre: "SAESAQC"
-equipeSlug: ""
+equipeSlug: "seniors-feminines"
 date: "2023-06-04T09:15:00.000Z"
 journee: "J1"
 competition: "TOURNOI ETF ACCESSION PNF ETF - ACCESSION - PNF"
