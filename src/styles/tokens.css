@@ -4,4 +4,7 @@
   --color-navy-deep: #001749;
   --color-crimson: #BB034D;
   --color-white: #FFFFFF;
+  /* Hors palette du logo, réservé au seul badge "Record" de la Carte joueur
+     (demande explicite du 30/09/2026) : ne pas l'employer ailleurs. */
+  --color-or: #E3B53B;
 }

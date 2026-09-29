@@ -8,6 +8,9 @@ import { getCollection } from "astro:content";
 import { trierEquipes } from "../lib/equipes";
 import { slugsAvecResultats } from "../lib/statistiques";
 import { categorieActuelleParHash, getCarriereParEquipe, type JoueurCarriere } from "../lib/carriereJoueur";
+import { detenteursDeRecord } from "../lib/records";
+import { saisonActuelle } from "../lib/saison";
+import CarteJoueur from "../components/CarteJoueur.astro";
 
 const slugsDisponibles = await slugsAvecResultats();
 // Équipes archivées exclues (demande du 29/09/2026) : leur dernier effectif
@@ -87,6 +90,21 @@ const saisonDebut = (await getCollection("resultats"))
 	.map((r) => r.data.saison)
 	.sort()[0];
 const periode = saisonDebut ? `depuis ${saisonDebut}` : "sur les saisons disponibles";
+
+// --- Carte joueur : données du bouton "Créer ma carte" de chaque ligne.
+// Uniquement ce qui est déjà affiché sur la page (nom affiché, équipe,
+// totaux) ; badge "Record" si la personne détient un record individuel
+// actuel de /records (recalculé à chaque build, jamais codé en dur).
+const detenteurs = await detenteursDeRecord();
+const donneesCarte = (j: JoueurCarriere, equipeNom: string, nominatif: boolean) =>
+	JSON.stringify({
+		nom: j.label ?? "",
+		equipe: equipeNom,
+		nominatif,
+		carriere: { matchs: j.matchsJoues, buts: j.buts, arrets: j.arrets },
+		saison: { matchs: j.saisonEnCours.matchsJoues, buts: j.saisonEnCours.buts, arrets: j.saisonEnCours.arrets },
+		record: nominatif && detenteurs.has(j.label ?? ""),
+	});
 
 // --- Graphique "buts par saison" (fiche détaillée, affichage nominatif
 // seulement : `detail` est null sinon, voir carriereJoueur.ts). SVG calculé
@@ -306,6 +324,9 @@ const comparables = blocs
 																		<span class="nom">{j.label}</span>
 																		{j.nonVuCetteSaison && <span class="badge badge--discret">Non vu cette saison</span>}
 																		{j.plusieursCategoriesCetteSaison && <span class="badge">Plusieurs catégories cette saison</span>}
+																		<button type="button" class="btn-carte" data-carte={donneesCarte(j, equipe.data.nom, j.detail !== null)}>
+																			Créer ma carte
+																		</button>
 																	</td>
 																	{carriere.plusieursEquipes && <td class="col-secondaire">{j.groupeLibelle}</td>}
 																	{COLONNES.map((c) => (
@@ -423,6 +444,7 @@ const comparables = blocs
 			)
 		}
 
+		<CarteJoueur saisonEnCours={saisonActuelle()} saisonDebut={saisonDebut} />
 		<Footer />
 
 		<script>
@@ -768,6 +790,26 @@ const comparables = blocs
 		background: var(--color-navy-deep);
 		color: var(--color-white);
 		margin-bottom: 1.5rem;
+	}
+	/* Bouton "Créer ma carte" (Carte joueur, voir CarteJoueur.astro). */
+	.btn-carte {
+		margin-left: 0.5rem;
+		min-height: 44px;
+		padding: 0 0.6rem;
+		font: inherit;
+		font-size: 0.75rem;
+		color: var(--color-white);
+		background: transparent;
+		border: 1px solid color-mix(in srgb, var(--color-white) 35%, transparent);
+		border-radius: 999px;
+		cursor: pointer;
+		vertical-align: middle;
+	}
+	.btn-carte:hover,
+	.btn-carte:focus-visible {
+		border-color: var(--color-crimson);
+		outline: none;
+		box-shadow: 0 0 0 2px var(--color-crimson);
 	}
 	/* --- Cartes mobiles (décision du 30/09/2026) -------------------------
 	   Grand écran : tableau inchangé, éléments propres aux cartes masqués. */

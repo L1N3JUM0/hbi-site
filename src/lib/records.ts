@@ -56,6 +56,9 @@ export interface Classement {
 	lignes: LignePerformance[];
 	/** Personnes à égalité au-delà du plafond de noms, non affichées. */
 	autresAEgalite: number;
+	/** Nom affiché de chaque personne à la première place (égalités
+	 * comprises). */
+	detenteurs: string[];
 }
 
 export interface RecordEquipe {
@@ -180,6 +183,10 @@ function performances(
 				contexte: c.contexte,
 			})),
 			autresAEgalite: Math.max(0, tous.length - MAX_LIGNES),
+			// Toutes les personnes à la première place, y compris au-delà du
+			// plafond de noms affichés : elles détiennent le record autant que
+			// les autres (voir detenteursDeRecord()).
+			detenteurs: tous.filter((c) => c.valeur === tous[0]?.valeur).map((c) => nomJoueur.get(c.hash) ?? ""),
 		};
 	};
 
@@ -356,4 +363,15 @@ export async function getRecords(options: { avecSerie: boolean }): Promise<Recor
 			equipes: recordsEquipes(resultats, equipesOrdonnees),
 		},
 	};
+}
+
+/** Noms (tels qu'affichés, nominatifs uniquement) des personnes qui
+ * détiennent au moins un record individuel de la période longue sur
+ * /records -- première place d'un classement, égalités comprises. Calculé à
+ * chaque build depuis les mêmes classements que la page : un record qui
+ * change de main se reflète tout seul (badge de la "Carte joueur", voir
+ * src/components/CarteJoueur.astro). */
+export async function detenteursDeRecord(): Promise<Set<string>> {
+	const { depuis } = await getRecords({ avecSerie: true });
+	return new Set(depuis.performances.flatMap((c) => c.detenteurs).filter(Boolean));
 }
