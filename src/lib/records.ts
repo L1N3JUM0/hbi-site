@@ -3,7 +3,9 @@ import { formatNomPropre } from "./fdme/noms.mjs";
 import { trierEquipes } from "./equipes";
 import { categorieActuelleParHash } from "./carriereJoueur";
 import { scoreNousEux, statsEquipeNous, type Resultat } from "./resultats";
-import { saisonActuelle } from "./saison";
+import { saisonActuelle, saisonPour } from "./saison";
+import introuvables from "../data/feuilles-introuvables.json";
+import suiviAuto from "../data/feuilles-auto.json";
 
 /**
  * Records de la page /records (demande du 29/09/2026). Deux règles de
@@ -110,16 +112,47 @@ function podium(candidats: Candidat[]): Candidat[] {
 	return tries.filter((c) => c.valeur >= seuil);
 }
 
+/** Rencontres jouées dont on n'a pas la feuille : une série qui les englobe
+ * pourrait être cassée ou prolongée à tort, elle n'est donc jamais affichée
+ * (demande du 29/09/2026 : pas de chiffre montré avec un doute). */
+export interface Trous {
+	/** Match précis manquant, pour une équipe. */
+	rencontres: { equipeSlug: string; saison: string; t: number }[];
+	/** Équipe + saison dont la complétude n'a pas pu être vérifiée. */
+	saisonsInverifiables: Set<string>;
+}
+
+function chargerTrous(): Trous {
+	const rencontres = introuvables.rencontres.map((m) => ({ equipeSlug: m.equipeSlug, saison: saisonPour(new Date(m.date)), t: new Date(m.date).getTime() }));
+	// Saison en cours : feuilles que la récupération automatique n'a pas pu
+	// obtenir alors que le score est publié (voir scripts/recuperer-feuilles.mjs).
+	for (const r of Object.values(suiviAuto.rencontres as Record<string, { statut?: string; date?: string; equipeSlug?: string }>)) {
+		if (!r.date || !r.equipeSlug || !["attente_feuille", "abandon", "echec_lecture"].includes(r.statut ?? "")) continue;
+		rencontres.push({ equipeSlug: r.equipeSlug, saison: saisonPour(new Date(r.date)), t: new Date(r.date).getTime() });
+	}
+	return { rencontres, saisonsInverifiables: new Set(introuvables.saisonsInverifiables.map((s) => `${s.equipeSlug}|${s.saison}`)) };
+}
+
 /** Plus longue série de matchs consécutifs (dans l'ordre des dates, parmi
- * les feuilles dont on dispose) avec au moins un but. */
-function meilleureSerie(lignes: Ligne[]): { longueur: number; debut: Date; fin: Date } | null {
+ * les feuilles dont on dispose) avec au moins un but -- en écartant toute
+ * série qu'un trou connu pourrait fausser : match manquant d'une équipe où
+ * la personne a joué cette saison-là, situé dans la série ou juste à ses
+ * bords (entre le dernier match sans but et le suivant). */
+function meilleureSerie(lignes: Ligne[], trous: Trous): { longueur: number; debut: Date; fin: Date } | null {
 	const tries = [...lignes].sort((a, b) => a.r.data.date.getTime() - b.r.data.date.getTime());
+	const equipesSaisons = new Set(tries.map((l) => `${l.r.data.equipeSlug}|${l.r.data.saison}`));
+	const douteuse = (i0: number, i1: number) => {
+		const avant = tries[i0 - 1]?.r.data.date.getTime() ?? -Infinity;
+		const apres = tries[i1 + 1]?.r.data.date.getTime() ?? Infinity;
+		if (trous.rencontres.some((m) => equipesSaisons.has(`${m.equipeSlug}|${m.saison}`) && m.t > avant && m.t < apres)) return true;
+		return tries.slice(i0, i1 + 1).some((l) => [...equipesSaisons].some((k) => k.endsWith(`|${l.r.data.saison}`) && trous.saisonsInverifiables.has(k)));
+	};
 	let meilleure: { longueur: number; debut: Date; fin: Date } | null = null;
 	let debut = 0;
 	for (let i = 0; i <= tries.length; i++) {
 		if (i < tries.length && tries[i].buts > 0) continue;
 		const longueur = i - debut;
-		if (longueur > 0 && (!meilleure || longueur > meilleure.longueur)) {
+		if (longueur > 0 && (!meilleure || longueur > meilleure.longueur) && !douteuse(debut, i - 1)) {
 			meilleure = { longueur, debut: tries[debut].r.data.date, fin: tries[i - 1].r.data.date };
 		}
 		debut = i + 1;
@@ -133,7 +166,7 @@ function performances(
 	equipeActuelle: Map<string, string>,
 	nomEquipe: Map<string, string>,
 	seuilArrets: number,
-	avecSerie: boolean,
+	trous: Trous | null,
 ): Classement[] {
 	const classement = (titre: string, cs: Candidat[], note?: string): Classement => {
 		const tous = podium(cs);
@@ -180,7 +213,7 @@ function performances(
 			const moyenne = dansLeBut.reduce((t, l) => t + l.arrets, 0) / dansLeBut.length;
 			arretsParMatch.push({ valeur: moyenne, texte: unDecimal(moyenne), hash, contexte: `sur ${dansLeBut.length} matchs dans le but` });
 		}
-		const serie = avecSerie ? meilleureSerie(lignes) : null;
+		const serie = trous ? meilleureSerie(lignes, trous) : null;
 		if (serie && serie.longueur > 1) {
 			series.push({
 				valeur: serie.longueur,
@@ -203,9 +236,13 @@ function performances(
 			`Gardien·ne·s ayant au moins ${seuilArrets} matchs avec un arrêt ou plus. Pas de pourcentage d'arrêts individuel : la feuille de match n'indique pas quel gardien a encaissé chaque but quand deux gardiens se partagent un match.`,
 		),
 	];
-	if (avecSerie) {
+	if (trous) {
 		classements.push(
-			classement("Plus longue série de matchs avec au moins un but", series, "Matchs consécutifs où le joueur figure sur la feuille, dans l'ordre des dates."),
+			classement(
+				"Plus longue série de matchs avec au moins un but",
+				series,
+				"Matchs consécutifs où le joueur figure sur la feuille, dans l'ordre des dates. Une série qui englobe une rencontre dont la feuille est introuvable n'est pas retenue : elle pourrait être fausse.",
+			),
 		);
 	}
 	return classements;
@@ -280,6 +317,7 @@ export async function getRecords(options: { avecSerie: boolean }): Promise<Recor
 	const equipeActuelle = new Map([...categorieActuelle].filter(([h]) => nominatifs.has(h)).map(([h, slug]) => [h, nomEquipe.get(slug) ?? slug]));
 
 	const saisonEnCours = saisonActuelle();
+	const trous = options.avecSerie ? chargerTrous() : null;
 	const nomJoueur = new Map<string, string>();
 	const lignes = { periode: new Map<string, Ligne[]>(), saison: new Map<string, Ligne[]>() };
 	// Du plus ancien au plus récent : le nom retenu est celui de la feuille la
@@ -306,7 +344,7 @@ export async function getRecords(options: { avecSerie: boolean }): Promise<Recor
 		saisonEnCours,
 		cetteSaison: {
 			saisonDebut: saisonEnCours,
-			performances: performances(lignes.saison, nomJoueur, equipeActuelle, nomEquipe, SEUIL_ARRETS_PAR_MATCH.saison, options.avecSerie),
+			performances: performances(lignes.saison, nomJoueur, equipeActuelle, nomEquipe, SEUIL_ARRETS_PAR_MATCH.saison, trous),
 			equipes: recordsEquipes(
 				resultats.filter((r) => r.data.saison === saisonEnCours),
 				equipesOrdonnees,
@@ -314,7 +352,7 @@ export async function getRecords(options: { avecSerie: boolean }): Promise<Recor
 		},
 		depuis: {
 			saisonDebut: saisonsPresentes[0] ?? null,
-			performances: performances(lignes.periode, nomJoueur, equipeActuelle, nomEquipe, SEUIL_ARRETS_PAR_MATCH.periode, options.avecSerie),
+			performances: performances(lignes.periode, nomJoueur, equipeActuelle, nomEquipe, SEUIL_ARRETS_PAR_MATCH.periode, trous),
 			equipes: recordsEquipes(resultats, equipesOrdonnees),
 		},
 	};

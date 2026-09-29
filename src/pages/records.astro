@@ -7,12 +7,11 @@ import Favicon from "../components/Favicon.astro";
 import { getRecords, type RecordsPeriode } from "../lib/records";
 import { withBase } from "../utils/links";
 
-// Série de matchs avec but : désactivée. Elle dépend de l'ordre des matchs,
-// et une feuille manquante casserait ou prolongerait faussement une série ;
-// or 54 feuilles 2025-2026 manquent (U11, U15M, U17F, U18M, U13M -- relevé
-// du 29/09/2026), dont des catégories où ont joué des joueur·se·s affiché·e·s
-// ici. À réactiver seulement une fois ces saisons complètes.
-const AVEC_SERIE = false;
+// Série de matchs avec but : réactivée le 29/09/2026, une fois les 54
+// feuilles 2025-2026 manquantes importées. Les rares trous restants (voir
+// src/data/feuilles-introuvables.json) ne sont pas compensés : toute série
+// qui les englobe est simplement écartée (voir meilleureSerie()).
+const AVEC_SERIE = true;
 
 const records = await getRecords({ avecSerie: AVEC_SERIE });
 const periodes: { id: string; onglet: string; titre: string; periode: RecordsPeriode }[] = [

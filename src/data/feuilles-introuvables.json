@@ -1,0 +1,13 @@
+{
+	"_note": "Rencontres jouées dont la feuille de match n'a pas pu être récupérée (relevés du 29/09/2026 contre ffhandball.fr). Sert à ne jamais afficher une série de matchs qui les englobe (voir src/lib/records.ts). Les trous de la saison en cours viennent en plus de src/data/feuilles-auto.json.",
+	"rencontres": [
+		{ "code": "SAESCFN", "equipeSlug": "u17-masculins-historique", "date": "2023-06-11", "competition": "BRASSAGES ELITE 2023/2024 -17 ANS MASCULINS", "raison": "PDF introuvable (404)" },
+		{ "code": "SAESCFP", "equipeSlug": "u17-masculins-historique", "date": "2023-06-11", "competition": "BRASSAGES ELITE 2023/2024 -17 ANS MASCULINS", "raison": "PDF introuvable (404)" },
+		{ "code": "SAESCFQ", "equipeSlug": "u17-masculins-historique", "date": "2023-06-11", "competition": "BRASSAGES ELITE 2023/2024 -17 ANS MASCULINS", "raison": "PDF introuvable (404)" },
+		{ "code": "UAFOWUS", "equipeSlug": "u13-feminines", "date": "2024-09-29", "competition": "U13 FEMININES HONNEUR DEPARTEMENTAL", "raison": "PDF introuvable (404)" },
+		{ "code": "UAFQNPY", "equipeSlug": "u11-mixtes", "date": "2025-01-11", "competition": "U11 MIXTE", "raison": "PDF introuvable (404)" }
+	],
+	"saisonsInverifiables": [
+		{ "equipeSlug": "u15-masculins", "saison": "2023-2024", "competition": "BRASSAGE ELITE U15G", "raison": "page de la compétition en erreur 500 sur ffhandball.fr : participation du club et matchs impossibles à vérifier" }
+	]
+}
