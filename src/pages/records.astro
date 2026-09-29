@@ -1,0 +1,302 @@
+---
+import "../styles/tokens.css";
+import Header from "../components/Header.astro";
+import PageBanner from "../components/PageBanner.astro";
+import Footer from "../components/Footer.astro";
+import Favicon from "../components/Favicon.astro";
+import { getRecords, type RecordsPeriode } from "../lib/records";
+import { withBase } from "../utils/links";
+
+// Série de matchs avec but : désactivée. Elle dépend de l'ordre des matchs,
+// et une feuille manquante casserait ou prolongerait faussement une série ;
+// or 54 feuilles 2025-2026 manquent (U11, U15M, U17F, U18M, U13M -- relevé
+// du 29/09/2026), dont des catégories où ont joué des joueur·se·s affiché·e·s
+// ici. À réactiver seulement une fois ces saisons complètes.
+const AVEC_SERIE = false;
+
+const records = await getRecords({ avecSerie: AVEC_SERIE });
+const periodes: { id: string; onglet: string; titre: string; periode: RecordsPeriode }[] = [
+	{ id: "saison", onglet: "Cette saison", titre: `Saison ${records.saisonEnCours}`, periode: records.cetteSaison },
+	{
+		id: "depuis",
+		// Jamais "de tous les temps" : les données ne remontent qu'à cette
+		// saison, calculée à chaque build (voir src/lib/records.ts).
+		onglet: records.depuis.saisonDebut ? `Depuis ${records.depuis.saisonDebut}` : "Toutes les données",
+		titre: records.depuis.saisonDebut ? `Depuis la saison ${records.depuis.saisonDebut}` : "Toutes les données",
+		periode: records.depuis,
+	},
+];
+---
+
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<Favicon />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Records — Handball Islois</title>
+		<meta name="description" content="Records d'équipe et meilleures performances des joueur·se·s actuel·le·s du Handball Islois, d'après les feuilles de match officielles." />
+		{/* Même régime que /statistiques et /statistiques-carriere : hors menu, non indexée, accessible par lien. */}
+		<meta name="robots" content="noindex, nofollow" />
+	</head>
+	<body>
+		<Header />
+		<PageBanner title="Records" subtitle="Records d'équipe et meilleures performances des joueur·se·s actuel·le·s, d'après les feuilles de match officielles." />
+
+		<section class="records-content">
+			<div class="wrap">
+				<p class="retour"><a href={withBase("/statistiques")}>← Statistiques</a></p>
+				<p class="note">
+					D'après les feuilles de match dont dispose le site : quelques rencontres manquent (feuilles introuvables ou pas encore récupérées), un
+					record peut donc être sous-estimé.
+				</p>
+
+				<div class="onglets" role="tablist" aria-label="Période">
+					{
+						periodes.map((p, i) => (
+							<button type="button" role="tab" id={`onglet-${p.id}`} aria-controls={`panneau-${p.id}`} aria-selected={String(i === 1)} tabindex={i === 1 ? "0" : "-1"}>
+								{p.onglet}
+							</button>
+						))
+					}
+				</div>
+
+				{
+					periodes.map((p, i) => (
+						<div class="panneau" role="tabpanel" id={`panneau-${p.id}`} aria-labelledby={`onglet-${p.id}`} hidden={i !== 1}>
+							<h2>Meilleures performances des joueur·se·s actuel·le·s</h2>
+							<p class="note">
+								{p.titre}. Uniquement les joueur·se·s dont la catégorie actuelle est affichée en nom complet ; les plus jeunes ne sont jamais cités
+								individuellement (voir les records d'équipe plus bas).
+							</p>
+							<div class="grille">
+								{p.periode.performances.map((c) => (
+									<article class="carte">
+										<h3>{c.titre}</h3>
+										{c.note && <p class="carte-note">{c.note}</p>}
+										{c.lignes.length === 0 ? (
+											<p class="vide">Pas encore de donnée.</p>
+										) : (
+											<ol>
+												{c.lignes.map((l) => (
+													<li>
+														<span class="valeur">{l.valeur}</span>
+														<span class="qui">
+															{l.joueur} <span class="equipe">{l.equipe}</span>
+														</span>
+														{l.contexte && <span class="contexte">{l.contexte}</span>}
+													</li>
+												))}
+											</ol>
+										)}
+										{c.autresAEgalite > 0 && (
+											<p class="carte-note">
+												… et {c.autresAEgalite} autre{c.autresAEgalite > 1 ? "s" : ""} à égalité.
+											</p>
+										)}
+									</article>
+								))}
+							</div>
+
+							<h2>Records d'équipe</h2>
+							<p class="note">{p.titre}. Calculés sur les scores officiels et les totaux d'équipe, sans nommer personne.</p>
+							{p.periode.equipes.length === 0 ? (
+								<p class="vide">Pas encore de match cette saison.</p>
+							) : (
+								<div class="grille">
+									{p.periode.equipes.map((e) => (
+										<article class="carte">
+											<h3>{e.equipe}</h3>
+											<dl>
+												{e.records.map((r) => (
+													<div class="record">
+														<dt>{r.titre}</dt>
+														<dd>
+															<span class="valeur">{r.valeur}</span>
+															<span class="contexte">{r.contexte}</span>
+														</dd>
+													</div>
+												))}
+											</dl>
+										</article>
+									))}
+								</div>
+							)}
+						</div>
+					))
+				}
+			</div>
+		</section>
+
+		<Footer />
+
+		<script>
+			// Onglets accessibles (flèches gauche/droite, WAI-ARIA tabs) ; sans JS,
+			// seul l'onglet par défaut ("Depuis ...") reste visible.
+			const onglets = [...document.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+			function activer(onglet: HTMLButtonElement) {
+				for (const o of onglets) {
+					const actif = o === onglet;
+					o.setAttribute("aria-selected", String(actif));
+					o.tabIndex = actif ? 0 : -1;
+					const panneau = document.getElementById(o.getAttribute("aria-controls")!);
+					if (panneau) panneau.hidden = !actif;
+				}
+			}
+			for (const [i, onglet] of onglets.entries()) {
+				onglet.addEventListener("click", () => activer(onglet));
+				onglet.addEventListener("keydown", (e) => {
+					if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+					const suivant = onglets[(i + (e.key === "ArrowRight" ? 1 : onglets.length - 1)) % onglets.length];
+					activer(suivant);
+					suivant.focus();
+				});
+			}
+		</script>
+	</body>
+</html>
+
+<style>
+	.records-content {
+		background: var(--color-navy-deep);
+		color: var(--color-white);
+	}
+	.wrap {
+		max-width: 900px;
+		margin: 0 auto;
+		padding: 2rem 1.5rem 3rem;
+	}
+	.retour a {
+		color: var(--color-white);
+		display: inline-block;
+		min-height: 44px;
+		line-height: 44px;
+	}
+	.onglets {
+		display: inline-flex;
+		border: 1px solid color-mix(in srgb, var(--color-white) 30%, transparent);
+		border-radius: 4px;
+		overflow: hidden;
+		margin: 0.5rem 0 1.5rem;
+	}
+	.onglets button {
+		min-height: 44px;
+		padding: 0.5rem 1rem;
+		font: inherit;
+		font-size: 1rem;
+		color: var(--color-white);
+		background: transparent;
+		border: 0;
+		cursor: pointer;
+	}
+	.onglets button + button {
+		border-left: 1px solid color-mix(in srgb, var(--color-white) 30%, transparent);
+	}
+	.onglets button[aria-selected="true"] {
+		background: var(--color-crimson);
+		font-weight: 700;
+	}
+	.onglets button:focus-visible {
+		outline: 2px solid var(--color-white);
+		outline-offset: -3px;
+	}
+	h2 {
+		font-size: 1.4rem;
+		margin: 2rem 0 0.25rem;
+	}
+	.panneau > h2:first-child {
+		margin-top: 0;
+	}
+	.note {
+		color: color-mix(in srgb, var(--color-white) 70%, transparent);
+		font-size: 1rem;
+		margin: 0 0 1rem;
+	}
+	.grille {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+		gap: 1rem;
+	}
+	.carte {
+		background: var(--color-navy);
+		border-radius: 6px;
+		padding: 1rem 1.1rem;
+	}
+	.carte h3 {
+		font-size: 1rem;
+		margin: 0 0 0.5rem;
+	}
+	.carte-note {
+		font-size: 0.8rem;
+		color: color-mix(in srgb, var(--color-white) 65%, transparent);
+		margin: 0 0 0.6rem;
+	}
+	ol {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	ol li,
+	.record {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		column-gap: 0.75rem;
+		padding: 0.45rem 0;
+		border-top: 1px solid color-mix(in srgb, var(--color-white) 12%, transparent);
+	}
+	ol li:first-child,
+	.record:first-child {
+		border-top: 0;
+	}
+	.valeur {
+		grid-row: span 2;
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: var(--color-white);
+		min-width: 2.5ch;
+	}
+	ol li:first-child .valeur {
+		color: var(--color-crimson);
+		/* Le fuchsia sur marine seul serait trop peu contrasté pour du texte :
+		   fond blanc arrondi derrière le chiffre du premier. */
+		background: var(--color-white);
+		border-radius: 4px;
+		padding: 0 0.3rem;
+		align-self: start;
+	}
+	.qui {
+		font-weight: 700;
+	}
+	.equipe {
+		font-weight: 400;
+		color: color-mix(in srgb, var(--color-white) 65%, transparent);
+		font-size: 0.85rem;
+	}
+	.contexte {
+		font-size: 0.85rem;
+		color: color-mix(in srgb, var(--color-white) 70%, transparent);
+	}
+	dl {
+		margin: 0;
+	}
+	dt {
+		grid-column: 2;
+		font-size: 0.85rem;
+		color: color-mix(in srgb, var(--color-white) 70%, transparent);
+	}
+	dd {
+		display: contents;
+	}
+	.record .valeur {
+		grid-column: 1;
+		grid-row: 1 / span 2;
+	}
+	.record .contexte {
+		grid-column: 2;
+	}
+	.vide {
+		color: color-mix(in srgb, var(--color-white) 60%, transparent);
+		font-size: 0.9rem;
+		margin: 0;
+	}
+</style>

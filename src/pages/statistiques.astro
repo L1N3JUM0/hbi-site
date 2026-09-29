@@ -7,6 +7,7 @@ import Favicon from "../components/Favicon.astro";
 import { getCollection } from "astro:content";
 import { trierEquipes } from "../lib/equipes";
 import { slugsAvecResultats, getStatistiquesParSaison } from "../lib/statistiques";
+import { withBase } from "../utils/links";
 
 const slugsDisponibles = await slugsAvecResultats();
 const equipes = trierEquipes(await getCollection("equipes")).filter((e) => slugsDisponibles.has(e.data.slug));
@@ -52,6 +53,8 @@ const blocs = await Promise.all(
 			) : (
 				<section class="stats-content">
 					<div class="wrap">
+						{/* Lien discret, seul accès à /records (hors menu, non indexée). */}
+						<p class="lien-records"><a href={withBase("/records")}>Voir les records et meilleures performances →</a></p>
 						<div class="filtres">
 							<div>
 								<label class="filtre-label" for="filtre-equipe">
@@ -220,6 +223,15 @@ const blocs = await Promise.all(
 		max-width: 900px;
 		margin: 0 auto;
 		padding: 2rem 1.5rem 3rem;
+	}
+	.lien-records {
+		margin: 0 0 1rem;
+	}
+	.lien-records a {
+		display: inline-block;
+		min-height: 44px;
+		line-height: 44px;
+		color: var(--color-white);
 	}
 	.empty p {
 		color: rgba(255, 255, 255, 0.75);
