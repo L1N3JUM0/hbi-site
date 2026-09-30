@@ -91,19 +91,23 @@ const saisonDebut = (await getCollection("resultats"))
 	.sort()[0];
 const periode = saisonDebut ? `depuis ${saisonDebut}` : "sur les saisons disponibles";
 
-// --- Carte joueur : données du bouton "Créer ma carte" de chaque ligne.
-// Uniquement ce qui est déjà affiché sur la page (nom affiché, équipe,
-// totaux) ; badge "Record" si la personne détient un record individuel
-// actuel de /records (recalculé à chaque build, jamais codé en dur).
+// --- Carte joueur : réservée aux joueur·se·s affiché·e·s en nom complet
+// (décision du 30/09/2026) -- pour une catégorie pseudonymisée, initiale +
+// catégorie + équipe suffisent à recouper l'identité d'un enfant : pas de
+// bouton, donc ni photo, ni export, rien à détourner. Données du bouton :
+// uniquement ce qui est déjà affiché sur la page ; badge "Record" si la
+// personne détient un record individuel actuel de /records (recalculé à
+// chaque build, jamais codé en dur).
 const detenteurs = await detenteursDeRecord();
-const donneesCarte = (j: JoueurCarriere, equipeNom: string, nominatif: boolean) =>
+const carteAutorisee = (j: JoueurCarriere) => j.detail !== null && Boolean(j.label);
+const donneesCarte = (j: JoueurCarriere, equipeNom: string) =>
 	JSON.stringify({
 		nom: j.label ?? "",
 		equipe: equipeNom,
-		nominatif,
+		nominatif: true,
 		carriere: { matchs: j.matchsJoues, buts: j.buts, arrets: j.arrets },
 		saison: { matchs: j.saisonEnCours.matchsJoues, buts: j.saisonEnCours.buts, arrets: j.saisonEnCours.arrets },
-		record: nominatif && detenteurs.has(j.label ?? ""),
+		record: detenteurs.has(j.label ?? ""),
 	});
 
 // --- Graphique "buts par saison" (fiche détaillée, affichage nominatif
@@ -324,9 +328,11 @@ const comparables = blocs
 																		<span class="nom">{j.label}</span>
 																		{j.nonVuCetteSaison && <span class="badge badge--discret">Non vu cette saison</span>}
 																		{j.plusieursCategoriesCetteSaison && <span class="badge">Plusieurs catégories cette saison</span>}
-																		<button type="button" class="btn-carte" data-carte={donneesCarte(j, equipe.data.nom, j.detail !== null)}>
-																			Créer ma carte
-																		</button>
+																		{carteAutorisee(j) && (
+																			<button type="button" class="btn-carte" data-carte={donneesCarte(j, equipe.data.nom)}>
+																				Créer ma carte
+																			</button>
+																		)}
 																	</td>
 																	{carriere.plusieursEquipes && <td class="col-secondaire">{j.groupeLibelle}</td>}
 																	{COLONNES.map((c) => (

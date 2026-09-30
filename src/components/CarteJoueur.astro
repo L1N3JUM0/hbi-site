@@ -6,10 +6,15 @@
  * - Aucune image, aucun surnom, aucun poste n'est envoyé ni enregistré :
  *   pas de requête réseau, pas de stockage (ni localStorage ni cookie) ; tout
  *   est oublié à la fermeture de la fenêtre.
- * - Nom : celui AFFICHÉ sur la page (pseudonymisé pour les catégories
- *   concernées) ; le surnom libre n'est proposé qu'en affichage nominatif,
- *   pour que la carte ne serve jamais à publier le nom complet d'un mineur
- *   avec le logo du club.
+ * - Réservée aux joueur·se·s affiché·e·s en nom complet (décision du
+ *   30/09/2026) : pour une catégorie pseudonymisée, initiale + catégorie +
+ *   équipe suffisent à recouper l'identité d'un enfant, la fonction
+ *   n'existe donc pas (aucun bouton, voir statistiques-carriere.astro ; et
+ *   refus ici par précaution). Nom tel qu'affiché, ou surnom facultatif.
+ * - Mention "Carte personnelle, non officielle" sur toutes les cartes :
+ *   n'importe qui peut générer la carte d'un·e joueur·se listé·e, avec
+ *   n'importe quelle photo, l'image ne doit pas passer pour un document du
+ *   club.
  * - Identité du club uniquement (tokens de couleur, logo du HBI, silhouette
  *   du logo en motif de fond) : inspirée de la mise en page des cartes à
  *   collectionner récentes, sans aucun élément de marque d'un produit ou
@@ -64,9 +69,6 @@ const silhouette = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(silhou
 
 			<label class="carte-label" for="carte-surnom">Surnom (facultatif)</label>
 			<input id="carte-surnom" type="text" maxlength="18" autocomplete="off" />
-			<p class="carte-note carte-surnom-note" hidden>
-				Pas de surnom pour les catégories affichées sans nom complet : la carte garde le nom tel qu'il apparaît sur le site.
-			</p>
 
 			<label class="carte-label" for="carte-poste">Poste (facultatif)</label>
 			<select id="carte-poste">
@@ -91,7 +93,6 @@ const silhouette = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(silhou
 				<button type="button" class="carte-partager" hidden>Partager</button>
 				<button type="button" class="carte-telecharger">Télécharger</button>
 			</div>
-			<p class="carte-note carte-mineurs" hidden>Pour les moins de 18 ans, l'accord d'un parent est conseillé.</p>
 		</div>
 	</div>
 </dialog>
@@ -249,7 +250,7 @@ const silhouette = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(silhou
 			ctx.lineTo(40, bandeauY + 140);
 			ctx.closePath();
 			ctx.fill();
-			const nom = (joueur.nominatif && champSurnom.value.trim()) || joueur.nom;
+			const nom = champSurnom.value.trim() || joueur.nom;
 			ctx.fillStyle = blanc;
 			ctx.textAlign = "center";
 			texteAjuste(nom.toUpperCase(), W - 160, 84);
@@ -297,11 +298,16 @@ const silhouette = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(silhou
 			ctx.font = police(28, 500);
 			ctx.textAlign = "center";
 			const periode = vueSaison ? `Statistiques de la saison ${saison}` : `Cumul des feuilles de match disponibles, ${debut} à ${saison}`;
-			ctx.fillText(periode, W / 2, H - 70);
+			ctx.fillText(periode, W / 2, H - 92);
 			ctx.globalAlpha = 1;
+			// Toujours présente, jamais optionnelle (voir l'en-tête du fichier).
+			ctx.font = police(26, 800);
+			ctx.fillText("CARTE PERSONNELLE, NON OFFICIELLE", W / 2, H - 44);
 		}
 
 		function ouvrir(donnees: Joueur) {
+			// Par précaution : le bouton n'existe que pour un affichage nominatif.
+			if (!donnees.nominatif) return;
 			joueur = donnees;
 			photo = null;
 			if (urlPhoto) URL.revokeObjectURL(urlPhoto);
@@ -311,9 +317,6 @@ const silhouette = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(silhou
 			champZoom.value = "1";
 			cadrage.disabled = true;
 			champSurnom.value = "";
-			champSurnom.disabled = !donnees.nominatif;
-			dialog!.querySelector<HTMLElement>(".carte-surnom-note")!.hidden = donnees.nominatif;
-			dialog!.querySelector<HTMLElement>(".carte-mineurs")!.hidden = donnees.nominatif;
 			champPoste.value = "";
 			dialog!.querySelector<HTMLInputElement>('input[name="carte-format"][value="1350"]')!.checked = true;
 			canvas.height = 1350;
