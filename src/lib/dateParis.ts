@@ -10,6 +10,15 @@
  * le runner GitHub Actions -- et décale donc l'heure affichée de 1 à 2 h.
  * Même classe de bug que celle décrite dans saison.ts : on interprète ici
  * l'heure à plat comme une heure de Paris, à coup sûr.
+ *
+ * Piège : dans un frontmatter, `date: 2026-10-11T14:30:00` (sans guillemets,
+ * tel que Sveltia l'écrit) n'arrive jamais ici comme texte. Le YAML (js-yaml,
+ * utilisé par Astro) le convertit d'abord en `Date` en le lisant comme UTC
+ * -- 14:30 UTC, soit 16:30 à Paris. Un `Date` reçu est donc relu comme une
+ * heure à plat (ses composantes UTC = l'heure tapée dans le CMS). Contrepartie
+ * : une date écrite à la main avec un fuseau explicite (`…Z`, `+02:00`)
+ * serait elle aussi relue comme heure de Paris, le YAML ne gardant pas cette
+ * information ; Sveltia, tel que configuré, n'en écrit jamais.
  */
 
 const SANS_FUSEAU = /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2})(?:\.\d+)?)?)?$/;
@@ -36,7 +45,17 @@ function decalageParis(instant: Date): number {
 /** Renvoie l'instant correspondant, ou `undefined` si la valeur n'est pas une
  * date exploitable (le schéma la traite alors comme "non renseignée"). */
 export function lireDateParis(valeur: unknown): Date | undefined {
-	if (valeur instanceof Date) return Number.isNaN(valeur.getTime()) ? undefined : valeur;
+	if (valeur instanceof Date) {
+		if (Number.isNaN(valeur.getTime())) return undefined;
+		return heureDeParis(
+			valeur.getUTCFullYear(),
+			valeur.getUTCMonth() + 1,
+			valeur.getUTCDate(),
+			valeur.getUTCHours(),
+			valeur.getUTCMinutes(),
+			valeur.getUTCSeconds(),
+		);
+	}
 	if (typeof valeur !== "string") return undefined;
 
 	const brut = valeur.trim();
@@ -47,7 +66,12 @@ export function lireDateParis(valeur: unknown): Date | undefined {
 	}
 
 	const [, annee, mois, jour, heure = "0", minute = "0", seconde = "0"] = plat;
-	const heureVueEnUtc = Date.UTC(+annee, +mois - 1, +jour, +heure, +minute, +seconde);
+	return heureDeParis(+annee, +mois, +jour, +heure, +minute, +seconde);
+}
+
+/** L'instant où les horloges de Paris affichent cette date et cette heure. */
+function heureDeParis(annee: number, mois: number, jour: number, heure: number, minute: number, seconde: number): Date {
+	const heureVueEnUtc = Date.UTC(annee, mois - 1, jour, heure, minute, seconde);
 	// Deux passes : le décalage dépend de l'instant qu'on cherche, pas de
 	// l'heure "à plat" -- la 2e passe corrige les heures proches d'un
 	// changement d'heure été/hiver.
