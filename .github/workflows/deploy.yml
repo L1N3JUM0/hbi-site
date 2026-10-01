@@ -11,11 +11,15 @@ on:
     - cron: "0 4 * * *"
     # Soirs de match : récupère les feuilles du week-end dès leur
     # publication (voir scripts/recuperer-feuilles.mjs). Le cron de GitHub
-    # est en UTC, sans heure d'été : réglés sur l'heure d'hiver (l'essentiel
-    # de la saison), soit samedi 23h / dimanche 22h de fin octobre à fin
-    # mars, et une heure plus tard en été (samedi minuit, dimanche 23h).
-    - cron: "0 22 * * 6"
-    - cron: "0 21 * * 0"
+    # est en UTC, sans heure d'été. Heures de Paris obtenues :
+    #   samedi 21h UTC   = 22h (hiver) / 23h (été)
+    #   dimanche 20h UTC = 21h (hiver) / 22h (été)
+    # Les deux tombent le soir même dans les deux cas : le build du samedi
+    # reste avant minuit (bloc "Ce week-end" de l'accueil, scores du samedi),
+    # celui du dimanche après 18h ("Résultats du week-end", voir
+    # src/lib/weekend.ts).
+    - cron: "0 21 * * 6"
+    - cron: "0 20 * * 0"
 
 permissions:
   # "write" (au lieu de "read") : le build commite les résultats importés
