@@ -1,5 +1,6 @@
 ---
 import { courbeScore, type Resultat } from "../../lib/resultats";
+import { casseNomClub } from "../../lib/nomsClubs";
 
 interface Props {
 	resultat: Resultat;
@@ -7,7 +8,7 @@ interface Props {
 
 const { resultat } = Astro.props;
 const courbe = courbeScore(resultat);
-const adversaire = resultat.data.adversaire;
+const adversaire = casseNomClub(resultat.data.adversaire);
 ---
 
 {

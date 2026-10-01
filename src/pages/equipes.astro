@@ -162,16 +162,26 @@ const groupes = (
 </html>
 
 <script>
-	// Léger défilement/mise en évidence quand on arrive via une ancre
-	// (#slug) depuis la homepage.
-	const id = window.location.hash.replace("#", "");
-	if (id) {
-		const target = document.getElementById(id);
-		if (target) {
-			target.classList.add("just-arrived");
-			target.addEventListener("animationend", () => target.classList.remove("just-arrived"), { once: true });
+	// /equipes#<slug> : le navigateur fait défiler jusqu'à la fiche mais ne
+	// l'ouvre pas (l'ancre vise le <details> lui-même). On l'ouvre -- ainsi que
+	// le repli "Équipes des saisons passées" s'il la contient -- puis on
+	// refait défiler, car l'ouverture (et la fermeture de la fiche
+	// précédemment ouverte, voir name="equipe") décale la page. Sans JS :
+	// défilement seul, fiche fermée, contenu accessible au clic.
+	function ouvrirDepuisAncre() {
+		const id = decodeURIComponent(window.location.hash.slice(1));
+		const cible = id ? document.getElementById(id) : null;
+		if (!cible) return;
+		for (let el: HTMLElement | null = cible; el; el = el.parentElement) {
+			if (el instanceof HTMLDetailsElement) el.open = true;
 		}
+		const reduit = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		cible.scrollIntoView({ block: "start", behavior: reduit ? "auto" : "smooth" });
+		cible.classList.add("just-arrived");
+		cible.addEventListener("animationend", () => cible.classList.remove("just-arrived"), { once: true });
 	}
+	ouvrirDepuisAncre();
+	window.addEventListener("hashchange", ouvrirDepuisAncre);
 </script>
 
 <style is:global>
@@ -400,7 +410,7 @@ const groupes = (
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
-		.just-arrived {
+		:global(.just-arrived) {
 			animation: arrived-pulse 1.4s ease;
 		}
 	}

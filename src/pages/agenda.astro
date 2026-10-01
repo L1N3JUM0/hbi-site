@@ -9,6 +9,7 @@ import FiltreEquipes from "../components/FiltreEquipes.astro";
 import { getCollection } from "astro:content";
 import { withBase } from "../utils/links";
 import { getAgendaMatches, getAgendaTeams, getCompetitionLinks, formatMatchDate, formatMatchTime, mapsSearchUrl, androidGeoUri } from "../lib/agenda";
+import { casseNomClub } from "../lib/nomsClubs";
 import { getUpcomingEvenements } from "../lib/evenements";
 import { trierEquipes } from "../lib/equipes";
 
@@ -97,7 +98,7 @@ const equipesFiltre = trierEquipes((await getCollection("equipes")).filter((e) =
 											</span>
 										</span>
 									</div>
-									<p class="opponent">{entry.match.isDerby ? "Derby interne au club" : `vs ${entry.match.opponent}`}</p>
+									<p class="opponent">{entry.match.isDerby ? "Derby interne au club" : `vs ${casseNomClub(entry.match.opponent)}`}</p>
 									{entry.match.reporte ? (
 										<>
 											<p class="meta meta--reporte">

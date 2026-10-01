@@ -7,6 +7,7 @@ import ResultatsEquipe from "../resultats/ResultatsEquipe.astro";
 import { formatMatchQuand, type AgendaMatch, type AgendaTeamConfig } from "../../lib/agenda";
 import { formatDateHeureCourte, formatHeureCourte, formatJourLong, grouperParJour, publicEquipe } from "../../lib/ficheEquipe";
 import { formatDateCourte, issueDuMatch, scoreNousEux, type Resultat } from "../../lib/resultats";
+import { casseNomClub } from "../../lib/nomsClubs";
 import { saisonActuelle } from "../../lib/saison";
 import { withBase } from "../../utils/links";
 
@@ -50,7 +51,7 @@ const ISSUE = { victoire: "Victoire", defaite: "Défaite", nul: "Match nul" } as
  * engage plusieurs équipes -- sinon on ne saurait pas laquelle joue. */
 function contre(m: AgendaMatch): string {
 	if (m.isDerby) return m.teamLabel;
-	const versus = `vs ${m.opponent ?? ""}`;
+	const versus = `vs ${casseNomClub(m.opponent)}`;
 	return plusieursEquipes ? `${m.teamLabelCourt} ${versus}` : versus;
 }
 
@@ -177,7 +178,7 @@ const historique = aDesResultats || avecStats;
 										<span class={`lieu ${r.data.domicile ? "lieu--dom" : ""}`} title={r.data.domicile ? "Domicile" : "Extérieur"}>
 											{r.data.domicile ? "D" : "E"}
 										</span>
-										<span class="adv">{r.data.adversaire}</span>
+										<span class="adv">{casseNomClub(r.data.adversaire)}</span>
 										<span class="score">{r.data.forfait ? "forfait" : score ? `${score.nous} – ${score.eux}` : "—"}</span>
 										<span class="date">{formatDateCourte(r.data.date)}</span>
 									</li>

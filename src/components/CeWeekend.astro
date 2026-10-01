@@ -1,6 +1,7 @@
 ---
 import { formatMatchDate } from "../lib/agenda";
 import { formatFenetre, formatJourHeure, getBlocWeekend, type LigneWeekend } from "../lib/weekend";
+import { casseNomClub } from "../lib/nomsClubs";
 import { withBase } from "../utils/links";
 
 /** Au-delà, la liste repousserait la découverte du club sous la ligne de
@@ -16,7 +17,7 @@ const lienEquipe = (slug: string) => withBase(`/agenda?equipe=${encodeURICompone
 const ISSUE = { victoire: ["V", "Victoire"], defaite: ["D", "Défaite"], nul: ["N", "Match nul"] } as const;
 
 function adversaire(l: LigneWeekend): string {
-	return l.match.isDerby ? "Derby du club" : (l.match.opponent ?? "");
+	return l.match.isDerby ? "Derby du club" : casseNomClub(l.match.opponent);
 }
 ---
 
@@ -76,7 +77,7 @@ function adversaire(l: LigneWeekend): string {
 										<time datetime={bloc.prochain.start.toISOString()}>{formatMatchDate(bloc.prochain.start).toLowerCase()}</time>
 										{" · "}
 										{bloc.prochain.teamLabel}
-										{bloc.prochain.opponent && ` · ${bloc.prochain.opponent}`}
+										{bloc.prochain.opponent && ` · ${casseNomClub(bloc.prochain.opponent)}`}
 									</span>
 								</a>
 							</li>

@@ -1,6 +1,7 @@
 ---
 import MatchScoreChart from "./MatchScoreChart.astro";
 import { buteurs, efficaciteTir, formatDateCourte, gardiens, issueDuMatch, scoreNousEux, statsEquipeNous, type Resultat } from "../../lib/resultats";
+import { casseNomClub } from "../../lib/nomsClubs";
 
 interface Props {
 	resultat: Resultat;
@@ -20,7 +21,8 @@ const stats = r.forfait ? undefined : statsEquipeNous(resultat);
 const efficacite = stats ? efficaciteTir(stats.buts, stats.tirs) : null;
 const listeButeurs = r.forfait ? [] : buteurs(resultat, affichageStats);
 const listeGardiens = r.forfait ? [] : gardiens(resultat, affichageStats);
-const forfaitLabel = r.forfait === "nous" ? `Le Handball Islois a déclaré forfait face à ${r.adversaire}.` : `${r.adversaire} a déclaré forfait face au Handball Islois.`;
+const adversaire = casseNomClub(r.adversaire);
+const forfaitLabel = r.forfait === "nous" ? `Le Handball Islois a déclaré forfait face à ${adversaire}.` : `${adversaire} a déclaré forfait face au Handball Islois.`;
 ---
 
 <li class="match">
@@ -28,7 +30,7 @@ const forfaitLabel = r.forfait === "nous" ? `Le Handball Islois a déclaré forf
 		<summary>
 			<span class={`issue issue--${issue}`} title={issueLabelLongue}>{issueLabel}</span>
 			<span class="lieu">{r.domicile ? "Dom." : "Ext."}</span>
-			<span class="adversaire">{r.adversaire}</span>
+			<span class="adversaire">{adversaire}</span>
 			{r.forfait ? <span class="tag-forfait">Forfait</span> : <span class="score">{score ? `${score.nous} – ${score.eux}` : "—"}</span>}
 			{r.typeMatch === "coupe" && <span class="tag-coupe">Coupe</span>}
 			<span class="date">{formatDateCourte(r.date)}</span>
