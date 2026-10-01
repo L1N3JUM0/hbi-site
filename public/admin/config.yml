@@ -371,7 +371,19 @@ collections:
       - label: "Description courte"
         name: "description"
         widget: "text"
-        hint: "1 à 2 phrases. Affichée sur la page d'accueil et sur la page Équipes."
+        hint: "1 à 2 phrases. Affichée sur la page d'accueil (survol de la carte de l'équipe)."
+
+      - label: "Présentation (page Équipes)"
+        name: "presentation"
+        widget: "text"
+        required: false
+        hint: "Facultatif. Quelques phrases sur l'équipe, affichées quand on ouvre sa fiche sur /equipes. Inutile d'y répéter les horaires et les encadrants : ils sont déjà affichés à part. Laissez vide si vous n'avez rien de plus à dire."
+
+      - label: "Public"
+        name: "public"
+        widget: "string"
+        required: false
+        hint: "Facultatif. À qui s'adresse le créneau (ex. « 4-6 ans », « Ouvert à tous, handball adapté », « Adultes »). Affiché sur la fiche à la place du prochain match pour les créneaux sans championnat."
 
       - label: "Photo de l'équipe"
         name: "photoProfil"

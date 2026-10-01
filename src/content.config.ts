@@ -176,6 +176,16 @@ const equipes = defineCollection({
 			/** Texte court (1-2 phrases) : survol de la carte sur la homepage ET
 			 * texte affiché sur /equipes. */
 			description: z.string(),
+			/** Présentation libre affichée dans le détail de la fiche sur
+			 * /equipes, seulement si elle est rédigée. Volontairement distincte de
+			 * `description` (accueil), qui ne fait souvent que répéter horaires et
+			 * encadrants -- déjà affichés à part sur la fiche. */
+			presentation: champFacultatif(z.string()),
+			/** Public visé ("4-6 ans", "Ouvert à tous, handball adapté"...),
+			 * affiché sur la fiche résumée à la place du prochain match pour un
+			 * créneau sans calendrier. Vide : déduit de `categorieAge` si possible
+			 * (voir publicEquipe() dans src/lib/ficheEquipe.ts). */
+			public: champFacultatif(z.string()),
 			/** Photo utilisée sur la carte homepage ET en tête de la page équipe.
 			 * Chemin relatif à ce fichier. */
 			photoProfil: safeImage(image),

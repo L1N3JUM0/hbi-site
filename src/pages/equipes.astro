@@ -6,6 +6,7 @@ import Footer from "../components/Footer.astro";
 import AjouterAgendaButton from "../components/AjouterAgendaButton.astro";
 import PhotoCarousel from "../components/PhotoCarousel.astro";
 import ResultatsEquipe from "../components/resultats/ResultatsEquipe.astro";
+import FicheEquipe from "../components/equipes/FicheEquipe.astro";
 import Favicon from "../components/Favicon.astro";
 import { withBase } from "../utils/links";
 import { getCollection, type CollectionEntry } from "astro:content";
@@ -88,14 +89,14 @@ function photosFor(team: CollectionEntry<"equipes">) {
 		<section class="teams">
 			<div class="wrap">
 				<h2>Équipes de compétition</h2>
-				<div class="grid">
+				<div class="fiches">
 					{
 						competition.map(async (t) => {
 							const buttons = agendaButtonsFor(t.data.slug);
 							const matches = await nextMatchesFor(t.data.slug);
 							return (
-								<div class="card" id={t.data.slug}>
-									<h3>{t.data.nom}</h3>
+								<FicheEquipe equipe={t} matchs={matches} calendriers={buttons}>
+								<div class="card">
 									<PhotoCarousel photos={photosFor(t)} ariaLabel={`Photos de ${t.data.nom}`} lightbox variant="card" />
 									<p class="description">{t.data.description}</p>
 									<dl>
@@ -154,6 +155,7 @@ function photosFor(team: CollectionEntry<"equipes">) {
 										</div>
 									)}
 								</div>
+								</FicheEquipe>
 							);
 						})
 					}
@@ -168,12 +170,11 @@ function photosFor(team: CollectionEntry<"equipes">) {
 					Deux créneaux ouverts à tous, pensés pour découvrir le handball sans
 					enjeu de compétition.
 				</p>
-				<div class="grid grid--decouverte">
+				<div class="fiches">
 					{
 						decouverte.map((t) => (
-							<div class="card card--decouverte" id={t.data.slug}>
-								<span class="tag">{typeLabel[t.data.type]}</span>
-								<h3>{t.data.nom}</h3>
+							<FicheEquipe equipe={t} matchs={[]} calendriers={[]} tag={typeLabel[t.data.type]}>
+							<div class="card card--decouverte">
 								<PhotoCarousel photos={photosFor(t)} ariaLabel={`Photos de ${t.data.nom}`} lightbox variant="card" />
 								<p class="description">{t.data.description}</p>
 								<dl>
@@ -191,6 +192,7 @@ function photosFor(team: CollectionEntry<"equipes">) {
 									</div>
 								</dl>
 							</div>
+							</FicheEquipe>
 						))
 					}
 				</div>
@@ -202,8 +204,8 @@ function photosFor(team: CollectionEntry<"equipes">) {
 				<section class="transversal">
 					<div class="wrap">
 						<h2>Créneau transversal</h2>
-						<div class="card card--transversal" id={transversal.data.slug}>
-							<h3>{transversal.data.nom}</h3>
+						<FicheEquipe equipe={transversal} matchs={[]} calendriers={[]}>
+						<div class="card card--transversal">
 							<PhotoCarousel
 								photos={photosFor(transversal)}
 								ariaLabel={`Photos de ${transversal.data.nom}`}
@@ -226,6 +228,7 @@ function photosFor(team: CollectionEntry<"equipes">) {
 								</div>
 							</dl>
 						</div>
+						</FicheEquipe>
 					</div>
 				</section>
 			)
@@ -337,6 +340,10 @@ function photosFor(team: CollectionEntry<"equipes">) {
 		margin-bottom: 2rem;
 	}
 
+	.fiches {
+		display: grid;
+		gap: 0.6rem;
+	}
 	.grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));

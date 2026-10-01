@@ -1,0 +1,419 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import type { AgendaMatch, AgendaTeamConfig } from "../../lib/agenda";
+import { formatDateHeureCourte, publicEquipe } from "../../lib/ficheEquipe";
+
+/** Fiche équipe de /equipes : un résumé compact d'une rangée (<summary>) et
+ * le détail, déplié au clic. `name="equipe"` : une seule fiche ouverte à la
+ * fois, nativement, sans JS (sans effet sur un navigateur trop ancien, qui
+ * laisse simplement plusieurs fiches ouvertes). Sans JS, tout reste
+ * accessible au clic. */
+interface Props {
+	equipe: CollectionEntry<"equipes">;
+	/** Prochains matchs (déjà limités par l'appelant). */
+	matchs: AgendaMatch[];
+	/** Calendriers de l'équipe (vide : créneau sans championnat). */
+	calendriers: AgendaTeamConfig[];
+	/** Étiquette "Découverte" / "Inclusion". */
+	tag?: string;
+	ouvert?: boolean;
+}
+
+const { equipe, matchs, calendriers, tag, ouvert = false } = Astro.props;
+const e = equipe.data;
+const slug = e.slug;
+const aCalendrier = calendriers.length > 0;
+const plusieursEquipes = calendriers.length > 1;
+const prochain = matchs.find((m) => !m.reporte || m.reporte.nouvelleDate);
+const publicVise = publicEquipe(equipe);
+
+/** "vs Pays d'Apt", précédé du libellé court ("SM1") quand la catégorie
+ * engage plusieurs équipes -- sinon on ne saurait pas laquelle joue. */
+function contre(m: AgendaMatch): string {
+	if (m.isDerby) return m.teamLabel;
+	const versus = `vs ${m.opponent ?? ""}`;
+	return plusieursEquipes ? `${m.teamLabelCourt} ${versus}` : versus;
+}
+---
+
+<details class="fiche" id={slug} name="equipe" open={ouvert}>
+	<summary class="resume">
+		<span class="photo">
+			<Image src={e.photoProfil} alt="" widths={[320, 640]} sizes="(max-width: 700px) 100vw, 160px" loading="lazy" />
+		</span>
+		<span class="infos">
+			{tag && <span class="tag">{tag}</span>}
+			{/* <summary> n'accepte qu'un contenu "phrasing" : pas de <h3> dans un
+			    <span>, d'où le rôle ARIA pour garder la navigation par titres. */}
+			<span class="nom" role="heading" aria-level="3">{e.nom}</span>
+			{e.horaires && <span class="horaires">{e.horaires}</span>}
+			{e.encadrants && <span class="encadrants">avec {e.encadrants}</span>}
+		</span>
+		<span class="suite">
+			{aCalendrier ? (
+				prochain ? (
+					<>
+						<span class="etiquette">Prochain match</span>
+						<span class="prochain">
+							<span class={`lieu ${prochain.isHome ? "lieu--dom" : ""}`} title={prochain.isHome ? "Domicile" : "Extérieur"}>
+								{prochain.isHome ? "D" : "E"}
+							</span>
+							<span class="prochain__texte">
+								{formatDateHeureCourte(prochain.start)} · {contre(prochain)}
+							</span>
+						</span>
+					</>
+				) : (
+					<span class="sans-match">Pas de match prévu</span>
+				)
+			) : (
+				publicVise && (
+					<>
+						<span class="etiquette">Public</span>
+						<span class="public">{publicVise}</span>
+					</>
+				)
+			)}
+		</span>
+		<span class="voir" aria-hidden="true">
+			<span class="voir--ferme">Voir l&rsquo;équipe</span>
+			<span class="voir--ouvert">Fermer</span>
+		</span>
+	</summary>
+
+	<div class="detail">
+		<slot />
+	</div>
+</details>
+
+<style>
+	.fiche {
+		--trait: color-mix(in srgb, var(--color-white) 18%, transparent);
+		--doux: color-mix(in srgb, var(--color-white) 78%, transparent);
+		background: var(--color-navy);
+		color: var(--color-white);
+		border-left: 4px solid var(--color-blue);
+		scroll-margin-top: var(--decalage-ancre, 8rem);
+	}
+	.fiche[open] {
+		border-left-color: var(--color-white);
+	}
+
+	/* --- Fiche résumée : une rangée, hauteur fixe sur desktop --- */
+	.resume {
+		display: grid;
+		grid-template-columns: 160px minmax(0, 1fr) minmax(0, 1.5fr) auto;
+		align-items: center;
+		column-gap: 1.25rem;
+		height: 140px;
+		padding: 10px 1.25rem 10px 10px;
+		cursor: pointer;
+		list-style: none;
+	}
+	.resume::-webkit-details-marker {
+		display: none;
+	}
+	.resume:hover {
+		background: color-mix(in srgb, var(--color-white) 6%, transparent);
+	}
+	.resume:focus-visible {
+		outline: 3px solid var(--color-white);
+		outline-offset: -3px;
+	}
+	.photo {
+		display: block;
+		width: 160px;
+		height: 120px;
+		overflow: hidden;
+		background: var(--color-navy-deep);
+	}
+	.photo :global(img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+	.infos,
+	.suite {
+		display: flex;
+		flex-direction: column;
+		gap: 0.15rem;
+		min-width: 0;
+	}
+	.tag {
+		align-self: flex-start;
+		font-size: 0.8rem;
+		font-weight: 800;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		color: var(--doux);
+	}
+	.nom {
+		margin: 0 0 0.2rem;
+		font-size: 1.15rem;
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: 0.02em;
+	}
+	.horaires,
+	.encadrants,
+	.prochain__texte,
+	.public {
+		font-size: 1rem;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+	.encadrants {
+		color: var(--doux);
+	}
+	.etiquette {
+		font-size: 0.8rem;
+		font-weight: 800;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		color: var(--doux);
+	}
+	.prochain {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		min-width: 0;
+	}
+	.sans-match {
+		color: var(--doux);
+		font-style: italic;
+	}
+	.lieu {
+		flex-shrink: 0;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 1.6rem;
+		height: 1.6rem;
+		font-weight: 800;
+		font-size: 0.9rem;
+		border: 1px solid var(--color-white);
+	}
+	.lieu--dom {
+		background: var(--color-white);
+		color: var(--color-navy);
+	}
+	.voir {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+		padding: 0 1rem;
+		border: 2px solid var(--color-white);
+		font-weight: 800;
+		white-space: nowrap;
+	}
+	.voir--ouvert,
+	.fiche[open] .voir--ferme {
+		display: none;
+	}
+	.fiche[open] .voir--ouvert {
+		display: inline;
+	}
+
+	/* --- Détail --- */
+	.detail {
+		padding: 0.5rem 1.25rem 1.5rem calc(160px + 10px + 1.25rem);
+		border-top: 1px solid var(--trait);
+	}
+	.presentation {
+		margin: 1rem 0 0;
+		line-height: 1.55;
+		max-width: 60ch;
+	}
+	.infos-pratiques {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 2.5rem;
+		margin: 1rem 0 0;
+	}
+	dt,
+	h4 {
+		font-size: 0.8rem;
+		font-weight: 800;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		color: var(--doux);
+		margin: 0 0 0.2rem;
+	}
+	dd {
+		margin: 0;
+		font-size: 1rem;
+	}
+	.matchs {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+		gap: 1rem 2.5rem;
+		margin-top: 1.25rem;
+	}
+	h4 {
+		padding-bottom: 0.35rem;
+		border-bottom: 1px solid var(--trait);
+		margin-bottom: 0.5rem;
+	}
+	.vide {
+		margin: 0;
+		color: var(--doux);
+		font-style: italic;
+	}
+	.jour + .jour {
+		margin-top: 0.6rem;
+	}
+	.jour__titre {
+		margin: 0 0 0.25rem;
+		font-weight: 800;
+	}
+	.plateau {
+		font-weight: 400;
+		color: var(--doux);
+	}
+	.lignes {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.35rem;
+	}
+	.lignes li {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		min-width: 0;
+	}
+	.heure {
+		font-variant-numeric: tabular-nums;
+		min-width: 3.2rem;
+	}
+	.adv {
+		flex: 1;
+		min-width: 0;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+	.score {
+		font-weight: 800;
+		font-variant-numeric: tabular-nums;
+		white-space: nowrap;
+	}
+	.date {
+		color: var(--doux);
+		white-space: nowrap;
+	}
+
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.75rem 1rem;
+		margin-top: 1.25rem;
+	}
+	.agenda-equipe {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+		padding: 0 1.1rem;
+		background: var(--color-crimson);
+		color: var(--color-white);
+		font-weight: 800;
+		text-decoration: none;
+	}
+	.agenda-equipe:hover {
+		background: color-mix(in srgb, var(--color-crimson) 85%, var(--color-navy-deep));
+	}
+	.agenda-equipe:focus-visible,
+	.stats-liens a:focus-visible {
+		outline: 2px solid var(--color-white);
+		outline-offset: 2px;
+	}
+	.galerie {
+		margin-top: 1.25rem;
+		max-width: 300px;
+	}
+
+	.historique {
+		margin-top: 1.5rem;
+		padding: 1rem 1.1rem 1.1rem;
+		background: var(--color-navy-deep);
+	}
+	.historique h4 {
+		color: var(--color-white);
+	}
+	/* Replis de ResultatsEquipe : en taille de texte normale, pas en petites
+	   capitales -- c'est le contenu principal de ce bloc. */
+	.historique :global(.resultats) {
+		margin-top: 0;
+		padding-top: 0;
+		border-top: 1px solid var(--trait);
+	}
+	.historique :global(.resultats:first-of-type) {
+		border-top: none;
+	}
+	/* Sélecteur volontairement plus spécifique que le style scopé de
+	   ResultatsEquipe (sinon il l'emporte). */
+	.fiche .detail .historique :global(.resultats > summary),
+	.fiche .detail .historique :global(.saison > summary) {
+		font-size: 1rem;
+		text-transform: none;
+		letter-spacing: 0;
+		color: var(--color-white);
+	}
+	.stats-liens {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1.5rem;
+		margin: 1rem 0 0;
+	}
+	.stats-liens a {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+		color: var(--color-white);
+		font-weight: 700;
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	/* --- Mobile : empilé, photo en bandeau bas --- */
+	@media (max-width: 700px) {
+		.resume {
+			grid-template-columns: minmax(0, 1fr);
+			row-gap: 0.6rem;
+			height: auto;
+			padding: 0 0 0.9rem;
+		}
+		.photo {
+			width: 100%;
+			height: 96px;
+		}
+		.infos,
+		.suite,
+		.voir {
+			margin: 0 1rem;
+		}
+		.voir {
+			justify-content: center;
+		}
+		.detail {
+			padding: 0.25rem 1rem 1.25rem;
+		}
+		.historique {
+			margin-left: -1rem;
+			margin-right: -1rem;
+		}
+	}
+</style>
