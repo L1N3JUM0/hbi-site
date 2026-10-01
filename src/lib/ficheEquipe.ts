@@ -68,3 +68,47 @@ export function publicEquipe(equipe: Equipe): string | undefined {
 	const age = /^U(\d+)$/i.exec(categorieAge);
 	return age ? `Moins de ${age[1]} ans` : undefined;
 }
+
+export type CleGroupe = "ecole" | "u13" | "u15" | "u17-u18" | "seniors" | "decouverte" | "complementaires";
+
+/** Groupes de la page /equipes et de sa barre "Aller à", dans l'ordre
+ * d'affichage. `titreBarre` : version courte pour la barre, qui doit tenir
+ * sur deux lignes au plus sur desktop -- absent quand les liens se suffisent
+ * ("U13 F", "U13 M"). Les titres de section, eux, restent complets. */
+export const GROUPES: { cle: CleGroupe; titre: string; titreBarre?: string }[] = [
+	{ cle: "ecole", titre: "École de hand", titreBarre: "École de hand" },
+	{ cle: "u13", titre: "U13" },
+	{ cle: "u15", titre: "U15" },
+	{ cle: "u17-u18", titre: "U17 – U18" },
+	{ cle: "seniors", titre: "Seniors et loisirs", titreBarre: "Seniors et loisirs" },
+	{ cle: "decouverte", titre: "Découverte et inclusion", titreBarre: "Découverte" },
+	{ cle: "complementaires", titre: "Créneaux complémentaires", titreBarre: "Compléments" },
+];
+
+/** Groupe d'une équipe, déduit de son type et de sa catégorie d'âge -- aucune
+ * saisie supplémentaire dans le CMS : une nouvelle catégorie (ex. un futur
+ * U20) se range d'elle-même. */
+export function groupeEquipe(equipe: Equipe): CleGroupe {
+	const { type, categorieAge } = equipe.data;
+	if (type === "decouverte" || type === "inclusion") return "decouverte";
+	if (type === "transversal") return "complementaires";
+	const age = categorieAge ? /^U(\d+)$/i.exec(categorieAge) : null;
+	// Sans catégorie d'âge (Loisirs) ou "senior" : adultes.
+	if (!age) return "seniors";
+	const n = Number(age[1]);
+	if (n <= 11) return "ecole";
+	if (n <= 13) return "u13";
+	if (n <= 15) return "u15";
+	if (n <= 18) return "u17-u18";
+	return "seniors";
+}
+
+/** Libellé court pour la barre "Aller à" : "U13 F", "Seniors M", sinon le
+ * nom ("Loisirs", "Baby Hand"). Le nom complet reste en infobulle (title) :
+ * le lien garde le texte visible comme nom accessible. */
+export function libelleCourtEquipe(equipe: Equipe): string {
+	const { nom, categorieAge, genre } = equipe.data;
+	if (!categorieAge) return nom.split(/[,&]/)[0].trim();
+	const lettre = genre === "feminin" ? " F" : genre === "masculin" ? " M" : "";
+	return `${categorieAge === "senior" ? "Seniors" : categorieAge.toUpperCase()}${lettre}`;
+}
