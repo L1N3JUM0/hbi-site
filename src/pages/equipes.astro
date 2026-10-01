@@ -92,6 +92,7 @@ const groupes = (
 			    header (lui-même collant) ; sur mobile, une seule ligne qui défile
 			    horizontalement. */}
 			<nav class="aller-a" aria-label="Aller à une équipe">
+				<div class="aller-a__cadre">
 				<ul class="aller-a__groupes">
 					{groupes.map((g) => (
 						<li class="aller-a__groupe">
@@ -108,6 +109,7 @@ const groupes = (
 						</li>
 					))}
 				</ul>
+				</div>
 			</nav>
 
 			<div class="wrap">
@@ -229,25 +231,30 @@ const groupes = (
 		margin: 0;
 		padding: 0;
 	}
-	.aller-a__groupes {
+	/* Groupes séparés par un filet vertical, pour qu'ils se lisent comme des
+	   groupes même sans titre. Chaque groupe porte son filet à gauche, et la
+	   liste est décalée d'autant vers la gauche dans un cadre qui masque ce
+	   qui dépasse : le filet d'un groupe placé en début de ligne -- la
+	   première comme celles créées par le retour à la ligne -- tombe hors du
+	   cadre, quel que soit le point de coupure. */
+	.aller-a__cadre {
 		max-width: 1000px;
-		margin: 0 auto !important;
+		margin: 0 auto;
+		overflow: hidden;
+	}
+	.aller-a__groupes {
+		--filet-retrait: calc(0.5rem + 1px);
+		margin-left: calc(-1 * var(--filet-retrait)) !important;
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0 0.5rem;
 	}
-	/* Groupes séparés par un filet vertical, pour qu'ils se lisent comme des
-	   groupes même sans titre. */
 	.aller-a__groupe {
 		display: flex;
 		align-items: center;
 		gap: 0.4rem;
 		padding-left: 0.5rem;
 		border-left: 1px solid color-mix(in srgb, var(--color-white) 25%, transparent);
-	}
-	.aller-a__groupe:first-child {
-		padding-left: 0;
-		border-left: none;
 	}
 	.aller-a__titre {
 		color: color-mix(in srgb, var(--color-white) 70%, transparent);
@@ -404,8 +411,14 @@ const groupes = (
 			flex-wrap: nowrap;
 			overflow-x: auto;
 			scrollbar-width: none;
+			margin-left: 0 !important;
 			padding: 0 1rem !important;
 			gap: 1rem;
+		}
+		/* Une seule ligne : seul le tout premier filet est à retirer. */
+		.aller-a__groupe:first-child {
+			padding-left: 0;
+			border-left: none;
 		}
 	}
 
