@@ -1,6 +1,6 @@
 {
 	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-feminines-32648/poule-192108/classements/",
-	"fetchedAt": "2026-09-30T10:11:59.900Z",
+	"fetchedAt": "2026-10-01T10:38:43.738Z",
 	"classement": [
 		{
 			"id": "10615053",
@@ -78,7 +78,7 @@
 			"diff": "1",
 			"dernieresRencontres": "-1;1",
 			"equipe_libelle": "MAZAN-SORGUES HANDBALL (+16)",
-			"equipe_logoActif": "1",
+			"equipe_logoActif": "0",
 			"structure_logo": "2025-09-19-e78c2c9a-7f7d-402a-853b-5d174ddb9404.png",
 			"ext_structureId": "3581"
 		},
@@ -222,7 +222,7 @@
 			"totalArrets": "0",
 			"nom": "POUBLAN-COUSTE",
 			"prenom": "LEA",
-			"showEquipeLogo": "1",
+			"showEquipeLogo": "0",
 			"equipeLibelle": "MAZAN-SORGUES HANDBALL (+16)",
 			"structureLogo": "2025-09-19-e78c2c9a-7f7d-402a-853b-5d174ddb9404.png"
 		},
@@ -233,7 +233,7 @@
 			"totalArrets": "0",
 			"nom": "DOLE",
 			"prenom": "LAURENCE",
-			"showEquipeLogo": "1",
+			"showEquipeLogo": "0",
 			"equipeLibelle": "MAZAN-SORGUES HANDBALL (+16)",
 			"structureLogo": "2025-09-19-e78c2c9a-7f7d-402a-853b-5d174ddb9404.png"
 		},
@@ -321,7 +321,7 @@
 			"totalArrets": "0",
 			"nom": "GONZALES",
 			"prenom": "AMELIE",
-			"showEquipeLogo": "1",
+			"showEquipeLogo": "0",
 			"equipeLibelle": "MAZAN-SORGUES HANDBALL (+16)",
 			"structureLogo": "2025-09-19-e78c2c9a-7f7d-402a-853b-5d174ddb9404.png"
 		},
@@ -453,7 +453,7 @@
 			"totalArrets": "0",
 			"nom": "ARRIGONI",
 			"prenom": "HONORINE",
-			"showEquipeLogo": "1",
+			"showEquipeLogo": "0",
 			"equipeLibelle": "MAZAN-SORGUES HANDBALL (+16)",
 			"structureLogo": "2025-09-19-e78c2c9a-7f7d-402a-853b-5d174ddb9404.png"
 		},
@@ -475,7 +475,7 @@
 			"totalArrets": "0",
 			"nom": "MAS",
 			"prenom": "CORINNE",
-			"showEquipeLogo": "1",
+			"showEquipeLogo": "0",
 			"equipeLibelle": "MAZAN-SORGUES HANDBALL (+16)",
 			"structureLogo": "2025-09-19-e78c2c9a-7f7d-402a-853b-5d174ddb9404.png"
 		},
@@ -486,7 +486,7 @@
 			"totalArrets": "0",
 			"nom": "manon",
 			"prenom": "pascal",
-			"showEquipeLogo": "1",
+			"showEquipeLogo": "0",
 			"equipeLibelle": "MAZAN-SORGUES HANDBALL (+16)",
 			"structureLogo": "2025-09-19-e78c2c9a-7f7d-402a-853b-5d174ddb9404.png"
 		},
@@ -585,7 +585,7 @@
 			"totalArrets": "0",
 			"nom": "FERNANDEZ",
 			"prenom": "CLAIRE",
-			"showEquipeLogo": "1",
+			"showEquipeLogo": "0",
 			"equipeLibelle": "MAZAN-SORGUES HANDBALL (+16)",
 			"structureLogo": "2025-09-19-e78c2c9a-7f7d-402a-853b-5d174ddb9404.png"
 		},
@@ -640,7 +640,7 @@
 			"totalArrets": "0",
 			"nom": "FISCHER",
 			"prenom": "AMANDINE",
-			"showEquipeLogo": "1",
+			"showEquipeLogo": "0",
 			"equipeLibelle": "MAZAN-SORGUES HANDBALL (+16)",
 			"structureLogo": "2025-09-19-e78c2c9a-7f7d-402a-853b-5d174ddb9404.png"
 		},
@@ -728,7 +728,7 @@
 			"totalArrets": "0",
 			"nom": "ROSICHINI",
 			"prenom": "MANON",
-			"showEquipeLogo": "1",
+			"showEquipeLogo": "0",
 			"equipeLibelle": "MAZAN-SORGUES HANDBALL (+16)",
 			"structureLogo": "2025-09-19-e78c2c9a-7f7d-402a-853b-5d174ddb9404.png"
 		},
@@ -750,7 +750,7 @@
 			"totalArrets": "15",
 			"nom": "julie",
 			"prenom": "mathe",
-			"showEquipeLogo": "1",
+			"showEquipeLogo": "0",
 			"equipeLibelle": "MAZAN-SORGUES HANDBALL (+16)",
 			"structureLogo": "2025-09-19-e78c2c9a-7f7d-402a-853b-5d174ddb9404.png"
 		},
@@ -816,7 +816,7 @@
 			"totalArrets": "0",
 			"nom": "BLANC",
 			"prenom": "LISON",
-			"showEquipeLogo": "1",
+			"showEquipeLogo": "0",
 			"equipeLibelle": "MAZAN-SORGUES HANDBALL (+16)",
 			"structureLogo": "2025-09-19-e78c2c9a-7f7d-402a-853b-5d174ddb9404.png"
 		},
@@ -827,7 +827,7 @@
 			"totalArrets": "0",
 			"nom": "AUDIBERT",
 			"prenom": "ALICE",
-			"showEquipeLogo": "1",
+			"showEquipeLogo": "0",
 			"equipeLibelle": "MAZAN-SORGUES HANDBALL (+16)",
 			"structureLogo": "2025-09-19-e78c2c9a-7f7d-402a-853b-5d174ddb9404.png"
 		},
@@ -882,7 +882,7 @@
 			"totalArrets": "9",
 			"nom": "frevol",
 			"prenom": "delphine",
-			"showEquipeLogo": "1",
+			"showEquipeLogo": "0",
 			"equipeLibelle": "MAZAN-SORGUES HANDBALL (+16)",
 			"structureLogo": "2025-09-19-e78c2c9a-7f7d-402a-853b-5d174ddb9404.png"
 		},
