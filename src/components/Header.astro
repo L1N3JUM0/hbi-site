@@ -8,7 +8,7 @@ const links = [
 	{ href: "/equipes", label: "Équipes" },
 	{ href: "/vie-du-club", label: "Vie du club" },
 	{ href: "/agenda", label: "Agenda" },
-	{ href: "/rejoindre", label: "Rejoindre" },
+	{ href: "/rejoindre", label: "Rejoindre", cta: true },
 ];
 ---
 
@@ -25,7 +25,7 @@ const links = [
 		</button>
 
 		<nav id="nav-menu" class="nav">
-			{links.map((l) => <a href={withBase(l.href)}>{l.label}</a>)}
+			{links.map((l) => <a href={withBase(l.href)} class:list={[l.cta && "nav-cta"]}>{l.label}</a>)}
 		</nav>
 	</div>
 </header>
@@ -40,6 +40,20 @@ const links = [
 		nav?.classList.toggle("is-open");
 	});
 </script>
+
+<style is:global>
+	/* Hauteur du header collant, partagée avec tout ce qui se cale dessous
+	   (barre "Aller à" de /equipes, ancres, hauteur du Hero) : une seule
+	   valeur à tenir à jour si le header change. */
+	:root {
+		--header-h: 64px;
+	}
+	@media (min-width: 1024px) {
+		:root {
+			--header-h: 96px;
+		}
+	}
+</style>
 
 <style>
 	.site-header {
@@ -129,6 +143,42 @@ const links = [
 			display: flex;
 			align-items: center;
 			border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+		}
+	}
+
+	/* Desktop seulement : sur grand écran le header paraissait chétif, le
+	   logo (identité du club) mérite plus de place. 12 + 72 + 12 = 96px,
+	   soit --header-h ci-dessus. Mobile et tablette restent tels quels. */
+	@media (min-width: 1024px) {
+		.wrap {
+			padding-block: 12px;
+		}
+		.logo :global(img) {
+			height: 72px;
+		}
+		.nav {
+			gap: 2rem;
+			align-items: center;
+		}
+		.nav a {
+			font-size: 1.05rem;
+		}
+		/* Seul appel à l'action du menu : bouton plutôt que lien. */
+		.nav a.nav-cta {
+			display: inline-flex;
+			align-items: center;
+			min-height: 44px;
+			padding: 0 1.25rem;
+			background: var(--color-crimson);
+			border: 0;
+			border-radius: 4px;
+		}
+		.nav a.nav-cta:hover {
+			background: color-mix(in srgb, var(--color-crimson) 85%, var(--color-navy-deep));
+		}
+		.nav a.nav-cta:focus-visible {
+			outline: 2px solid var(--color-white);
+			outline-offset: 2px;
 		}
 	}
 </style>

@@ -211,7 +211,6 @@ const groupes = (
 		/* Hauteur du header collant + de la barre "Aller à" : une fiche visée
 		   par une ancre ne doit pas finir cachée dessous (voir
 		   scroll-margin-top dans FicheEquipe). */
-		--header-h: 64px;
 		--barre-h: 6.5rem;
 		--decalage-ancre: calc(var(--header-h) + var(--barre-h) + 0.75rem);
 		background: var(--color-navy-deep);
@@ -319,7 +318,7 @@ const groupes = (
 	/* Cartes des équipes archivées (inchangées). */
 	.card {
 		padding: 1.25rem 1.4rem;
-		scroll-margin-top: 5rem;
+		scroll-margin-top: var(--decalage-ancre);
 		border-radius: 4px;
 	}
 	.card h3 {
