@@ -1,0 +1,279 @@
+---
+import { formatMatchDate } from "../lib/agenda";
+import { formatFenetre, formatJourHeure, getBlocWeekend, type LigneWeekend } from "../lib/weekend";
+import { withBase } from "../utils/links";
+
+/** Au-delà, la liste repousserait la découverte du club sous la ligne de
+ * flottaison : le reste est sur /agenda. */
+const MAX_LIGNES = 6;
+
+const bloc = await getBlocWeekend();
+const lignes = bloc.type === "weekend" ? bloc.lignes.slice(0, MAX_LIGNES) : [];
+const autres = bloc.type === "weekend" ? bloc.lignes.length - lignes.length : 0;
+const titre = bloc.type === "weekend" && bloc.fenetre.mode === "resultats" ? "Résultats du week-end" : "Ce week-end";
+
+const lienEquipe = (slug: string) => withBase(`/agenda?equipe=${encodeURIComponent(slug)}`);
+const ISSUE = { victoire: ["V", "Victoire"], defaite: ["D", "Défaite"], nul: ["N", "Match nul"] } as const;
+
+function adversaire(l: LigneWeekend): string {
+	return l.match.isDerby ? "Derby du club" : (l.match.opponent ?? "");
+}
+---
+
+{
+	bloc.type !== "vide" && (
+		<section class="weekend" aria-labelledby="weekend-titre">
+			<div class="wrap">
+				<header class="tete">
+					<h2 id="weekend-titre">{titre}</h2>
+					<span class="dates">{formatFenetre(bloc.fenetre)}</span>
+				</header>
+
+				{bloc.type === "weekend" ? (
+					<ul class="lignes">
+						{lignes.map((l) => (
+							<li>
+								<a class="ligne" href={lienEquipe(l.equipeSlug)}>
+									<span class={`lieu ${l.match.isHome ? "lieu--dom" : "lieu--ext"}`}>
+										<span class="long">{l.match.isHome ? "Domicile" : "Extérieur"}</span>
+										<span class="court" aria-hidden="true">{l.match.isHome ? "Dom." : "Ext."}</span>
+									</span>
+									<span class="cat">
+										<span class="long">{l.match.teamLabel}</span>
+										<span class="court" aria-hidden="true">{l.match.teamLabelCourt}</span>
+									</span>
+									<span class="adv" title={adversaire(l)}>{adversaire(l)}</span>
+									<span class="etat">
+										{l.etat.type === "heure" && <time datetime={l.match.start.toISOString()}>{formatJourHeure(l.match.start)}</time>}
+										{l.etat.type === "score" && (
+											<>
+												{l.etat.issue && (
+													<abbr class="issue" title={ISSUE[l.etat.issue][1]}>{ISSUE[l.etat.issue][0]}</abbr>
+												)}
+												<span class="score">{l.etat.gauche} – {l.etat.droite}</span>
+											</>
+										)}
+										{l.etat.type === "forfait" && (
+											<>
+												<abbr class="issue" title={ISSUE[l.etat.issue][1]}>{ISSUE[l.etat.issue][0]}</abbr>
+												<span class="note">forfait</span>
+											</>
+										)}
+										{l.etat.type === "score-a-venir" && <span class="note">score à venir</span>}
+									</span>
+								</a>
+							</li>
+						))}
+					</ul>
+				) : (
+					<>
+						<p class="aucun">Pas de match ce week-end.</p>
+						<ul class="lignes">
+							<li>
+								<a class="ligne ligne--prochain" href={lienEquipe(bloc.prochain.equipeSlugs[0])}>
+									<span class="prochain">
+										<strong>Prochain match :</strong>{" "}
+										<time datetime={bloc.prochain.start.toISOString()}>{formatMatchDate(bloc.prochain.start).toLowerCase()}</time>
+										{" · "}
+										{bloc.prochain.teamLabel}
+										{bloc.prochain.opponent && ` · ${bloc.prochain.opponent}`}
+									</span>
+								</a>
+							</li>
+						</ul>
+					</>
+				)}
+
+				<footer class="pied">
+					{autres > 0 && <span class="autres">et {autres} autre{autres > 1 ? "s" : ""} match{autres > 1 ? "s" : ""}</span>}
+					<a class="tout" href={withBase("/agenda")}>
+						Tout l&rsquo;agenda →
+					</a>
+				</footer>
+			</div>
+		</section>
+	)
+}
+
+<style>
+	.weekend {
+		--trait: color-mix(in srgb, var(--color-white) 18%, transparent);
+		background: var(--color-navy);
+		color: var(--color-white);
+		padding: 1.25rem 1rem 1.5rem;
+	}
+	.wrap {
+		max-width: 1000px;
+		margin: 0 auto;
+	}
+
+	.tete {
+		display: flex;
+		align-items: baseline;
+		flex-wrap: wrap;
+		column-gap: 0.75rem;
+		padding-bottom: 0.5rem;
+		border-bottom: 2px solid var(--color-white);
+	}
+	h2 {
+		margin: 0;
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		font-weight: 800;
+		font-size: 1.25rem;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+	.dates {
+		font-size: 1rem;
+		color: color-mix(in srgb, var(--color-white) 80%, transparent);
+	}
+
+	.lignes {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.lignes li {
+		border-bottom: 1px solid var(--trait);
+	}
+	/* Colonnes de largeur fixe pour que les lignes s'alignent comme un
+	   tableau de score, sans les contraintes d'un vrai <table> (ligne
+	   entière cliquable). */
+	.ligne {
+		display: grid;
+		grid-template-columns: 6.5rem minmax(0, 15rem) minmax(0, 1fr) 7.5rem;
+		align-items: center;
+		column-gap: 1rem;
+		min-height: 44px;
+		padding: 0.35rem 0.25rem;
+		color: inherit;
+		text-decoration: none;
+		font-size: 1rem;
+	}
+	.ligne:hover {
+		background: color-mix(in srgb, var(--color-white) 8%, transparent);
+	}
+	.ligne:focus-visible {
+		outline: 2px solid var(--color-white);
+		outline-offset: -2px;
+	}
+
+	.court {
+		display: none;
+	}
+	.lieu {
+		justify-self: start;
+		font-weight: 700;
+		padding: 0.05rem 0.45rem;
+		border: 1px solid var(--color-white);
+	}
+	.lieu--dom {
+		background: var(--color-white);
+		color: var(--color-navy);
+	}
+	.cat {
+		font-weight: 800;
+	}
+	.cat,
+	.adv {
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+	.adv {
+		color: color-mix(in srgb, var(--color-white) 88%, transparent);
+	}
+	.etat {
+		justify-self: end;
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.4rem;
+		white-space: nowrap;
+		font-variant-numeric: tabular-nums;
+	}
+	.score {
+		font-weight: 800;
+	}
+	.issue {
+		text-decoration: none;
+		font-weight: 800;
+		min-width: 1.3em;
+		text-align: center;
+		border: 1px solid var(--trait);
+	}
+	.note {
+		font-style: italic;
+		color: color-mix(in srgb, var(--color-white) 80%, transparent);
+	}
+
+	.aucun {
+		margin: 0.6rem 0 0;
+		color: color-mix(in srgb, var(--color-white) 80%, transparent);
+	}
+	.ligne--prochain {
+		display: flex;
+	}
+	.prochain {
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	.pied {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 1rem;
+		margin-top: 0.85rem;
+	}
+	.autres {
+		margin-right: auto;
+		color: color-mix(in srgb, var(--color-white) 80%, transparent);
+	}
+	.tout {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+		padding: 0 1.1rem;
+		background: var(--color-crimson);
+		color: var(--color-white);
+		font-weight: 800;
+		text-decoration: none;
+	}
+	.tout:hover {
+		background: color-mix(in srgb, var(--color-crimson) 85%, var(--color-navy-deep));
+	}
+	.tout:focus-visible {
+		outline: 2px solid var(--color-white);
+		outline-offset: 2px;
+	}
+
+	/* Mobile : une seule ligne par match -- libellés abrégés, adversaire
+	   tronqué. Les versions longues restent lisibles par les lecteurs
+	   d'écran. */
+	@media (max-width: 640px) {
+		.ligne {
+			grid-template-columns: 3.4rem auto minmax(0, 1fr) auto;
+			column-gap: 0.6rem;
+		}
+		.long {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			overflow: hidden;
+			clip-path: inset(50%);
+			white-space: nowrap;
+		}
+		.court {
+			display: inline;
+		}
+		.lieu {
+			padding: 0.05rem 0.3rem;
+			text-align: center;
+			justify-self: stretch;
+		}
+		.prochain {
+			white-space: normal;
+		}
+	}
+</style>

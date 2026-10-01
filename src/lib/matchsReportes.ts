@@ -151,6 +151,7 @@ export function appliquerReports(
 			id: `report-${report.id}`,
 			equipeSlugs: [equipe.equipeSlug],
 			teamLabel: equipe.nomAffiche,
+			teamLabelCourt: equipe.nomCourt,
 			equipeLibelle: equipe.libelle,
 			opponent: report.adversaire,
 			isDerby: false,

@@ -8,6 +8,9 @@ export interface AgendaTeamConfig {
 	 * l'équipe, complété par son "libelle" (ex. "1"/"2") si plusieurs
 	 * équipes du club partagent la même poule. */
 	nomAffiche: string;
+	/** Version abrégée de `nomAffiche` ("SM1", "U15M Exc.") pour les listes
+	 * denses sur mobile (bloc "Ce week-end" de l'accueil) -- voir nomCourt(). */
+	nomCourt: string;
 	/** Le "libelle" du calendrier tel que saisi dans le CMS (ex. "1"/"2"),
 	 * absent pour une équipe seule dans sa catégorie. Sert à retrouver l'équipe
 	 * visée par une annotation "match reporté". */
@@ -33,6 +36,8 @@ export interface AgendaMatch {
 	/** Nom d'affichage de l'équipe HBI concernée, ou "Équipe A vs Équipe B"
 	 * quand deux équipes du club se rencontrent (derby interne). */
 	teamLabel: string;
+	/** Version abrégée de `teamLabel` (voir AgendaTeamConfig.nomCourt). */
+	teamLabelCourt: string;
 	/** Nom de l'adversaire, ou null pour un derby interne au club. */
 	opponent: string | null;
 	isDerby: boolean;
@@ -84,12 +89,36 @@ function estNomEquipeNonRenseigne(nom: string): boolean {
 	return texte === "" || NOM_EQUIPE_NON_RENSEIGNE_PATTERN.test(texte);
 }
 
-/** Nombre de jours d'écart maximum entre deux matchs d'une même compétition
- * pour les considérer comme faisant partie de la même journée, quand le
- * flux iCal ne fournit pas de numéro de journée exploitable. Une journée de
- * championnat s'étale généralement sur un week-end (samedi + dimanche),
- * parfois avec un match avancé au vendredi ou reporté au lundi. */
-const FALLBACK_MATCHDAY_WINDOW_DAYS = 3;
+/** L'instant de référence du build. `HBI_MAINTENANT` (date ISO avec fuseau,
+ * ex. "2026-09-27T19:00:00+02:00") ne sert qu'à vérifier en local
+ * l'affichage d'un autre moment de la semaine (bloc "Ce week-end" de
+ * l'accueil) -- jamais défini sur le workflow de déploiement. */
+export function maintenant(): Date {
+	const simule = process.env.HBI_MAINTENANT;
+	if (simule) {
+		const date = new Date(simule);
+		if (!Number.isNaN(date.getTime())) return date;
+	}
+	return new Date();
+}
+
+const LETTRE_GENRE: Record<string, string> = { feminin: "F", masculin: "M" };
+
+/** "Seniors masculins" + "1" -> "SM1", "U15 masculins" + "U15 Excellence"
+ * -> "U15M Exc.", "U11 mixtes" -> "U11" : assez court pour tenir sur une
+ * seule ligne de liste sur mobile. Sans catégorie d'âge (ne devrait pas
+ * arriver pour une équipe qui a un calendrier), repli sur le nom complet. */
+function nomCourt(nom: string, categorieAge: string | undefined, genre: string | undefined, libelle: string | undefined): string {
+	const lettre = genre ? (LETTRE_GENRE[genre] ?? "") : "";
+	const code = categorieAge === "senior" ? `S${lettre}` : categorieAge ? `${categorieAge.toUpperCase()}${lettre}` : nom;
+	// Le libellé répète souvent la catégorie ("U15 Excellence") : seul le reste
+	// distingue les deux équipes.
+	const reste = (libelle ?? "").replace(new RegExp(`^${categorieAge ?? "$^"}\\s*`, "i"), "").trim();
+	if (!reste) return code;
+	if (/^\d+$/.test(reste)) return `${code}${reste}`;
+	const mot = reste.split(/\s+/)[0];
+	return mot.length <= 4 ? `${code} ${mot}` : `${code} ${mot.slice(0, 3)}.`;
+}
 
 function parseJournee(description: string): number | null {
 	const match = JOURNEE_PATTERN.exec(description);
@@ -201,6 +230,7 @@ export async function getAgendaTeams(): Promise<AgendaTeamConfig[]> {
 				for (const cal of equipe.data.calendriers) {
 					teams.push({
 						nomAffiche: cal.libelle ? `${equipe.data.nom} ${cal.libelle}`.trim() : equipe.data.nom,
+						nomCourt: nomCourt(equipe.data.nom, equipe.data.categorieAge, equipe.data.genre, cal.libelle),
 						libelle: cal.libelle,
 						equipeSlug: equipe.data.slug,
 						urlIcs: cal.url,
@@ -226,9 +256,12 @@ async function groupTeamsByFeed(): Promise<Map<string, AgendaTeamConfig[]>> {
 	return byUrl;
 }
 
-/** Les matchs à venir tels que publiés par la fédération, SANS les
- * annotations "match reporté" du CMS -- voir getAgendaMatches(). */
-async function getMatchsDuFlux(now: Date): Promise<AgendaMatch[]> {
+/** Les matchs du flux fédéral commençant à partir de `depuis`, SANS les
+ * annotations "match reporté" du CMS -- voir getAgendaMatches(). Le flux
+ * garde les matchs déjà joués de la saison : c'est `depuis` seul qui les
+ * écarte (l'instant présent pour /agenda, le samedi 00h pour le bloc "Ce
+ * week-end" de l'accueil, qui doit encore lister les matchs déjà joués). */
+async function getMatchsDuFlux(depuis: Date): Promise<AgendaMatch[]> {
 	const matches: AgendaMatch[] = [];
 
 	for (const [url, teams] of await groupTeamsByFeed()) {
@@ -240,7 +273,7 @@ async function getMatchsDuFlux(now: Date): Promise<AgendaMatch[]> {
 			derivePouleUrl(events.find((e) => e.matchUrl)?.matchUrl);
 
 		for (const event of events) {
-			if (event.start < now) continue;
+			if (event.start < depuis) continue;
 
 			// Pas de filtre générique "handball islois" ici : une équipe engagée
 			// dans une entente avec un autre club (ex. U17F 2026-2027, "L'ISLE -
@@ -273,6 +306,7 @@ async function getMatchsDuFlux(now: Date): Promise<AgendaMatch[]> {
 					...base,
 					equipeSlugs: [matchedA.equipeSlug, matchedB.equipeSlug],
 					teamLabel: `${matchedA.nomAffiche} vs ${matchedB.nomAffiche}`,
+					teamLabelCourt: `${matchedA.nomCourt} – ${matchedB.nomCourt}`,
 					opponent: null,
 					isDerby: true,
 					isHome: HOME_LOCATION_PATTERN.test(event.location),
@@ -282,6 +316,7 @@ async function getMatchsDuFlux(now: Date): Promise<AgendaMatch[]> {
 					...base,
 					equipeSlugs: [matchedA.equipeSlug],
 					teamLabel: matchedA.nomAffiche,
+					teamLabelCourt: matchedA.nomCourt,
 					equipeLibelle: matchedA.libelle,
 					opponent: sideB,
 					isDerby: false,
@@ -292,6 +327,7 @@ async function getMatchsDuFlux(now: Date): Promise<AgendaMatch[]> {
 					...base,
 					equipeSlugs: [matchedB.equipeSlug],
 					teamLabel: matchedB.nomAffiche,
+					teamLabelCourt: matchedB.nomCourt,
 					equipeLibelle: matchedB.libelle,
 					opponent: sideA,
 					isDerby: false,
@@ -325,6 +361,7 @@ async function getMatchsDuFlux(now: Date): Promise<AgendaMatch[]> {
 						...base,
 						equipeSlugs: [team.equipeSlug],
 						teamLabel: team.nomAffiche,
+						teamLabelCourt: team.nomCourt,
 						equipeLibelle: team.libelle,
 						opponent: sideB,
 						isDerby: false,
@@ -335,6 +372,7 @@ async function getMatchsDuFlux(now: Date): Promise<AgendaMatch[]> {
 						...base,
 						equipeSlugs: [team.equipeSlug],
 						teamLabel: team.nomAffiche,
+						teamLabelCourt: team.nomCourt,
 						equipeLibelle: team.libelle,
 						opponent: sideA,
 						isDerby: false,
@@ -384,70 +422,22 @@ async function getMatchsReportes(): Promise<MatchReporte[]> {
  * d'origine passée -- il ne disparaît que quand il est replanifié ou que sa
  * saison se termine. */
 export async function getAgendaMatches(): Promise<AgendaMatch[]> {
-	const now = new Date();
+	const now = maintenant();
+	return getMatchsDepuis(now, now);
+}
+
+/** Comme getAgendaMatches(), mais à partir de `depuis` plutôt que de
+ * l'instant présent -- y compris des matchs déjà joués, encore présents dans
+ * le flux. `depuis` sert aussi d'instant de référence pour les annotations
+ * "match reporté" : une annotation dont la nouvelle date tombe après
+ * `depuis` (donc éventuellement déjà jouée) reste appliquée. */
+export async function getMatchsDepuis(depuis: Date, now: Date = depuis): Promise<AgendaMatch[]> {
 	const [matchsFlux, reports, equipes] = await Promise.all([
-		getMatchsDuFlux(now),
+		getMatchsDuFlux(depuis),
 		getMatchsReportes(),
 		getAgendaTeams(),
 	]);
 	return appliquerReports(matchsFlux, reports, equipes, now, avertirUneFois);
-}
-
-/** Tous les matchs de la prochaine journée de championnat, toutes équipes et
- * toutes compétitions du club confondues.
- *
- * Chaque compétition (un flux iCal = une poule) a sa propre numérotation de
- * journée, indépendante des autres catégories. On détermine donc la
- * "prochaine journée" compétition par compétition -- c'est le numéro de
- * journée du prochain match à venir de cette compétition -- puis on
- * regroupe tous les matchs de chaque compétition qui partagent ce même
- * numéro. Quand le flux ne fournit pas de numéro de journée exploitable, on
- * se rabat sur une fenêtre de quelques jours autour du prochain match de
- * cette compétition (une journée s'étale généralement sur un seul
- * week-end). Le résultat de chaque compétition est ensuite fusionné et trié
- * chronologiquement : les matchs affichés peuvent donc venir de week-ends
- * légèrement différents si les compétitions ne sont pas alignées, mais
- * chaque match affiché correspond bien à la prochaine échéance de son
- * équipe. */
-export async function getNextMatchday(): Promise<AgendaMatch[]> {
-	const all = await getAgendaMatches();
-	// Les matchs reportés ne servent jamais à DÉTERMINER la prochaine journée :
-	// leur date (nouvelle ou d'origine) n'a rien à voir avec le calendrier de
-	// la poule, ils décaleraient toute la fenêtre. Ils sont réintégrés plus bas
-	// s'ils ont une nouvelle date qui tombe avant la fin de cette journée ;
-	// sans nouvelle date, ils ne sont jamais affichés ici (le match ne se joue
-	// pas ce week-end-là) -- ils restent visibles sur /agenda.
-	const matches = all.filter((m) => !m.reporte);
-	const reportes = all.filter((m) => m.reporte?.nouvelleDate);
-
-	const byCompetition = new Map<string, AgendaMatch[]>();
-	for (const match of matches) {
-		const list = byCompetition.get(match.icsUrl) ?? [];
-		list.push(match);
-		byCompetition.set(match.icsUrl, list);
-	}
-
-	const result: AgendaMatch[] = [];
-	for (const competitionMatches of byCompetition.values()) {
-		const next = competitionMatches[0];
-		if (!next) continue;
-
-		let groupe: AgendaMatch[];
-		if (next.journee != null) {
-			groupe = competitionMatches.filter((m) => m.journee === next.journee);
-		} else {
-			const windowMs = FALLBACK_MATCHDAY_WINDOW_DAYS * 24 * 60 * 60 * 1000;
-			const cutoff = next.start.getTime() + windowMs;
-			groupe = competitionMatches.filter((m) => m.start.getTime() <= cutoff);
-		}
-		result.push(...groupe);
-
-		const finDeJournee = Math.max(...groupe.map((m) => m.start.getTime()));
-		result.push(...reportes.filter((m) => m.icsUrl === next.icsUrl && m.start.getTime() <= finDeJournee));
-	}
-
-	result.sort((a, b) => a.start.getTime() - b.start.getTime());
-	return result;
 }
 
 /** Les prochains matchs d'une équipe précise (identifiée par son
