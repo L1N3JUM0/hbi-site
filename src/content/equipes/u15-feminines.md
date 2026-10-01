@@ -8,7 +8,7 @@ genre: feminin
 ordre: null
 calendriers:
   - url: https://competition-calendar.ffhandball.fr/c-33207/s-3577.ics
-    repere: Handball Islois
+    repere: CONVENTION L'ISLE LE THOR
     libelle: ''
     classementUrl: ''
     statistiquesUrl: ''
