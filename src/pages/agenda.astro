@@ -5,9 +5,12 @@ import PageBanner from "../components/PageBanner.astro";
 import Footer from "../components/Footer.astro";
 import AjouterAgendaButton from "../components/AjouterAgendaButton.astro";
 import Favicon from "../components/Favicon.astro";
+import FiltreEquipes from "../components/FiltreEquipes.astro";
+import { getCollection } from "astro:content";
 import { withBase } from "../utils/links";
 import { getAgendaMatches, getAgendaTeams, getCompetitionLinks, formatMatchDate, formatMatchTime, mapsSearchUrl, androidGeoUri } from "../lib/agenda";
 import { getUpcomingEvenements } from "../lib/evenements";
+import { trierEquipes } from "../lib/equipes";
 
 // Matchs (flux FFHandball) et événements du club (CMS) dans UNE seule liste
 // chronologique : la personne qui consulte l'agenda cherche "ce qui vient",
@@ -32,6 +35,11 @@ const entries = [
 ].sort((a, b) => a.start.getTime() - b.start.getTime());
 const competitions = await getCompetitionLinks();
 const agendaTeams = await getAgendaTeams();
+
+// Le filtre ne propose que les équipes ayant au moins un match à venir : une
+// option qui mène toujours à une liste vide n'apprend rien au visiteur.
+const slugsAvecMatchs = new Set(matches.flatMap((m) => m.equipeSlugs));
+const equipesFiltre = trierEquipes((await getCollection("equipes")).filter((e) => slugsAvecMatchs.has(e.data.slug)));
 ---
 
 <html lang="fr">
@@ -56,6 +64,7 @@ const agendaTeams = await getAgendaTeams();
 		<section class="matches">
 			<div class="wrap">
 				<h2>À venir</h2>
+				{equipesFiltre.length > 0 && <FiltreEquipes equipes={equipesFiltre} />}
 				{entries.length === 0 && <p class="empty">Aucun match ni événement à venir pour le moment.</p>}
 				<ul class="match-list">
 					{
@@ -64,7 +73,7 @@ const agendaTeams = await getAgendaTeams();
 								<li class="match-card event-card">
 									<div class="match-top">
 										<span class="event-title">{entry.evenement.titre}</span>
-										<span class="badge badge--event">Événement du club</span>
+										<span class="badge badge--event">Vie du club</span>
 									</div>
 									<p class="event-meta">
 										{formatMatchDate(entry.start)} à {formatMatchTime(entry.start)}
@@ -78,7 +87,7 @@ const agendaTeams = await getAgendaTeams();
 									)}
 								</li>
 							) : (
-								<li class={`match-card ${entry.match.isHome ? "match-card--home" : ""}`}>
+								<li class={`match-card ${entry.match.isHome ? "match-card--home" : ""}`} data-equipes={entry.match.equipeSlugs.join(" ")}>
 									<div class="match-top">
 										<span class="team">{entry.match.teamLabel}</span>
 										<span class="badges">
@@ -254,6 +263,10 @@ const agendaTeams = await getAgendaTeams();
 		color: rgba(255, 255, 255, 0.7);
 		text-align: center;
 	}
+	/* Les cartes masquées par le filtre (voir FiltreEquipes.astro). */
+	.match-card[hidden] {
+		display: none;
+	}
 	.match-list {
 		list-style: none;
 		margin: 2rem 0 0;
@@ -333,9 +346,13 @@ const agendaTeams = await getAgendaTeams();
 		font-weight: 800;
 		font-size: 1.05rem;
 	}
+	/* Contour seul, volontairement plus discret que les badges des matchs :
+	   la carte blanche suffit déjà à distinguer l'événement, le badge ne fait
+	   que le nommer. */
 	.badge--event {
-		background: var(--color-navy);
-		color: var(--color-white);
+		background: transparent;
+		color: var(--color-navy);
+		border: 1px solid var(--color-navy);
 	}
 	.event-meta {
 		color: var(--color-navy);

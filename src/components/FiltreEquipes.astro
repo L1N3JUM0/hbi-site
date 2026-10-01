@@ -1,0 +1,294 @@
+---
+/**
+ * Filtre par équipe de la page /agenda. Agit sur tout élément de la page
+ * portant `data-equipes="slug1 slug2"` (les cartes de match) ; les autres
+ * (événements du club) ne sont jamais masqués.
+ *
+ * Rendu `hidden` : seul le script l'affiche. Sans JavaScript, aucun contrôle
+ * inopérant n'apparaît et la liste complète reste visible.
+ */
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+	/** Équipes ayant au moins un match à venir, déjà triées (trierEquipes). */
+	equipes: CollectionEntry<"equipes">[];
+}
+
+const { equipes } = Astro.props;
+
+// Regroupement du select mobile : une liste plate de 8 à 10 équipes se
+// parcourt mal sur un petit écran, des repères d'âge la rendent scannable.
+function groupe(categorieAge: string | null | undefined): string {
+	switch (categorieAge) {
+		case "U9":
+		case "U11":
+			return "École de hand (U9–U11)";
+		case "U13":
+			return "U13";
+		case "U15":
+			return "U15";
+		case "U17":
+		case "U18":
+			return "U17–U18";
+		case "senior":
+			return "Seniors";
+		default:
+			return "Autres";
+	}
+}
+
+const groupes = new Map<string, CollectionEntry<"equipes">[]>();
+for (const equipe of equipes) {
+	const nom = groupe(equipe.data.categorieAge);
+	groupes.set(nom, [...(groupes.get(nom) ?? []), equipe]);
+}
+---
+
+<div class="filtre" data-filtre-equipes hidden>
+	<fieldset class="chips">
+		<legend>Filtrer par équipe</legend>
+		<label class="chip">
+			<input type="radio" name="filtre-equipe" value="" checked />
+			<span>Toutes les équipes</span>
+		</label>
+		{
+			equipes.map((e) => (
+				<label class="chip">
+					<input type="radio" name="filtre-equipe" value={e.data.slug} data-nom={e.data.nom} />
+					<span>{e.data.nom}</span>
+				</label>
+			))
+		}
+	</fieldset>
+
+	<div class="mobile">
+		<label class="mobile-label" for="filtre-equipe-select">Équipe</label>
+		<div class="mobile-row">
+			<select id="filtre-equipe-select">
+				<option value="">Toutes les équipes</option>
+				{
+					[...groupes].map(([nom, liste]) => (
+						<optgroup label={nom}>
+							{liste.map((e) => (
+								<option value={e.data.slug}>{e.data.nom}</option>
+							))}
+						</optgroup>
+					))
+				}
+			</select>
+			<button type="button" class="reset" data-filtre-reset>Toutes les équipes</button>
+		</div>
+	</div>
+
+	<p class="status" aria-live="polite" data-filtre-status></p>
+</div>
+
+<script>
+	const CLE_MEMOIRE = "hbi-agenda-equipe";
+
+	// localStorage peut lever (navigation privée stricte, stockage bloqué) :
+	// la mémoire n'est qu'un confort, son absence ne doit rien casser.
+	function lireMemoire(): string | null {
+		try {
+			return localStorage.getItem(CLE_MEMOIRE);
+		} catch {
+			return null;
+		}
+	}
+	function ecrireMemoire(slug: string) {
+		try {
+			if (slug) localStorage.setItem(CLE_MEMOIRE, slug);
+			else localStorage.removeItem(CLE_MEMOIRE);
+		} catch {
+			// Ignoré : voir lireMemoire().
+		}
+	}
+
+	const racine = document.querySelector<HTMLElement>("[data-filtre-equipes]");
+	if (racine) {
+		const radios = [...racine.querySelectorAll<HTMLInputElement>('input[name="filtre-equipe"]')];
+		const select = racine.querySelector<HTMLSelectElement>("select")!;
+		const status = racine.querySelector<HTMLElement>("[data-filtre-status]")!;
+		const cartes = [...document.querySelectorAll<HTMLElement>("[data-equipes]")];
+		const noms = new Map(radios.filter((r) => r.value).map((r) => [r.value, r.dataset.nom ?? r.value]));
+
+		const pluriel = (n: number) => `${n} match${n > 1 ? "s" : ""}`;
+
+		function appliquer(slug: string) {
+			let visibles = 0;
+			for (const carte of cartes) {
+				// Un derby porte deux slugs : il reste visible pour chacune des
+				// deux équipes, et n'existe qu'une fois dans le DOM en vue "toutes".
+				const visible = !slug || (carte.dataset.equipes ?? "").split(" ").includes(slug);
+				carte.hidden = !visible;
+				if (visible) visibles++;
+			}
+			for (const radio of radios) radio.checked = radio.value === slug;
+			select.value = slug;
+
+			if (!slug) {
+				status.textContent = `${pluriel(visibles)} à venir, toutes équipes confondues`;
+			} else if (visibles === 0) {
+				status.textContent = `Aucun match à venir pour ${noms.get(slug)} pour le moment.`;
+			} else {
+				status.textContent = `${pluriel(visibles)} pour ${noms.get(slug)}`;
+			}
+
+			// replaceState plutôt que pushState : changer de filtre n'est pas
+			// une navigation, le bouton "retour" doit quitter la page.
+			const url = new URL(window.location.href);
+			if (slug) url.searchParams.set("equipe", slug);
+			else url.searchParams.delete("equipe");
+			history.replaceState(history.state, "", url);
+		}
+
+		function choisir(slug: string) {
+			appliquer(slug);
+			ecrireMemoire(slug);
+		}
+
+		for (const radio of radios) radio.addEventListener("change", () => choisir(radio.value));
+		select.addEventListener("change", () => choisir(select.value));
+		racine.querySelector("[data-filtre-reset]")?.addEventListener("click", () => choisir(""));
+
+		// L'URL prime sur la mémoire : un lien partagé doit montrer ce que son
+		// auteur a voulu montrer. Un slug inconnu (équipe sans match à venir,
+		// lien ancien, faute de frappe) ramène à "toutes" plutôt qu'à une
+		// liste vide inexpliquée. Seul un choix explicite est mémorisé, pas
+		// l'ouverture d'un lien.
+		const depuisUrl = new URLSearchParams(window.location.search).get("equipe");
+		const candidat = depuisUrl !== null ? depuisUrl : lireMemoire();
+		appliquer(candidat && noms.has(candidat) ? candidat : "");
+
+		racine.hidden = false;
+	}
+</script>
+
+<style>
+	.filtre {
+		margin: 1.5rem 0 0;
+	}
+	.filtre[hidden] {
+		display: none;
+	}
+
+	.chips {
+		display: none;
+		border: 0;
+		margin: 0;
+		padding: 0;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.6rem;
+	}
+	.chips legend {
+		width: 100%;
+		text-align: center;
+		color: var(--color-white);
+		font-weight: 700;
+		font-size: 1rem;
+		margin-bottom: 0.75rem;
+	}
+	.chip {
+		position: relative;
+		cursor: pointer;
+	}
+	/* Radio natif conservé (clavier aux flèches, annonce "1 sur 9" par les
+	   lecteurs d'écran) mais visuellement remplacé par la pastille. */
+	.chip input {
+		position: absolute;
+		opacity: 0;
+		width: 1px;
+		height: 1px;
+		margin: 0;
+	}
+	.chip span {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+		padding: 0.4rem 1rem;
+		border: 2px solid var(--color-white);
+		border-radius: 999px;
+		color: var(--color-white);
+		font-weight: 700;
+		font-size: 1rem;
+	}
+	.chip:hover span {
+		background: var(--color-navy);
+	}
+	/* Pastille active : le contour blanc est gardé pour que la limite du
+	   contrôle reste à > 3:1 sur le marine (le fuchsia seul n'y suffit pas),
+	   et la coche donne un signal qui ne repose pas que sur la couleur. */
+	.chip input:checked + span {
+		background: var(--color-crimson);
+	}
+	.chip input:checked + span::before {
+		content: "✓";
+		margin-right: 0.4rem;
+	}
+	.chip input:focus-visible + span {
+		outline: 3px solid var(--color-white);
+		outline-offset: 3px;
+	}
+
+	.mobile-label {
+		display: block;
+		color: var(--color-white);
+		font-weight: 700;
+		font-size: 1rem;
+		margin-bottom: 0.4rem;
+	}
+	.mobile-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+	}
+	select {
+		flex: 1 1 12rem;
+		min-height: 44px;
+		padding: 0.4rem 0.75rem;
+		font: inherit;
+		font-size: 1rem;
+		color: var(--color-navy-deep);
+		background: var(--color-white);
+		border: 2px solid var(--color-white);
+		border-radius: 6px;
+	}
+	.reset {
+		min-height: 44px;
+		padding: 0.4rem 1rem;
+		font: inherit;
+		font-size: 1rem;
+		font-weight: 700;
+		color: var(--color-white);
+		background: transparent;
+		border: 2px solid var(--color-white);
+		border-radius: 999px;
+		cursor: pointer;
+	}
+	.reset:hover {
+		background: var(--color-navy);
+	}
+	select:focus-visible,
+	.reset:focus-visible {
+		outline: 3px solid var(--color-white);
+		outline-offset: 2px;
+	}
+
+	.status {
+		color: var(--color-white);
+		font-weight: 700;
+		font-size: 1rem;
+		text-align: center;
+		margin: 1.25rem 0 0;
+	}
+
+	@media (min-width: 768px) {
+		.chips {
+			display: flex;
+		}
+		.mobile {
+			display: none;
+		}
+	}
+</style>
