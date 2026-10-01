@@ -3,16 +3,15 @@ import "../styles/tokens.css";
 import Header from "../components/Header.astro";
 import PageBanner from "../components/PageBanner.astro";
 import Footer from "../components/Footer.astro";
-import AjouterAgendaButton from "../components/AjouterAgendaButton.astro";
-import PhotoCarousel from "../components/PhotoCarousel.astro";
 import ResultatsEquipe from "../components/resultats/ResultatsEquipe.astro";
 import FicheEquipe from "../components/equipes/FicheEquipe.astro";
 import Favicon from "../components/Favicon.astro";
 import { withBase } from "../utils/links";
 import { getCollection, type CollectionEntry } from "astro:content";
-import { getAgendaTeams, getMatchesForEquipe, hasAgendaFeed, formatMatchQuand } from "../lib/agenda";
+import { getAgendaTeams, getMatchesForEquipe } from "../lib/agenda";
 import { saisonActuelle } from "../lib/saison";
 import { trierEquipes } from "../lib/equipes";
+import { getResultatsForEquipe, resultatsParSaison } from "../lib/resultats";
 import { slugsAvecResultats } from "../lib/statistiques";
 
 const allTeams = trierEquipes(await getCollection("equipes"));
@@ -26,14 +25,11 @@ const transversal = actives.find((t) => t.data.type === "transversal");
 const archivees = allTeams.filter((t) => t.data.statut === "archivee");
 
 const agendaTeams = await getAgendaTeams();
-/** Équipes ayant au moins un résultat importé (voir src/lib/statistiques.ts,
- * qui calcule désormais les statistiques à partir de NOTRE collection
- * "resultats" -- le JSON FFHandball, plus pauvre, ne sert plus que de
- * vérification en arrière-plan) : sert à n'afficher le lien discret vers
- * /statistiques que pour celles qui ont effectivement quelque chose à
- * montrer. Cette page reste volontairement hors du menu de navigation et
- * non indexée (voir src/pages/statistiques.astro) : destinée aux joueurs,
- * coachs et dirigeants, pas mise en avant auprès du grand public. */
+/** Équipes ayant au moins un résultat importé (voir src/lib/statistiques.ts) :
+ * seules celles-ci reçoivent les liens vers /statistiques et
+ * /statistiques-carriere. Ces pages restent volontairement hors du menu de
+ * navigation et non indexées : destinées aux joueurs, coachs et dirigeants,
+ * pas mises en avant auprès du grand public. */
 const slugsStats = await slugsAvecResultats();
 
 const typeLabel: Record<string, string> = {
@@ -41,30 +37,30 @@ const typeLabel: Record<string, string> = {
 	inclusion: "Inclusion",
 };
 
-function agendaButtonsFor(slug: string) {
-	return agendaTeams.filter((t) => t.equipeSlug === slug);
+/** Prochains matchs listés dans le détail d'une fiche (la suite est sur
+ * /agenda?equipe=<slug>). */
+const PROCHAINS_MATCHS = 6;
+/** Derniers résultats de la saison en cours affichés à côté. */
+const DERNIERS_RESULTATS = 3;
+
+async function ficheProps(t: CollectionEntry<"equipes">) {
+	const slug = t.data.slug;
+	const calendriers = agendaTeams.filter((a) => a.equipeSlug === slug);
+	const resultats = await getResultatsForEquipe(slug);
+	return {
+		equipe: t,
+		calendriers,
+		matchs: calendriers.length > 0 ? await getMatchesForEquipe(slug, PROCHAINS_MATCHS) : [],
+		derniers: resultatsParSaison(resultats).saisonEnCours.slice(0, DERNIERS_RESULTATS),
+		aDesResultats: resultats.length > 0,
+		avecStats: slugsStats.has(slug),
+		tag: typeLabel[t.data.type],
+	};
 }
 
-/** Prochains matchs à afficher sur la section de cette équipe (vide si pas
- * de flux configuré, ou pas de match à venir pour l'instant). */
-async function nextMatchesFor(slug: string) {
-	if (!(await hasAgendaFeed(slug))) return [];
-	return getMatchesForEquipe(slug, 3);
-}
-
-/** Photos pour la carte équipe : `photoProfil` toujours en premier (c'est
- * elle, et elle seule, qui doit être visible sur la carte -- voir la
- * variante "card" de PhotoCarousel, qui n'affiche que la première photo),
- * suivie du reste de la galerie (sans dupliquer photoProfil si elle y
- * figure déjà) pour que la visionneuse plein écran, elle, montre bien la
- * galerie complète au clic. */
-function photosFor(team: CollectionEntry<"equipes">) {
-	const profil = { src: team.data.photoProfil, alt: `${team.data.nom} — photo de profil` };
-	const reste = team.data.galerie
-		.filter((src) => src.src !== team.data.photoProfil.src)
-		.map((src, i) => ({ src, alt: `${team.data.nom} — photo ${i + 1}` }));
-	return [profil, ...reste];
-}
+const fichesCompetition = await Promise.all(competition.map(ficheProps));
+const fichesDecouverte = await Promise.all(decouverte.map(ficheProps));
+const ficheTransversal = transversal ? await ficheProps(transversal) : null;
 ---
 
 <html lang="fr">
@@ -90,75 +86,7 @@ function photosFor(team: CollectionEntry<"equipes">) {
 			<div class="wrap">
 				<h2>Équipes de compétition</h2>
 				<div class="fiches">
-					{
-						competition.map(async (t) => {
-							const buttons = agendaButtonsFor(t.data.slug);
-							const matches = await nextMatchesFor(t.data.slug);
-							return (
-								<FicheEquipe equipe={t} matchs={matches} calendriers={buttons}>
-								<div class="card">
-									<PhotoCarousel photos={photosFor(t)} ariaLabel={`Photos de ${t.data.nom}`} lightbox variant="card" />
-									<p class="description">{t.data.description}</p>
-									<dl>
-										<div class="row">
-											<dt>Jours &amp; horaires</dt>
-											<dd>{t.data.horaires}</dd>
-										</div>
-										<div class="row">
-											<dt>Encadrant(s)</dt>
-											<dd>{t.data.encadrants}</dd>
-										</div>
-										<div class="row">
-											<dt>Tarif licence</dt>
-											<dd>{t.data.tarif}</dd>
-										</div>
-									</dl>
-									{matches.length > 0 && (
-										<div class="next-matches">
-											<p class="next-matches__title">Prochains matchs</p>
-											<ul>
-												{matches.map((m) => (
-													<li>
-														<span class={`badge ${m.isHome ? "badge--home" : "badge--away"}`}>
-															{m.isHome ? "D" : "E"}
-														</span>
-														<span class="next-matches__text">
-															{m.isDerby ? m.teamLabel : `vs ${m.opponent}`} — {formatMatchQuand(m)}
-														</span>
-													</li>
-												))}
-											</ul>
-										</div>
-									)}
-									{buttons.length > 0 && (
-										<div class="card-agenda">
-											{buttons.map((at) => (
-												<AjouterAgendaButton
-													href={at.urlIcs}
-													label={buttons.length > 1 ? `Agenda ${at.nomAffiche.replace(t.data.nom, "").trim()}` : "Ajouter à mon agenda"}
-												/>
-											))}
-											<a class="agenda-link" href={withBase("/agenda")}>
-												Voir l&rsquo;agenda →
-											</a>
-										</div>
-									)}
-									<ResultatsEquipe equipeSlug={t.data.slug} affichageStats={t.data.affichageStats} calendriers={t.data.calendriers} />
-									{slugsStats.has(t.data.slug) && (
-										<div class="stats-links">
-											<a class="stats-link" href={withBase(`/statistiques#equipe-${t.data.slug}`)}>
-												Statistiques de la saison →
-											</a>
-											<a class="stats-link" href={withBase(`/statistiques-carriere#equipe-${t.data.slug}`)}>
-												Statistiques carrière →
-											</a>
-										</div>
-									)}
-								</div>
-								</FicheEquipe>
-							);
-						})
-					}
+					{fichesCompetition.map((f) => <FicheEquipe {...f} />)}
 				</div>
 			</div>
 		</section>
@@ -171,64 +99,19 @@ function photosFor(team: CollectionEntry<"equipes">) {
 					enjeu de compétition.
 				</p>
 				<div class="fiches">
-					{
-						decouverte.map((t) => (
-							<FicheEquipe equipe={t} matchs={[]} calendriers={[]} tag={typeLabel[t.data.type]}>
-							<div class="card card--decouverte">
-								<PhotoCarousel photos={photosFor(t)} ariaLabel={`Photos de ${t.data.nom}`} lightbox variant="card" />
-								<p class="description">{t.data.description}</p>
-								<dl>
-									<div class="row">
-										<dt>Jours &amp; horaires</dt>
-										<dd>{t.data.horaires}</dd>
-									</div>
-									<div class="row">
-										<dt>Encadrant(s)</dt>
-										<dd>{t.data.encadrants}</dd>
-									</div>
-									<div class="row">
-										<dt>Tarif licence</dt>
-										<dd>{t.data.tarif}</dd>
-									</div>
-								</dl>
-							</div>
-							</FicheEquipe>
-						))
-					}
+					{fichesDecouverte.map((f) => <FicheEquipe {...f} />)}
 				</div>
 			</div>
 		</section>
 
 		{
-			transversal && (
+			ficheTransversal && (
 				<section class="transversal">
 					<div class="wrap">
 						<h2>Créneau transversal</h2>
-						<FicheEquipe equipe={transversal} matchs={[]} calendriers={[]}>
-						<div class="card card--transversal">
-							<PhotoCarousel
-								photos={photosFor(transversal)}
-								ariaLabel={`Photos de ${transversal.data.nom}`}
-								lightbox
-								variant="card"
-							/>
-							<p class="description">{transversal.data.description}</p>
-							<dl>
-								<div class="row">
-									<dt>Jours &amp; horaires</dt>
-									<dd>{transversal.data.horaires}</dd>
-								</div>
-								<div class="row">
-									<dt>Encadrant(s)</dt>
-									<dd>{transversal.data.encadrants}</dd>
-								</div>
-								<div class="row">
-									<dt>Tarif</dt>
-									<dd>{transversal.data.tarif}</dd>
-								</div>
-							</dl>
+						<div class="fiches">
+							<FicheEquipe {...ficheTransversal} />
 						</div>
-						</FicheEquipe>
 					</div>
 				</section>
 			)
@@ -308,7 +191,10 @@ function photosFor(team: CollectionEntry<"equipes">) {
 		font-weight: 800;
 		font-size: clamp(1.6rem, 4vw, 2.2rem);
 		text-align: center;
-		margin: 0 0 0.75rem;
+		margin: 0 0 2rem;
+	}
+	.decouverte h2 {
+		margin-bottom: 0.75rem;
 	}
 	.intro {
 		color: rgba(255, 255, 255, 0.75);
@@ -317,41 +203,26 @@ function photosFor(team: CollectionEntry<"equipes">) {
 		margin: 0 auto 2rem;
 		line-height: 1.6;
 	}
-
-	.teams {
+	.teams,
+	.transversal {
 		background: var(--color-navy-deep);
 		padding: 3.5rem 1.5rem;
 	}
 	.decouverte {
-		background: var(--color-navy);
-		padding: 3.5rem 1.5rem;
-	}
-	.transversal {
 		background: var(--color-navy-deep);
-		padding: 3.5rem 1.5rem 4rem;
+		padding: 0 1.5rem 3.5rem;
 	}
-
 	.wrap {
 		max-width: 1000px;
 		margin: 0 auto;
 	}
-
-	.teams h2 {
-		margin-bottom: 2rem;
-	}
-
 	.fiches {
 		display: grid;
 		gap: 0.6rem;
 	}
-	.grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-		gap: 1.25rem;
-	}
 
+	/* Cartes des équipes archivées (inchangées). */
 	.card {
-		background: var(--color-blue);
 		padding: 1.25rem 1.4rem;
 		scroll-margin-top: 5rem;
 		border-radius: 4px;
@@ -364,109 +235,6 @@ function photosFor(team: CollectionEntry<"equipes">) {
 		text-transform: uppercase;
 		letter-spacing: 0.02em;
 		margin: 0 0 0.75rem;
-	}
-	.card :global(.photo-carousel) {
-		margin: 0 0 0.9rem;
-	}
-	.card .description {
-		color: rgba(255, 255, 255, 0.9);
-		font-size: 0.92rem;
-		line-height: 1.5;
-		margin: 0 0 0.9rem;
-	}
-	.card dl {
-		margin: 0;
-	}
-	.card .row {
-		padding: 0.5rem 0;
-		border-top: 1px solid rgba(255, 255, 255, 0.15);
-	}
-	.card .row:first-child {
-		border-top: none;
-	}
-	.card dt {
-		color: rgba(255, 255, 255, 0.6);
-		font-size: 0.75rem;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		font-weight: 700;
-		margin: 0 0 0.15rem;
-	}
-	.card dd {
-		color: var(--color-white);
-		font-size: 0.95rem;
-		line-height: 1.4;
-		margin: 0;
-	}
-
-	.next-matches {
-		margin-top: 1rem;
-		padding-top: 1rem;
-		border-top: 1px solid rgba(255, 255, 255, 0.15);
-	}
-	.next-matches__title {
-		color: rgba(255, 255, 255, 0.6);
-		font-size: 0.75rem;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		font-weight: 700;
-		margin: 0 0 0.5rem;
-	}
-	.next-matches ul {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		display: grid;
-		gap: 0.4rem;
-	}
-	.next-matches li {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-	}
-	.badge {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		width: 1.3rem;
-		height: 1.3rem;
-		border-radius: 999px;
-		font-weight: 800;
-		font-size: 0.7rem;
-		flex-shrink: 0;
-	}
-	.badge--home {
-		background: var(--color-crimson);
-		color: var(--color-white);
-	}
-	.badge--away {
-		background: rgba(255, 255, 255, 0.2);
-		color: var(--color-white);
-	}
-	.next-matches__text {
-		color: var(--color-white);
-		font-size: 0.85rem;
-	}
-
-	.card-agenda {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 0.6rem;
-		margin-top: 1rem;
-		padding-top: 1rem;
-		border-top: 1px solid rgba(255, 255, 255, 0.15);
-	}
-	.agenda-link {
-		color: rgba(255, 255, 255, 0.85);
-		font-weight: 700;
-		font-size: 0.85rem;
-		text-decoration: none;
-		border-bottom: 2px solid var(--color-crimson);
-		padding-bottom: 0.1rem;
-	}
-	.agenda-link:hover {
-		color: var(--color-crimson);
 	}
 	/* Volontairement discret (voir le commentaire sur slugsStats plus haut) :
 	 * pas des boutons, deux simples lignes de texte en bas de carte. */
@@ -486,31 +254,6 @@ function photosFor(team: CollectionEntry<"equipes">) {
 		color: rgba(255, 255, 255, 0.75);
 	}
 
-	.card--decouverte {
-		background: var(--color-navy-deep);
-		border-left: 3px solid var(--color-crimson);
-	}
-	.tag {
-		display: inline-block;
-		background: var(--color-crimson);
-		color: var(--color-white);
-		font-weight: 800;
-		font-size: 0.7rem;
-		letter-spacing: 0.05em;
-		text-transform: uppercase;
-		padding: 0.2rem 0.55rem;
-		margin-bottom: 0.6rem;
-	}
-
-	.transversal h2 {
-		margin-bottom: 2rem;
-	}
-	.card--transversal {
-		background: var(--color-navy);
-		border-left: 3px solid var(--color-crimson);
-		max-width: 480px;
-		margin: 0 auto;
-	}
 
 	.archives {
 		background: var(--color-navy);
@@ -555,9 +298,14 @@ function photosFor(team: CollectionEntry<"equipes">) {
 	}
 
 	@media (max-width: 640px) {
-		.grid,
 		.archives-grid {
 			grid-template-columns: 1fr;
+		}
+		.teams,
+		.decouverte,
+		.transversal {
+			padding-left: 1rem;
+			padding-right: 1rem;
 		}
 	}
 

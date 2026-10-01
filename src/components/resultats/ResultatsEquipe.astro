@@ -10,9 +10,11 @@ interface Props {
 	 * compte plusieurs équipes (voir ordreGroupesEquipe() dans
 	 * src/lib/resultats.ts) ; sans effet pour une catégorie à équipe unique. */
 	calendriers?: { libelle?: string }[];
+	/** Libellé du repli de la saison en cours ("Résultats" par défaut). */
+	titreSaison?: string;
 }
 
-const { equipeSlug, affichageStats, calendriers = [] } = Astro.props;
+const { equipeSlug, affichageStats, calendriers = [], titreSaison = "Résultats" } = Astro.props;
 const tousLesResultats = await getResultatsForEquipe(equipeSlug);
 const { saisonEnCours, saisonsPrecedentes } = resultatsParSaison(tousLesResultats);
 
@@ -27,7 +29,7 @@ const ordreGroupes = aPlusieursEquipes(tousLesResultats) ? ordreGroupesEquipe(to
 {
 	saisonEnCours.length > 0 && (
 		<details class="resultats">
-			<summary>Résultats ({saisonEnCours.length})</summary>
+			<summary>{titreSaison} ({saisonEnCours.length})</summary>
 			<ListeResultats resultats={saisonEnCours} affichageStats={affichageStats} ordreGroupes={ordreGroupes} />
 		</details>
 	)

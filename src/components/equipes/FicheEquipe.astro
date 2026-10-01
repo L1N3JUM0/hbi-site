@@ -1,8 +1,14 @@
 ---
 import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
-import type { AgendaMatch, AgendaTeamConfig } from "../../lib/agenda";
-import { formatDateHeureCourte, publicEquipe } from "../../lib/ficheEquipe";
+import AjouterAgendaButton from "../AjouterAgendaButton.astro";
+import PhotoCarousel from "../PhotoCarousel.astro";
+import ResultatsEquipe from "../resultats/ResultatsEquipe.astro";
+import { formatMatchQuand, type AgendaMatch, type AgendaTeamConfig } from "../../lib/agenda";
+import { formatDateHeureCourte, formatHeureCourte, formatJourLong, grouperParJour, publicEquipe } from "../../lib/ficheEquipe";
+import { formatDateCourte, issueDuMatch, scoreNousEux, type Resultat } from "../../lib/resultats";
+import { saisonActuelle } from "../../lib/saison";
+import { withBase } from "../../utils/links";
 
 /** Fiche équipe de /equipes : un résumé compact d'une rangée (<summary>) et
  * le détail, déplié au clic. `name="equipe"` : une seule fiche ouverte à la
@@ -15,18 +21,30 @@ interface Props {
 	matchs: AgendaMatch[];
 	/** Calendriers de l'équipe (vide : créneau sans championnat). */
 	calendriers: AgendaTeamConfig[];
+	/** 2-3 derniers résultats de la saison en cours, du plus récent au plus ancien. */
+	derniers: Resultat[];
+	/** Au moins un résultat importé, toutes saisons confondues. */
+	aDesResultats: boolean;
+	/** Liens vers /statistiques et /statistiques-carriere (pages hors menu,
+	 * noindex -- règles inchangées, seul l'emplacement du lien change). */
+	avecStats: boolean;
 	/** Étiquette "Découverte" / "Inclusion". */
 	tag?: string;
 	ouvert?: boolean;
 }
 
-const { equipe, matchs, calendriers, tag, ouvert = false } = Astro.props;
+const { equipe, matchs, calendriers, derniers, aDesResultats, avecStats, tag, ouvert = false } = Astro.props;
 const e = equipe.data;
 const slug = e.slug;
 const aCalendrier = calendriers.length > 0;
 const plusieursEquipes = calendriers.length > 1;
 const prochain = matchs.find((m) => !m.reporte || m.reporte.nouvelleDate);
+const { jours, sansDate } = grouperParJour(matchs);
 const publicVise = publicEquipe(equipe);
+
+/** Lu seulement par les lecteurs d'écran : à l'écran, le score "nous – eux"
+ * suffit, et une lettre "D" (défaite) se confondrait avec le badge D (domicile). */
+const ISSUE = { victoire: "Victoire", defaite: "Défaite", nul: "Match nul" } as const;
 
 /** "vs Pays d'Apt", précédé du libellé court ("SM1") quand la catégorie
  * engage plusieurs équipes -- sinon on ne saurait pas laquelle joue. */
@@ -35,6 +53,12 @@ function contre(m: AgendaMatch): string {
 	const versus = `vs ${m.opponent ?? ""}`;
 	return plusieursEquipes ? `${m.teamLabelCourt} ${versus}` : versus;
 }
+
+const photos = [
+	{ src: e.photoProfil, alt: `${e.nom} — photo de profil` },
+	...e.galerie.filter((p) => p.src !== e.photoProfil.src).map((src, i) => ({ src, alt: `${e.nom} — photo ${i + 1}` })),
+];
+const historique = aDesResultats || avecStats;
 ---
 
 <details class="fiche" id={slug} name="equipe" open={ouvert}>
@@ -83,7 +107,125 @@ function contre(m: AgendaMatch): string {
 	</summary>
 
 	<div class="detail">
-		<slot />
+		{e.presentation && <p class="presentation">{e.presentation}</p>}
+
+		<dl class="infos-pratiques">
+			{e.tarif && (
+				<div>
+					<dt>{e.type === "transversal" ? "Tarif" : "Tarif licence"}</dt>
+					<dd>{e.tarif}</dd>
+				</div>
+			)}
+			{!aCalendrier && publicVise && (
+				<div>
+					<dt>Public</dt>
+					<dd>{publicVise}</dd>
+				</div>
+			)}
+		</dl>
+
+		{(aCalendrier || derniers.length > 0) && (
+			<div class="matchs">
+				{aCalendrier && (
+					<section class="bloc">
+						<h4>Prochains matchs</h4>
+						{matchs.length === 0 && <p class="vide">Pas de match prévu pour l&rsquo;instant.</p>}
+						{jours.map((j) => (
+							<div class="jour">
+								<p class="jour__titre">
+									{formatJourLong(j.date)}
+									{j.matchs.length > 1 && <span class="plateau"> — {j.matchs.length} matchs</span>}
+								</p>
+								<ul class="lignes">
+									{j.matchs.map((m) => (
+										<li>
+											<span class={`lieu ${m.isHome ? "lieu--dom" : ""}`} title={m.isHome ? "Domicile" : "Extérieur"}>
+												{m.isHome ? "D" : "E"}
+											</span>
+											<span class="heure">{m.reporte ? "Reporté" : formatHeureCourte(m.start)}</span>
+											<span class="adv">{contre(m)}</span>
+										</li>
+									))}
+								</ul>
+							</div>
+						))}
+						{sansDate.length > 0 && (
+							<ul class="lignes">
+								{sansDate.map((m) => (
+									<li>
+										<span class={`lieu ${m.isHome ? "lieu--dom" : ""}`}>{m.isHome ? "D" : "E"}</span>
+										<span class="adv">
+											{contre(m)} — {formatMatchQuand(m)}
+										</span>
+									</li>
+								))}
+							</ul>
+						)}
+					</section>
+				)}
+
+				{derniers.length > 0 && (
+					<section class="bloc">
+						<h4>Derniers résultats</h4>
+						<ul class="lignes">
+							{derniers.map((r) => {
+								const issue = issueDuMatch(r);
+								const score = r.data.forfait ? null : scoreNousEux(r);
+								return (
+									<li>
+										<span class="sr-only">{ISSUE[issue]} :</span>
+										<span class={`lieu ${r.data.domicile ? "lieu--dom" : ""}`} title={r.data.domicile ? "Domicile" : "Extérieur"}>
+											{r.data.domicile ? "D" : "E"}
+										</span>
+										<span class="adv">{r.data.adversaire}</span>
+										<span class="score">{r.data.forfait ? "forfait" : score ? `${score.nous} – ${score.eux}` : "—"}</span>
+										<span class="date">{formatDateCourte(r.data.date)}</span>
+									</li>
+								);
+							})}
+						</ul>
+					</section>
+				)}
+			</div>
+		)}
+
+		{aCalendrier && (
+			<div class="actions">
+				<a class="agenda-equipe" href={withBase(`/agenda?equipe=${encodeURIComponent(slug)}`)}>
+					Agenda de l&rsquo;équipe →
+				</a>
+				{calendriers.map((c) => (
+					<AjouterAgendaButton
+						href={c.urlIcs}
+						label={plusieursEquipes ? `Ajouter ${c.nomCourt} à mon agenda` : "Ajouter à mon agenda"}
+					/>
+				))}
+			</div>
+		)}
+
+		{photos.length > 1 && (
+			<div class="galerie">
+				<PhotoCarousel photos={photos} ariaLabel={`Photos de ${e.nom}`} lightbox variant="card" />
+			</div>
+		)}
+
+		{historique && (
+			<section class="historique">
+				<h4>Historique et stats</h4>
+				<ResultatsEquipe
+					equipeSlug={slug}
+					affichageStats={e.affichageStats}
+					calendriers={e.calendriers}
+					titreSaison={`Saison ${saisonActuelle()}, tous les résultats`}
+				/>
+				{avecStats && (
+					<p class="stats-liens">
+						<a href={withBase(`/statistiques#equipe-${slug}`)}>Statistiques de la saison →</a>
+						<a href={withBase(`/statistiques-carriere#equipe-${slug}`)}>Statistiques carrière →</a>
+					</p>
+				)}
+			</section>
+		)}
 	</div>
 </details>
 
