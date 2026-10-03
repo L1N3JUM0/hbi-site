@@ -1,3 +1,0 @@
----
-pdf: files/wagrink.pdf
----

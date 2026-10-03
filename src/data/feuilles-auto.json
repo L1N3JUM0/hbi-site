@@ -1,5 +1,83 @@
 {
 	"rencontres": {
+		"2985116": {
+			"date": "2026-10-03T12:00:00.000Z",
+			"competition": "U13 MIXTE",
+			"adversaire": "HANDBALL CLUB CARPENTRAS",
+			"equipeSlug": "u13-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u13-mixte-32335/poule-196080/rencontre-2716747/",
+			"derniereTentative": "2026-10-03T17:03:36.534Z",
+			"code": "WAGWDIP",
+			"statut": "attente_score"
+		},
+		"2985117": {
+			"date": "2026-10-03T12:00:00.000Z",
+			"competition": "U13 MIXTE",
+			"adversaire": "HANDBALL CLUB THOROIS",
+			"equipeSlug": "u13-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u13-mixte-32335/poule-196080/rencontre-2716748/",
+			"derniereTentative": "2026-10-03T17:03:36.534Z",
+			"code": "WAGWDIQ",
+			"statut": "attente_score"
+		},
+		"2985159": {
+			"date": "2026-10-03T12:00:00.000Z",
+			"competition": "U11 MIXTE",
+			"adversaire": "PAYS APT HANDBALL 1",
+			"equipeSlug": "u11-mixtes",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-196084/rencontre-2716924/",
+			"derniereTentative": "2026-10-03T17:03:36.534Z",
+			"code": "WAGWDPL",
+			"scoreVuLe": "2026-10-03T17:03:36.534Z",
+			"statut": "echec_lecture",
+			"raison": "Colonne \"Buts\" introuvable dans l'en-tête du tableau de stats."
+		},
+		"2985160": {
+			"date": "2026-10-03T12:00:00.000Z",
+			"competition": "U11 MIXTE",
+			"adversaire": "HANDBALL CLUB ORANGE 2",
+			"equipeSlug": "u11-mixtes",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-196084/rencontre-2716925/",
+			"derniereTentative": "2026-10-03T17:03:36.534Z",
+			"code": "WAGWDPM",
+			"statut": "attente_score"
+		},
+		"2985165": {
+			"date": "2026-10-03T12:30:00.000Z",
+			"competition": "U11 MIXTE",
+			"adversaire": "CO CHATEAURENARDAIS 2",
+			"equipeSlug": "u11-mixtes",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-196084/rencontre-2716930/",
+			"derniereTentative": "2026-10-03T17:03:36.534Z",
+			"code": "WAGWDPR",
+			"scoreVuLe": "2026-10-03T17:03:36.534Z",
+			"statut": "echec_lecture",
+			"raison": "Colonne \"Buts\" introuvable dans l'en-tête du tableau de stats."
+		},
+		"2985168": {
+			"date": "2026-10-03T12:30:00.000Z",
+			"competition": "U11 MIXTE",
+			"adversaire": "HANDBALL CLUB CAVAILLONNAIS",
+			"equipeSlug": "u11-mixtes",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-196084/rencontre-2716933/",
+			"derniereTentative": "2026-10-03T17:03:36.534Z",
+			"code": "WAGWDPU",
+			"scoreVuLe": "2026-10-03T17:03:36.534Z",
+			"statut": "echec_lecture",
+			"raison": "Colonne \"Buts\" introuvable dans l'en-tête du tableau de stats."
+		},
+		"2985169": {
+			"date": "2026-10-03T12:30:00.000Z",
+			"competition": "U11 MIXTE",
+			"adversaire": "HANDBALL CLUB THOROIS",
+			"equipeSlug": "u11-mixtes",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-196084/rencontre-2716934/",
+			"derniereTentative": "2026-10-03T17:03:36.534Z",
+			"code": "WAGWDPV",
+			"scoreVuLe": "2026-10-03T17:03:36.534Z",
+			"statut": "echec_lecture",
+			"raison": "Colonne \"Buts\" introuvable dans l'en-tête du tableau de stats."
+		},
 		"2996912": {
 			"date": "2026-09-12T12:00:00.000Z",
 			"competition": "CHAMPIONNAT U15 EXCELLENCE MASCULIN",
@@ -138,6 +216,16 @@
 			"derniereTentative": "2026-09-28T15:23:53.579Z",
 			"code": "WAGWJIE",
 			"statut": "importee"
+		},
+		"3043374": {
+			"date": "2026-10-03T15:00:00.000Z",
+			"competition": "U15 FEMININES INTER DEP POULE 1",
+			"adversaire": "HANDBALL CLUB MONTEUX",
+			"equipeSlug": "u15-feminines",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u15-feminines-inter-dep-poule-1-33207/poule-196377/rencontre-2720664/",
+			"derniereTentative": "2026-10-03T17:03:36.534Z",
+			"code": "WAGWJIJ",
+			"statut": "attente_score"
 		}
 	}
 }
