@@ -29,8 +29,7 @@
 			"derniereTentative": "2026-10-03T17:30:34.306Z",
 			"code": "WAGWDPL",
 			"scoreVuLe": "2026-10-03T17:03:36.534Z",
-			"statut": "importee",
-			"raison": "Colonne \"Buts\" introuvable dans l'en-tête du tableau de stats."
+			"statut": "importee"
 		},
 		"2985160": {
 			"date": "2026-10-03T12:00:00.000Z",
@@ -51,8 +50,7 @@
 			"derniereTentative": "2026-10-03T17:30:34.306Z",
 			"code": "WAGWDPR",
 			"scoreVuLe": "2026-10-03T17:03:36.534Z",
-			"statut": "importee",
-			"raison": "Colonne \"Buts\" introuvable dans l'en-tête du tableau de stats."
+			"statut": "importee"
 		},
 		"2985168": {
 			"date": "2026-10-03T12:30:00.000Z",
@@ -63,8 +61,7 @@
 			"derniereTentative": "2026-10-03T17:30:34.306Z",
 			"code": "WAGWDPU",
 			"scoreVuLe": "2026-10-03T17:03:36.534Z",
-			"statut": "importee",
-			"raison": "Colonne \"Buts\" introuvable dans l'en-tête du tableau de stats."
+			"statut": "importee"
 		},
 		"2985169": {
 			"date": "2026-10-03T12:30:00.000Z",
@@ -75,8 +72,7 @@
 			"derniereTentative": "2026-10-03T17:30:34.306Z",
 			"code": "WAGWDPV",
 			"scoreVuLe": "2026-10-03T17:03:36.534Z",
-			"statut": "importee",
-			"raison": "Colonne \"Buts\" introuvable dans l'en-tête du tableau de stats."
+			"statut": "importee"
 		},
 		"2996912": {
 			"date": "2026-09-12T12:00:00.000Z",

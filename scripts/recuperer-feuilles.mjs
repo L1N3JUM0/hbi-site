@@ -186,8 +186,11 @@ try {
 		await sleep(PAUSE_MS);
 		const res = await telecharger(c.ev.url);
 		const rencontre = res.ok ? lireRencontre(await res.text()) : null;
+		// Sans la raison du statut précédent : chaque nouveau statut pose la
+		// sienne s'il en a une (voir suivreAuto() dans import-fdme.mjs).
+		const { raison: _raisonPrecedente, ...precedent } = c.precedent ?? {};
 		const suivi = {
-			...c.precedent,
+			...precedent,
 			date: c.ev.debut.toISOString(),
 			competition: c.ev.competition,
 			adversaire: c.equipe?.adversaire,
