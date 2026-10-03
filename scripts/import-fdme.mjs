@@ -228,6 +228,20 @@ function suivreAuto(uid, changements) {
 	etatAutoModifie = true;
 }
 
+/** Équipe déjà déduite du calendrier par la récupération automatique pour
+ * ce code de rencontre, s'il y en a une. Sert de repli à un DÉPÔT MANUEL
+ * dont la compétition ne suffit pas à trouver l'équipe : le calendrier fait
+ * foi (même règle que pour une feuille récupérée automatiquement, voir plus
+ * bas), et c'est le seul signal fiable quand la compétition ne dit pas le
+ * genre -- ex. « U13 MIXTE BRASSAGES » 2026-2027, joué par les U13
+ * masculins alors que le club a aussi des U13 féminines (WAGWDIP/WAGWDIQ,
+ * déposées à la main le 03/10/2026 avant que la fédération n'affiche leur
+ * score). Appliqué APRÈS preserverCorrectionsManuelles() : une équipe
+ * corrigée à la main dans le CMS reste prioritaire. */
+function equipeDuCalendrier(codeRencontre) {
+	return Object.values(etatAuto.rencontres).find((r) => r.code === codeRencontre && r.equipeSlug)?.equipeSlug;
+}
+
 /** Deux provenances, un seul traitement : les dépôts du CMS, et les PDF
  * téléchargés par la récupération automatique (dossier temporaire ignoré par
  * git). Seule différence : une feuille automatique illisible ou refusée est
@@ -308,6 +322,7 @@ for (const source of sources) {
 		}
 		const cible = join(RESULTATS_DIR, `pdf-${data.codeRencontre.toLowerCase()}.md`);
 		preserverCorrectionsManuelles(cible, data);
+		if (!auto && !data.equipeSlug) data.equipeSlug = equipeDuCalendrier(data.codeRencontre) ?? "";
 
 		for (const avertissement of data.avertissements) {
 			console.warn(`[import-fdme] ${pdfPath} : ${avertissement}`);
