@@ -6,9 +6,9 @@
 			"adversaire": "HANDBALL CLUB CARPENTRAS",
 			"equipeSlug": "u13-masculins",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u13-mixte-32335/poule-196080/rencontre-2716747/",
-			"derniereTentative": "2026-10-03T17:30:34.306Z",
+			"derniereTentative": "2026-10-03T19:41:35.528Z",
 			"code": "WAGWDIP",
-			"statut": "attente_score"
+			"statut": "importee"
 		},
 		"2985117": {
 			"date": "2026-10-03T12:00:00.000Z",
@@ -16,9 +16,9 @@
 			"adversaire": "HANDBALL CLUB THOROIS",
 			"equipeSlug": "u13-masculins",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u13-mixte-32335/poule-196080/rencontre-2716748/",
-			"derniereTentative": "2026-10-03T17:30:34.306Z",
+			"derniereTentative": "2026-10-03T19:41:35.528Z",
 			"code": "WAGWDIQ",
-			"statut": "attente_score"
+			"statut": "importee"
 		},
 		"2985159": {
 			"date": "2026-10-03T12:00:00.000Z",
@@ -37,7 +37,7 @@
 			"adversaire": "HANDBALL CLUB ORANGE 2",
 			"equipeSlug": "u11-mixtes",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-196084/rencontre-2716925/",
-			"derniereTentative": "2026-10-03T17:30:34.306Z",
+			"derniereTentative": "2026-10-03T19:41:35.528Z",
 			"code": "WAGWDPM",
 			"statut": "attente_score"
 		},
