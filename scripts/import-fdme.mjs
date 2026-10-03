@@ -224,7 +224,11 @@ const etatAuto = existsSync(ETAT_PATH) ? JSON.parse(readFileSync(ETAT_PATH, "utf
 let etatAutoModifie = false;
 function suivreAuto(uid, changements) {
 	if (!uid) return;
-	etatAuto.rencontres[uid] = { ...etatAuto.rencontres[uid], ...changements };
+	const precedent = { ...etatAuto.rencontres[uid] };
+	// La raison n'explique que le statut qui l'a posée : sans ça, un ancien
+	// échec de lecture resterait affiché sur une feuille importée depuis.
+	if (changements.statut) delete precedent.raison;
+	etatAuto.rencontres[uid] = { ...precedent, ...changements };
 	etatAutoModifie = true;
 }
 
