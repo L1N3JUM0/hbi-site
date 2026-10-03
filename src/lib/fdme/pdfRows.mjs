@@ -34,7 +34,10 @@ export async function extractRows(pdfBytes) {
 		for (const item of content.items) {
 			const str = item.str;
 			if (!str || !str.trim()) continue;
-			fragments.push({ page: pageNum, x: item.transform[4], y: item.transform[5], str: str.trim() });
+			// `width` : sert à situer un libellé d'en-tête collé à son voisin
+			// dans un même fragment (voir headerColumnPositions() dans
+			// parseFeuille.mjs).
+			fragments.push({ page: pageNum, x: item.transform[4], y: item.transform[5], width: item.width, str: str.trim() });
 		}
 	}
 	// Origine PDF en bas de page : page croissante, puis y décroissant pour

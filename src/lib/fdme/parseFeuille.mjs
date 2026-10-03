@@ -205,7 +205,7 @@ function parseHeaderFields(rows) {
  * : elle n'est jamais exploitée par le parseur, l'exiger ne ferait
  * qu'ajouter une façon de plus pour une feuille valide d'être rejetée. */
 function headerColumnPositions(headerRow) {
-	const find = (str) => headerRow.items.find((i) => i.str === str)?.x;
+	const find = (str) => headerRow.items.find((i) => i.str === str)?.x ?? findInMergedItem(headerRow, str);
 	const positions = {
 		licence: find("Licence"),
 		buts: find("Buts"),
@@ -220,6 +220,22 @@ function headerColumnPositions(headerRow) {
 		if (x === undefined) throw new FeuilleFormatError(`Colonne "${STAT_HEADER_LABELS[key] ?? key}" introuvable dans l'en-tête du tableau de stats.`);
 	}
 	return positions;
+}
+
+/** Repli de headerColumnPositions() : sur les feuilles U11/U13 2026-2027
+ * (colonne "Type JIPES/JFL"), pdfjs livre "JIPES/JFL Buts" en UN seul
+ * fragment, si bien que "Buts" n'existe pas seul dans l'en-tête (les 4
+ * feuilles du 03/10/2026, WAGWDIP/DIQ/DPU/DPV, rejetées pour ça). On situe
+ * alors le libellé par proportion dans la largeur du fragment -- les
+ * valeurs de la colonne sont alignées sur le libellé, pas sur le début du
+ * fragment (ici ~421 contre 392), et STAT_COLUMN_MAX_DISTANCE absorbe
+ * l'approximation. Uniquement en DERNIER mot du fragment : c'est le seul
+ * collage observé, et un libellé court comme "7m" ou "2'" pourrait sinon
+ * apparaître au milieu d'un texte sans rapport. */
+function findInMergedItem(headerRow, str) {
+	const item = headerRow.items.find((i) => i.str.endsWith(` ${str}`));
+	if (!item || !item.width) return undefined;
+	return item.x + (item.width * (item.str.length - str.length)) / item.str.length;
 }
 
 /** Extrait la liste des joueur·se·s d'une équipe à partir de la ligne
