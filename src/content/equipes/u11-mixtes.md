@@ -21,8 +21,10 @@ horaires: Lundi 17h-18h30 / mercredi 15h-16h30
 encadrants: Teddy
 tarif: 180 €
 description: Entraînements le lundi de 17h à 18h30 et le mercredi de 15h à 16h30, encadrés par Teddy. Deux équipes engagées en championnat (1 et 2).
-photoProfil: ../../assets/match-1.jpg
+presentation: ''
+public: ''
+photoProfil: /src/assets/1000001864.webp
 galerie:
-  - ../../assets/match-1.jpg
-  - ../../assets/vie-club-1.jpg
+  - /src/assets/1000001864.webp
+  - /src/assets/1000001841.webp
 ---
