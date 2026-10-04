@@ -1,6 +1,6 @@
 {
 	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-feminines-32648/poule-192108/classements/",
-	"fetchedAt": "2026-10-03T23:35:38.776Z",
+	"fetchedAt": "2026-10-04T10:22:15.890Z",
 	"classement": [
 		{
 			"id": "10615049",
@@ -156,7 +156,7 @@
 			"butPlus": "20",
 			"butMoins": "30",
 			"diff": "-10",
-			"dernieresRencontres": "-1;-1",
+			"dernieresRencontres": "-1;1",
 			"equipe_libelle": "HANDBALL CONCERNADE",
 			"equipe_logoActif": "1",
 			"structure_logo": "2015-08-17-3c5d5ea7-3296-42e1-a7bd-bd33284b9289.jpg",
@@ -448,7 +448,7 @@
 		},
 		{
 			"individuId": "746917",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "0",
 			"totalArrets": "0",
 			"nom": "GARCIA",
@@ -514,8 +514,8 @@
 		},
 		{
 			"individuId": "1156647",
-			"matchCount": "1",
-			"totalButs": "11",
+			"matchCount": "2",
+			"totalButs": "14",
 			"totalArrets": "0",
 			"nom": "LIARDET",
 			"prenom": "ELINOR",
@@ -580,7 +580,7 @@
 		},
 		{
 			"individuId": "1379693",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "2",
 			"totalArrets": "0",
 			"nom": "PERRIN",
@@ -646,8 +646,8 @@
 		},
 		{
 			"individuId": "1640697",
-			"matchCount": "1",
-			"totalButs": "0",
+			"matchCount": "2",
+			"totalButs": "2",
 			"totalArrets": "0",
 			"nom": "CARMONA",
 			"prenom": "NATHALIE",
@@ -712,8 +712,8 @@
 		},
 		{
 			"individuId": "1830181",
-			"matchCount": "1",
-			"totalButs": "1",
+			"matchCount": "2",
+			"totalButs": "4",
 			"totalArrets": "0",
 			"nom": "RASSE",
 			"prenom": "ANGELINE",
@@ -777,6 +777,17 @@
 			"structureLogo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG"
 		},
 		{
+			"individuId": "2073611",
+			"matchCount": "1",
+			"totalButs": "8",
+			"totalArrets": "0",
+			"nom": "SCHOTT",
+			"prenom": "TIFENN",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CONCERNADE",
+			"structureLogo": "2015-08-17-3c5d5ea7-3296-42e1-a7bd-bd33284b9289.jpg"
+		},
+		{
 			"individuId": "2107206",
 			"matchCount": "1",
 			"totalButs": "0",
@@ -811,8 +822,8 @@
 		},
 		{
 			"individuId": "2319758",
-			"matchCount": "1",
-			"totalButs": "2",
+			"matchCount": "2",
+			"totalButs": "5",
 			"totalArrets": "0",
 			"nom": "BAUDOIN",
 			"prenom": "MANON",
@@ -909,6 +920,17 @@
 			"structureLogo": "2015-04-24-5122cd2a-de1c-48cc-a5a4-bd12530e8316.jpg"
 		},
 		{
+			"individuId": "2748910",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "PERROT",
+			"prenom": "LOLITA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HBC PLANAIS 2",
+			"structureLogo": "2026-08-01-1307c0ce-4a94-4e91-ac41-15b6c8e3282e.jpg"
+		},
+		{
 			"individuId": "2788542",
 			"matchCount": "2",
 			"totalButs": "3",
@@ -987,8 +1009,8 @@
 		},
 		{
 			"individuId": "2964765",
-			"matchCount": "1",
-			"totalButs": "0",
+			"matchCount": "2",
+			"totalButs": "1",
 			"totalArrets": "0",
 			"nom": "VILLA",
 			"prenom": "LEANA",
@@ -1020,9 +1042,9 @@
 		},
 		{
 			"individuId": "3128282",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "0",
-			"totalArrets": "15",
+			"totalArrets": "27",
 			"nom": "SALMI",
 			"prenom": "INES",
 			"showEquipeLogo": "1",
@@ -1042,8 +1064,8 @@
 		},
 		{
 			"individuId": "3253530",
-			"matchCount": "1",
-			"totalButs": "1",
+			"matchCount": "2",
+			"totalButs": "4",
 			"totalArrets": "0",
 			"nom": "BOUZID",
 			"prenom": "ALEXANDRA",
@@ -1119,8 +1141,8 @@
 		},
 		{
 			"individuId": "3351385",
-			"matchCount": "1",
-			"totalButs": "0",
+			"matchCount": "2",
+			"totalButs": "1",
 			"totalArrets": "0",
 			"nom": "BEHAR",
 			"prenom": "JULIE",
@@ -1130,8 +1152,8 @@
 		},
 		{
 			"individuId": "3351406",
-			"matchCount": "1",
-			"totalButs": "0",
+			"matchCount": "2",
+			"totalButs": "1",
 			"totalArrets": "0",
 			"nom": "MISTRETTA",
 			"prenom": "LUCIE",
@@ -1152,7 +1174,7 @@
 		},
 		{
 			"individuId": "3377336",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "0",
 			"totalArrets": "0",
 			"nom": "NOUBEL",
@@ -1162,9 +1184,20 @@
 			"structureLogo": "2026-08-01-1307c0ce-4a94-4e91-ac41-15b6c8e3282e.jpg"
 		},
 		{
-			"individuId": "3385813",
+			"individuId": "3380752",
 			"matchCount": "1",
-			"totalButs": "3",
+			"totalButs": "4",
+			"totalArrets": "0",
+			"nom": "KERDI",
+			"prenom": "MELISSA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CONCERNADE",
+			"structureLogo": "2015-08-17-3c5d5ea7-3296-42e1-a7bd-bd33284b9289.jpg"
+		},
+		{
+			"individuId": "3385813",
+			"matchCount": "2",
+			"totalButs": "8",
 			"totalArrets": "0",
 			"nom": "MALLEM",
 			"prenom": "SANAE",
@@ -1251,8 +1284,8 @@
 		},
 		{
 			"individuId": "3514348",
-			"matchCount": "1",
-			"totalButs": "0",
+			"matchCount": "2",
+			"totalButs": "1",
 			"totalArrets": "0",
 			"nom": "NOEL",
 			"prenom": "FANNY",
@@ -1284,7 +1317,7 @@
 		},
 		{
 			"individuId": "3540820",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "1",
 			"totalArrets": "0",
 			"nom": "LEGRAND",
@@ -1295,8 +1328,8 @@
 		},
 		{
 			"individuId": "3541617",
-			"matchCount": "1",
-			"totalButs": "5",
+			"matchCount": "2",
+			"totalButs": "8",
 			"totalArrets": "0",
 			"nom": "COLLETIN",
 			"prenom": "ELEA",
@@ -1339,14 +1372,25 @@
 		},
 		{
 			"individuId": "3732512",
-			"matchCount": "1",
-			"totalButs": "0",
-			"totalArrets": "10",
+			"matchCount": "2",
+			"totalButs": "3",
+			"totalArrets": "33",
 			"nom": "TALOC",
 			"prenom": "VIOLETTE",
 			"showEquipeLogo": "1",
 			"equipeLibelle": "HANDBALL CONCERNADE",
 			"structureLogo": "2015-08-17-3c5d5ea7-3296-42e1-a7bd-bd33284b9289.jpg"
+		},
+		{
+			"individuId": "3738000",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "6",
+			"nom": "PARPEIX",
+			"prenom": "LAURENE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HBC PLANAIS 2",
+			"structureLogo": "2026-08-01-1307c0ce-4a94-4e91-ac41-15b6c8e3282e.jpg"
 		},
 		{
 			"individuId": "3743475",
@@ -1394,7 +1438,7 @@
 		},
 		{
 			"individuId": "3925901",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "0",
 			"totalArrets": "0",
 			"nom": "ROSSI LUMBROSO",
@@ -1405,8 +1449,8 @@
 		},
 		{
 			"individuId": "3937936",
-			"matchCount": "1",
-			"totalButs": "3",
+			"matchCount": "2",
+			"totalButs": "5",
 			"totalArrets": "0",
 			"nom": "LANCIAUX",
 			"prenom": "MARIE",
