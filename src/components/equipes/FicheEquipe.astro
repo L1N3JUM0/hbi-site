@@ -531,7 +531,7 @@ const historique = aDesResultats || avecStats;
 		text-underline-offset: 3px;
 	}
 
-	/* --- Mobile : empilé, photo en bandeau bas --- */
+	/* --- Mobile : empilé, photo entière en tête --- */
 	@media (max-width: 700px) {
 		.resume {
 			grid-template-columns: minmax(0, 1fr);
@@ -539,9 +539,20 @@ const historique = aDesResultats || avecStats;
 			height: auto;
 			padding: 0 0 0.9rem;
 		}
+		/* Le cadre suit la photo (ratio naturel, jamais rognée) au lieu de
+		   l'inverse : un bandeau de hauteur fixe coupait une partie du
+		   groupe. Plafonnée en hauteur pour qu'une photo portrait n'étire pas
+		   la fiche repliée ; la galerie, au clic, la montre en grand. Le fond
+		   de la fiche (token) apparaît de part et d'autre si elle est étroite. */
 		.photo {
 			width: 100%;
-			height: 96px;
+			height: auto;
+			background: none;
+		}
+		.photo :global(img) {
+			height: auto;
+			max-height: 180px;
+			object-fit: contain;
 		}
 		.infos,
 		.suite,

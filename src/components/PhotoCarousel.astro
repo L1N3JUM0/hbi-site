@@ -35,11 +35,15 @@ const { photos, ariaLabel, lightbox = false, variant = "band" } = Astro.props;
 		{
 			photos.map((p, i) => (
 				<div class="slide">
+					{/* Variante "card" : largeur seule, pour garder le ratio d'origine
+					    du fichier -- avec width + height, le service d'images rogne
+					    la photo elle-même, et la visionneuse plein écran n'affichait
+					    alors qu'un extrait. */}
 					<Image
 						src={p.src}
 						alt={p.alt}
 						width={640}
-						height={420}
+						height={variant === "card" ? undefined : 420}
 						format="webp"
 						/* Variante "card" : seule la 1ère photo (le slide effectivement
 						   visible) reste chargée en lazy -- les suivantes, clippées hors
@@ -256,6 +260,30 @@ const { photos, ariaLabel, lightbox = false, variant = "band" } = Astro.props;
 		.photo-carousel--card .slide {
 			flex-basis: 100%;
 			height: 180px;
+		}
+	}
+
+	/* Carte équipe sur téléphone : la photo entière, à son ratio naturel,
+	   plutôt qu'un cadre fixe qui coupe une partie du groupe -- la
+	   visionneuse reste là pour la voir en grand. Seule la 1ère slide est
+	   mise en page : les suivantes, jamais visibles sur la carte, imposeraient
+	   sinon leur hauteur (une photo portrait) à toute la piste. Elles restent
+	   dans le DOM, chargées, pour la visionneuse. 700px : même seuil que la
+	   mise en page mobile de FicheEquipe. */
+	@media (max-width: 700px) {
+		.photo-carousel--card .track {
+			background: none;
+		}
+		.photo-carousel--card .slide {
+			height: auto;
+		}
+		.photo-carousel--card .slide:not(:first-child) {
+			display: none;
+		}
+		.photo-carousel--card .slide :global(img) {
+			height: auto;
+			max-height: 220px;
+			object-fit: contain;
 		}
 	}
 
