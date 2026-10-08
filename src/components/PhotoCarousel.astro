@@ -263,6 +263,18 @@ const { photos, ariaLabel, lightbox = false, variant = "band" } = Astro.props;
 		}
 	}
 
+	/* Carte équipe au-delà du téléphone : cadre fixe (cartes alignées), mais
+	   photo entière (contain) sur le fond marine profond, au lieu d'un
+	   "cover" qui coupait portraits et formats larges. */
+	@media (min-width: 701px) {
+		.photo-carousel--card .slide {
+			background: var(--color-navy-deep);
+		}
+		.photo-carousel--card .slide :global(img) {
+			object-fit: contain;
+		}
+	}
+
 	/* Carte équipe sur téléphone : la photo entière, à son ratio naturel,
 	   plutôt qu'un cadre fixe qui coupe une partie du groupe -- la
 	   visionneuse reste là pour la voir en grand. Seule la 1ère slide est
