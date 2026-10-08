@@ -170,6 +170,12 @@ ligne d'en-tête), une regex classique échoue sur ce tableau.
   réellement calculable.
 - La comparaison de joueurs côte à côte a été volontairement retirée
   (risque de moqueries et de conflits) : ne pas la réintroduire sans décision du club.
+- Un build local modifie des fichiers de données suivis par git (résultats, suivi des
+  feuilles). Ne jamais les commiter depuis un poste local : le robot est seul à les
+  publier. Avant de pousser, faire un fetch et remettre ses commits par-dessus la
+  pointe distante.
+- Avant de pousser, vérifier s'il reste des commits locaux d'une autre session et me
+  le signaler.
 
 ---
 
