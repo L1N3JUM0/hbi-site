@@ -145,30 +145,6 @@ function barres(saisons: { saison: string; buts: number }[]) {
 		};
 	});
 }
-
-// --- Comparaison de deux joueur·se·s : uniquement les lignes nominatives
-// (celles qui ont un détail), jamais un pseudonymisé -- aucune donnée des
-// autres n'est même envoyée au navigateur.
-const comparables = blocs
-	.flatMap(({ equipe, carriere }) =>
-		joueursAffiches(carriere)
-			.filter((j) => j.detail !== null && j.label)
-			.map((j) => ({
-				nom: j.label!,
-				equipe: equipe.data.nom,
-				matchs: j.matchsJoues,
-				buts: j.buts,
-				ratio: j.ratio,
-				sept_m: j.sept_m,
-				tirs: j.tirs,
-				arrets: j.arrets,
-				avertissements: j.avertissements,
-				exclusions: j.exclusions,
-				disqualifications: j.disqualifications,
-				saisons: butsParSaison(j.detail!),
-			})),
-	)
-	.sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
 ---
 
 <html lang="fr">
@@ -244,30 +220,6 @@ const comparables = blocs
 								</select>
 							</div>
 						</div>
-
-						{comparables.length >= 2 && (
-							<details class="comparaison">
-								<summary>Comparer deux joueur·se·s</summary>
-								<p class="note">Cumul {periode}. Uniquement les joueur·se·s affiché·e·s en nom complet.</p>
-								<div class="comparaison-choix">
-									{[1, 2].map((n) => (
-										<div>
-											<label class="filtre-label" for={`comparer-${n}`}>Joueur·se {n}</label>
-											<select id={`comparer-${n}`} class="comparer-select">
-												<option value="">— Choisir —</option>
-												{comparables.map((c, i) => (
-													<option value={i}>
-														{c.nom} ({c.equipe})
-													</option>
-												))}
-											</select>
-										</div>
-									))}
-								</div>
-								<div class="comparaison-resultat" aria-live="polite" />
-								<script is:inline type="application/json" id="donnees-comparaison" set:html={JSON.stringify(comparables)} />
-							</details>
-						)}
 
 						{blocs.map(({ equipe, carriere }) => {
 							const joueurs = joueursAffiches(carriere);
@@ -657,109 +609,6 @@ const comparables = blocs
 				plus.addEventListener("click", (e) => e.stopPropagation());
 				plus.addEventListener("keydown", (e) => e.stopPropagation());
 			}
-
-			// --- Comparaison de deux joueur·se·s (nominatifs uniquement) --------
-			type Comparable = {
-				nom: string;
-				equipe: string;
-				matchs: number;
-				buts: number;
-				ratio: number | null;
-				sept_m: number;
-				tirs: number;
-				arrets: number;
-				avertissements: number;
-				exclusions: number;
-				disqualifications: number;
-				saisons: { saison: string; buts: number; matchs: number }[];
-			};
-			const donnees = document.querySelector<HTMLScriptElement>("#donnees-comparaison");
-			const comparables: Comparable[] = donnees ? JSON.parse(donnees.textContent ?? "[]") : [];
-			const choix = [...document.querySelectorAll<HTMLSelectElement>(".comparer-select")];
-			const resultat = document.querySelector<HTMLElement>(".comparaison-resultat");
-
-			// Mise en avant de la meilleure valeur seulement pour ce qui se lit
-			// "plus = mieux" ; jamais pour les sanctions, où ce serait un jugement.
-			const LIGNES: { titre: string; valeur: (c: Comparable) => number | null; texte?: (c: Comparable) => string; meilleur?: boolean }[] = [
-				{ titre: "Matchs", valeur: (c) => c.matchs, meilleur: true },
-				{ titre: "Buts", valeur: (c) => c.buts, meilleur: true },
-				{ titre: "Buts/match", valeur: (c) => c.ratio, texte: (c) => (c.ratio == null ? "—" : c.ratio.toFixed(1)), meilleur: true },
-				{ titre: "7m", valeur: (c) => c.sept_m, meilleur: true },
-				{ titre: "Tirs", valeur: (c) => c.tirs },
-				{ titre: "Arrêts", valeur: (c) => c.arrets, meilleur: true },
-				{ titre: "Avert.", valeur: (c) => c.avertissements },
-				{ titre: "Excl.", valeur: (c) => c.exclusions },
-				{ titre: "Disq.", valeur: (c) => c.disqualifications },
-			];
-
-			function cellule(balise: "th" | "td", texte: string, classe?: string) {
-				const el = document.createElement(balise);
-				el.textContent = texte;
-				if (classe) el.className = classe;
-				if (balise === "th") el.scope = "row";
-				return el;
-			}
-
-			function tableau(legende: string, entetes: string[], lignes: { titre: string; valeurs: string[]; meilleurs?: boolean[] }[]) {
-				const table = document.createElement("table");
-				table.className = "detail comparaison-table";
-				table.createCaption().textContent = legende;
-				const tr = table.createTHead().insertRow();
-				for (const e of entetes) {
-					const th = cellule("th", e);
-					th.scope = "col";
-					tr.append(th);
-				}
-				const tbody = table.createTBody();
-				for (const l of lignes) {
-					const row = tbody.insertRow();
-					row.append(cellule("th", l.titre));
-					l.valeurs.forEach((v, i) => row.append(cellule("td", v, l.meilleurs?.[i] ? "meilleur" : undefined)));
-				}
-				return table;
-			}
-
-			function comparer() {
-				if (!resultat) return;
-				resultat.replaceChildren();
-				const [a, b] = choix.map((s) => (s.value === "" ? null : comparables[Number(s.value)]));
-				if (!a || !b) return;
-				if (a === b) {
-					const p = document.createElement("p");
-					p.className = "note";
-					p.textContent = "Choisissez deux joueur·se·s différent·e·s.";
-					resultat.append(p);
-					return;
-				}
-				resultat.append(
-					tableau(
-						"Cumul",
-						["", `${a.nom} (${a.equipe})`, `${b.nom} (${b.equipe})`],
-						LIGNES.map((l) => {
-							const va = l.valeur(a) ?? -1;
-							const vb = l.valeur(b) ?? -1;
-							return {
-								titre: l.titre,
-								valeurs: [a, b].map((c) => (l.texte ? l.texte(c) : String(l.valeur(c)))),
-								meilleurs: l.meilleur && va !== vb ? [va > vb, vb > va] : undefined,
-							};
-						}),
-					),
-				);
-				const saisons = [...new Set([...a.saisons, ...b.saisons].map((s) => s.saison))].sort();
-				const buts = (c: Comparable, s: string) => {
-					const e = c.saisons.find((x) => x.saison === s);
-					return e ? `${e.buts} (${e.matchs} m.)` : "—";
-				};
-				resultat.append(
-					tableau(
-						"Buts par saison (matchs joués)",
-						["Saison", a.nom, b.nom],
-						saisons.map((s) => ({ titre: s, valeurs: [buts(a, s), buts(b, s)] })),
-					),
-				);
-			}
-			for (const s of choix) s.addEventListener("change", comparer);
 		</script>
 	</body>
 </html>
@@ -981,78 +830,6 @@ const comparables = blocs
 	.graphe-saison {
 		fill: color-mix(in srgb, var(--color-white) 70%, transparent);
 		font-size: 10px;
-	}
-	/* Comparaison de deux joueur·se·s. */
-	.comparaison {
-		margin: 0 0 1.5rem;
-		border: 1px solid color-mix(in srgb, var(--color-white) 20%, transparent);
-		border-radius: 4px;
-		padding: 0 1rem;
-	}
-	.comparaison summary {
-		min-height: 44px;
-		display: flex;
-		align-items: center;
-		cursor: pointer;
-		color: var(--color-white);
-		font-weight: 700;
-	}
-	.comparaison summary:focus-visible {
-		outline: 2px solid var(--color-crimson);
-		outline-offset: 2px;
-	}
-	.comparaison[open] {
-		padding-bottom: 1rem;
-	}
-	.comparaison-choix {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-		gap: 0 1rem;
-	}
-	.comparaison-choix select {
-		margin-bottom: 1rem;
-	}
-	.comparaison-resultat {
-		overflow-x: auto;
-	}
-	/* Tableaux construits par le script (après le build) : les styles
-	   "scopés" d'Astro ne s'y appliquent pas, d'où :global(), limité au
-	   conteneur de la comparaison. */
-	.comparaison-resultat :global(table) {
-		width: 100%;
-		border-collapse: collapse;
-		font-size: 0.85rem;
-		margin-bottom: 1rem;
-	}
-	.comparaison-resultat :global(caption) {
-		text-align: left;
-		color: color-mix(in srgb, var(--color-white) 55%, transparent);
-		font-size: 0.7rem;
-		text-transform: uppercase;
-		letter-spacing: 0.04em;
-		margin-bottom: 0.4rem;
-	}
-	.comparaison-resultat :global(th),
-	.comparaison-resultat :global(td) {
-		padding: 0.4rem 0.6rem;
-		color: color-mix(in srgb, var(--color-white) 85%, transparent);
-		border-bottom: 1px solid color-mix(in srgb, var(--color-white) 12%, transparent);
-		text-align: right;
-	}
-	.comparaison-resultat :global(thead th) {
-		color: var(--color-white);
-		font-weight: 700;
-		font-size: 0.8rem;
-	}
-	.comparaison-resultat :global(th[scope="row"]) {
-		text-align: left;
-		font-weight: 400;
-		color: color-mix(in srgb, var(--color-white) 65%, transparent);
-	}
-	.comparaison-resultat :global(td.meilleur) {
-		color: var(--color-white);
-		font-weight: 700;
-		box-shadow: inset 0 -2px 0 var(--color-crimson);
 	}
 	/* Bascule de vue : les deux valeurs sont dans chaque cellule, une seule
 	   est montrée selon data-vue (posé par le script sur .carriere-content). */

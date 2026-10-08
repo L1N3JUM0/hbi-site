@@ -168,6 +168,8 @@ ligne d'en-tête), une regex classique échoue sur ce tableau.
   "surclassé" envisagé un temps s'est avéré impossible (l'âge des joueurs n'est pas
   dans les feuilles) — remplacé par "plusieurs catégories la même saison", qui est
   réellement calculable.
+- La comparaison de joueurs côte à côte a été volontairement retirée
+  (risque de moqueries et de conflits) : ne pas la réintroduire sans décision du club.
 
 ---
 
