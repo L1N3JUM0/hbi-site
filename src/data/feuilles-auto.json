@@ -59,7 +59,7 @@
 			"adversaire": "HANDBALL CLUB ORANGE 2",
 			"equipeSlug": "u11-mixtes",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-196084/rencontre-2716925/",
-			"derniereTentative": "2026-10-10T16:32:47.244Z",
+			"derniereTentative": "2026-10-10T21:15:30.314Z",
 			"code": "WAGWDPM",
 			"statut": "attente_score"
 		},
@@ -137,6 +137,16 @@
 			"code": "WAGRINK",
 			"statut": "importee"
 		},
+		"2996929": {
+			"date": "2026-10-10T16:00:00.000Z",
+			"competition": "CHAMPIONNAT U15 EXCELLENCE MASCULIN",
+			"adversaire": "SALON HANDBALL CLUB PROVENCE",
+			"equipeSlug": "u15-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/regional/championnat-u15-excellence-masculin-32450/poule-190653/rencontre-2635288/",
+			"derniereTentative": "2026-10-10T21:15:30.314Z",
+			"code": "WAGRINN",
+			"statut": "attente_score"
+		},
 		"3017764": {
 			"date": "2026-09-13T15:00:00.000Z",
 			"competition": "DIVISION 1 FEMININES",
@@ -166,6 +176,16 @@
 			"derniereTentative": "2026-09-28T15:23:53.579Z",
 			"code": "WAGTIAF",
 			"statut": "importee"
+		},
+		"3017778": {
+			"date": "2026-10-10T18:30:00.000Z",
+			"competition": "DIVISION 1 FEMININES",
+			"adversaire": "HBC PLANAIS 2",
+			"equipeSlug": "seniors-feminines",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-feminines-32648/poule-192108/rencontre-2669822/",
+			"derniereTentative": "2026-10-10T21:15:30.314Z",
+			"code": "WAGTIAP",
+			"statut": "forfait_cree"
 		},
 		"3017851": {
 			"date": "2026-09-13T13:00:00.000Z",
@@ -217,6 +237,27 @@
 			"code": "WAGTIMD",
 			"statut": "importee"
 		},
+		"3017866": {
+			"date": "2026-10-10T18:00:00.000Z",
+			"competition": "DIVISION 1 MASCULINS",
+			"adversaire": "SUD DURANCE - PLANAIS CAVAILLON",
+			"equipeSlug": "seniors-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-masculins-32649/poule-192119/rencontre-2670129/",
+			"derniereTentative": "2026-10-10T21:15:30.314Z",
+			"code": "WAGTIMK",
+			"statut": "attente_score"
+		},
+		"3042002": {
+			"date": "2026-10-10T16:00:00.000Z",
+			"competition": "U18 MASCULIN INTER DEP",
+			"adversaire": "ENT EMBRUN-BRIANÇON",
+			"equipeSlug": "u18-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u18-masculin-inter-dep-33194/poule-196031/rencontre-2716463/",
+			"derniereTentative": "2026-10-10T21:15:30.314Z",
+			"code": "WAGXIJE",
+			"scoreVuLe": "2026-10-10T21:15:30.314Z",
+			"statut": "importee"
+		},
 		"3043197": {
 			"date": "2026-09-26T11:30:00.000Z",
 			"competition": "U17 FEMININES INTER DEP POULE 1",
@@ -233,9 +274,9 @@
 			"adversaire": "MIRAMAS HANDBALL OUEST PROVENCE",
 			"equipeSlug": "u17-feminines",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u17-feminines-inter-dep-poule-1-33205/poule-196082/rencontre-2716855/",
-			"derniereTentative": "2026-10-10T16:32:47.244Z",
+			"derniereTentative": "2026-10-10T21:15:30.314Z",
 			"code": "WAGWDMU",
-			"statut": "attente_score"
+			"statut": "importee"
 		},
 		"3043253": {
 			"date": "2026-09-27T09:00:00.000Z",
