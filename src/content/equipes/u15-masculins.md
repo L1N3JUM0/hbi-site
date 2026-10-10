@@ -16,7 +16,7 @@ calendriers:
     repere: Handball Islois
     libelle: Inter Dép
     classementUrl: ''
-    statistiquesUrl: ''
+    statistiquesUrl: https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u15-masculins-inter-dep-1-2-33206/poule-196090/classements/
 horaires: Mardi et jeudi 19h-20h30
 encadrants: Bruno et Teddy
 tarif: 200 €
