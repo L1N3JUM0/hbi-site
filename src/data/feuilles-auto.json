@@ -20,6 +20,28 @@
 			"code": "WAGWDIQ",
 			"statut": "importee"
 		},
+		"2985131": {
+			"date": "2026-10-10T11:30:00.000Z",
+			"competition": "U13 MIXTE",
+			"adversaire": "HANDBALL CLUB CARPENTRAS",
+			"equipeSlug": "u13-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u13-mixte-32335/poule-196080/rencontre-2716762/",
+			"derniereTentative": "2026-10-10T16:17:25.861Z",
+			"code": "WAGWDJE",
+			"scoreVuLe": "2026-10-10T16:17:25.861Z",
+			"statut": "importee"
+		},
+		"2985133": {
+			"date": "2026-10-10T11:30:00.000Z",
+			"competition": "U13 MIXTE",
+			"adversaire": "AVIGNON HANDBALL",
+			"equipeSlug": "u13-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u13-mixte-32335/poule-196080/rencontre-2716764/",
+			"derniereTentative": "2026-10-10T16:17:25.861Z",
+			"code": "WAGWDJG",
+			"scoreVuLe": "2026-10-10T16:17:25.861Z",
+			"statut": "importee"
+		},
 		"2985159": {
 			"date": "2026-10-03T12:00:00.000Z",
 			"competition": "U11 MIXTE",
@@ -37,7 +59,7 @@
 			"adversaire": "HANDBALL CLUB ORANGE 2",
 			"equipeSlug": "u11-mixtes",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-196084/rencontre-2716925/",
-			"derniereTentative": "2026-10-10T10:21:35.270Z",
+			"derniereTentative": "2026-10-10T16:17:25.861Z",
 			"code": "WAGWDPM",
 			"statut": "attente_score"
 		},
@@ -205,6 +227,16 @@
 			"code": "WAGWDMQ",
 			"statut": "importee"
 		},
+		"3043201": {
+			"date": "2026-10-10T14:00:00.000Z",
+			"competition": "U17 FEMININES INTER DEP POULE 1",
+			"adversaire": "MIRAMAS HANDBALL OUEST PROVENCE",
+			"equipeSlug": "u17-feminines",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u17-feminines-inter-dep-poule-1-33205/poule-196082/rencontre-2716855/",
+			"derniereTentative": "2026-10-10T16:17:25.861Z",
+			"code": "WAGWDMU",
+			"statut": "attente_score"
+		},
 		"3043253": {
 			"date": "2026-09-27T09:00:00.000Z",
 			"competition": "U15 MASCULINS INTER DEP 1&2",
@@ -231,6 +263,17 @@
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u15-feminines-inter-dep-poule-1-33207/poule-196377/rencontre-2720664/",
 			"derniereTentative": "2026-10-03T17:30:34.306Z",
 			"code": "WAGWJIJ",
+			"statut": "importee"
+		},
+		"3043379": {
+			"date": "2026-10-10T12:00:00.000Z",
+			"competition": "U15 FEMININES INTER DEP POULE 1",
+			"adversaire": "HANDBALL CLUB ORANGE",
+			"equipeSlug": "u15-feminines",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u15-feminines-inter-dep-poule-1-33207/poule-196377/rencontre-2720669/",
+			"derniereTentative": "2026-10-10T16:17:25.861Z",
+			"code": "WAGWJIO",
+			"scoreVuLe": "2026-10-10T16:17:25.861Z",
 			"statut": "importee"
 		}
 	}

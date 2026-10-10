@@ -1,6 +1,6 @@
 {
 	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u17-feminines-inter-dep-poule-1-33205/poule-196082/statistiques/",
-	"fetchedAt": "2026-10-10T10:21:57.703Z",
+	"fetchedAt": "2026-10-10T16:18:08.315Z",
 	"classement": [
 		{
 			"id": "10621237",
@@ -16,7 +16,7 @@
 			"butPlus": "24",
 			"butMoins": "11",
 			"diff": "13",
-			"dernieresRencontres": "1",
+			"dernieresRencontres": "1;-1",
 			"equipe_libelle": "HANDBALL CLUB MONTEUX",
 			"equipe_logoActif": "1",
 			"structure_logo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG",
@@ -56,7 +56,7 @@
 			"butPlus": "33",
 			"butMoins": "24",
 			"diff": "9",
-			"dernieresRencontres": "1",
+			"dernieresRencontres": "1;-1",
 			"equipe_libelle": "HANDBALL CLUB VALREAS",
 			"equipe_logoActif": "1",
 			"structure_logo": "2026-06-05-700b853c-4af0-4959-a4c0-ea4e44299bb2.png",
@@ -76,7 +76,7 @@
 			"butPlus": "20",
 			"butMoins": "17",
 			"diff": "3",
-			"dernieresRencontres": "1",
+			"dernieresRencontres": "1;-1",
 			"equipe_libelle": "HANDBALL CLUB VEDENAIS",
 			"equipe_logoActif": "1",
 			"structure_logo": "2026-07-16-885c7b46-4733-4c24-b320-3ce37156cb58.jpg",
@@ -96,7 +96,7 @@
 			"butPlus": "17",
 			"butMoins": "20",
 			"diff": "-3",
-			"dernieresRencontres": "-1",
+			"dernieresRencontres": "-1;-1",
 			"equipe_libelle": "MIRAMAS HANDBALL OUEST PROVENCE",
 			"equipe_logoActif": "1",
 			"structure_logo": "2020-09-08-153081ff-5dc4-44c9-988a-c559c99d80a5.jpg",
@@ -116,7 +116,7 @@
 			"butPlus": "29",
 			"butMoins": "38",
 			"diff": "-9",
-			"dernieresRencontres": "-1",
+			"dernieresRencontres": "-1;1",
 			"equipe_libelle": "L'ISLE - LE THOR (U17F)",
 			"equipe_logoActif": "0",
 			"structure_logo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg",
@@ -136,7 +136,7 @@
 			"butPlus": "24",
 			"butMoins": "33",
 			"diff": "-9",
-			"dernieresRencontres": "-1",
+			"dernieresRencontres": "-1;-1",
 			"equipe_libelle": "SALON HANDBALL CLUB PROVENCE",
 			"equipe_logoActif": "1",
 			"structure_logo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg",
@@ -188,8 +188,8 @@
 		},
 		{
 			"individuId": "2374683",
-			"matchCount": "1",
-			"totalButs": "0",
+			"matchCount": "2",
+			"totalButs": "3",
 			"totalArrets": "0",
 			"nom": "DENANTE",
 			"prenom": "LENA",
@@ -199,8 +199,8 @@
 		},
 		{
 			"individuId": "2494382",
-			"matchCount": "1",
-			"totalButs": "1",
+			"matchCount": "2",
+			"totalButs": "13",
 			"totalArrets": "0",
 			"nom": "GARCIA",
 			"prenom": "MARION",
@@ -232,9 +232,9 @@
 		},
 		{
 			"individuId": "2756995",
-			"matchCount": "1",
-			"totalButs": "4",
-			"totalArrets": "0",
+			"matchCount": "2",
+			"totalButs": "7",
+			"totalArrets": "1",
 			"nom": "AUDIBERT",
 			"prenom": "ALICIA",
 			"showEquipeLogo": "1",
@@ -287,8 +287,8 @@
 		},
 		{
 			"individuId": "2941675",
-			"matchCount": "1",
-			"totalButs": "7",
+			"matchCount": "2",
+			"totalButs": "9",
 			"totalArrets": "0",
 			"nom": "FAVRE",
 			"prenom": "MAELYS",
@@ -320,7 +320,7 @@
 		},
 		{
 			"individuId": "3055436",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "1",
 			"totalArrets": "0",
 			"nom": "LOISY",
@@ -372,6 +372,17 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "SALON HANDBALL CLUB PROVENCE",
 			"structureLogo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg"
+		},
+		{
+			"individuId": "3162040",
+			"matchCount": "1",
+			"totalButs": "4",
+			"totalArrets": "0",
+			"nom": "EL SEFFAH",
+			"prenom": "JENA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "MIRAMAS HANDBALL OUEST PROVENCE",
+			"structureLogo": "2020-09-08-153081ff-5dc4-44c9-988a-c559c99d80a5.jpg"
 		},
 		{
 			"individuId": "3274824",
@@ -430,8 +441,8 @@
 		},
 		{
 			"individuId": "3354952",
-			"matchCount": "1",
-			"totalButs": "2",
+			"matchCount": "2",
+			"totalButs": "4",
 			"totalArrets": "0",
 			"nom": "VANADIA",
 			"prenom": "LEONA",
@@ -507,8 +518,8 @@
 		},
 		{
 			"individuId": "3391544",
-			"matchCount": "1",
-			"totalButs": "9",
+			"matchCount": "2",
+			"totalButs": "16",
 			"totalArrets": "0",
 			"nom": "COLLI",
 			"prenom": "ANNA",
@@ -573,9 +584,9 @@
 		},
 		{
 			"individuId": "3495526",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "0",
-			"totalArrets": "11",
+			"totalArrets": "54",
 			"nom": "HENRY",
 			"prenom": "ELISA",
 			"showEquipeLogo": "0",
@@ -617,8 +628,8 @@
 		},
 		{
 			"individuId": "3526612",
-			"matchCount": "1",
-			"totalButs": "3",
+			"matchCount": "2",
+			"totalButs": "9",
 			"totalArrets": "0",
 			"nom": "BALANDRAUD",
 			"prenom": "LOLIE",
@@ -660,6 +671,17 @@
 			"structureLogo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg"
 		},
 		{
+			"individuId": "3537776",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "ROSELLINI",
+			"prenom": "JENNA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "MIRAMAS HANDBALL OUEST PROVENCE",
+			"structureLogo": "2020-09-08-153081ff-5dc4-44c9-988a-c559c99d80a5.jpg"
+		},
+		{
 			"individuId": "3540065",
 			"matchCount": "1",
 			"totalButs": "3",
@@ -672,7 +694,7 @@
 		},
 		{
 			"individuId": "3542855",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "3",
 			"totalArrets": "0",
 			"nom": "GUICHARD",
@@ -704,6 +726,17 @@
 			"structureLogo": "2026-06-05-700b853c-4af0-4959-a4c0-ea4e44299bb2.png"
 		},
 		{
+			"individuId": "3564087",
+			"matchCount": "1",
+			"totalButs": "2",
+			"totalArrets": "0",
+			"nom": "DEVEZE CHIFFLET",
+			"prenom": "COLINE",
+			"showEquipeLogo": "0",
+			"equipeLibelle": "L'ISLE - LE THOR (U17F)",
+			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
 			"individuId": "3582519",
 			"matchCount": "1",
 			"totalButs": "1",
@@ -713,6 +746,17 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "HANDBALL SAINT MARTINOIS",
 			"structureLogo": "2015-09-23-941c58ce-ddb6-42ea-8bb0-144fa8e05287.jpg"
+		},
+		{
+			"individuId": "3583640",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "HAFAFSA",
+			"prenom": "ANAIS",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "MIRAMAS HANDBALL OUEST PROVENCE",
+			"structureLogo": "2020-09-08-153081ff-5dc4-44c9-988a-c559c99d80a5.jpg"
 		},
 		{
 			"individuId": "3584725",
@@ -738,7 +782,7 @@
 		},
 		{
 			"individuId": "3712619",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "0",
 			"totalArrets": "0",
 			"nom": "MAGUET",
@@ -757,6 +801,28 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "SALON HANDBALL CLUB PROVENCE",
 			"structureLogo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg"
+		},
+		{
+			"individuId": "3723957",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "SAINT-JOANIS",
+			"prenom": "LUCILE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "MIRAMAS HANDBALL OUEST PROVENCE",
+			"structureLogo": "2020-09-08-153081ff-5dc4-44c9-988a-c559c99d80a5.jpg"
+		},
+		{
+			"individuId": "3739639",
+			"matchCount": "1",
+			"totalButs": "1",
+			"totalArrets": "0",
+			"nom": "PUGET",
+			"prenom": "LILI-ROSE",
+			"showEquipeLogo": "0",
+			"equipeLibelle": "L'ISLE - LE THOR (U17F)",
+			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
 		},
 		{
 			"individuId": "3742865",
@@ -804,11 +870,22 @@
 		},
 		{
 			"individuId": "3744505",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "1",
 			"totalArrets": "0",
 			"nom": "BUCHAUT",
 			"prenom": "AURORE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "MIRAMAS HANDBALL OUEST PROVENCE",
+			"structureLogo": "2020-09-08-153081ff-5dc4-44c9-988a-c559c99d80a5.jpg"
+		},
+		{
+			"individuId": "3745272",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "BOUKARAI",
+			"prenom": "LINA",
 			"showEquipeLogo": "1",
 			"equipeLibelle": "MIRAMAS HANDBALL OUEST PROVENCE",
 			"structureLogo": "2020-09-08-153081ff-5dc4-44c9-988a-c559c99d80a5.jpg"
@@ -837,9 +914,9 @@
 		},
 		{
 			"individuId": "3810640",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "0",
-			"totalArrets": "24",
+			"totalArrets": "37",
 			"nom": "MASSA",
 			"prenom": "CHARLENE",
 			"showEquipeLogo": "1",
@@ -881,8 +958,8 @@
 		},
 		{
 			"individuId": "3917121",
-			"matchCount": "1",
-			"totalButs": "4",
+			"matchCount": "2",
+			"totalButs": "7",
 			"totalArrets": "0",
 			"nom": "LAMOUREUX-CHAMPEIL",
 			"prenom": "AMELIE",
@@ -892,7 +969,7 @@
 		},
 		{
 			"individuId": "3953897",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "3",
 			"totalArrets": "0",
 			"nom": "MOUJANE",
@@ -925,7 +1002,7 @@
 		},
 		{
 			"individuId": "4143639",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "0",
 			"totalArrets": "0",
 			"nom": "CZILINDER",
@@ -947,8 +1024,8 @@
 		},
 		{
 			"individuId": "4201650",
-			"matchCount": "1",
-			"totalButs": "8",
+			"matchCount": "2",
+			"totalButs": "10",
 			"totalArrets": "0",
 			"nom": "MOHAMMEDI",
 			"prenom": "ELIANE",
