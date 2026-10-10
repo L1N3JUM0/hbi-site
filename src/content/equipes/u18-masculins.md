@@ -16,10 +16,13 @@ horaires: Mercredi et vendredi 19h-20h30
 encadrants: Jérôme et Cyril
 tarif: 210 €
 description: Entraînements le mercredi et le vendredi de 19h à 20h30, encadrés par Jérôme et Cyril.
-photoProfil: /src/assets/u18M.jpg
+presentation: ''
+public: ''
+photoProfil: /src/assets/1000002221.webp
 galerie:
   - /src/assets/u18M.jpg
   - /src/assets/u18m-3.webp
   - /src/assets/u18m-2.webp
+  - /src/assets/1000002221.webp
 affichageStats: nominatif
 ---
