@@ -11,6 +11,7 @@ calendriers:
     repere: Handball Islois
     libelle: ''
     classementUrl: ''
+    statistiquesUrl: https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u18-masculin-inter-dep-33194/poule-196031/classements/
 horaires: Mercredi et vendredi 19h-20h30
 encadrants: Jérôme et Cyril
 tarif: 210 €

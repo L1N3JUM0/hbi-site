@@ -15,7 +15,7 @@ calendriers:
     repere: CONVENTION L'ISLE LE THOR
     libelle: ''
     classementUrl: ''
-    statistiquesUrl: ''
+    statistiquesUrl: https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u15-feminines-inter-dep-poule-1-33207/poule-196377/classements/
 horaires: Mercredi 16h30-18h / vendredi 18h-19h30
 encadrants: Aurore
 tarif: 200 €
