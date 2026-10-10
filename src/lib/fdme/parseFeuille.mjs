@@ -93,8 +93,24 @@ function parseDetailScore(rows) {
 	if (!recVisFound || recVisFound.index === 0) return null;
 	const recVisRow = recVisFound.row;
 
-	const labels = rows[recVisFound.index - 1].items;
-	if (labels.length !== recVisRow.items.length / 2) return null;
+	// Seuls les libellés placés au-dessus d'une paire REC/VIS comptent : le
+	// nom de l'équipe visiteuse, imprimé dans la marge gauche, peut tomber
+	// sur la même ligne que les libellés (vu sur WAGWDMU, U17F 10/10/2026,
+	// « MIRAMAS HANDBALL OUEST PROVENCE » à côté de « Période 1 ») et
+	// faussait le décompte des colonnes.
+	const paires = recVisRow.items.length / 2;
+	// Le libellé doit tenir entièrement entre le REC et le VIS de sa paire :
+	// un test sur son seul centre ne suffit pas, le nom d'équipe étant assez
+	// long pour déborder jusqu'au-dessus de la première paire.
+	const labels = rows[recVisFound.index - 1].items.filter((label) => {
+		for (let i = 0; i < paires; i++) {
+			const rec = recVisRow.items[i * 2];
+			const vis = recVisRow.items[i * 2 + 1];
+			if (label.x >= rec.x && label.x + (label.width ?? 0) <= vis.x + (vis.width ?? 0)) return true;
+		}
+		return false;
+	});
+	if (labels.length !== paires) return null;
 	const colonnes = labels.map((label, i) => ({
 		label: label.str,
 		xDomicile: recVisRow.items[i * 2].x,
