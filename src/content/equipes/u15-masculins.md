@@ -21,7 +21,9 @@ horaires: Mardi et jeudi 19h-20h30
 encadrants: Bruno et Teddy
 tarif: 200 €
 description: Entraînements le mardi et le jeudi de 19h à 20h30, encadrés par Bruno et Teddy.
-photoProfil: /src/assets/u15-prof.webp
+presentation: ''
+public: ''
+photoProfil: /src/assets/1000002215.webp
 galerie:
   - /src/assets/u15-prof.webp
   - /src/assets/u15-1.webp
