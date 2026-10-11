@@ -1,6 +1,6 @@
 {
 	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u15-feminines-inter-dep-poule-1-33207/poule-196377/classements/",
-	"fetchedAt": "2026-10-11T10:30:06.511Z",
+	"fetchedAt": "2026-10-11T18:37:25.726Z",
 	"classement": [
 		{
 			"id": "10621268",
@@ -63,11 +63,31 @@
 			"ext_structureId": "3533"
 		},
 		{
+			"id": "10621259",
+			"ext_classementId": "59734641",
+			"pouleId": "246166",
+			"equipeId": "1833756",
+			"place": "4",
+			"point": "8",
+			"joue": "4",
+			"gagne": "1",
+			"nul": "0",
+			"perdu": "2",
+			"butPlus": "64",
+			"butMoins": "64",
+			"diff": "0",
+			"dernieresRencontres": "-1;-1;1",
+			"equipe_libelle": "SALON HANDBALL CLUB PROVENCE",
+			"equipe_logoActif": "1",
+			"structure_logo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg",
+			"ext_structureId": "3543"
+		},
+		{
 			"id": "10621263",
 			"ext_classementId": "59734639",
 			"pouleId": "246166",
 			"equipeId": "1833760",
-			"place": "4",
+			"place": "5",
 			"point": "7",
 			"joue": "3",
 			"gagne": "1",
@@ -76,7 +96,7 @@
 			"butPlus": "52",
 			"butMoins": "50",
 			"diff": "2",
-			"dernieresRencontres": "1;-1;-1",
+			"dernieresRencontres": "1;-1;1",
 			"equipe_libelle": "CO CHATEAURENARDAIS",
 			"equipe_logoActif": "1",
 			"structure_logo": "2022-10-09-786141e3-0823-48c5-8b45-dddd8e700f13.jpeg",
@@ -87,7 +107,7 @@
 			"ext_classementId": "59734635",
 			"pouleId": "246166",
 			"equipeId": "1833758",
-			"place": "5",
+			"place": "6",
 			"point": "6",
 			"joue": "3",
 			"gagne": "1",
@@ -107,7 +127,7 @@
 			"ext_classementId": "59734643",
 			"pouleId": "246166",
 			"equipeId": "1833761",
-			"place": "6",
+			"place": "7",
 			"point": "5",
 			"joue": "3",
 			"gagne": "1",
@@ -121,26 +141,6 @@
 			"equipe_logoActif": "1",
 			"structure_logo": "2024-06-12-f09f9018-5fbb-48ab-ba11-dcc688a9aa24.png",
 			"ext_structureId": "3584"
-		},
-		{
-			"id": "10621259",
-			"ext_classementId": "59734641",
-			"pouleId": "246166",
-			"equipeId": "1833756",
-			"place": "7",
-			"point": "5",
-			"joue": "3",
-			"gagne": "0",
-			"nul": "0",
-			"perdu": "2",
-			"butPlus": "28",
-			"butMoins": "44",
-			"diff": "-16",
-			"dernieresRencontres": "-1;-1;1",
-			"equipe_libelle": "SALON HANDBALL CLUB PROVENCE",
-			"equipe_logoActif": "1",
-			"structure_logo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg",
-			"ext_structureId": "3543"
 		},
 		{
 			"id": "10621265",
@@ -168,14 +168,14 @@
 			"pouleId": "246166",
 			"equipeId": "1833763",
 			"place": "9",
-			"point": "2",
-			"joue": "2",
+			"point": "3",
+			"joue": "3",
 			"gagne": "0",
 			"nul": "0",
-			"perdu": "2",
-			"butPlus": "22",
-			"butMoins": "53",
-			"diff": "-31",
+			"perdu": "3",
+			"butPlus": "42",
+			"butMoins": "89",
+			"diff": "-47",
 			"dernieresRencontres": "-1;-1;-1",
 			"equipe_libelle": "HANDBALL CLUB MONTEUX",
 			"equipe_logoActif": "1",
@@ -206,7 +206,7 @@
 	"statsJoueurs": [
 		{
 			"individuId": "1920908",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "0",
 			"totalArrets": "0",
 			"nom": "HAKIM",
@@ -338,8 +338,8 @@
 		},
 		{
 			"individuId": "3165891",
-			"matchCount": "2",
-			"totalButs": "1",
+			"matchCount": "3",
+			"totalButs": "5",
 			"totalArrets": "0",
 			"nom": "JEGOUIC",
 			"prenom": "ALEXIE",
@@ -404,8 +404,8 @@
 		},
 		{
 			"individuId": "3290320",
-			"matchCount": "2",
-			"totalButs": "6",
+			"matchCount": "3",
+			"totalButs": "12",
 			"totalArrets": "0",
 			"nom": "PEREZ",
 			"prenom": "CLARA",
@@ -503,8 +503,8 @@
 		},
 		{
 			"individuId": "3374290",
-			"matchCount": "2",
-			"totalButs": "12",
+			"matchCount": "3",
+			"totalButs": "18",
 			"totalArrets": "0",
 			"nom": "CHAVANON",
 			"prenom": "LAUREEN",
@@ -744,6 +744,17 @@
 			"structureLogo": "2026-08-01-1307c0ce-4a94-4e91-ac41-15b6c8e3282e.jpg"
 		},
 		{
+			"individuId": "3731789",
+			"matchCount": "1",
+			"totalButs": "3",
+			"totalArrets": "0",
+			"nom": "ZAIMI",
+			"prenom": "MANEL",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB VEDENAIS",
+			"structureLogo": "2026-07-16-885c7b46-4733-4c24-b320-3ce37156cb58.jpg"
+		},
+		{
 			"individuId": "3734602",
 			"matchCount": "3",
 			"totalButs": "1",
@@ -877,8 +888,8 @@
 		},
 		{
 			"individuId": "3944302",
-			"matchCount": "2",
-			"totalButs": "0",
+			"matchCount": "3",
+			"totalButs": "2",
 			"totalArrets": "0",
 			"nom": "MOLINS-MARTIN",
 			"prenom": "CAMILLE",
@@ -888,8 +899,8 @@
 		},
 		{
 			"individuId": "3944828",
-			"matchCount": "2",
-			"totalButs": "2",
+			"matchCount": "3",
+			"totalButs": "3",
 			"totalArrets": "0",
 			"nom": "BARTOLI",
 			"prenom": "CHARLOTTE",
@@ -964,6 +975,28 @@
 			"structureLogo": "2020-09-08-153081ff-5dc4-44c9-988a-c559c99d80a5.jpg"
 		},
 		{
+			"individuId": "3952598",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "BOU",
+			"prenom": "ELOISE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB VEDENAIS",
+			"structureLogo": "2026-07-16-885c7b46-4733-4c24-b320-3ce37156cb58.jpg"
+		},
+		{
+			"individuId": "3952716",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "16",
+			"nom": "ARSAC",
+			"prenom": "SALOME",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB VEDENAIS",
+			"structureLogo": "2026-07-16-885c7b46-4733-4c24-b320-3ce37156cb58.jpg"
+		},
+		{
 			"individuId": "3953897",
 			"matchCount": "1",
 			"totalButs": "6",
@@ -997,9 +1030,20 @@
 			"structureLogo": "2015-04-24-b29597c8-5231-430b-8fd3-ce6883cd4776.jpg"
 		},
 		{
-			"individuId": "3960125",
+			"individuId": "3958362",
 			"matchCount": "1",
-			"totalButs": "9",
+			"totalButs": "3",
+			"totalArrets": "0",
+			"nom": "RAJAONARIVELO",
+			"prenom": "LAYLAH",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB VEDENAIS",
+			"structureLogo": "2026-07-16-885c7b46-4733-4c24-b320-3ce37156cb58.jpg"
+		},
+		{
+			"individuId": "3960125",
+			"matchCount": "2",
+			"totalButs": "18",
 			"totalArrets": "0",
 			"nom": "GARCIA",
 			"prenom": "LEANNA",
@@ -1009,8 +1053,8 @@
 		},
 		{
 			"individuId": "3971585",
-			"matchCount": "2",
-			"totalButs": "6",
+			"matchCount": "3",
+			"totalButs": "8",
 			"totalArrets": "0",
 			"nom": "CHBIBI",
 			"prenom": "CAMELIA",
@@ -1064,8 +1108,8 @@
 		},
 		{
 			"individuId": "4033254",
-			"matchCount": "2",
-			"totalButs": "4",
+			"matchCount": "3",
+			"totalButs": "5",
 			"totalArrets": "0",
 			"nom": "ROUSSAT",
 			"prenom": "LUCE",
@@ -1116,6 +1160,28 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "ROGNAC VELAUX COUDOUX HANDBALL",
 			"structureLogo": "2023-01-11-42ab6333-b47d-47a3-bbc2-ae462ae537cd.png"
+		},
+		{
+			"individuId": "4130971",
+			"matchCount": "1",
+			"totalButs": "4",
+			"totalArrets": "0",
+			"nom": "HADJADJI MASSON",
+			"prenom": "LENA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB VEDENAIS",
+			"structureLogo": "2026-07-16-885c7b46-4733-4c24-b320-3ce37156cb58.jpg"
+		},
+		{
+			"individuId": "4131040",
+			"matchCount": "1",
+			"totalButs": "4",
+			"totalArrets": "0",
+			"nom": "SERRA",
+			"prenom": "LEONIE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB VEDENAIS",
+			"structureLogo": "2026-07-16-885c7b46-4733-4c24-b320-3ce37156cb58.jpg"
 		},
 		{
 			"individuId": "4137724",
@@ -1229,9 +1295,9 @@
 		},
 		{
 			"individuId": "4295000",
-			"matchCount": "2",
+			"matchCount": "3",
 			"totalButs": "0",
-			"totalArrets": "0",
+			"totalArrets": "11",
 			"nom": "CHAMPION",
 			"prenom": "ANNAELLE",
 			"showEquipeLogo": "1",
@@ -1262,8 +1328,8 @@
 		},
 		{
 			"individuId": "4307216",
-			"matchCount": "1",
-			"totalButs": "0",
+			"matchCount": "2",
+			"totalButs": "6",
 			"totalArrets": "0",
 			"nom": "GUEYE",
 			"prenom": "RAHMA",
@@ -1281,6 +1347,28 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "HANDBALL CLUB ORANGE",
 			"structureLogo": "2024-06-12-f09f9018-5fbb-48ab-ba11-dcc688a9aa24.png"
+		},
+		{
+			"individuId": "4334399",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "SAURON",
+			"prenom": "HIBA",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB VEDENAIS",
+			"structureLogo": "2026-07-16-885c7b46-4733-4c24-b320-3ce37156cb58.jpg"
+		},
+		{
+			"individuId": "4335511",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "0",
+			"nom": "BLAGDEN",
+			"prenom": "JULIETTE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL CLUB VEDENAIS",
+			"structureLogo": "2026-07-16-885c7b46-4733-4c24-b320-3ce37156cb58.jpg"
 		}
 	]
 }
