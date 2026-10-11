@@ -1068,6 +1068,50 @@ function barres(saisons: { saison: string; buts: number }[]) {
 		white-space: normal;
 		margin: 0 0 0.5rem;
 	}
+	/* --- Colonne du nom figée (grand écran : sur mobile, ce sont des
+	   cartes) ---------------------------------------------------------------
+	   Le tableau dépasse la largeur utile dès qu'il y a une colonne
+	   Catégorie. Fond opaque issu des tokens, filet à droite ; le nom est
+	   tronqué (…) au-delà de 11rem pour que la colonne ne mange pas la
+	   largeur. */
+	@media (min-width: 601px) {
+		table.joueurs > thead > tr > th:first-child,
+		table.joueurs tr.joueur-row > td:first-child,
+		table.joueurs table.detail th:first-child,
+		table.joueurs table.detail td:first-child {
+			position: sticky;
+			left: 0;
+			z-index: 1;
+			background: var(--color-navy-deep);
+			box-shadow: inset -1px 0 0 color-mix(in srgb, var(--color-white) 20%, transparent);
+		}
+		
+		/* Coin supérieur gauche : au-dessus de l'en-tête (collé en haut) comme
+		   de la colonne (collée à gauche). */
+		table.joueurs > thead > tr > th {
+			z-index: 2;
+		}
+		table.joueurs > thead > tr > th:first-child {
+			z-index: 3;
+		}
+		/* Équivalents opaques des fonds translucides de la ligne survolée et
+		   de la fiche détaillée. */
+		table.joueurs tr.joueur-row[data-has-detail]:hover > td:first-child {
+			background: color-mix(in srgb, var(--color-white) 6%, var(--color-navy-deep));
+		}
+		table.joueurs table.detail th:first-child,
+		table.joueurs table.detail td:first-child {
+			background: color-mix(in srgb, var(--color-white) 4%, var(--color-navy-deep));
+		}
+		.nom {
+			display: inline-block;
+			max-width: 11rem;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			vertical-align: middle;
+		}
+	}
 	tr.joueur-row[data-has-detail] {
 		cursor: pointer;
 	}

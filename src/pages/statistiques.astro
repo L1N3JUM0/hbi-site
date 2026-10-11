@@ -141,7 +141,9 @@ const blocs = await Promise.all(
 														<tbody>
 															{groupe.joueurs.map((j) => (
 																<tr>
-																	<td>{j.label}</td>
+																	<td>
+																		<span class="nom">{j.label}</span>
+																	</td>
 																	<td>{j.matchsJoues}</td>
 																	<td>{j.buts}</td>
 																	<td>{j.sept_m}</td>
@@ -327,12 +329,19 @@ const blocs = await Promise.all(
 		font-weight: 700;
 		margin: 0;
 	}
+	/* Le tableau défile dans son propre cadre, dans les deux sens : en-tête
+	   collé en haut, colonne du nom collée à gauche (position: sticky, sans
+	   JS). La hauteur limitée donne un sens à l'en-tête collant. */
 	.table-scroll {
-		overflow-x: auto;
+		overflow: auto;
+		max-height: 70vh;
 	}
 	table.joueurs {
 		width: 100%;
-		border-collapse: collapse;
+		/* `separate` : en mode `collapse`, les bordures des cellules collantes
+		   restent en place au lieu de suivre la cellule. */
+		border-collapse: separate;
+		border-spacing: 0;
 		font-size: 0.85rem;
 	}
 	table.joueurs th,
@@ -349,6 +358,36 @@ const blocs = await Promise.all(
 		text-transform: uppercase;
 		letter-spacing: 0.04em;
 		font-weight: 700;
+		position: sticky;
+		top: 0;
+		z-index: 2;
+		background: var(--color-navy-deep);
+	}
+	/* Colonne du nom figée : fond opaque (le contenu qui défile dessous ne
+	   doit pas transparaître), filet à droite. */
+	table.joueurs th:first-child,
+	table.joueurs td:first-child {
+		position: sticky;
+		left: 0;
+		z-index: 1;
+		background: var(--color-navy-deep);
+		box-shadow: inset -1px 0 0 color-mix(in srgb, var(--color-white) 20%, transparent);
+	}
+	/* Coin supérieur gauche : au-dessus des deux bandes collantes. */
+	table.joueurs th:first-child {
+		z-index: 3;
+	}
+	.nom {
+		display: block;
+		max-width: 14rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	@media (max-width: 600px) {
+		/* Assez pour « Prénom N. », sans manger l'écran. */
+		.nom {
+			max-width: 8.5rem;
+		}
 	}
 	table.joueurs td:not(:first-child),
 	table.joueurs th:not(:first-child) {
