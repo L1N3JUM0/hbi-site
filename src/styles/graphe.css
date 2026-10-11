@@ -1,0 +1,33 @@
+/* Diagrammes en barres générés par src/lib/grapheBarres.ts. Feuille
+   globale, pas un <style> de page : le SVG est inséré tel quel (set:html au
+   build, innerHTML dans le navigateur), hors de portée des styles scopés
+   d'Astro. Sobre, couleurs des tokens uniquement. */
+.graphe svg {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+.graphe-barre {
+	fill: var(--color-blue);
+}
+/* Dernière barre (la plus récente) mise en avant. */
+.graphe svg > g:last-child .graphe-barre {
+	fill: var(--color-crimson);
+}
+.graphe-axe {
+	stroke: color-mix(in srgb, var(--color-white) 30%, transparent);
+	stroke-width: 1;
+}
+.graphe-valeur {
+	fill: var(--color-white);
+	font-size: 11px;
+	font-weight: 700;
+}
+.graphe-vide .graphe-valeur {
+	fill: color-mix(in srgb, var(--color-white) 50%, transparent);
+	font-weight: 400;
+}
+.graphe-libelle {
+	fill: color-mix(in srgb, var(--color-white) 70%, transparent);
+	font-size: 10px;
+}

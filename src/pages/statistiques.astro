@@ -1,25 +1,60 @@
 ---
 import "../styles/tokens.css";
+import "../styles/graphe.css";
 import Header from "../components/Header.astro";
 import PageBanner from "../components/PageBanner.astro";
 import Footer from "../components/Footer.astro";
 import Favicon from "../components/Favicon.astro";
 import { getCollection } from "astro:content";
 import { trierEquipes } from "../lib/equipes";
-import { slugsAvecResultats, getStatistiquesParSaison } from "../lib/statistiques";
+import { slugsAvecResultats, getStatistiquesParSaison, type MatchJoueur } from "../lib/statistiques";
 import { withBase } from "../utils/links";
 import CelluleEfficacite from "../components/CelluleEfficacite.astro";
-import { SEUIL_TIRS_SAISON } from "../lib/efficacite";
+import { estGardien, SEUIL_TIRS_SAISON } from "../lib/efficacite";
+import { categorieActuelleParHash } from "../lib/carriereJoueur";
 
 const slugsDisponibles = await slugsAvecResultats();
 const equipes = trierEquipes(await getCollection("equipes")).filter((e) => slugsDisponibles.has(e.data.slug));
 
+// Détail match par match : réservé aux personnes dont la catégorie ACTUELLE
+// est affichée en nom complet (U17 et plus), comme la fiche détaillée de
+// /statistiques-carriere (même calcul, categorieActuelleParHash). Pour qui
+// n'est plus dans aucun effectif récent (a quitté le club), l'équipe de son
+// dernier match en tient lieu : un·e ancien·ne senior garde son détail, un
+// enfant parti en U13 reste sans détail. Sans aucune équipe connue, rien.
+const categorieActuelle = await categorieActuelleParHash(equipes.map((e) => e.data.slug));
+const dernierMatch = new Map<string, { date: Date; slug: string }>();
+for (const r of await getCollection("resultats")) {
+	for (const j of r.data.statsJoueurs ?? []) {
+		const actuel = j.licenceHash ? dernierMatch.get(j.licenceHash) : undefined;
+		if (j.licenceHash && (!actuel || r.data.date > actuel.date)) dernierMatch.set(j.licenceHash, { date: r.data.date, slug: r.data.equipeSlug });
+	}
+}
+const affichageParSlug = new Map(equipes.map((e) => [e.data.slug, e.data.affichageStats]));
+const detailAutorise = (hashes: string[]) =>
+	hashes.length > 0 &&
+	hashes.every((h) => affichageParSlug.get(categorieActuelle.get(h) ?? dernierMatch.get(h)?.slug ?? "") === "nominatif");
+
 const blocs = await Promise.all(
 	equipes.map(async (e) => ({
 		equipe: e,
-		saisons: await getStatistiquesParSaison(e.data.slug, e.data.calendriers, e.data.affichageStats),
+		saisons: await getStatistiquesParSaison(e.data.slug, e.data.calendriers, e.data.affichageStats, detailAutorise),
 	})),
 );
+
+// Données du détail, compactes et en un seul bloc JSON pour toute la page
+// (un panneau complet rendu pour chaque joueur·se de chaque saison doublait
+// son poids) : par identifiant de panneau, [date, adversaire, buts, 7m,
+// tirs, arrêts, avert., excl.] par match. Rempli pendant le rendu du
+// tableau, sérialisé en bas de page.
+const donneesMatchs: Record<string, (string | number)[][]> = {};
+// Jour du match à Paris (AAAA-MM-JJ), pas le jour UTC.
+const jourParis = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris" });
+const enregistrer = (id: string, matchs: MatchJoueur[]) => {
+	donneesMatchs[id] = matchs.map((m) => [jourParis.format(new Date(m.date)), m.adversaire, m.buts, m.sept_m, m.tirs, m.arrets, m.avertissements, m.exclusions]);
+	return id;
+};
+const COLONNES_TABLEAU = 10;
 ---
 
 <html lang="fr">
@@ -92,7 +127,7 @@ const blocs = await Promise.all(
 									<h2>
 										{equipe.data.nom} <span class="saison-label">— {s.saison}</span>
 									</h2>
-									{s.groupes.map((groupe) => (
+									{s.groupes.map((groupe, gi) => (
 										<div class="groupe">
 											{s.plusieursEquipes && <h3>{groupe.libelle}</h3>}
 
@@ -139,24 +174,48 @@ const blocs = await Promise.all(
 															</tr>
 														</thead>
 														<tbody>
-															{groupe.joueurs.map((j) => (
-																<tr>
-																	<td>
-																		<span class="nom">{j.label}</span>
-																	</td>
-																	<td>{j.matchsJoues}</td>
-																	<td>{j.buts}</td>
-																	<td>{j.sept_m}</td>
-																	<td>{j.tirs}</td>
-																	<td>
-																		<CelluleEfficacite buts={j.buts} tirs={j.tirs} arrets={j.arrets} seuil={SEUIL_TIRS_SAISON} />
-																	</td>
-																	<td>{j.arrets}</td>
-																	<td>{j.avertissements}</td>
-																	<td>{j.exclusions}</td>
-																	<td>{j.disqualifications}</td>
-																</tr>
-															))}
+															{groupe.joueurs.map((j, i) => {
+																const detailId = `matchs-${equipe.data.slug}-${s.saison}-${gi}-${i}`;
+																return (
+																	<>
+																		<tr>
+																			<td>
+																				{j.matchs ? (
+																					<button type="button" class="nom-btn" aria-expanded="false" aria-controls={detailId}>
+																						<span class="nom">{j.label}</span>
+																					</button>
+																				) : (
+																					<span class="nom">{j.label}</span>
+																				)}
+																			</td>
+																			<td>{j.matchsJoues}</td>
+																			<td>{j.buts}</td>
+																			<td>{j.sept_m}</td>
+																			<td>{j.tirs}</td>
+																			<td>
+																				<CelluleEfficacite buts={j.buts} tirs={j.tirs} arrets={j.arrets} seuil={SEUIL_TIRS_SAISON} />
+																			</td>
+																			<td>{j.arrets}</td>
+																			<td>{j.avertissements}</td>
+																			<td>{j.exclusions}</td>
+																			<td>{j.disqualifications}</td>
+																		</tr>
+																		{j.matchs && (
+																			<tr class="detail-row" id={detailId} hidden>
+																				<td colspan={COLONNES_TABLEAU}>
+																					<div
+																						class="match-panel"
+																						data-id={enregistrer(detailId, j.matchs)}
+																						data-nom={j.label}
+																						data-saison={s.saison}
+																						data-gardien={String(estGardien(j))}
+																					/>
+																				</td>
+																			</tr>
+																		)}
+																	</>
+																);
+															})}
 														</tbody>
 													</table>
 												</div>
@@ -169,6 +228,49 @@ const blocs = await Promise.all(
 						{/* Simple lien texte en bas de page, seul accès à /records (hors
 						menu et accueil, non indexée -- décision du 30/09/2026). */}
 						<p class="lien-records"><a href={withBase("/records")}>Records et meilleures performances</a></p>
+						
+						{/* Gabarit du panneau match par match, cloné à l'ouverture (voir le
+						script plus bas) ; les identifiants y sont complétés à chaque copie. */}
+						<template id="gabarit-matchs">
+							<label class="filtre-label">
+								Paramètre affiché
+							</label>
+							<select class="match-param">
+								<option value="buts">Buts</option>
+								<option value="tirs">Tirs</option>
+								<option value="efficacite">Efficacité</option>
+								<option value="arrets">Arrêts</option>
+								<option value="avertissements">Avertissements</option>
+								<option value="exclusions">Exclusions</option>
+								<option value="sept_m">7m</option>
+							</select>
+							<figure class="graphe">
+								<figcaption />
+								<div class="graphe-svg" />
+							</figure>
+							<div class="match-scroll">
+								<table class="match-table">
+									<caption />
+									<thead>
+										<tr>
+											<th scope="col">Date</th>
+											<th scope="col">Adversaire</th>
+											<th scope="col">Buts</th>
+											<th scope="col">7m</th>
+											<th scope="col">Tirs</th>
+											<th scope="col">Effic.</th>
+											<th scope="col">Arrêts</th>
+											<th scope="col">Avert.</th>
+											<th scope="col">Excl.</th>
+										</tr>
+									</thead>
+									<tbody />
+									<tfoot />
+								</table>
+							</div>
+							<p class="match-note">Les matchs dont la feuille n'a pas été importée n'apparaissent pas.</p>
+						</template>
+						<script type="application/json" id="donnees-matchs" set:html={JSON.stringify(donneesMatchs).replace(/</g, "\\u003c")} />
 					</div>
 				</section>
 			)
@@ -226,8 +328,141 @@ const blocs = await Promise.all(
 					afficher(selectEquipe.value, selectSaison.value);
 				});
 				selectSaison.addEventListener("change", () => afficher(selectEquipe.value, selectSaison.value));
-			}
-		</script>
+		}
+	</script>
+
+	<script>
+		// --- Détail match par match (clic sur un nom affiché en nom complet) ---
+		// Tableau et graphique construits à la première ouverture, depuis les
+		// données compactes du panneau : les rendre au build pour chaque
+		// joueur·se de chaque saison alourdirait la page d'environ 1 Mo.
+		import { svgBarres } from "../lib/grapheBarres";
+		import { efficacite } from "../lib/efficacite";
+
+		type Match = { date: Date; adversaire: string; buts: number; sept_m: number; tirs: number; arrets: number; avertissements: number; exclusions: number };
+		type Parametre = "buts" | "tirs" | "efficacite" | "arrets" | "avertissements" | "exclusions" | "sept_m";
+
+		const TITRES: Record<Parametre, string> = {
+				buts: "Buts",
+				tirs: "Tirs",
+				efficacite: "Efficacité (%)",
+				arrets: "Arrêts",
+				avertissements: "Avertissements",
+				exclusions: "Exclusions",
+				sept_m: "Buts à 7m",
+		};
+		const dateLongue = new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "2-digit", year: "2-digit", timeZone: "Europe/Paris" });
+		const dateCourte = new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "2-digit", timeZone: "Europe/Paris" });
+
+		/** Efficacité d'un match : `null` sans tir (une absence de valeur,
+		 * jamais un 0 %), pour un·e gardien·ne ou une feuille incohérente. */
+		const efficaciteMatch = (m: Match, gardien: boolean) => (gardien ? null : efficacite(m, 1).pct);
+
+		const valeur = (m: Match, p: Parametre, gardien: boolean): number | null => (p === "efficacite" ? efficaciteMatch(m, gardien) : m[p]);
+
+		function cellule(texte: string | number, titre?: string) {
+				const td = document.createElement("td");
+				td.textContent = String(texte);
+				if (titre) td.title = titre;
+				return td;
+		}
+
+		let donnees: Record<string, [string, string, number, number, number, number, number, number][]> | null = null;
+		
+		function construire(panneau: HTMLElement) {
+			donnees ??= JSON.parse(document.getElementById("donnees-matchs")?.textContent ?? "{}");
+			const id = panneau.dataset.id!;
+			const lignes = donnees![id] ?? [];
+			const gabarit = document.querySelector<HTMLTemplateElement>("#gabarit-matchs")!.content.cloneNode(true) as DocumentFragment;
+			const champ = gabarit.querySelector<HTMLSelectElement>(".match-param")!;
+			champ.id = `${id}-param`;
+			gabarit.querySelector("label")!.htmlFor = champ.id;
+			panneau.append(gabarit);
+				const matchs: Match[] = lignes.map(([date, adversaire, buts, sept_m, tirs, arrets, avertissements, exclusions]) => ({
+					date: new Date(date),
+					adversaire,
+					buts,
+					sept_m,
+					tirs,
+					arrets,
+					avertissements,
+					exclusions,
+				}));
+				const gardien = panneau.dataset.gardien === "true";
+				const nom = panneau.dataset.nom ?? "";
+				panneau.querySelector("caption")!.textContent = `Matchs de ${nom}, saison ${panneau.dataset.saison}`;
+
+				// Tableau : l'équivalent texte du graphique, total en pied.
+				const tbody = panneau.querySelector("tbody")!;
+				for (const m of matchs) {
+					const tr = document.createElement("tr");
+					const eff = efficaciteMatch(m, gardien);
+					tr.append(
+						cellule(dateLongue.format(m.date)),
+						cellule(m.adversaire, m.adversaire),
+						cellule(m.buts),
+						cellule(m.sept_m),
+						cellule(m.tirs),
+						cellule(eff === null ? "–" : `${eff} %`, eff === null ? (gardien ? "Gardien·ne" : m.tirs === 0 ? "Aucun tir" : "Donnée incohérente") : `${m.buts} buts sur ${m.tirs} tirs`),
+						cellule(m.arrets),
+						cellule(m.avertissements),
+						cellule(m.exclusions),
+					);
+					tbody.append(tr);
+				}
+				const somme = (cle: keyof Omit<Match, "date" | "adversaire">) => matchs.reduce((t, m) => t + m[cle], 0);
+				const total = { buts: somme("buts"), tirs: somme("tirs"), arrets: somme("arrets") };
+				const effTotale = gardien ? null : efficacite(total, 1).pct;
+				const pied = document.createElement("tr");
+				const libelle = document.createElement("th");
+				libelle.scope = "row";
+				libelle.colSpan = 2;
+				libelle.textContent = `Total (${matchs.length} match${matchs.length > 1 ? "s" : ""})`;
+				pied.append(
+					libelle,
+					cellule(total.buts),
+					cellule(somme("sept_m")),
+					cellule(total.tirs),
+					cellule(effTotale === null ? "–" : `${effTotale} %`),
+					cellule(total.arrets),
+					cellule(somme("avertissements")),
+					cellule(somme("exclusions")),
+				);
+				panneau.querySelector("tfoot")!.append(pied);
+
+				// Graphique : le paramètre choisi dans le menu.
+				const select = panneau.querySelector<HTMLSelectElement>(".match-param")!;
+				const legende = panneau.querySelector("figcaption")!;
+				const zone = panneau.querySelector<HTMLElement>(".graphe-svg")!;
+				function dessiner() {
+					const p = select.value as Parametre;
+					legende.textContent = `${TITRES[p]} par match`;
+					zone.innerHTML = svgBarres(
+						matchs.map((m) => ({ libelle: dateCourte.format(m.date), valeur: valeur(m, p, gardien) })),
+						`${TITRES[p]} par match de ${nom}, saison ${panneau.dataset.saison} : valeurs détaillées dans le tableau ci-dessous.`,
+					);
+				}
+				// Gardien·ne : les arrêts d'abord, les buts n'en disent rien.
+				if (gardien) select.value = "arrets";
+				select.addEventListener("change", dessiner);
+				dessiner();
+		}
+
+		for (const bouton of document.querySelectorAll<HTMLButtonElement>(".nom-btn")) {
+				bouton.addEventListener("click", () => {
+					const ligne = document.getElementById(bouton.getAttribute("aria-controls")!);
+					if (!ligne) return;
+					const ouvrir = bouton.getAttribute("aria-expanded") !== "true";
+					const panneau = ligne.querySelector<HTMLElement>(".match-panel")!;
+					if (ouvrir && !panneau.dataset.construit) {
+						construire(panneau);
+						panneau.dataset.construit = "true";
+					}
+					bouton.setAttribute("aria-expanded", String(ouvrir));
+					ligne.hidden = !ouvrir;
+				});
+		}
+	</script>
 	</body>
 </html>
 
@@ -335,6 +570,8 @@ const blocs = await Promise.all(
 	.table-scroll {
 		overflow: auto;
 		max-height: 70vh;
+		/* Référence de largeur (100cqw) du panneau match par match. */
+		container-type: inline-size;
 	}
 	table.joueurs {
 		width: 100%;
@@ -344,15 +581,17 @@ const blocs = await Promise.all(
 		border-spacing: 0;
 		font-size: 0.85rem;
 	}
-	table.joueurs th,
-	table.joueurs td {
+	/* `>` partout : rien de ceci ne doit atteindre le tableau imbriqué du
+	   panneau match par match. */
+	table.joueurs > thead > tr > th,
+	table.joueurs > tbody > tr > td {
 		text-align: left;
 		padding: 0.5rem 0.6rem;
 		color: var(--color-white);
 		border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 		white-space: nowrap;
 	}
-	table.joueurs th {
+	table.joueurs > thead > tr > th {
 		color: rgba(255, 255, 255, 0.55);
 		font-size: 0.68rem;
 		text-transform: uppercase;
@@ -365,8 +604,8 @@ const blocs = await Promise.all(
 	}
 	/* Colonne du nom figée : fond opaque (le contenu qui défile dessous ne
 	   doit pas transparaître), filet à droite. */
-	table.joueurs th:first-child,
-	table.joueurs td:first-child {
+	table.joueurs > thead > tr > th:first-child,
+	table.joueurs > tbody > tr:not(.detail-row) > td:first-child {
 		position: sticky;
 		left: 0;
 		z-index: 1;
@@ -374,7 +613,7 @@ const blocs = await Promise.all(
 		box-shadow: inset -1px 0 0 color-mix(in srgb, var(--color-white) 20%, transparent);
 	}
 	/* Coin supérieur gauche : au-dessus des deux bandes collantes. */
-	table.joueurs th:first-child {
+	table.joueurs > thead > tr > th:first-child {
 		z-index: 3;
 	}
 	.nom {
@@ -382,6 +621,7 @@ const blocs = await Promise.all(
 		max-width: 14rem;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 	@media (max-width: 600px) {
 		/* Assez pour « Prénom N. », sans manger l'écran. */
@@ -389,8 +629,128 @@ const blocs = await Promise.all(
 			max-width: 8.5rem;
 		}
 	}
-	table.joueurs td:not(:first-child),
-	table.joueurs th:not(:first-child) {
+	table.joueurs > tbody > tr > td:not(:first-child),
+	table.joueurs > thead > tr > th:not(:first-child) {
 		text-align: right;
+	}
+	/* Nom cliquable (détail match par match) : toute la cellule est la
+	   cible tactile (>= 44px), soulignement pointillé pour le signaler. */
+	.nom-btn {
+		display: block;
+		width: calc(100% + 1.2rem);
+		min-height: 44px;
+		margin: -0.5rem -0.6rem;
+		padding: 0.5rem 0.6rem;
+		font: inherit;
+		color: inherit;
+		text-align: left;
+		background: none;
+		border: 0;
+		cursor: pointer;
+	}
+	.nom-btn .nom {
+		text-decoration: underline dotted;
+		text-underline-offset: 3px;
+	}
+	.nom-btn[aria-expanded="true"] .nom {
+		font-weight: 700;
+	}
+	.nom-btn:hover .nom,
+	.nom-btn:focus-visible .nom {
+		text-decoration-style: solid;
+	}
+	.nom-btn:focus-visible {
+		outline: 2px solid var(--color-crimson);
+		outline-offset: -2px;
+	}
+	/* --- Panneau match par match ------------------------------------------ */
+	table.joueurs > tbody > tr.detail-row > td {
+		padding: 0;
+		background: color-mix(in srgb, var(--color-white) 4%, var(--color-navy-deep));
+	}
+	/* Collé à gauche, à la largeur visible du cadre : la ligne de détail
+	   s'étend sur toute la largeur du tableau, plus large que l'écran sur
+	   mobile -- sans ceci, le panneau sortirait de l'écran. */
+	.match-panel {
+		position: sticky;
+		left: 0;
+		box-sizing: border-box;
+		width: 100cqw;
+		padding: 0.8rem 0.6rem 1rem;
+		white-space: normal;
+	}
+	.match-panel select {
+		max-width: 20rem;
+		margin-bottom: 0.8rem;
+	}
+	.graphe {
+		margin: 0 0 0.8rem;
+		max-width: 420px;
+	}
+	.graphe figcaption {
+		color: color-mix(in srgb, var(--color-white) 55%, transparent);
+		font-size: 0.7rem;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		margin-bottom: 0.3rem;
+	}
+	/* Le tableau du panneau défile seul, date figée à gauche. */
+	.match-scroll {
+		overflow-x: auto;
+	}
+	.match-table {
+		width: 100%;
+		border-collapse: separate;
+		border-spacing: 0;
+		font-size: 0.8rem;
+	}
+	.match-table caption {
+		text-align: left;
+		color: color-mix(in srgb, var(--color-white) 55%, transparent);
+		font-size: 0.7rem;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		margin-bottom: 0.4rem;
+	}
+	/* :global() : lignes et cellules créées par le script, sans l'attribut
+	   de portée d'Astro. */
+	.match-table :global(th),
+	.match-table :global(td) {
+		padding: 0.4rem 0.5rem;
+		color: color-mix(in srgb, var(--color-white) 85%, transparent);
+		text-align: right;
+		white-space: nowrap;
+		border-bottom: 1px solid color-mix(in srgb, var(--color-white) 10%, transparent);
+	}
+	.match-table :global(th) {
+		color: color-mix(in srgb, var(--color-white) 55%, transparent);
+		font-weight: 700;
+	}
+	.match-table :global(tr > :first-child),
+	.match-table :global(tr > :nth-child(2)) {
+		text-align: left;
+	}
+	.match-table :global(tr > :first-child) {
+		position: sticky;
+		left: 0;
+		background: color-mix(in srgb, var(--color-white) 4%, var(--color-navy-deep));
+		box-shadow: inset -1px 0 0 color-mix(in srgb, var(--color-white) 20%, transparent);
+	}
+	/* Adversaire : nom tronqué, complet en infobulle. */
+	.match-table :global(td:nth-child(2)) {
+		max-width: 9rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.match-table :global(tfoot th),
+	.match-table :global(tfoot td) {
+		color: var(--color-white);
+		font-weight: 700;
+		border-bottom: 0;
+	}
+	.match-note {
+		margin: 0.6rem 0 0;
+		color: color-mix(in srgb, var(--color-white) 60%, transparent);
+		font-size: 0.8rem;
 	}
 </style>

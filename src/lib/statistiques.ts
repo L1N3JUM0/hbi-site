@@ -2,6 +2,7 @@ import { getCollection } from "astro:content";
 import { disambiguateDisplayNames } from "./fdme/noms.mjs";
 import { normaliserTexte } from "./fdme/equipeMatch.mjs";
 import { saisonActuelle } from "./saison";
+import { casseNomClub } from "./nomsClubs";
 import {
 	getResultatsForEquipe,
 	resultatsParSaison,
@@ -13,8 +14,30 @@ import {
 	type Resultat,
 } from "./resultats";
 
+/** Une ligne de feuille de match d'un·e joueur·se (détail match par match
+ * de /statistiques). */
+export interface MatchJoueur {
+	/** ISO 8601. */
+	date: string;
+	adversaire: string;
+	buts: number;
+	sept_m: number;
+	tirs: number;
+	arrets: number;
+	avertissements: number;
+	exclusions: number;
+}
+
+/** Autorise ou non le détail match par match d'une personne, à partir des
+ * empreintes de licence de ses lignes (voir getStatistiquesParSaison). */
+export type DetailAutorise = (licenceHashes: string[]) => boolean;
+
 export interface JoueurStatAffiche {
 	label: string | null;
+	/** Matchs de la saison, du plus ancien au plus récent -- `null` hors
+	 * affichage nominatif : avec dates et adversaires, une liste de matchs
+	 * rendrait identifiable un·e joueur·se pseudonymisé·e par recoupement. */
+	matchs: MatchJoueur[] | null;
 	matchsJoues: number;
 	buts: number;
 	sept_m: number;
@@ -94,6 +117,8 @@ type JoueurAgrege = {
 	avertissements: number;
 	exclusions: number;
 	disqualifications: number;
+	licenceHashes: Set<string>;
+	matchs: MatchJoueur[];
 };
 
 /** Cumule les stats individuelles de chaque feuille de match du groupe sur
@@ -104,7 +129,11 @@ type JoueurAgrege = {
  * homonymat (même nom ET même prénom) au sein d'une même équipe reste un cas
  * limite non résolu ici : leurs stats se cumuleraient à tort sur une seule
  * ligne -- aucun cas réel observé à ce jour dans les feuilles importées. */
-function agregerJoueurs(resultats: Resultat[], affichageStats: "nominatif" | "pseudonymise" | "masque"): JoueurStatAffiche[] {
+function agregerJoueurs(
+	resultats: Resultat[],
+	affichageStats: "nominatif" | "pseudonymise" | "masque",
+	detailAutorise: DetailAutorise,
+): JoueurStatAffiche[] {
 	if (affichageStats === "masque") return [];
 
 	const parCle = new Map<string, JoueurAgrege>();
@@ -125,6 +154,8 @@ function agregerJoueurs(resultats: Resultat[], affichageStats: "nominatif" | "ps
 					avertissements: 0,
 					exclusions: 0,
 					disqualifications: 0,
+					licenceHashes: new Set(),
+					matchs: [],
 				};
 				parCle.set(cle, a);
 			}
@@ -136,6 +167,19 @@ function agregerJoueurs(resultats: Resultat[], affichageStats: "nominatif" | "ps
 			a.avertissements += j.avertissements;
 			a.exclusions += j.exclusions;
 			if (j.disqualification) a.disqualifications++;
+			if (j.licenceHash) a.licenceHashes.add(j.licenceHash);
+			// Une entrée par feuille où la personne figure : leur somme est,
+			// par construction, le total de saison affiché sur sa ligne.
+			a.matchs.push({
+				date: r.data.date.toISOString(),
+				adversaire: casseNomClub(r.data.adversaire),
+				buts: j.buts,
+				sept_m: j.sept_m,
+				tirs: j.tirs,
+				arrets: j.arrets,
+				avertissements: j.avertissements,
+				exclusions: j.exclusions,
+			});
 		}
 	}
 	if (parCle.size === 0) return [];
@@ -153,6 +197,13 @@ function agregerJoueurs(resultats: Resultat[], affichageStats: "nominatif" | "ps
 		.sort((a, b) => b.j.buts - a.j.buts || b.j.arrets - a.j.arrets)
 		.map(({ j, label }) => ({
 			label,
+			// Confidentialité : uniquement pour une ligne affichée en nom
+			// complet ET une personne dont la catégorie actuelle l'est aussi
+			// (même règle que la fiche détaillée de /statistiques-carriere).
+			matchs:
+				affichageStats === "nominatif" && detailAutorise([...j.licenceHashes])
+					? j.matchs.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0))
+					: null,
 			matchsJoues: j.matchsJoues,
 			buts: j.buts,
 			sept_m: j.sept_m,
@@ -177,6 +228,8 @@ export async function getStatistiquesParSaison(
 	equipeSlug: string,
 	calendriers: { libelle?: string }[],
 	affichageStats: "nominatif" | "pseudonymise" | "masque",
+	/** Par défaut, aucun détail match par match. */
+	detailAutorise: DetailAutorise = () => false,
 ): Promise<StatistiquesSaisonEquipe[]> {
 	const tous = await getResultatsForEquipe(equipeSlug);
 	if (tous.length === 0) return [];
@@ -193,7 +246,7 @@ export async function getStatistiquesParSaison(
 		groupes: grouperResultats(resultats, ordre).map((g) => ({
 			libelle: g.libelle,
 			bilan: bilanEquipe(g.resultats),
-			joueurs: agregerJoueurs(g.resultats, affichageStats),
+			joueurs: agregerJoueurs(g.resultats, affichageStats, detailAutorise),
 		})),
 	}));
 }
