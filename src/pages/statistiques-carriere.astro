@@ -11,6 +11,8 @@ import { categorieActuelleParHash, getCarriereParEquipe, type JoueurCarriere } f
 import { detenteursDeRecord } from "../lib/records";
 import { saisonActuelle } from "../lib/saison";
 import CarteJoueur from "../components/CarteJoueur.astro";
+import CelluleEfficacite from "../components/CelluleEfficacite.astro";
+import { efficaciteTri, SEUIL_TIRS_CARRIERE, SEUIL_TIRS_SAISON } from "../lib/efficacite";
 
 const slugsDisponibles = await slugsAvecResultats();
 // Équipes archivées exclues (demande du 29/09/2026) : leur dernier effectif
@@ -49,13 +51,24 @@ const formatRatio = (r: number | null) => (r == null ? "—" : r.toFixed(1));
 // script plus bas) -- aucun recalcul côté navigateur.
 type Totaux = Pick<JoueurCarriere, "matchsJoues" | "buts" | "sept_m" | "tirs" | "arrets" | "avertissements" | "exclusions" | "disqualifications" | "ratio">;
 // `principale` : chiffres montrés d'emblée sur la carte mobile ; les autres
-// passent dans sa zone "Plus de détails" (décision du 30/09/2026).
-const COLONNES: { key: string; titre: string; valeur: (t: Totaux) => number | null; texte?: (t: Totaux) => string; principale?: boolean }[] = [
+// passent dans sa zone "Plus de détails" (décision du 30/09/2026). Tirs et
+// efficacité y sont côte à côte : l'un ne se lit pas sans l'autre.
+// `efficacite` : cellule rendue par CelluleEfficacite, triée via
+// efficaciteTri() (seuil de tirs, voir src/lib/efficacite.ts).
+const COLONNES: {
+	key: string;
+	titre: string;
+	valeur: (t: Totaux) => number | null;
+	texte?: (t: Totaux) => string;
+	principale?: boolean;
+	efficacite?: boolean;
+}[] = [
 	{ key: "matchs", titre: "Matchs", valeur: (t) => t.matchsJoues, principale: true },
 	{ key: "buts", titre: "Buts", valeur: (t) => t.buts, principale: true },
 	{ key: "ratio", titre: "Buts/match", valeur: (t) => t.ratio, texte: (t) => formatRatio(t.ratio), principale: true },
 	{ key: "sept_m", titre: "7m", valeur: (t) => t.sept_m },
-	{ key: "tirs", titre: "Tirs", valeur: (t) => t.tirs },
+	{ key: "tirs", titre: "Tirs", valeur: (t) => t.tirs, principale: true },
+	{ key: "efficacite", titre: "Effic.", valeur: () => null, principale: true, efficacite: true },
 	{ key: "arrets", titre: "Arrêts", valeur: (t) => t.arrets, principale: true },
 	{ key: "avertissements", titre: "Avert.", valeur: (t) => t.avertissements },
 	{ key: "exclusions", titre: "Excl.", valeur: (t) => t.exclusions },
@@ -63,13 +76,15 @@ const COLONNES: { key: string; titre: string; valeur: (t: Totaux) => number | nu
 ];
 const texteCellule = (c: (typeof COLONNES)[number], t: Totaux) => (c.texte ? c.texte(t) : String(c.valeur(t)));
 // Valeur de tri : -1 pour un ratio absent (aucun match), pour qu'il passe
-// toujours après un vrai 0.0.
-const valeurTri = (c: (typeof COLONNES)[number], t: Totaux) => c.valeur(t) ?? -1;
+// toujours après un vrai 0.0 en tri décroissant. Efficacité absente ou sous
+// le seuil : attribut omis, rangé en fin de tri dans les DEUX sens (voir
+// valeurTri() dans le script).
+const valeurTri = (c: (typeof COLONNES)[number], t: Totaux, seuil: number) => (c.efficacite ? efficaciteTri(t, seuil) : (c.valeur(t) ?? -1));
 const attributsTri = (j: JoueurCarriere) =>
 	Object.fromEntries(
 		COLONNES.flatMap((c) => [
-			[`data-value-${c.key}`, valeurTri(c, j)],
-			[`data-saison-${c.key}`, valeurTri(c, j.saisonEnCours)],
+			[`data-value-${c.key}`, valeurTri(c, j, SEUIL_TIRS_CARRIERE)],
+			[`data-saison-${c.key}`, valeurTri(c, j.saisonEnCours, SEUIL_TIRS_SAISON)],
 		]),
 	);
 // La recherche ne porte que sur le nom AFFICHÉ (pseudonymisé le cas
@@ -215,12 +230,18 @@ function barres(saisons: { saison: string; buts: number }[]) {
 									<option value="buts">Buts</option>
 									<option value="matchs">Matchs</option>
 									<option value="ratio">Buts par match</option>
+									<option value="efficacite">Efficacité</option>
 									<option value="arrets">Arrêts</option>
 									<option value="joueur">Nom</option>
 								</select>
 							</div>
 						</div>
-
+						<p class="legende">
+							Effic. : buts ÷ tirs. Classée à partir de {SEUIL_TIRS_CARRIERE} tirs sur la carrière, {SEUIL_TIRS_SAISON} sur une saison ;
+							en dessous, atténuée et rangée en fin de tri. « – » pour un·e gardien·ne, aucun tir, ou plus de buts que de tirs sur les
+							feuilles.
+						</p>
+						
 						{blocs.map(({ equipe, carriere }) => {
 							const joueurs = joueursAffiches(carriere);
 							return (
@@ -289,8 +310,21 @@ function barres(saisons: { saison: string; buts: number }[]) {
 																	{carriere.plusieursEquipes && <td class="col-secondaire">{j.groupeLibelle}</td>}
 																	{COLONNES.map((c) => (
 																		<td class={c.principale ? "col-principale" : "col-secondaire"} data-label={c.titre}>
-																			<span class="v-carriere">{texteCellule(c, j)}</span>
-																			<span class="v-saison">{texteCellule(c, j.saisonEnCours)}</span>
+																			{c.efficacite ? (
+																				<>
+																					<span class="v-carriere">
+																						<CelluleEfficacite buts={j.buts} tirs={j.tirs} arrets={j.arrets} seuil={SEUIL_TIRS_CARRIERE} />
+																					</span>
+																					<span class="v-saison">
+																						<CelluleEfficacite {...j.saisonEnCours} seuil={SEUIL_TIRS_SAISON} />
+																					</span>
+																				</>
+																			) : (
+																				<>
+																					<span class="v-carriere">{texteCellule(c, j)}</span>
+																					<span class="v-saison">{texteCellule(c, j.saisonEnCours)}</span>
+																				</>
+																			)}
 																		</td>
 																	))}
 																	{/* Carte mobile uniquement (masqué sur grand écran) : les
@@ -320,7 +354,7 @@ function barres(saisons: { saison: string; buts: number }[]) {
 																</tr>
 																{aDetail && (
 																	<tr class="detail-row" id={detailId} hidden>
-																		<td colspan={carriere.plusieursEquipes ? 11 : 10}>
+																		<td colspan={1 + COLONNES.length + (carriere.plusieursEquipes ? 1 : 0)}>
 																			{j.parcours.length > 1 && (
 																				<div class="parcours">{j.parcours.map((e) => `${e.saison} ${e.equipeNom}`).join(" → ")}</div>
 																			)}
@@ -360,6 +394,7 @@ function barres(saisons: { saison: string; buts: number }[]) {
 																						<th scope="col">Buts/match</th>
 																						<th scope="col">7m</th>
 																						<th scope="col">Tirs</th>
+																						<th scope="col">Effic.</th>
 																						<th scope="col">Arrêts</th>
 																						<th scope="col">Avert.</th>
 																						<th scope="col">Excl.</th>
@@ -376,6 +411,9 @@ function barres(saisons: { saison: string; buts: number }[]) {
 																							<td>{formatRatio(e.ratio)}</td>
 																							<td>{e.sept_m}</td>
 																							<td>{e.tirs}</td>
+																							<td>
+																								<CelluleEfficacite buts={e.buts} tirs={e.tirs} arrets={e.arrets} seuil={SEUIL_TIRS_SAISON} />
+																							</td>
 																							<td>{e.arrets}</td>
 																							<td>{e.avertissements}</td>
 																							<td>{e.exclusions}</td>
@@ -450,10 +488,12 @@ function barres(saisons: { saison: string; buts: number }[]) {
 			let vue: "carriere" | "saison" = "carriere";
 			const contenu = document.querySelector<HTMLElement>(".carriere-content");
 
-			function valeurTri(row: HTMLTableRowElement, key: string, type: string): string | number {
+			/** `null` : valeur hors classement (efficacité absente ou sous le
+			 * seuil de tirs, attribut omis au build), toujours en fin de tri. */
+			function valeurTri(row: HTMLTableRowElement, key: string, type: string): string | number | null {
 				const suffixe = `${key.charAt(0).toUpperCase()}${key.slice(1)}`;
 				const brut = type === "num" && vue === "saison" ? row.dataset[`saison${suffixe}`] : row.dataset[`value${suffixe}`];
-				if (type === "num") return Number(brut ?? 0);
+				if (type === "num") return brut === undefined ? null : Number(brut);
 				return brut ?? "";
 			}
 
@@ -504,6 +544,9 @@ function barres(saisons: { saison: string; buts: number }[]) {
 					groupes.sort((a, b) => {
 						const va = valeurTri(a.main, key, type);
 						const vb = valeurTri(b.main, key, type);
+						// Hors classement en bas quel que soit le sens : `sens` ne
+						// s'applique pas ici.
+						if (va === null || vb === null) return va === vb ? 0 : va === null ? 1 : -1;
 						if (typeof va === "number" && typeof vb === "number") return (va - vb) * sens;
 						return String(va).localeCompare(String(vb), "fr") * sens;
 					});
@@ -701,7 +744,8 @@ function barres(saisons: { saison: string; buts: number }[]) {
 		}
 		table.joueurs tr.joueur-row {
 			display: grid;
-			grid-template-columns: repeat(4, 1fr);
+			/* Six chiffres clés : deux rangées de trois. */
+			grid-template-columns: repeat(3, 1fr);
 			gap: 0.4rem;
 			margin: 0 0 0.75rem;
 			padding: 0.75rem;
@@ -841,6 +885,11 @@ function barres(saisons: { saison: string; buts: number }[]) {
 	}
 	.carriere-content[data-vue="saison"] .v-carriere {
 		display: none;
+	}
+	.legende {
+		margin: -0.5rem 0 1.5rem;
+		color: color-mix(in srgb, var(--color-white) 70%, transparent);
+		font-size: 0.85rem;
 	}
 	.controles {
 		display: flex;

@@ -8,6 +8,8 @@ import { getCollection } from "astro:content";
 import { trierEquipes } from "../lib/equipes";
 import { slugsAvecResultats, getStatistiquesParSaison } from "../lib/statistiques";
 import { withBase } from "../utils/links";
+import CelluleEfficacite from "../components/CelluleEfficacite.astro";
+import { SEUIL_TIRS_SAISON } from "../lib/efficacite";
 
 const slugsDisponibles = await slugsAvecResultats();
 const equipes = trierEquipes(await getCollection("equipes")).filter((e) => slugsDisponibles.has(e.data.slug));
@@ -74,6 +76,11 @@ const blocs = await Promise.all(
 							</div>
 						</div>
 
+						<p class="legende">
+							Effic. : buts ÷ tirs. Atténuée sous {SEUIL_TIRS_SAISON} tirs ; « – » pour un·e gardien·ne, aucun tir, ou plus de buts
+							que de tirs sur les feuilles.
+						</p>
+
 						{blocs.map(({ equipe, saisons }) =>
 							saisons.map((s) => (
 								<section
@@ -122,6 +129,9 @@ const blocs = await Promise.all(
 																<th scope="col">Buts</th>
 																<th scope="col">7m</th>
 																<th scope="col">Tirs</th>
+																<th scope="col">
+																	<abbr title="Efficacité : buts ÷ tirs">Effic.</abbr>
+																</th>
 																<th scope="col">Arrêts</th>
 																<th scope="col">Avert.</th>
 																<th scope="col">Excl.</th>
@@ -136,6 +146,9 @@ const blocs = await Promise.all(
 																	<td>{j.buts}</td>
 																	<td>{j.sept_m}</td>
 																	<td>{j.tirs}</td>
+																	<td>
+																		<CelluleEfficacite buts={j.buts} tirs={j.tirs} arrets={j.arrets} seuil={SEUIL_TIRS_SAISON} />
+																	</td>
 																	<td>{j.arrets}</td>
 																	<td>{j.avertissements}</td>
 																	<td>{j.exclusions}</td>
@@ -224,6 +237,14 @@ const blocs = await Promise.all(
 		max-width: 900px;
 		margin: 0 auto;
 		padding: 2rem 1.5rem 3rem;
+	}
+	.legende {
+		margin: -0.5rem 0 1.5rem;
+		color: color-mix(in srgb, var(--color-white) 70%, transparent);
+		font-size: 0.85rem;
+	}
+	abbr[title] {
+		text-decoration: none;
 	}
 	.lien-records {
 		margin: 2rem 0 0;

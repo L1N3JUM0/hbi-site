@@ -1,0 +1,59 @@
+---
+/**
+ * Contenu d'une cellule « Efficacité » (buts ÷ tirs) : pourcentage, puis le
+ * détail buts/tirs en texte secondaire -- lisible au doigt, là où une
+ * infobulle seule n'existe pas. Atténuée sous le seuil de tirs, « – » quand
+ * un chiffre serait trompeur (voir src/lib/efficacite.ts).
+ */
+import { efficacite, titreEfficacite } from "../lib/efficacite";
+
+interface Props {
+	buts: number;
+	tirs: number;
+	arrets: number;
+	seuil: number;
+}
+const { buts, tirs, arrets, seuil } = Astro.props;
+const e = efficacite({ buts, tirs, arrets }, seuil);
+const titre = titreEfficacite(e, seuil);
+---
+
+{
+	e.pct === null ? (
+		<span class="eff eff--vide" title={titre}>
+			–<span class="eff-sr">{titre}</span>
+		</span>
+	) : (
+		<span class:list={["eff", { "eff--hors": !e.classee }]} title={titre}>
+			{e.pct} %<span class="eff-detail">{e.detail}</span>
+			{!e.classee && <span class="eff-sr">, moins de {seuil} tirs, hors classement</span>}
+		</span>
+	)
+}
+
+<style>
+	/* Ancre du texte masqué (.eff-sr) : sans elle, positionné par rapport à
+	   la page, il débordait de l'écran quand le tableau défile. */
+	.eff {
+		position: relative;
+	}
+	.eff-detail {
+		display: block;
+		font-size: 0.7rem;
+		font-weight: 400;
+		color: color-mix(in srgb, var(--color-white) 60%, transparent);
+	}
+	/* Sous le seuil : présente mais en retrait, jamais en concurrence avec
+	   une efficacité établie sur un vrai volume de tirs. */
+	.eff--hors {
+		opacity: 0.5;
+	}
+	.eff-sr {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+</style>
