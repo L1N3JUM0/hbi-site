@@ -10,7 +10,7 @@ import { trierEquipes } from "../lib/equipes";
 import { slugsAvecResultats, getStatistiquesParSaison, type MatchJoueur } from "../lib/statistiques";
 import { withBase } from "../utils/links";
 import CelluleEfficacite from "../components/CelluleEfficacite.astro";
-import { estGardien, SEUIL_TIRS_SAISON } from "../lib/efficacite";
+import { efficaciteTri, estGardien, SEUIL_TIRS_SAISON } from "../lib/efficacite";
 import { categorieActuelleParHash } from "../lib/carriereJoueur";
 
 const slugsDisponibles = await slugsAvecResultats();
@@ -55,6 +55,26 @@ const enregistrer = (id: string, matchs: MatchJoueur[]) => {
 	return id;
 };
 const COLONNES_TABLEAU = 10;
+
+// Tri par colonne (même fonctionnement que /statistiques-carriere) : chaque
+// ligne porte ses valeurs de tri en data-value-*. Efficacité absente ou sous
+// le seuil de tirs : attribut omis, rangée en fin de tri dans les deux sens.
+type Joueur = Awaited<ReturnType<typeof getStatistiquesParSaison>>[number]["groupes"][number]["joueurs"][number];
+const COLONNES_TRI: { key: string; titre: string; abbr?: string; valeur: (j: Joueur) => number | null }[] = [
+	{ key: "matchs", titre: "Matchs", valeur: (j) => j.matchsJoues },
+	{ key: "buts", titre: "Buts", valeur: (j) => j.buts },
+	{ key: "sept_m", titre: "7m", valeur: (j) => j.sept_m },
+	{ key: "tirs", titre: "Tirs", valeur: (j) => j.tirs },
+	{ key: "efficacite", titre: "Effic.", abbr: "Efficacité : buts ÷ tirs", valeur: (j) => efficaciteTri(j, SEUIL_TIRS_SAISON) },
+	{ key: "arrets", titre: "Arrêts", valeur: (j) => j.arrets },
+	{ key: "avertissements", titre: "Avert.", valeur: (j) => j.avertissements },
+	{ key: "exclusions", titre: "Excl.", valeur: (j) => j.exclusions },
+	{ key: "disqualifications", titre: "Disq.", valeur: (j) => j.disqualifications },
+];
+const attributsTri = (j: Joueur) => ({
+	"data-value-joueur": (j.label ?? "").toLowerCase(),
+	...Object.fromEntries(COLONNES_TRI.map((c) => [`data-value-${c.key}`, c.valeur(j)])),
+});
 ---
 
 <html lang="fr">
@@ -112,8 +132,8 @@ const COLONNES_TABLEAU = 10;
 						</div>
 
 						<p class="legende">
-							Effic. : buts ÷ tirs. Atténuée sous {SEUIL_TIRS_SAISON} tirs ; « – » pour un·e gardien·ne, aucun tir, ou plus de buts
-							que de tirs sur les feuilles.
+							Cliquer sur un en-tête pour trier. Effic. : buts ÷ tirs. Sous {SEUIL_TIRS_SAISON} tirs, atténuée et rangée en fin de tri ;
+							« – » pour un·e gardien·ne, aucun tir, ou plus de buts que de tirs sur les feuilles.
 						</p>
 
 						{blocs.map(({ equipe, saisons }) =>
@@ -159,18 +179,20 @@ const COLONNES_TABLEAU = 10;
 													<table class="joueurs">
 														<thead>
 															<tr>
-																<th scope="col">Joueur·se</th>
-																<th scope="col">Matchs</th>
-																<th scope="col">Buts</th>
-																<th scope="col">7m</th>
-																<th scope="col">Tirs</th>
-																<th scope="col">
-																	<abbr title="Efficacité : buts ÷ tirs">Effic.</abbr>
+																<th scope="col" aria-sort="none">
+																	<button type="button" class="sort-btn" data-key="joueur" data-type="text">
+																		Joueur·se
+																		<span class="sort-indicator" aria-hidden="true" />
+																	</button>
 																</th>
-																<th scope="col">Arrêts</th>
-																<th scope="col">Avert.</th>
-																<th scope="col">Excl.</th>
-																<th scope="col">Disq.</th>
+																{COLONNES_TRI.map((c) => (
+																	<th scope="col" aria-sort={c.key === "buts" ? "descending" : "none"}>
+																		<button type="button" class="sort-btn" data-key={c.key} data-type="num">
+																			{c.abbr ? <abbr title={c.abbr}>{c.titre}</abbr> : c.titre}
+																			<span class="sort-indicator" aria-hidden="true" />
+																		</button>
+																	</th>
+																))}
 															</tr>
 														</thead>
 														<tbody>
@@ -178,7 +200,7 @@ const COLONNES_TABLEAU = 10;
 																const detailId = `matchs-${equipe.data.slug}-${s.saison}-${gi}-${i}`;
 																return (
 																	<>
-																		<tr>
+																		<tr class="joueur-row" {...attributsTri(j)}>
 																			<td>
 																				{j.matchs ? (
 																					<button type="button" class="nom-btn" aria-expanded="false" aria-controls={detailId}>
@@ -328,8 +350,58 @@ const COLONNES_TABLEAU = 10;
 					afficher(selectEquipe.value, selectSaison.value);
 				});
 				selectSaison.addEventListener("change", () => afficher(selectEquipe.value, selectSaison.value));
-		}
-	</script>
+	}
+
+	// --- Tri par colonne -------------------------------------------------
+	// Chaque tableau se trie seul. Une ligne joueur et son panneau match par
+	// match éventuel se déplacent ensemble, le panneau restant sous son nom.
+	for (const table of document.querySelectorAll<HTMLTableElement>("table.joueurs")) {
+				const tbody = table.tBodies[0];
+				if (!tbody) continue;
+				const boutons = [...table.querySelectorAll<HTMLButtonElement>(":scope > thead .sort-btn")];
+				// Ordre initial du build : buts décroissants.
+				let triActuel: { key: string; sens: 1 | -1 } = { key: "buts", sens: -1 };
+
+				/** `null` : hors classement (efficacité absente ou sous le seuil de
+				 * tirs, attribut omis au build), toujours en fin de tri. */
+				const valeur = (row: HTMLTableRowElement, key: string, type: string): string | number | null => {
+					const brut = row.getAttribute(`data-value-${key}`);
+					if (type === "num") return brut === null ? null : Number(brut);
+					return brut ?? "";
+				};
+
+				for (const bouton of boutons) {
+					bouton.addEventListener("click", () => {
+						const key = bouton.dataset.key!;
+						const type = bouton.dataset.type ?? "text";
+						// Nouveau tri : décroissant pour un chiffre (le meilleur en tête),
+						// alphabétique pour le nom ; second clic : sens inversé.
+						const sens: 1 | -1 = triActuel.key === key ? (triActuel.sens === 1 ? -1 : 1) : type === "num" ? -1 : 1;
+						triActuel = { key, sens };
+
+						const paires = [...tbody.querySelectorAll<HTMLTableRowElement>(":scope > tr.joueur-row")].map((main) => {
+							const suivante = main.nextElementSibling;
+							return { main, detail: suivante?.classList.contains("detail-row") ? suivante : null };
+						});
+						paires.sort((a, b) => {
+							const va = valeur(a.main, key, type);
+							const vb = valeur(b.main, key, type);
+							if (va === null || vb === null) return va === vb ? 0 : va === null ? 1 : -1;
+							if (typeof va === "number" && typeof vb === "number") return (va - vb) * sens;
+							return String(va).localeCompare(String(vb), "fr") * sens;
+						});
+						for (const { main, detail } of paires) {
+							tbody.append(main);
+							if (detail) tbody.append(detail);
+						}
+						table.closest<HTMLElement>(".table-scroll")?.scrollTo({ top: 0 });
+
+						for (const autre of boutons) autre.closest("th")?.setAttribute("aria-sort", "none");
+						bouton.closest("th")?.setAttribute("aria-sort", sens === 1 ? "ascending" : "descending");
+					});
+				}
+	}
+</script>
 
 	<script>
 		// --- Détail match par match (clic sur un nom affiché en nom complet) ---
@@ -592,6 +664,8 @@ const COLONNES_TABLEAU = 10;
 		white-space: nowrap;
 	}
 	table.joueurs > thead > tr > th {
+		/* Le bouton de tri porte le remplissage : cible tactile >= 44px. */
+		padding: 0;
 		color: rgba(255, 255, 255, 0.55);
 		font-size: 0.68rem;
 		text-transform: uppercase;
@@ -632,6 +706,44 @@ const COLONNES_TABLEAU = 10;
 	table.joueurs > tbody > tr > td:not(:first-child),
 	table.joueurs > thead > tr > th:not(:first-child) {
 		text-align: right;
+	}
+	.sort-btn {
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		width: 100%;
+		min-height: 44px;
+		box-sizing: border-box;
+		padding: 0.5rem 0.6rem;
+		font: inherit;
+		text-transform: inherit;
+		letter-spacing: inherit;
+		color: inherit;
+		background: transparent;
+		border: 0;
+		cursor: pointer;
+	}
+	table.joueurs > thead > tr > th:not(:first-child) .sort-btn {
+		justify-content: flex-end;
+	}
+	.sort-btn:hover,
+	.sort-btn:focus-visible {
+		color: var(--color-white);
+	}
+	.sort-btn:focus-visible {
+		outline: 2px solid var(--color-crimson);
+		outline-offset: -2px;
+	}
+	.sort-indicator {
+		display: inline-block;
+		width: 0.8em;
+		margin-left: 0.15rem;
+	}
+	th[aria-sort="ascending"] .sort-indicator::after {
+		content: "▲";
+	}
+	th[aria-sort="descending"] .sort-indicator::after {
+		content: "▼";
 	}
 	/* Nom cliquable (détail match par match) : toute la cellule est la
 	   cible tactile (>= 44px), soulignement pointillé pour le signaler. */
