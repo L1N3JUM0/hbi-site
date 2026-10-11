@@ -1,6 +1,6 @@
 {
 	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-masculins-32649/poule-192119/classements/",
-	"fetchedAt": "2026-10-10T23:19:54.907Z",
+	"fetchedAt": "2026-10-11T00:09:34.583Z",
 	"classement": [
 		{
 			"id": "10615057",
@@ -218,6 +218,17 @@
 			"structureLogo": "2024-06-12-f09f9018-5fbb-48ab-ba11-dcc688a9aa24.png"
 		},
 		{
+			"individuId": "207408",
+			"matchCount": "1",
+			"totalButs": "4",
+			"totalArrets": "0",
+			"nom": "BAILLEUL",
+			"prenom": "BENOIT",
+			"showEquipeLogo": "0",
+			"equipeLibelle": "SUD DURANCE - PLANAIS CAVAILLON",
+			"structureLogo": "2026-08-01-1307c0ce-4a94-4e91-ac41-15b6c8e3282e.jpg"
+		},
+		{
 			"individuId": "275977",
 			"matchCount": "2",
 			"totalButs": "7",
@@ -306,6 +317,17 @@
 			"structureLogo": "2026-08-01-1307c0ce-4a94-4e91-ac41-15b6c8e3282e.jpg"
 		},
 		{
+			"individuId": "313831",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "3",
+			"nom": "ALBERT",
+			"prenom": "GREGORY",
+			"showEquipeLogo": "0",
+			"equipeLibelle": "SUD DURANCE - PLANAIS CAVAILLON",
+			"structureLogo": "2026-08-01-1307c0ce-4a94-4e91-ac41-15b6c8e3282e.jpg"
+		},
+		{
 			"individuId": "313937",
 			"matchCount": "2",
 			"totalButs": "18",
@@ -318,7 +340,7 @@
 		},
 		{
 			"individuId": "313941",
-			"matchCount": "2",
+			"matchCount": "3",
 			"totalButs": "4",
 			"totalArrets": "0",
 			"nom": "ETIENNE",
@@ -329,8 +351,8 @@
 		},
 		{
 			"individuId": "313949",
-			"matchCount": "3",
-			"totalButs": "9",
+			"matchCount": "4",
+			"totalButs": "10",
 			"totalArrets": "0",
 			"nom": "BAYON DE NOYER",
 			"prenom": "NICOLAS",
@@ -362,8 +384,8 @@
 		},
 		{
 			"individuId": "313997",
-			"matchCount": "2",
-			"totalButs": "1",
+			"matchCount": "3",
+			"totalButs": "3",
 			"totalArrets": "0",
 			"nom": "OMET",
 			"prenom": "CORENTIN",
@@ -461,8 +483,8 @@
 		},
 		{
 			"individuId": "368873",
-			"matchCount": "1",
-			"totalButs": "3",
+			"matchCount": "2",
+			"totalButs": "5",
 			"totalArrets": "0",
 			"nom": "SCHOENACKER",
 			"prenom": "CHRISTOPHE",
@@ -505,9 +527,9 @@
 		},
 		{
 			"individuId": "394813",
-			"matchCount": "2",
+			"matchCount": "3",
 			"totalButs": "0",
-			"totalArrets": "9",
+			"totalArrets": "22",
 			"nom": "PINEDA",
 			"prenom": "JEAN-FRANCOIS",
 			"showEquipeLogo": "1",
@@ -527,8 +549,8 @@
 		},
 		{
 			"individuId": "496786",
-			"matchCount": "2",
-			"totalButs": "0",
+			"matchCount": "3",
+			"totalButs": "2",
 			"totalArrets": "0",
 			"nom": "INSERRA",
 			"prenom": "CHRISTOPHE",
@@ -615,8 +637,8 @@
 		},
 		{
 			"individuId": "825600",
-			"matchCount": "1",
-			"totalButs": "1",
+			"matchCount": "2",
+			"totalButs": "3",
 			"totalArrets": "0",
 			"nom": "FERLAND",
 			"prenom": "GUILLAUME",
@@ -637,8 +659,8 @@
 		},
 		{
 			"individuId": "970020",
-			"matchCount": "1",
-			"totalButs": "2",
+			"matchCount": "2",
+			"totalButs": "5",
 			"totalArrets": "0",
 			"nom": "CAUTIER",
 			"prenom": "THOMAS",
@@ -856,6 +878,17 @@
 			"structureLogo": "2015-08-17-3c5d5ea7-3296-42e1-a7bd-bd33284b9289.jpg"
 		},
 		{
+			"individuId": "1618125",
+			"matchCount": "1",
+			"totalButs": "5",
+			"totalArrets": "0",
+			"nom": "PIRRELLO",
+			"prenom": "TONIN",
+			"showEquipeLogo": "0",
+			"equipeLibelle": "SUD DURANCE - PLANAIS CAVAILLON",
+			"structureLogo": "2026-08-01-1307c0ce-4a94-4e91-ac41-15b6c8e3282e.jpg"
+		},
+		{
 			"individuId": "1624281",
 			"matchCount": "1",
 			"totalButs": "0",
@@ -901,8 +934,8 @@
 		},
 		{
 			"individuId": "1834652",
-			"matchCount": "1",
-			"totalButs": "2",
+			"matchCount": "2",
+			"totalButs": "6",
 			"totalArrets": "0",
 			"nom": "CARRIERE",
 			"prenom": "ALEXIS",
@@ -934,8 +967,8 @@
 		},
 		{
 			"individuId": "1945268",
-			"matchCount": "2",
-			"totalButs": "8",
+			"matchCount": "3",
+			"totalButs": "12",
 			"totalArrets": "0",
 			"nom": "JACONELLI",
 			"prenom": "ALEXIS",
@@ -978,8 +1011,8 @@
 		},
 		{
 			"individuId": "2068384",
-			"matchCount": "3",
-			"totalButs": "2",
+			"matchCount": "4",
+			"totalButs": "3",
 			"totalArrets": "0",
 			"nom": "BOUNIAS",
 			"prenom": "REMY",
@@ -989,8 +1022,8 @@
 		},
 		{
 			"individuId": "2081271",
-			"matchCount": "1",
-			"totalButs": "7",
+			"matchCount": "2",
+			"totalButs": "11",
 			"totalArrets": "0",
 			"nom": "COLLIGNON",
 			"prenom": "CLEMENT",
@@ -1132,9 +1165,9 @@
 		},
 		{
 			"individuId": "2497212",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "0",
-			"totalArrets": "3",
+			"totalArrets": "15",
 			"nom": "ACCARY",
 			"prenom": "REMY",
 			"showEquipeLogo": "0",
@@ -1143,14 +1176,25 @@
 		},
 		{
 			"individuId": "2506237",
-			"matchCount": "1",
-			"totalButs": "2",
+			"matchCount": "2",
+			"totalButs": "4",
 			"totalArrets": "0",
 			"nom": "GENIN",
 			"prenom": "ALEXANDRE",
 			"showEquipeLogo": "1",
 			"equipeLibelle": "HANDBALL ISLOIS 2",
 			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
+			"individuId": "2525134",
+			"matchCount": "1",
+			"totalButs": "4",
+			"totalArrets": "0",
+			"nom": "CHAMBON",
+			"prenom": "LOAN",
+			"showEquipeLogo": "0",
+			"equipeLibelle": "SUD DURANCE - PLANAIS CAVAILLON",
+			"structureLogo": "2026-08-01-1307c0ce-4a94-4e91-ac41-15b6c8e3282e.jpg"
 		},
 		{
 			"individuId": "2545109",
@@ -1220,8 +1264,8 @@
 		},
 		{
 			"individuId": "3117315",
-			"matchCount": "1",
-			"totalButs": "0",
+			"matchCount": "2",
+			"totalButs": "1",
 			"totalArrets": "0",
 			"nom": "CHARRIER",
 			"prenom": "CEDRIC",
@@ -1275,8 +1319,8 @@
 		},
 		{
 			"individuId": "3268618",
-			"matchCount": "2",
-			"totalButs": "1",
+			"matchCount": "3",
+			"totalButs": "5",
 			"totalArrets": "0",
 			"nom": "LOISEAU",
 			"prenom": "VIRGILE",
@@ -1352,8 +1396,8 @@
 		},
 		{
 			"individuId": "3705093",
-			"matchCount": "3",
-			"totalButs": "4",
+			"matchCount": "4",
+			"totalButs": "8",
 			"totalArrets": "0",
 			"nom": "FLIPPE",
 			"prenom": "FLORENT",
@@ -1363,8 +1407,8 @@
 		},
 		{
 			"individuId": "3896605",
-			"matchCount": "3",
-			"totalButs": "7",
+			"matchCount": "4",
+			"totalButs": "10",
 			"totalArrets": "0",
 			"nom": "LEGRAND",
 			"prenom": "GABRIEL",
@@ -1385,7 +1429,7 @@
 		},
 		{
 			"individuId": "4103951",
-			"matchCount": "2",
+			"matchCount": "3",
 			"totalButs": "2",
 			"totalArrets": "0",
 			"nom": "MELONI",
@@ -1396,8 +1440,8 @@
 		},
 		{
 			"individuId": "4110663",
-			"matchCount": "3",
-			"totalButs": "5",
+			"matchCount": "4",
+			"totalButs": "7",
 			"totalArrets": "0",
 			"nom": "BRANCHU",
 			"prenom": "ALEXIS",
