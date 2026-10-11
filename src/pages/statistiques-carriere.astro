@@ -729,11 +729,13 @@ function barres(saisons: { saison: string; buts: number }[]) {
 			overflow: visible;
 			max-height: none;
 		}
+		/* `>` : ces règles ne doivent pas atteindre le tableau saison par
+		   saison imbriqué dans la fiche détaillée (il perdait ses en-têtes). */
 		table.joueurs,
-		table.joueurs tbody {
+		table.joueurs > tbody {
 			display: block;
 		}
-		table.joueurs thead {
+		table.joueurs > thead {
 			/* En-têtes remplacés par le menu "Trier par" et les libellés de
 			   chaque case ; masqués visuellement seulement. */
 			position: absolute;
@@ -1093,20 +1095,28 @@ function barres(saisons: { saison: string; buts: number }[]) {
 		letter-spacing: 0.04em;
 		margin-bottom: 0.4rem;
 	}
-	table.detail th,
-	table.detail td {
+	/* Préfixe table.joueurs : ce tableau est imbriqué dans table.joueurs,
+	   dont les règles d'en-tête (collant, majuscules, alignement à droite
+	   dès la 2e colonne) ne le concernent pas. */
+	table.joueurs table.detail th,
+	table.joueurs table.detail td {
 		text-align: left;
 		padding: 0.35rem 0.5rem;
 		color: rgba(255, 255, 255, 0.85);
 		white-space: nowrap;
 	}
-	table.detail th {
+	table.joueurs table.detail th {
+		position: static;
+		background: none;
+		font-size: inherit;
+		text-transform: none;
+		letter-spacing: normal;
 		color: rgba(255, 255, 255, 0.5);
 		font-weight: 700;
 		border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 	}
-	table.detail td:not(:first-child):not(:nth-child(2)),
-	table.detail th:not(:first-child):not(:nth-child(2)) {
+	table.joueurs table.detail td:not(:first-child):not(:nth-child(2)),
+	table.joueurs table.detail th:not(:first-child):not(:nth-child(2)) {
 		text-align: right;
 	}
 </style>
