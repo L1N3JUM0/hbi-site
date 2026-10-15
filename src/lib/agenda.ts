@@ -26,6 +26,13 @@ export interface AgendaTeamConfig {
 	/** Lien vers le classement de la compétition, si renseigné à la main
 	 * dans le CMS (sinon déduit automatiquement de l'URL des rencontres). */
 	urlClassement?: string;
+	/** Calendrier d'une coupe, en plus du championnat de la même équipe (voir
+	 * `coupe` dans content.config.ts) -- ce n'est pas une équipe de plus. */
+	coupe: boolean;
+	/** Pour un calendrier de coupe : "Coupe de France" ou, à défaut, "Coupe"
+	 * -- de quoi distinguer ce flux du championnat sur les boutons
+	 * d'abonnement. Absent pour un championnat. */
+	nomCoupe?: string;
 }
 
 export interface AgendaMatch {
@@ -66,6 +73,9 @@ export interface AgendaMatch {
 	 * (collection "matchsReportes", voir src/lib/matchsReportes.ts). Sans
 	 * `nouvelleDate`, la fédération n'a pas encore replanifié le match. */
 	reporte?: { dateOrigine: Date; nouvelleDate?: Date };
+	/** Match de Coupe de France (badge tricolore sur l'agenda), déduit du nom
+	 * de la compétition dans le flux -- voir COUPE_DE_FRANCE_PATTERN. */
+	coupeDeFrance: boolean;
 }
 
 export interface Competition {
@@ -76,6 +86,12 @@ export interface Competition {
 
 const HOME_LOCATION_PATTERN = /emile avy/i;
 const JOURNEE_PATTERN = /journ[ée]e\s*(\d+)/i;
+/** Le flux FFHandball nomme la compétition en toutes lettres dans la
+ * DESCRIPTION de chaque match et dans le nom du calendrier ("COUPE DE FRANCE
+ * DEPARTEMENTALE FEMININE 2026-2027") : aucune case à cocher n'est donc
+ * nécessaire pour le badge tricolore, valable quel que soit le niveau
+ * (départementale, régionale, nationale). */
+const COUPE_DE_FRANCE_PATTERN = /coupe\s+de\s+france/i;
 
 /** Nom d'équipe non renseigné côté fédération sur le flux ("SANS LIBELLE"
  * plutôt qu'un vrai nom de club) -- motif générique, pas propre à une équipe
@@ -161,6 +177,8 @@ interface FeedEvent {
 	geo?: { lat: number; lon: number };
 	matchUrl?: string;
 	journee: number | null;
+	/** Nom de la compétition (DESCRIPTION iCal), vide si le flux ne le donne pas. */
+	competition: string;
 }
 
 interface FeedData {
@@ -195,6 +213,7 @@ async function fetchFeed(url: string): Promise<FeedData> {
 								: undefined,
 						matchUrl: event.url,
 						journee: parseJournee(textValue(event.description)),
+						competition: textValue(event.description),
 					}));
 
 				const rawName = (data.vcalendar as { name?: string } | undefined)?.name;
@@ -228,6 +247,13 @@ export async function getAgendaTeams(): Promise<AgendaTeamConfig[]> {
 			for (const equipe of equipes) {
 				if (equipe.data.statut === "archivee") continue;
 				for (const cal of equipe.data.calendriers) {
+					// Flux mis en cache : le relire ici ne coûte rien de plus, il
+					// sera de toute façon lu pour les matchs.
+					const nomCoupe = cal.coupe
+						? COUPE_DE_FRANCE_PATTERN.test((await fetchFeed(cal.url)).calendarName ?? "")
+							? "Coupe de France"
+							: "Coupe"
+						: undefined;
 					teams.push({
 						nomAffiche: cal.libelle ? `${equipe.data.nom} ${cal.libelle}`.trim() : equipe.data.nom,
 						nomCourt: nomCourt(equipe.data.nom, equipe.data.categorieAge, equipe.data.genre, cal.libelle),
@@ -236,6 +262,8 @@ export async function getAgendaTeams(): Promise<AgendaTeamConfig[]> {
 						urlIcs: cal.url,
 						matchLabel: cal.repere,
 						urlClassement: cal.classementUrl,
+						coupe: cal.coupe,
+						nomCoupe,
 					});
 				}
 			}
@@ -265,7 +293,7 @@ async function getMatchsDuFlux(depuis: Date): Promise<AgendaMatch[]> {
 	const matches: AgendaMatch[] = [];
 
 	for (const [url, teams] of await groupTeamsByFeed()) {
-		const { events } = await fetchFeed(url);
+		const { events, calendarName } = await fetchFeed(url);
 		if (events.length === 0) continue;
 
 		const classementUrl =
@@ -299,6 +327,7 @@ async function getMatchsDuFlux(depuis: Date): Promise<AgendaMatch[]> {
 				icsUrl: url,
 				classementUrl,
 				journee: event.journee,
+				coupeDeFrance: COUPE_DE_FRANCE_PATTERN.test(event.competition || calendarName || ""),
 			};
 
 			if (matchedA && matchedB) {
@@ -461,6 +490,9 @@ export async function getCompetitionLinks(): Promise<Competition[]> {
 	const competitions: Competition[] = [];
 
 	for (const [url, teams] of await groupTeamsByFeed()) {
+		// Une coupe se joue par élimination directe : pas de classement à
+		// montrer, la page de "poule" fédérale n'apprendrait rien.
+		if (teams.every((t) => t.coupe)) continue;
 		const { events, calendarName } = await fetchFeed(url);
 		const classementUrl =
 			teams.find((t) => t.urlClassement)?.urlClassement ??

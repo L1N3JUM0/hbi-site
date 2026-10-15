@@ -321,7 +321,7 @@ collections:
         widget: "list"
         required: false
         summary: "{{fields.repere}}"
-        hint: "Un calendrier par équipe engagée en championnat dans cette catégorie. Sur la page de la compétition sur ffhandball.fr, cliquez sur « Ajouter les matchs à votre calendrier » et copiez le lien .ics proposé. Laissez cette liste vide tant que le calendrier de la saison n'est pas encore publié par la fédération, ou pour un créneau qui ne joue pas de championnat : l'équipe n'apparaît simplement pas dans l'agenda, sans erreur."
+        hint: "Un calendrier par équipe engagée en championnat dans cette catégorie, plus un par coupe à laquelle l'équipe est inscrite (case « Calendrier de coupe » cochée). Sur la page de la compétition sur ffhandball.fr, cliquez sur « Ajouter les matchs à votre calendrier » et copiez le lien .ics proposé. Laissez cette liste vide tant que le calendrier de la saison n'est pas encore publié par la fédération, ou pour un créneau qui ne joue pas de championnat : l'équipe n'apparaît simplement pas dans l'agenda, sans erreur."
         fields:
           - label: "Lien du calendrier (.ics)"
             name: "url"
@@ -353,6 +353,13 @@ collections:
             required: false
             pattern: ["^https://www\\.ffhandball\\.fr/.+$", "L'adresse doit commencer par https://www.ffhandball.fr/"]
             hint: "Sur la page de la compétition sur ffhandball.fr, copiez l'adresse de l'onglet « Classement » ou « Statistiques ». C'est la même poule que le calendrier ci-dessus (même valeur pour les deux équipes en cas de poule partagée). Laissez vide pour ne pas afficher cette équipe sur la page Statistiques : aucune erreur, elle disparaît simplement."
+
+          - label: "Calendrier de coupe (Coupe de France...)"
+            name: "coupe"
+            widget: "boolean"
+            default: false
+            required: false
+            hint: "Cochez pour le calendrier d'une coupe à laquelle l'équipe est inscrite (ex. Coupe de France départementale), EN PLUS de son calendrier de championnat. Laissez « Repère » à sa valeur par défaut et « Libellé » vide : c'est la même équipe, pas une équipe de plus. Les matchs de Coupe de France sont alors signalés par un petit drapeau tricolore dans l'agenda."
 
       - label: "Jours et horaires d'entraînement"
         name: "horaires"

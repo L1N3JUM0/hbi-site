@@ -194,6 +194,17 @@ différent pour chacune (le texte exact qui les distingue sur ffhandball.fr,
 ex. « Handball Islois 1 » / « Handball Islois 2 ») et un **« Numéro »**
 (1, 2...) pour les distinguer sur l'agenda du site.
 
+**Une équipe inscrite en coupe** (ex. Coupe de France départementale) : sur
+ffhandball.fr, la coupe a sa propre page de compétition (menu « Coupe de
+France ») et donc son propre lien .ics. Ajoutez-le comme un calendrier de
+plus de la fiche équipe, **case « Calendrier de coupe » cochée**, en
+laissant « Repère » à sa valeur par défaut et « Libellé » vide : c'est la
+même équipe, pas une équipe de plus. Les matchs de Coupe de France sont
+alors marqués d'un petit drapeau tricolore sur l'agenda, sur la fiche
+équipe et dans le bloc « Ce week-end » de l'accueil. Une fois l'équipe
+éliminée, vous pouvez supprimer ce calendrier (ou le laisser : il n'aura
+simplement plus de match à venir).
+
 **Le calendrier de la saison n'est pas encore publié par la fédération ?**
 Laissez le champ vide, ou laissez l'ancienne adresse si elle fonctionne
 encore : une équipe sans calendrier valide n'apparaît simplement pas dans

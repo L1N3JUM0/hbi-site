@@ -7,4 +7,10 @@
   /* Hors palette du logo, réservé au seul badge "Record" de la Carte joueur
      (demande explicite du 30/09/2026) : ne pas l'employer ailleurs. */
   --color-or: #E3B53B;
+  /* Hors palette du logo, réservés au seul petit drapeau des matchs de Coupe
+     de France (DrapeauTricolore.astro, demande explicite du 15/10/2026) :
+     bleu France et rouge Marianne de la charte de l'État. Ne pas les
+     employer ailleurs. */
+  --color-fr-bleu: #000091;
+  --color-fr-rouge: #E1000F;
 }

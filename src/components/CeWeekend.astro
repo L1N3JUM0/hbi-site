@@ -3,6 +3,7 @@ import { formatMatchDate } from "../lib/agenda";
 import { formatFenetre, formatJourHeure, getBlocWeekend, type LigneWeekend } from "../lib/weekend";
 import { casseNomClub } from "../lib/nomsClubs";
 import { withBase } from "../utils/links";
+import DrapeauTricolore from "./DrapeauTricolore.astro";
 
 /** Au-delà, la liste repousserait la découverte du club sous la ligne de
  * flottaison : le reste est sur /agenda. */
@@ -43,7 +44,11 @@ function adversaire(l: LigneWeekend): string {
 										<span class="long">{l.match.teamLabel}</span>
 										<span class="court" aria-hidden="true">{l.match.teamLabelCourt}</span>
 									</span>
-									<span class="adv" title={adversaire(l)}>{adversaire(l)}</span>
+									<span class="adv" title={adversaire(l)}>
+										{/* Avant le nom : après, l'ellipsis d'un nom long le masquerait. */}
+										{l.match.coupeDeFrance && <><DrapeauTricolore /> </>}
+										{adversaire(l)}
+									</span>
 									<span class="etat">
 										{l.etat.type === "heure" && <time datetime={l.match.start.toISOString()}>{formatJourHeure(l.match.start)}</time>}
 										{l.etat.type === "score" && (

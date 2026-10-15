@@ -130,7 +130,13 @@ function chargerEquipesCompetition() {
 			// reconnaître le camp HBI d'une feuille quand son nom d'équipe n'est
 			// pas "Handball Islois" (ex. une entente, voir estNomEquipeHBI()) --
 			// les deux dans src/lib/fdme/equipeMatch.mjs.
-			calendriers: (data.calendriers ?? []).map((c) => ({ url: c.url, libelle: c.libelle, repere: c.repere })),
+			// Les calendriers de coupe sont écartés : ce ne sont pas des équipes
+			// de plus (voir `coupe` dans content.config.ts). Gardés, ils
+			// feraient croire à des "compétitions différentes" pour la même
+			// catégorie et déclencheraient detecterLibelleCompetition() à tort.
+			calendriers: (data.calendriers ?? [])
+				.filter((c) => c.coupe !== true)
+				.map((c) => ({ url: c.url, libelle: c.libelle, repere: c.repere })),
 		}))
 		.filter((e) => e.slug && e.categorieAge && e.genre);
 }

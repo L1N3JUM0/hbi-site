@@ -12,6 +12,12 @@ calendriers:
     libelle: ''
     classementUrl: ''
     statistiquesUrl: https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-feminines-32648/poule-192108/classements/
+  - url: https://competition-calendar.ffhandball.fr/c-33243/s-3577.ics
+    repere: Handball Islois
+    libelle: ''
+    classementUrl: ''
+    statistiquesUrl: ''
+    coupe: true
 horaires: Mercredi et vendredi 20h30-22h30
 encadrants: Cyril et Thierry
 tarif: 220 €

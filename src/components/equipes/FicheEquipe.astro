@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
 import AjouterAgendaButton from "../AjouterAgendaButton.astro";
+import DrapeauTricolore from "../DrapeauTricolore.astro";
 import PhotoCarousel from "../PhotoCarousel.astro";
 import ResultatsEquipe from "../resultats/ResultatsEquipe.astro";
 import { formatMatchQuand, type AgendaMatch, type AgendaTeamConfig } from "../../lib/agenda";
@@ -38,7 +39,9 @@ const { equipe, matchs, calendriers, derniers, aDesResultats, avecStats, tag, ou
 const e = equipe.data;
 const slug = e.slug;
 const aCalendrier = calendriers.length > 0;
-const plusieursEquipes = calendriers.length > 1;
+// Un calendrier de coupe n'est pas une équipe de plus (voir `coupe` dans
+// content.config.ts) : seuls les championnats comptent ici.
+const plusieursEquipes = calendriers.filter((c) => !c.coupe).length > 1;
 const prochain = matchs.find((m) => !m.reporte || m.reporte.nouvelleDate);
 const { jours, sansDate } = grouperParJour(matchs);
 const publicVise = publicEquipe(equipe);
@@ -85,6 +88,7 @@ const historique = aDesResultats || avecStats;
 								{prochain.isHome ? "D" : "E"}
 							</span>
 							<span class="prochain__texte">
+								{prochain.coupeDeFrance && <><DrapeauTricolore /> </>}
 								{formatDateHeureCourte(prochain.start)} · {contre(prochain)}
 							</span>
 						</span>
@@ -144,7 +148,11 @@ const historique = aDesResultats || avecStats;
 												{m.isHome ? "D" : "E"}
 											</span>
 											<span class="heure">{m.reporte ? "Reporté" : formatHeureCourte(m.start)}</span>
-											<span class="adv">{contre(m)}</span>
+											<span class="adv">
+												{/* Avant le texte : après, l'ellipsis d'un nom long le masquerait. */}
+												{m.coupeDeFrance && <><DrapeauTricolore /> </>}
+												{contre(m)}
+											</span>
 										</li>
 									))}
 								</ul>
@@ -156,6 +164,7 @@ const historique = aDesResultats || avecStats;
 									<li>
 										<span class={`lieu ${m.isHome ? "lieu--dom" : ""}`}>{m.isHome ? "D" : "E"}</span>
 										<span class="adv">
+											{m.coupeDeFrance && <><DrapeauTricolore /> </>}
 											{contre(m)} — {formatMatchQuand(m)}
 										</span>
 									</li>
@@ -198,7 +207,13 @@ const historique = aDesResultats || avecStats;
 				{calendriers.map((c) => (
 					<AjouterAgendaButton
 						href={c.urlIcs}
-						label={plusieursEquipes ? `Ajouter ${c.nomCourt} à mon agenda` : "Ajouter à mon agenda"}
+						label={
+							c.nomCoupe
+								? `Ajouter la ${c.nomCoupe} à mon agenda`
+								: plusieursEquipes
+									? `Ajouter ${c.nomCourt} à mon agenda`
+									: "Ajouter à mon agenda"
+						}
 					/>
 				))}
 			</div>

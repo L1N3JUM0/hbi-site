@@ -1,0 +1,38 @@
+---
+/** Mini drapeau tricolore signalant un match de Coupe de France (agenda,
+ * fiche équipe, bloc "Ce week-end"). Volontairement minuscule : il ne doit
+ * pas concurrencer les badges Domicile/Extérieur, seulement se repérer.
+ * `decoratif` quand un texte "Coupe de France" l'accompagne déjà (sinon les
+ * lecteurs d'écran l'annonceraient deux fois). */
+interface Props {
+	decoratif?: boolean;
+}
+const { decoratif = false } = Astro.props;
+---
+
+{
+	decoratif ? (
+		<span class="drapeau" aria-hidden="true" />
+	) : (
+		<span class="drapeau" role="img" aria-label="Coupe de France" title="Coupe de France" />
+	)
+}
+
+<style>
+	.drapeau {
+		display: inline-block;
+		flex: none;
+		width: 1.05em;
+		height: 0.7em;
+		border-radius: 1px;
+		vertical-align: -0.05em;
+		background: linear-gradient(
+			90deg,
+			var(--color-fr-bleu) 0 33.34%,
+			var(--color-white) 33.34% 66.67%,
+			var(--color-fr-rouge) 66.67% 100%
+		);
+		/* Le bleu France disparaîtrait sur nos fonds marine sans ce liseré clair. */
+		box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.55);
+	}
+</style>
