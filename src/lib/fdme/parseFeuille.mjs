@@ -556,7 +556,10 @@ export async function parseFeuilleDeMatch(pdfBytes, equipesCompetition = []) {
 	// close, on rattache silencieusement à la catégorie sans sous-équipe
 	// (equipeNumero reste vide), sans avertissement -- un avertissement par
 	// saison close s'accumulerait sans fin (voir la demande du 28/09/2026).
-	if (!equipeNumero && equipeSlug && saisonPour(header.date) === saisonActuelle()) {
+	// Pas pour une coupe : le club y engage une seule équipe composée de toute
+	// la catégorie (équipes 1 et 2 confondues), il n'y a rien à départager --
+	// voir cleGroupe() dans src/lib/resultats.ts.
+	if (!equipeNumero && equipeSlug && typeMatch !== "coupe" && saisonPour(header.date) === saisonActuelle()) {
 		const equipe = equipesCompetition.find((e) => e.slug === equipeSlug);
 		const urlsDistinctes = new Set((equipe?.calendriers ?? []).map((c) => c.url)).size;
 		if (urlsDistinctes > 1) {

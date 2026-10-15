@@ -138,8 +138,9 @@ const calendrierEquipe = z.object({
 	 * erreur. Voir src/content.config.ts > statistiquesPoules. */
 	statistiquesUrl: champFacultatif(z.string().url()),
 	/** Calendrier d'une COUPE (Coupe de France départementale...) plutôt que
-	 * d'un championnat : la même équipe que les autres calendriers de la
-	 * fiche, pas une équipe de plus. Exclu de toute la logique "plusieurs
+	 * d'un championnat : en coupe, le club engage UNE équipe composée des
+	 * joueurs de toute la catégorie (équipes 1 et 2 confondues), pas une
+	 * équipe de plus. Exclu de toute la logique "plusieurs
 	 * équipes du club dans cette catégorie" (libellés SM1/SM2, distinction
 	 * des feuilles de match par compétition -- voir
 	 * scripts/import-fdme.mjs) et des liens de classement de /agenda (une

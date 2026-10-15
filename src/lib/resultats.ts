@@ -53,6 +53,20 @@ export function libelleEquipeAffiche(numero: string | null | undefined): string 
 	return /^\d+$/.test(valeur) ? `Équipe ${valeur}` : valeur;
 }
 
+/** Clé du groupe des matchs de coupe dans une catégorie à plusieurs équipes. */
+const CLE_COUPE = "coupe";
+
+/** Groupe d'un résultat dans une catégorie à plusieurs équipes. Un match de
+ * coupe (Coupe de France...) sans numéro d'équipe n'est PAS rangé dans
+ * "Équipe 1" comme un match de championnat sans suffixe : en coupe, le club
+ * engage UNE équipe composée des joueurs de toute la catégorie, équipes 1 et
+ * 2 confondues (précision du club, 15/10/2026) -- elle a donc son propre
+ * groupe. Un numéro saisi à la main garde toujours la priorité. */
+function cleGroupe(r: Resultat): string {
+	if (r.data.equipeNumero) return normaliserTexte(r.data.equipeNumero);
+	return r.data.typeMatch === "coupe" ? CLE_COUPE : "1";
+}
+
 export interface GroupeIdentite {
 	/** Clé de regroupement normalisée (casse/accents ignorés, voir
 	 * normaliserTexte() dans src/lib/fdme/equipeMatch.mjs) -- deux résultats
@@ -99,11 +113,20 @@ export function ordreGroupesEquipe(tousLesResultats: Resultat[], calendriers: { 
 
 	const restants: GroupeIdentite[] = [];
 	for (const r of tousLesResultats) {
-		const cle = normaliserTexte(r.data.equipeNumero || "1");
+		const cle = cleGroupe(r);
 		if (groupes.has(cle) || restants.some((g) => g.cle === cle)) continue;
-		restants.push({ cle, libelle: libelleEquipeAffiche(r.data.equipeNumero) });
+		const libelle =
+			cle === CLE_COUPE
+				? /coupe\s+de\s+france/i.test(r.data.competition ?? "")
+					? "Coupe de France"
+					: "Coupe"
+				: libelleEquipeAffiche(r.data.equipeNumero);
+		restants.push({ cle, libelle });
 	}
 	restants.sort((a, b) => {
+		// La coupe après les équipes de championnat.
+		if (a.cle === CLE_COUPE) return 1;
+		if (b.cle === CLE_COUPE) return -1;
 		const na = Number(a.cle);
 		const nb = Number(b.cle);
 		if (!Number.isNaN(na) && !Number.isNaN(nb)) return na - nb;
@@ -126,7 +149,7 @@ export function grouperResultats(resultats: Resultat[], ordre: GroupeIdentite[])
 	return ordre
 		.map((groupe) => ({
 			...groupe,
-			resultats: resultats.filter((r) => normaliserTexte(r.data.equipeNumero || "1") === groupe.cle),
+			resultats: resultats.filter((r) => cleGroupe(r) === groupe.cle),
 		}))
 		.filter((g) => g.resultats.length > 0);
 }

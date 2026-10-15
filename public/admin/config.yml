@@ -359,7 +359,7 @@ collections:
             widget: "boolean"
             default: false
             required: false
-            hint: "Cochez pour le calendrier d'une coupe à laquelle l'équipe est inscrite (ex. Coupe de France départementale), EN PLUS de son calendrier de championnat. Laissez « Repère » à sa valeur par défaut et « Libellé » vide : c'est la même équipe, pas une équipe de plus. Les matchs de Coupe de France sont alors signalés par un petit drapeau tricolore dans l'agenda."
+            hint: "Cochez pour le calendrier d'une coupe à laquelle l'équipe est inscrite (ex. Coupe de France départementale), EN PLUS de son calendrier de championnat. Laissez « Repère » à sa valeur par défaut et « Libellé » vide, même pour les Seniors masculins : en coupe, le club présente une seule équipe avec les joueurs de toute la catégorie (équipes 1 et 2 confondues). Un seul calendrier de coupe par catégorie. Les matchs de Coupe de France sont alors signalés par un petit drapeau tricolore dans l'agenda."
 
       - label: "Jours et horaires d'entraînement"
         name: "horaires"

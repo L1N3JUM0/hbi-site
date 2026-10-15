@@ -194,23 +194,59 @@ différent pour chacune (le texte exact qui les distingue sur ffhandball.fr,
 ex. « Handball Islois 1 » / « Handball Islois 2 ») et un **« Numéro »**
 (1, 2...) pour les distinguer sur l'agenda du site.
 
-**Une équipe inscrite en coupe** (ex. Coupe de France départementale) : sur
-ffhandball.fr, la coupe a sa propre page de compétition (menu « Coupe de
-France ») et donc son propre lien .ics. Ajoutez-le comme un calendrier de
-plus de la fiche équipe, **case « Calendrier de coupe » cochée**, en
-laissant « Repère » à sa valeur par défaut et « Libellé » vide : c'est la
-même équipe, pas une équipe de plus. Les matchs de Coupe de France sont
-alors marqués d'un petit drapeau tricolore sur l'agenda, sur la fiche
-équipe et dans le bloc « Ce week-end » de l'accueil. Une fois l'équipe
-éliminée, vous pouvez supprimer ce calendrier (ou le laisser : il n'aura
-simplement plus de match à venir).
-
 **Le calendrier de la saison n'est pas encore publié par la fédération ?**
 Laissez le champ vide, ou laissez l'ancienne adresse si elle fonctionne
 encore : une équipe sans calendrier valide n'apparaît simplement pas dans
 l'agenda, sans erreur ni bloc vide sur le site. Revenez compléter le champ
 dès que la fédération publie le nouveau calendrier (voir "Changement de
 saison" ci-dessous).
+
+### Inscrire une équipe en coupe (Coupe de France...)
+
+En coupe, le club présente **une seule équipe par catégorie**, composée des
+joueurs de toute la catégorie — équipes 1 et 2 confondues pour les Seniors
+masculins. On ajoute donc **un seul calendrier de coupe par catégorie**, en
+plus du (ou des) calendrier(s) de championnat déjà présents.
+
+1. **Trouver le lien .ics de la coupe.** Sur ffhandball.fr, menu
+   **Compétitions** → onglet **« Coupe de France »** → choisissez la coupe
+   (ex. « Coupe de France départementale féminine 2026-2027 »). Sur la page
+   de la compétition, cliquez sur **« Ajouter les matchs à votre
+   calendrier »**, choisissez **Handball Islois** et copiez le lien qui se
+   termine par `.ics`.
+   *Astuce :* le lien a la forme
+   `https://competition-calendar.ffhandball.fr/c-NUMÉRO/s-3577.ics`, où
+   `NUMÉRO` est le nombre à la fin du nom de la compétition dans l'adresse
+   de sa page (ex. `…/coupe-de-france-departementale-feminine-2026-2027-33243/`
+   → `c-33243`).
+2. Dans le CMS, ouvrez **Équipes** → la fiche de la catégorie concernée
+   (ex. « Seniors féminines »).
+3. Dans **« Calendriers de compétition »**, cliquez sur **Ajouter**, sans
+   toucher aux calendriers de championnat existants.
+4. Remplissez le nouveau calendrier :
+   - **Lien du calendrier (.ics)** : le lien copié à l'étape 1 ;
+   - **Repère** : laissez **« Handball Islois »** (valeur par défaut) ;
+   - **Libellé** : laissez **vide**, y compris pour les Seniors masculins.
+     Ne mettez ni « 1 » ni « 2 » : c'est l'équipe de toute la catégorie ;
+   - **Lien du classement** et **Lien des statistiques** : laissez vides
+     (une coupe n'a pas de classement) ;
+   - **Calendrier de coupe** : **cochez la case**. C'est indispensable :
+     sans elle, le site prendrait la coupe pour une équipe de plus et
+     brouillerait la distinction équipe 1 / équipe 2 sur les feuilles de
+     match.
+5. **Enregistrer.** Quelques minutes plus tard :
+   - les matchs de coupe apparaissent sur `/agenda` avec un petit badge
+     tricolore **« Coupe de France »**, et un mini drapeau sur la fiche
+     équipe et dans le bloc « Ce week-end » de l'accueil ;
+   - un bouton **« Ajouter la Coupe de France à mon agenda »** apparaît sur
+     la fiche équipe ;
+   - les feuilles de match de coupe sont récupérées comme les autres. Pour
+     les Seniors masculins, leurs résultats sont regroupés à part sous
+     **« Coupe de France »**, ni dans « Équipe 1 » ni dans « Équipe 2 ».
+6. **Une fois l'équipe éliminée**, vous pouvez supprimer ce calendrier de la
+   fiche (les résultats déjà importés restent), ou le laisser : il n'aura
+   simplement plus de match à venir. À chaque nouvelle saison, la coupe a un
+   nouveau lien .ics : remplacez-le comme pour un championnat.
 
 ## Ajouter un événement du club (loto, assemblée générale...)
 
