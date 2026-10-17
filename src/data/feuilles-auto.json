@@ -59,7 +59,7 @@
 			"adversaire": "HANDBALL CLUB ORANGE 2",
 			"equipeSlug": "u11-mixtes",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-196084/rencontre-2716925/",
-			"derniereTentative": "2026-10-17T18:31:54.485Z",
+			"derniereTentative": "2026-10-17T19:38:47.110Z",
 			"code": "WAGWDPM",
 			"statut": "attente_score"
 		},
@@ -394,6 +394,16 @@
 			"code": "WAGWJIO",
 			"scoreVuLe": "2026-10-10T16:17:25.861Z",
 			"statut": "importee"
+		},
+		"3044993": {
+			"date": "2026-10-17T17:30:00.000Z",
+			"competition": "COUPE DE FRANCE DEPARTEMENTALE FEMININE 2026-2027",
+			"adversaire": "MARSEILLE NORD HANDBALL",
+			"equipeSlug": "seniors-feminines",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/coupe-de-france/coupe-de-france-departementale-feminine-2026-2027-33243/poule-196378/rencontre-2729419/",
+			"derniereTentative": "2026-10-17T19:38:47.110Z",
+			"code": "WAGWXBX",
+			"statut": "attente_score"
 		}
 	}
 }
