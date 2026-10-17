@@ -22,6 +22,9 @@ export interface MatchJoue {
 
 export interface FicheAdversaire {
 	adversaire: string;
+	/** Match de coupe : championnat départemental de l'adversaire d'où
+	 * viennent forme, classement et buteurs. null en championnat. */
+	championnat: { competition: string; comite: string; equipe: string } | null;
 	classement: {
 		place: number;
 		points: number;
@@ -51,6 +54,8 @@ export interface EquipeScouting {
 	/** Segment d'URL de la fiche ("seniors-masculins-1"). */
 	id: string;
 	equipe: string;
+	/** Calendrier de coupe (toute la catégorie), pas de match aller. */
+	coupe?: boolean;
 	statut: "ok" | "aucun_match" | "indisponible";
 	match?: { date: string; domicile: boolean; adversaire: string; journee: string | null; competition: string | null };
 	fiche?: FicheAdversaire | null;

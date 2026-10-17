@@ -179,3 +179,69 @@ export function journeesALire(journees, aujourdhui, journeesAVenir) {
 	for (const j of journees) if (j.date_debut <= aujourdhui) numeros.add(j.journee_numero);
 	return [...numeros].sort((a, b) => a - b);
 }
+
+// --- Coupe : retrouver le championnat d'un adversaire hors de nos poules ---
+
+/** Segment d'URL d'un comité sur ffhandball.fr, même règle que le site
+ * fédéral (`o-` + libellé en minuscules sans accents + identifiant) :
+ * "COMITE DES BOUCHES DU RHONE", "43" -> "o-comite-des-bouches-du-rhone-43". */
+export function segmentComite(libelle, extStructureId) {
+	const texte = libelle
+		.normalize("NFD")
+		.replace(/[̀-ͯ]/g, "")
+		.toLowerCase()
+		.replace(/[^a-z0-9]+/g, "-")
+		.replace(/^-|-$/g, "");
+	return `o-${texte}-${extStructureId}`;
+}
+
+/** Une compétition départementale est-elle de la bonne catégorie ? Seniors :
+ * tout ce qui ne porte pas de catégorie d'âge ("1ERE DIVISION MASCULINE
+ * TERRITORIALE", "DIVISION 1 FEMININES") ; jeunes : la catégorie dans le
+ * libellé ("U17 FEMININES INTER DEP POULE 1"). Loisirs et plateaux exclus. */
+export function estCompetitionDeCategorie(competition, genre, categorieAge) {
+	if (genre && competition.genre && competition.genre !== genre) return false;
+	const libelle = competition.libelle ?? "";
+	if (/plateau|loisir|baby|non\s+competiti/i.test(libelle)) return false;
+	if (categorieAge === "senior") return !/\b(U|-)\s?\d{2}\b|moins\s+de/i.test(libelle);
+	return new RegExp(`\\b${categorieAge}\\b`, "i").test(libelle);
+}
+
+const normaliser = (nom) => (nom ?? "").toUpperCase().replace(/\s+/g, " ").trim();
+
+/** Nom(s) d'équipe du club dans un flux iCal "compétition × club" : celui
+ * qui figure dans TOUS les matchs du flux (l'adversaire change, pas lui).
+ * Plusieurs noms si le club y engage plusieurs équipes ("X 1" et "X 2"
+ * jouent toujours, mais pas dans les mêmes matchs : aucun n'est commun),
+ * d'où le repli sur les noms présents dans au moins la moitié des matchs. */
+export function equipesDuClub(evenements) {
+	const camps = evenements.map((e) => e.titre.split(/\s+vs\s+/i).map(normaliser)).filter((c) => c.length === 2);
+	if (camps.length === 0) return [];
+	const compte = new Map();
+	for (const c of camps) for (const nom of new Set(c)) compte.set(nom, (compte.get(nom) ?? 0) + 1);
+	const communs = [...compte].filter(([, n]) => n === camps.length).map(([nom]) => nom);
+	if (communs.length) return communs;
+	return [...compte].filter(([, n]) => n * 2 >= camps.length).sort((a, b) => b[1] - a[1]).map(([nom]) => nom);
+}
+
+/** Parmi les équipes trouvées (dans l'ordre des compétitions du comité,
+ * division la plus haute d'abord), celle qui joue la coupe : même nom
+ * exact, sinon la "1", sinon la première. */
+export function choisirEquipe(candidats, nomCoupe) {
+	const cible = normaliser(nomCoupe).replace(/\s+\d+$/, "");
+	return (
+		candidats.find((c) => normaliser(c.equipe) === normaliser(nomCoupe)) ??
+		candidats.find((c) => normaliser(c.equipe) === `${cible} 1`) ??
+		candidats.find((c) => normaliser(c.equipe).startsWith(cible)) ??
+		candidats[0] ??
+		null
+	);
+}
+
+/** Identifiant fédéral d'une équipe dans une rencontre, d'après son nom. */
+export function idEquipeDansRencontre(rencontre, nomEquipe) {
+	const cible = normaliser(nomEquipe);
+	if (normaliser(rencontre.equipe1Libelle) === cible) return rencontre.equipe1Id;
+	if (normaliser(rencontre.equipe2Libelle) === cible) return rencontre.equipe2Id;
+	return null;
+}

@@ -92,3 +92,35 @@ test("URL de rencontre du flux iCal, journées à lire", () => {
 	assert.deepEqual(journeesALire(journees, "2026-10-17", [3, null]), [1, 2, 3]);
 	assert.deepEqual(journeesALire(journees, "2026-10-17", []), [1, 2]);
 });
+
+test("coupe : comité, catégorie, équipe du club dans un flux iCal", async () => {
+	const { segmentComite, estCompetitionDeCategorie, equipesDuClub, choisirEquipe, idEquipeDansRencontre } = await import("./analyse.mjs");
+	assert.equal(segmentComite("COMITE DES BOUCHES DU RHONE", "43"), "o-comite-des-bouches-du-rhone-43");
+	assert.equal(segmentComite("COMITE DES ALPES-MARITIMES", "155"), "o-comite-des-alpes-maritimes-155");
+
+	const c = (libelle: string, genre = "MASCULIN") => ({ libelle, genre });
+	assert.equal(estCompetitionDeCategorie(c("1ERE DIVISION MASCULINE TERRITORIALE"), "MASCULIN", "senior"), true);
+	assert.equal(estCompetitionDeCategorie(c("DIVISION 1 FEMININES", "FEMININ"), "MASCULIN", "senior"), false);
+	assert.equal(estCompetitionDeCategorie(c("U18 MASCULINS DEPARTEMENTALE"), "MASCULIN", "senior"), false);
+	assert.equal(estCompetitionDeCategorie(c("U18 MASCULINS DEPARTEMENTALE"), "MASCULIN", "U18"), true);
+	assert.equal(estCompetitionDeCategorie(c("PLATEAU U9 MIXTES", "MIXTE"), "", "senior"), false);
+
+	const ev = (titre: string) => ({ titre });
+	assert.deepEqual(
+		equipesDuClub([ev("EP MANOSQUE 04 HB vs MALLEMORT DURANCE PROVENCE HB"), ev("MALLEMORT DURANCE PROVENCE HB vs MARSEILLE NORD HANDBALL")]),
+		["MALLEMORT DURANCE PROVENCE HB"],
+	);
+	assert.deepEqual(equipesDuClub([ev("X 1 vs A"), ev("B vs X 2"), ev("X 1 vs C"), ev("X 2 vs D")]).sort(), ["X 1", "X 2"]);
+
+	const candidats = [
+		{ equipe: "MALLEMORT HB 2", competition: "D2" },
+		{ equipe: "MALLEMORT HB 1", competition: "D1" },
+	];
+	assert.equal(choisirEquipe(candidats, "MALLEMORT HB")?.competition, "D1");
+	assert.equal(choisirEquipe(candidats, "MALLEMORT HB 2")?.competition, "D2");
+	assert.equal(choisirEquipe([], "X"), null);
+
+	const r = { equipe1Id: "1", equipe2Id: "2", equipe1Libelle: "A", equipe2Libelle: "MALLEMORT  HB " };
+	assert.equal(idEquipeDansRencontre(r, "mallemort hb"), "2");
+	assert.equal(idEquipeDansRencontre(r, "Z"), null);
+});

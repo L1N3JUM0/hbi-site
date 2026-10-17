@@ -377,8 +377,16 @@ secret, sans authentification.
 - **Données** : `scripts/scouting-ffhandball.mjs` (prebuild) lit le flux
   iCal de chaque équipe puis les pages ffhandball.fr de la poule (classement,
   résultats par journée, buteurs par match) et écrit un JSON par catégorie
-  dans `src/data/scouting/`, ignoré par git. Coupe exclue. Jamais d'échec de
-  build : une donnée manquante s'affiche « données indisponibles ».
+  dans `src/data/scouting/`, ignoré par git. Jamais d'échec de build : une
+  donnée manquante s'affiche « données indisponibles ».
+- **Coupe** : l'adversaire n'est pas dans nos poules. Le script part de son
+  identifiant de club (page de la rencontre), puis interroge le flux iCal
+  « compétition × club » de chaque championnat départemental de la bonne
+  catégorie, comité par comité dans la ligue (département de sa salle s'il
+  reçoit, puis Vaucluse, puis les autres). Règle du club : un adversaire de
+  coupe joue toujours en départementale de son département. Fiche alors
+  tirée de ce championnat (sans match aller), source indiquée en tête.
+  Jusqu'à ~30 requêtes de plus par match de coupe.
 - **Buteurs** : la page fédérale omet les joueur·se·s sans licence validée,
   d'où la mention « partiel » quand la somme des buts ne fait pas le score.
   Nom complet en Seniors, prénom + initiale en U17/U18 (seul ce libellé
