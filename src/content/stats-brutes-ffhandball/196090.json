@@ -1,6 +1,6 @@
 {
 	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u15-masculins-inter-dep-1-2-33206/poule-196090/classements/",
-	"fetchedAt": "2026-10-17T08:11:45.578Z",
+	"fetchedAt": "2026-10-17T18:28:09.373Z",
 	"classement": [
 		{
 			"id": "10621249",
@@ -63,11 +63,31 @@
 			"ext_structureId": "3580"
 		},
 		{
+			"id": "10621250",
+			"ext_classementId": "59733318",
+			"pouleId": "246164",
+			"equipeId": "1833747",
+			"place": "4",
+			"point": "4",
+			"joue": "2",
+			"gagne": "1",
+			"nul": "0",
+			"perdu": "1",
+			"butPlus": "65",
+			"butMoins": "60",
+			"diff": "5",
+			"dernieresRencontres": "-1;1",
+			"equipe_libelle": "HANDBALL ISLOIS",
+			"equipe_logoActif": "1",
+			"structure_logo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg",
+			"ext_structureId": "3577"
+		},
+		{
 			"id": "10621244",
 			"ext_classementId": "59733319",
 			"pouleId": "246164",
 			"equipeId": "1833741",
-			"place": "4",
+			"place": "5",
 			"point": "4",
 			"joue": "2",
 			"gagne": "1",
@@ -83,11 +103,31 @@
 			"ext_structureId": "3585"
 		},
 		{
+			"id": "10621248",
+			"ext_classementId": "59733321",
+			"pouleId": "246164",
+			"equipeId": "1833745",
+			"place": "6",
+			"point": "2",
+			"joue": "2",
+			"gagne": "0",
+			"nul": "0",
+			"perdu": "2",
+			"butPlus": "54",
+			"butMoins": "82",
+			"diff": "-28",
+			"dernieresRencontres": "-1;-1",
+			"equipe_libelle": "PAYS APT HANDBALL 1",
+			"equipe_logoActif": "1",
+			"structure_logo": "2015-06-30-e12edf68-e375-45d8-8c0b-526c0334d204.jpg",
+			"ext_structureId": "3575"
+		},
+		{
 			"id": "10621246",
 			"ext_classementId": "59733320",
 			"pouleId": "246164",
 			"equipeId": "1833743",
-			"place": "5",
+			"place": "7",
 			"point": "1",
 			"joue": "1",
 			"gagne": "0",
@@ -107,7 +147,7 @@
 			"ext_classementId": "59733322",
 			"pouleId": "246164",
 			"equipeId": "1833744",
-			"place": "6",
+			"place": "8",
 			"point": "1",
 			"joue": "1",
 			"gagne": "0",
@@ -121,46 +161,6 @@
 			"equipe_logoActif": "1",
 			"structure_logo": "2026-06-05-700b853c-4af0-4959-a4c0-ea4e44299bb2.png",
 			"ext_structureId": "3582"
-		},
-		{
-			"id": "10621250",
-			"ext_classementId": "59733318",
-			"pouleId": "246164",
-			"equipeId": "1833747",
-			"place": "7",
-			"point": "1",
-			"joue": "1",
-			"gagne": "0",
-			"nul": "0",
-			"perdu": "1",
-			"butPlus": "24",
-			"butMoins": "34",
-			"diff": "-10",
-			"dernieresRencontres": "-1",
-			"equipe_libelle": "HANDBALL ISLOIS",
-			"equipe_logoActif": "1",
-			"structure_logo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg",
-			"ext_structureId": "3577"
-		},
-		{
-			"id": "10621248",
-			"ext_classementId": "59733321",
-			"pouleId": "246164",
-			"equipeId": "1833745",
-			"place": "8",
-			"point": "1",
-			"joue": "1",
-			"gagne": "0",
-			"nul": "0",
-			"perdu": "1",
-			"butPlus": "28",
-			"butMoins": "41",
-			"diff": "-13",
-			"dernieresRencontres": "-1",
-			"equipe_libelle": "PAYS APT HANDBALL 1",
-			"equipe_logoActif": "1",
-			"structure_logo": "2015-06-30-e12edf68-e375-45d8-8c0b-526c0334d204.jpg",
-			"ext_structureId": "3575"
 		}
 	],
 	"statsJoueurs": [
@@ -176,6 +176,17 @@
 			"structureLogo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png"
 		},
 		{
+			"individuId": "2461188",
+			"matchCount": "1",
+			"totalButs": "10",
+			"totalArrets": "0",
+			"nom": "AUZIER TROUVE",
+			"prenom": "ROBIN",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL ISLOIS",
+			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
 			"individuId": "2578565",
 			"matchCount": "2",
 			"totalButs": "3",
@@ -188,8 +199,8 @@
 		},
 		{
 			"individuId": "2859119",
-			"matchCount": "1",
-			"totalButs": "4",
+			"matchCount": "2",
+			"totalButs": "6",
 			"totalArrets": "0",
 			"nom": "CAPRON",
 			"prenom": "HUGO",
@@ -210,8 +221,8 @@
 		},
 		{
 			"individuId": "2968780",
-			"matchCount": "1",
-			"totalButs": "7",
+			"matchCount": "2",
+			"totalButs": "13",
 			"totalArrets": "0",
 			"nom": "MOURIER",
 			"prenom": "NOA",
@@ -221,7 +232,7 @@
 		},
 		{
 			"individuId": "2976608",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "1",
 			"totalArrets": "0",
 			"nom": "DOMEAU",
@@ -253,6 +264,17 @@
 			"structureLogo": "2026-07-16-885c7b46-4733-4c24-b320-3ce37156cb58.jpg"
 		},
 		{
+			"individuId": "3138072",
+			"matchCount": "1",
+			"totalButs": "8",
+			"totalArrets": "0",
+			"nom": "CAMBOULIVES DUFFEAL",
+			"prenom": "BASILE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL ISLOIS",
+			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
 			"individuId": "3162567",
 			"matchCount": "2",
 			"totalButs": "1",
@@ -275,6 +297,17 @@
 			"structureLogo": "2024-06-12-f09f9018-5fbb-48ab-ba11-dcc688a9aa24.png"
 		},
 		{
+			"individuId": "3182952",
+			"matchCount": "1",
+			"totalButs": "0",
+			"totalArrets": "2",
+			"nom": "PINEDA",
+			"prenom": "LEO",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL ISLOIS",
+			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
 			"individuId": "3223946",
 			"matchCount": "2",
 			"totalButs": "1",
@@ -295,6 +328,17 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "AVIGNON HANDBALL",
 			"structureLogo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png"
+		},
+		{
+			"individuId": "3269733",
+			"matchCount": "1",
+			"totalButs": "2",
+			"totalArrets": "0",
+			"nom": "CLEMENT",
+			"prenom": "CESAR",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL ISLOIS",
+			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
 		},
 		{
 			"individuId": "3271601",
@@ -320,8 +364,8 @@
 		},
 		{
 			"individuId": "3283979",
-			"matchCount": "1",
-			"totalButs": "7",
+			"matchCount": "2",
+			"totalButs": "16",
 			"totalArrets": "0",
 			"nom": "FOURNIER",
 			"prenom": "JEAN",
@@ -331,8 +375,8 @@
 		},
 		{
 			"individuId": "3306902",
-			"matchCount": "1",
-			"totalButs": "2",
+			"matchCount": "2",
+			"totalButs": "6",
 			"totalArrets": "0",
 			"nom": "SAIHI PELLENC",
 			"prenom": "LYAM",
@@ -408,9 +452,9 @@
 		},
 		{
 			"individuId": "3354946",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "0",
-			"totalArrets": "13",
+			"totalArrets": "15",
 			"nom": "MUGEMANGANGO",
 			"prenom": "LOUIS",
 			"showEquipeLogo": "1",
@@ -506,6 +550,17 @@
 			"structureLogo": "2024-05-23-e369fad5-1df8-488d-a160-80766caecb4f.png"
 		},
 		{
+			"individuId": "3473847",
+			"matchCount": "1",
+			"totalButs": "5",
+			"totalArrets": "0",
+			"nom": "BONNEMAIN",
+			"prenom": "RAPHAEL",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL ISLOIS",
+			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
 			"individuId": "3504929",
 			"matchCount": "1",
 			"totalButs": "12",
@@ -529,8 +584,8 @@
 		},
 		{
 			"individuId": "3515544",
-			"matchCount": "1",
-			"totalButs": "7",
+			"matchCount": "2",
+			"totalButs": "15",
 			"totalArrets": "0",
 			"nom": "DELIS",
 			"prenom": "MARIUS",
@@ -660,9 +715,20 @@
 			"structureLogo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png"
 		},
 		{
-			"individuId": "3620599",
+			"individuId": "3620163",
 			"matchCount": "1",
-			"totalButs": "5",
+			"totalButs": "7",
+			"totalArrets": "0",
+			"nom": "HOUBE",
+			"prenom": "ELIOTT",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "HANDBALL ISLOIS",
+			"structureLogo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg"
+		},
+		{
+			"individuId": "3620599",
+			"matchCount": "2",
+			"totalButs": "10",
 			"totalArrets": "0",
 			"nom": "BARO",
 			"prenom": "ANSELME",
@@ -760,7 +826,7 @@
 		},
 		{
 			"individuId": "3733789",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "1",
 			"totalArrets": "0",
 			"nom": "LOPES BRANDELET",
@@ -826,9 +892,9 @@
 		},
 		{
 			"individuId": "3916747",
-			"matchCount": "1",
+			"matchCount": "2",
 			"totalButs": "0",
-			"totalArrets": "16",
+			"totalArrets": "21",
 			"nom": "MAZZINI",
 			"prenom": "ARONE",
 			"showEquipeLogo": "1",
@@ -969,8 +1035,8 @@
 		},
 		{
 			"individuId": "4273528",
-			"matchCount": "1",
-			"totalButs": "3",
+			"matchCount": "2",
+			"totalButs": "4",
 			"totalArrets": "0",
 			"nom": "BARRUEL",
 			"prenom": "MACEO",

@@ -59,7 +59,7 @@
 			"adversaire": "HANDBALL CLUB ORANGE 2",
 			"equipeSlug": "u11-mixtes",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-196084/rencontre-2716925/",
-			"derniereTentative": "2026-10-17T08:11:17.584Z",
+			"derniereTentative": "2026-10-17T18:27:40.257Z",
 			"code": "WAGWDPM",
 			"statut": "attente_score"
 		},
@@ -353,6 +353,17 @@
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u15-masculins-inter-dep-1-2-33206/poule-196090/rencontre-2717191/",
 			"derniereTentative": "2026-09-28T15:23:53.579Z",
 			"code": "WAGWDZY",
+			"statut": "importee"
+		},
+		"3043258": {
+			"date": "2026-10-17T14:30:00.000Z",
+			"competition": "U15 MASCULINS INTER DEP 1&2",
+			"adversaire": "PAYS APT HANDBALL 1",
+			"equipeSlug": "u15-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u15-masculins-inter-dep-1-2-33206/poule-196090/rencontre-2717196/",
+			"derniereTentative": "2026-10-17T18:27:40.257Z",
+			"code": "WAGXOFL",
+			"scoreVuLe": "2026-10-17T18:27:40.257Z",
 			"statut": "importee"
 		},
 		"3043369": {
