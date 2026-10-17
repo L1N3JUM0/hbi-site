@@ -1,0 +1,120 @@
+---
+/**
+ * Gabarit des pages de scouting réservées aux coachs (lien secret, voir
+ * src/pages/[scouting]/). Volontairement sans Header/Footer du site : un
+ * outil consulté au gymnase sur téléphone, pas une page vitrine.
+ *
+ * - noindex/nofollow : la page n'est jamais liée publiquement, mais un lien
+ *   partagé ne doit pas finir dans un moteur de recherche ;
+ * - no-referrer : un clic vers un autre site ne doit pas lui transmettre le
+ *   chemin secret.
+ */
+import "../../styles/tokens.css";
+import Favicon from "../Favicon.astro";
+
+interface Props {
+	title: string;
+	/** Lien "← Tous les adversaires" (absent sur l'index). */
+	retour?: string;
+	genereLe?: string | null;
+}
+
+const { title, retour, genereLe } = Astro.props;
+---
+
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<Favicon />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="robots" content="noindex, nofollow" />
+		<meta name="referrer" content="no-referrer" />
+		<title>{title} — Scouting HBI</title>
+	</head>
+	<body>
+		<header class="barre">
+			{retour ? <a class="retour" href={retour}>← Tous les adversaires</a> : <span class="marque">HBI · Scouting coachs</span>}
+		</header>
+		<main>
+			<h1>{title}</h1>
+			<slot />
+			{genereLe && <p class="maj">Données FFHandball relevées le {genereLe}.</p>}
+		</main>
+	</body>
+</html>
+
+<style is:global>
+	/* Tokens uniquement, déclinés par color-mix pour les fonds et filets. */
+	body {
+		margin: 0;
+		background: color-mix(in srgb, var(--color-blue) 5%, var(--color-white));
+		color: var(--color-navy-deep);
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		font-size: 1rem;
+		line-height: 1.45;
+	}
+	main {
+		max-width: 40rem;
+		margin: 0 auto;
+		padding: 1rem 1rem 3rem;
+	}
+	h1 {
+		font-size: 1.5rem;
+		line-height: 1.2;
+		margin: 0.5rem 0 1rem;
+	}
+	h2 {
+		font-size: 1.125rem;
+		margin: 0 0 0.75rem;
+	}
+	.carte {
+		background: var(--color-white);
+		border: 1px solid color-mix(in srgb, var(--color-navy) 15%, transparent);
+		border-radius: 0.75rem;
+		padding: 1rem;
+		margin-bottom: 1rem;
+	}
+	.indispo {
+		color: color-mix(in srgb, var(--color-navy-deep) 70%, var(--color-white));
+		font-style: italic;
+		margin: 0;
+	}
+	.note {
+		font-size: 1rem;
+		color: color-mix(in srgb, var(--color-navy-deep) 75%, var(--color-white));
+		margin: 0.75rem 0 0;
+	}
+	a {
+		color: var(--color-blue);
+	}
+	a:focus-visible {
+		outline: 3px solid var(--color-crimson);
+		outline-offset: 2px;
+	}
+</style>
+
+<style>
+	.barre {
+		background: var(--color-navy-deep);
+		color: var(--color-white);
+		padding: 0 1rem;
+		min-height: 3rem;
+		display: flex;
+		align-items: center;
+	}
+	.marque {
+		font-weight: 700;
+	}
+	.retour {
+		color: var(--color-white);
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+		font-weight: 600;
+		text-decoration: none;
+	}
+	.maj {
+		font-size: 1rem;
+		color: color-mix(in srgb, var(--color-navy-deep) 70%, var(--color-white));
+	}
+</style>

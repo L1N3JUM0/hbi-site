@@ -364,6 +364,32 @@ confidentialité pour les catégories jeunes : à changer uniquement en
 des règles retenues (pourquoi ce choix, quelles équipes sont en
 `nominatif`).
 
+## Scouting coachs (pages confidentielles)
+
+Fiches des prochains adversaires de championnat (Seniors, U17, U18) pour
+les coachs, à l'adresse `/scouting-<SCOUTING_SLUG>/` -- accès par lien
+secret, sans authentification.
+
+- **Activer** : créer le secret de dépôt `SCOUTING_SLUG` (Settings →
+  Secrets and variables → Actions), une longue chaîne aléatoire de lettres,
+  chiffres, `-` ou `_` (ex. `openssl rand -hex 16`). Sans ce secret, aucune
+  page n'est générée. Changer le secret change l'adresse (ancien lien mort).
+- **Données** : `scripts/scouting-ffhandball.mjs` (prebuild) lit le flux
+  iCal de chaque équipe puis les pages ffhandball.fr de la poule (classement,
+  résultats par journée, buteurs par match) et écrit un JSON par catégorie
+  dans `src/data/scouting/`, ignoré par git. Coupe exclue. Jamais d'échec de
+  build : une donnée manquante s'affiche « données indisponibles ».
+- **Buteurs** : la page fédérale omet les joueur·se·s sans licence validée,
+  d'où la mention « partiel » quand la somme des buts ne fait pas le score.
+  Nom complet en Seniors, prénom + initiale en U17/U18 (seul ce libellé
+  réduit est écrit dans le JSON).
+- **Confidentialité** : `noindex, nofollow` et `no-referrer` sur chaque
+  page, aucun lien depuis le site public, rien dans `robots.txt` ni dans un
+  sitemap (en ajouter un un jour : exclure `/scouting-`). Le slug est masqué
+  par GitHub dans les logs ; ne jamais l'afficher dans une étape.
+- **En local** : `SCOUTING_SLUG=essai node scripts/scouting-ffhandball.mjs`
+  puis `SCOUTING_SLUG=essai npx astro build`.
+
 ## Back-office (Sveltia CMS)
 
 `public/admin/` contient l'interface d'édition à destination des bénévoles

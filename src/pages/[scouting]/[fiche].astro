@@ -1,0 +1,266 @@
+---
+/**
+ * Fiche du prochain adversaire d'une équipe du club (voir index.astro du
+ * même dossier pour le chemin secret et les règles de confidentialité).
+ * Chaque bloc a son propre « données indisponibles » : une page FFHandball
+ * illisible ne masque pas le reste de la fiche.
+ */
+import ScoutingLayout from "../../components/scouting/ScoutingLayout.astro";
+import { chargerScouting, formatDateCourte, formatDateMatch, formatGenereLe, formatScore, segmentScouting, type CategorieScouting, type EquipeScouting } from "../../lib/scouting";
+import { casseNomClub } from "../../lib/nomsClubs";
+import { withBase } from "../../utils/links";
+
+export function getStaticPaths() {
+	const segment = segmentScouting();
+	if (!segment) return [];
+	return chargerScouting().flatMap((categorie) =>
+		categorie.matchs
+			.filter((m) => m.match && m.fiche)
+			.map((equipe) => ({ params: { scouting: segment, fiche: equipe.id }, props: { categorie, equipe } })),
+	);
+}
+
+interface Props {
+	categorie: CategorieScouting;
+	equipe: EquipeScouting;
+}
+
+const { categorie, equipe } = Astro.props;
+const { scouting } = Astro.params;
+const match = equipe.match!;
+const fiche = equipe.fiche!;
+const adversaire = casseNomClub(fiche.adversaire);
+const signe = (n: number) => (n > 0 ? `+${n}` : String(n));
+const RESULTAT = { V: "Victoire", N: "Nul", D: "Défaite" } as const;
+---
+
+<ScoutingLayout title={adversaire} retour={withBase(`/${scouting}/`)} genereLe={categorie.genereLe ? formatGenereLe(categorie.genereLe) : null}>
+	<p class="contexte">
+		{equipe.equipe} · {formatDateMatch(match.date)} · {match.domicile ? "à domicile" : "à l'extérieur"}{match.journee && ` · ${match.journee}`}
+	</p>
+
+	<section class="carte" aria-labelledby="classement">
+		<h2 id="classement">Classement</h2>
+		{
+			fiche.classement ? (
+				<>
+					<p class="gros">
+						<span>
+							{fiche.classement.place}
+							<sup>{fiche.classement.place === 1 ? "er" : "e"}</sup> / {fiche.classement.nbEquipes}
+						</span>
+						<span class="pts">
+							{fiche.classement.points} pt{fiche.classement.points > 1 ? "s" : ""}
+						</span>
+					</p>
+					<p class="detail">
+						{fiche.classement.joue} J · {fiche.classement.gagne} V · {fiche.classement.nul} N · {fiche.classement.perdu} D · diff. {signe(fiche.classement.diff)}
+					</p>
+				</>
+			) : (
+				<p class="indispo">Données indisponibles.</p>
+			)
+		}
+	</section>
+
+	<section class="carte" aria-labelledby="forme">
+		<h2 id="forme">Forme (5 derniers matchs)</h2>
+		{
+			fiche.forme ? (
+				<ol class="forme">
+					{fiche.forme.map((m) => (
+						<li>
+							<span class={`res res-${m.resultat}`} title={RESULTAT[m.resultat]}>
+								{m.resultat}
+							</span>
+							<span class="score">{formatScore(m)}</span>
+							<span class="contre">
+								{m.domicile ? "vs" : "à"} {casseNomClub(m.adversaire)}
+								<span class="date">{formatDateCourte(m.date)}</span>
+							</span>
+						</li>
+					))}
+				</ol>
+			) : (
+				<p class="indispo">Données indisponibles.</p>
+			)
+		}
+		<p class="note">Du plus récent au plus ancien. Score de l'adversaire en premier.</p>
+	</section>
+
+	<section class="carte" aria-labelledby="moyennes">
+		<h2 id="moyennes">Moyennes de buts</h2>
+		{
+			fiche.moyennes ? (
+				<>
+					<dl class="moyennes">
+						<div>
+							<dt>Marqués</dt>
+							<dd>{fiche.moyennes.marques.toLocaleString("fr-FR")}</dd>
+						</div>
+						<div>
+							<dt>Encaissés</dt>
+							<dd>{fiche.moyennes.encaisses.toLocaleString("fr-FR")}</dd>
+						</div>
+					</dl>
+					<p class="note">Par match, sur {fiche.moyennes.matchs} match{fiche.moyennes.matchs > 1 ? "s" : ""} de championnat (forfaits exclus).</p>
+				</>
+			) : (
+				<p class="indispo">Données indisponibles.</p>
+			)
+		}
+	</section>
+
+	<section class="carte" aria-labelledby="aller">
+		<h2 id="aller">Match aller</h2>
+		{
+			fiche.aller ? (
+				<p class="gros">
+					<span class={`res res-${fiche.aller.resultat}`} title={RESULTAT[fiche.aller.resultat]}>
+						{fiche.aller.resultat}
+					</span>{" "}
+					HBI {formatScore(fiche.aller)} <span class="detail">({fiche.aller.domicile ? "à domicile" : "à l'extérieur"}, {formatDateCourte(fiche.aller.date)})</span>
+				</p>
+			) : fiche.journeesManquantes > 0 ? (
+				<p class="indispo">Données indisponibles.</p>
+			) : (
+				<p class="indispo">Pas encore joué cette saison.</p>
+			)
+		}
+	</section>
+
+	<section class="carte" aria-labelledby="buteurs">
+		<h2 id="buteurs">Meilleurs buteurs (5 derniers matchs)</h2>
+		{
+			fiche.buteurs && fiche.buteurs.liste.length > 0 ? (
+				<>
+					<table>
+						<thead>
+							<tr>
+								<th scope="col">Joueur·se</th>
+								<th scope="col" class="num">Buts</th>
+								<th scope="col" class="num">Matchs</th>
+							</tr>
+						</thead>
+						<tbody>
+							{fiche.buteurs.liste.map((b) => (
+								<tr>
+									<td>{b.nom}</td>
+									<td class="num">{b.buts}</td>
+									<td class="num">{b.matchs}</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+					<p class="note">
+						Sur {fiche.buteurs.matchsAnalyses} feuille{fiche.buteurs.matchsAnalyses > 1 ? "s" : ""} de match
+						{fiche.buteurs.partiel && " — partiel : la fédération n'affiche pas les joueur·se·s sans licence validée, ou une feuille manque"}.
+					</p>
+				</>
+			) : (
+				<p class="indispo">Données indisponibles.</p>
+			)
+		}
+	</section>
+
+	{fiche.journeesManquantes > 0 && <p class="note">Certaines journées n'ont pas pu être lues : forme et moyennes peuvent être incomplètes.</p>}
+</ScoutingLayout>
+
+<style>
+	.contexte {
+		margin: -0.5rem 0 1rem;
+		font-weight: 600;
+	}
+	.gros {
+		font-size: 1.5rem;
+		font-weight: 700;
+		margin: 0;
+		display: flex;
+		align-items: baseline;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+	.pts,
+	.detail {
+		font-size: 1rem;
+		font-weight: 400;
+	}
+	.detail {
+		margin: 0.25rem 0 0;
+	}
+	.forme {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.5rem;
+	}
+	.forme li {
+		display: grid;
+		grid-template-columns: 2.25rem 5.5rem 1fr;
+		align-items: center;
+		gap: 0.5rem;
+	}
+	.res {
+		display: inline-grid;
+		place-items: center;
+		width: 2.25rem;
+		height: 2.25rem;
+		border-radius: 0.375rem;
+		font-weight: 700;
+		color: var(--color-white);
+		flex: none;
+	}
+	.res-V {
+		background: var(--color-blue);
+	}
+	.res-N {
+		background: var(--color-white);
+		color: var(--color-navy-deep);
+		box-shadow: inset 0 0 0 2px var(--color-navy-deep);
+	}
+	.res-D {
+		background: var(--color-crimson);
+	}
+	.score {
+		font-weight: 700;
+		font-variant-numeric: tabular-nums;
+	}
+	.contre {
+		display: flex;
+		flex-direction: column;
+	}
+	.date {
+		color: color-mix(in srgb, var(--color-navy-deep) 70%, var(--color-white));
+	}
+	.moyennes {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.75rem;
+		margin: 0;
+	}
+	.moyennes dt {
+		font-weight: 600;
+	}
+	.moyennes dd {
+		margin: 0;
+		font-size: 1.75rem;
+		font-weight: 700;
+		font-variant-numeric: tabular-nums;
+	}
+	table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+	th,
+	td {
+		text-align: left;
+		padding: 0.5rem 0.25rem;
+		border-bottom: 1px solid color-mix(in srgb, var(--color-navy) 12%, transparent);
+	}
+	.num {
+		text-align: right;
+		font-variant-numeric: tabular-nums;
+		width: 4rem;
+	}
+</style>

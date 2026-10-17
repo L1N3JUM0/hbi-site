@@ -66,8 +66,14 @@ jobs:
         # licence (voir src/lib/fdme/licenceHash.mjs) -- injecté ici comme
         # variable d'environnement (secret du dépôt), jamais commité. En
         # local, le même pépin vit dans .env.local (gitignoré).
+        #
+        # SCOUTING_SLUG : partie secrète du chemin des pages de scouting
+        # coachs (/scouting-<slug>/, voir src/pages/[scouting]/). Absent ->
+        # pages non générées. GitHub le masque dans les logs ; ne jamais
+        # l'afficher (echo) dans une étape.
         env:
           LICENCE_HASH_PEPPER: ${{ secrets.LICENCE_HASH_PEPPER }}
+          SCOUTING_SLUG: ${{ secrets.SCOUTING_SLUG }}
         run: npm run build
 
       - name: Vérifier qu'aucune feuille de match (PDF) ne sera commitée

@@ -15,6 +15,10 @@ src/data/import-erreurs.generated.json
 # elles portent noms et licences en clair, jamais dans le dépôt.
 .feuilles-auto/
 
+# Données des pages de scouting coachs (voir scripts/scouting-ffhandball.mjs) :
+# noms de joueur·se·s adverses, régénérées à chaque build, jamais commitées.
+src/data/scouting/
+
 # dependencies
 node_modules/
 

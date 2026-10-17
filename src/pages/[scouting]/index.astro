@@ -1,0 +1,100 @@
+---
+/**
+ * Index du scouting coachs : le prochain adversaire de championnat de
+ * chaque équipe Seniors / U17 / U18. Chemin secret /scouting-{SCOUTING_SLUG}/
+ * (secret GitHub Actions) ; sans ce secret, aucune page n'est générée.
+ * Jamais liée depuis une page publique, absente de tout sitemap et de
+ * robots.txt (le citer révélerait le chemin).
+ */
+import ScoutingLayout from "../../components/scouting/ScoutingLayout.astro";
+import { chargerScouting, formatDateMatch, formatGenereLe, segmentScouting } from "../../lib/scouting";
+import { casseNomClub } from "../../lib/nomsClubs";
+import { withBase } from "../../utils/links";
+
+export function getStaticPaths() {
+	const segment = segmentScouting();
+	return segment ? [{ params: { scouting: segment } }] : [];
+}
+
+const { scouting } = Astro.params;
+const categories = chargerScouting();
+const genereLe = categories.map((c) => c.genereLe).find(Boolean);
+---
+
+<ScoutingLayout title="Prochains adversaires" genereLe={genereLe ? formatGenereLe(genereLe) : null}>
+	{
+		categories.map((categorie) => (
+			<section class="carte" aria-labelledby={`cat-${categorie.id}`}>
+				<h2 id={`cat-${categorie.id}`}>{categorie.libelle}</h2>
+				{categorie.genereLe === null || categorie.matchs.length === 0 ? (
+					<p class="indispo">Données indisponibles.</p>
+				) : (
+					<ul class="liste">
+						{categorie.matchs.map((m) => (
+							<li>
+								<p class="equipe">{m.equipe}</p>
+								{m.statut === "aucun_match" && <p class="indispo">Aucun match de championnat à venir.</p>}
+								{m.statut === "indisponible" && <p class="indispo">Données indisponibles.</p>}
+								{m.match &&
+									(m.fiche ? (
+										<a class="lien" href={withBase(`/${scouting}/${m.id}/`)}>
+											<span class="adv">{casseNomClub(m.match.adversaire)}</span>
+											<span class="quand">
+												{formatDateMatch(m.match.date)} · {m.match.domicile ? "Domicile" : "Extérieur"}
+											</span>
+										</a>
+									) : (
+										<div class="lien inactif">
+											<span class="adv">{casseNomClub(m.match.adversaire)}</span>
+											<span class="quand">
+												{formatDateMatch(m.match.date)} · {m.match.domicile ? "Domicile" : "Extérieur"}
+											</span>
+											<span class="indispo">Fiche : données indisponibles.</span>
+										</div>
+									))}
+							</li>
+						))}
+					</ul>
+				)}
+			</section>
+		))
+	}
+</ScoutingLayout>
+
+<style>
+	.liste {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.75rem;
+	}
+	.equipe {
+		font-weight: 700;
+		margin: 0 0 0.25rem;
+	}
+	.lien {
+		display: flex;
+		flex-direction: column;
+		gap: 0.125rem;
+		min-height: 44px;
+		padding: 0.75rem;
+		border-radius: 0.5rem;
+		background: color-mix(in srgb, var(--color-blue) 8%, var(--color-white));
+		text-decoration: none;
+		color: var(--color-navy-deep);
+	}
+	a.lien {
+		border-left: 4px solid var(--color-blue);
+	}
+	a.lien::after {
+		content: "Voir la fiche →";
+		color: var(--color-blue);
+		font-weight: 600;
+		margin-top: 0.25rem;
+	}
+	.adv {
+		font-weight: 700;
+		font-size: 1.125rem;
+	}
+</style>
