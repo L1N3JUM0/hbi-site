@@ -33,7 +33,7 @@ const genereLe = categories.map((c) => c.genereLe).find(Boolean);
 						{categorie.matchs.map((m) => (
 							<li>
 								<p class="equipe">{m.equipe}</p>
-								{m.statut === "aucun_match" && <p class="indispo">Aucun match de championnat à venir.</p>}
+								{m.statut === "aucun_match" && <p class="indispo">{m.coupe ? "Aucun match de coupe programmé." : "Aucun match de championnat à venir."}</p>}
 								{m.statut === "indisponible" && <p class="indispo">Données indisponibles.</p>}
 								{m.match &&
 									(m.fiche ? (
