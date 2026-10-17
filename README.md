@@ -366,7 +366,7 @@ des règles retenues (pourquoi ce choix, quelles équipes sont en
 
 ## Scouting coachs (pages confidentielles)
 
-Fiches des prochains adversaires de championnat (Seniors, U17, U18) pour
+Fiches des prochains adversaires (Seniors, U18, U17, U15, U13) pour
 les coachs, à l'adresse `/scouting-<SCOUTING_SLUG>/` -- accès par lien
 secret, sans authentification.
 
@@ -389,8 +389,9 @@ secret, sans authentification.
   Jusqu'à ~30 requêtes de plus par match de coupe.
 - **Buteurs** : la page fédérale omet les joueur·se·s sans licence validée,
   d'où la mention « partiel » quand la somme des buts ne fait pas le score.
-  Nom complet en Seniors, prénom + initiale en U17/U18 (seul ce libellé
-  réduit est écrit dans le JSON).
+  Nom complet en Seniors, prénom + initiale chez les jeunes (seul ce libellé
+  réduit est écrit dans le JSON). En U13, la fédération masque les buteurs
+  (`hideButs`) : on respecte ce choix, la fiche l'indique.
 - **Confidentialité** : `noindex, nofollow` et `no-referrer` sur chaque
   page, aucun lien depuis le site public, rien dans `robots.txt` ni dans un
   sitemap (en ajouter un un jour : exclure `/scouting-`). Le slug est masqué

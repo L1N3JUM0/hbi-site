@@ -42,6 +42,8 @@ export interface FicheAdversaire {
 	/** Vu par le HBI (butsPour = buts du HBI). */
 	aller: MatchJoue | null;
 	buteurs: {
+		/** La fédération ne publie pas les buteurs de cette catégorie (U13). */
+		masques?: boolean;
 		liste: { nom: string; buts: number; matchs: number }[];
 		matchsAnalyses: number;
 		matchsDemandes: number;
@@ -75,6 +77,8 @@ const CATEGORIES = [
 	{ id: "seniors", libelle: "Seniors" },
 	{ id: "u17", libelle: "U17" },
 	{ id: "u18", libelle: "U18" },
+	{ id: "u15", libelle: "U15" },
+	{ id: "u13", libelle: "U13" },
 ];
 const DOSSIER = join(process.cwd(), "src/data/scouting");
 

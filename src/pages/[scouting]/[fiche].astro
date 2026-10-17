@@ -147,7 +147,9 @@ const libelleCompetition = (libelle: string) => libelle.toLowerCase().replace(/^
 	<section class="carte" aria-labelledby="buteurs">
 		<h2 id="buteurs">Meilleurs buteurs (5 derniers matchs)</h2>
 		{
-			fiche.buteurs && fiche.buteurs.liste.length > 0 ? (
+			fiche.buteurs?.masques ? (
+				<p class="indispo">Non publiés par la fédération pour cette catégorie.</p>
+			) : fiche.buteurs && fiche.buteurs.liste.length > 0 ? (
 				<>
 					<table>
 						<thead>

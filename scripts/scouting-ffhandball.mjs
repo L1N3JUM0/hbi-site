@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Données des pages de scouting réservées aux coachs (preuve de concept
- * Seniors / U17 / U18, demande du 17/10/2026). Dernier maillon de
+ * Données des pages de scouting réservées aux coachs : Seniors, U18, U17
+ * (demande du 17/10/2026), U15 et U13 (ajoutées le même jour). Dernier maillon de
  * "prebuild" avant la vérification des images.
  *
  * Pour chaque calendrier d'une équipe du club de ces catégories :
@@ -59,13 +59,15 @@ const FFH = "https://www.ffhandball.fr";
 /** Comité du club sur ffhandball.fr (Vaucluse) : sa ligue délimite les
  * comités où chercher un adversaire de coupe, et il est essayé en premier. */
 const COMITE_HBI = "114";
-/** Catégories de la preuve de concept, par `categorieAge` de la fiche
+/** Catégories couvertes, par `categorieAge` de la fiche
  * équipe. `nomComplet` : seuls les seniors (majeur·e·s) sont nommé·e·s en
  * entier, prénom + initiale pour les jeunes. */
 const CATEGORIES = [
 	{ id: "seniors", libelle: "Seniors", categorieAge: "senior", nomComplet: true },
 	{ id: "u17", libelle: "U17", categorieAge: "U17", nomComplet: false },
 	{ id: "u18", libelle: "U18", categorieAge: "U18", nomComplet: false },
+	{ id: "u15", libelle: "U15", categorieAge: "U15", nomComplet: false },
+	{ id: "u13", libelle: "U13", categorieAge: "U13", nomComplet: false },
 ];
 const GENRE_FFH = { masculin: "MASCULIN", feminin: "FEMININ" };
 const NB_MATCHS_FORME = 5;
@@ -174,10 +176,15 @@ async function lirePoule(base, journeesAVenir) {
 	return { rencontres, classement: accueil.classement, journeesManquantes };
 }
 
+/** Buteurs d'une rencontre ; MASQUE quand la fédération choisit de ne pas
+ * les afficher (`hideButs`, constaté en U13 le 17/10/2026). Les chiffres
+ * restent présents dans le JSON de la page, mais on respecte ce choix :
+ * jamais lus, jamais écrits. */
+const MASQUE = Symbol("buteurs masqués");
 const lireFeuille = async (base, rencontreId) => {
 	const liste = await lireComposant(`${base}/rencontre-${rencontreId}/`, "competitions---rencontre-liste-joueurs");
-	if (!liste || liste.hideButs) return null;
-	return liste.statsJoueurs ?? null;
+	if (liste?.hideButs) return MASQUE;
+	return liste?.statsJoueurs ?? null;
 };
 
 /** Comités de la ligue du club, celui du département `departement` (s'il
@@ -233,7 +240,13 @@ function equipesDeCategorie(categorieAge) {
 			(e.calendriers ?? [])
 				.filter((c) => c.url)
 				.map((c) => ({
-					id: [e.slug, c.coupe ? "coupe" : c.libelle].filter(Boolean).join("-").toLowerCase().replace(/[^a-z0-9-]+/g, "-"),
+					id: [e.slug, c.coupe ? "coupe" : c.libelle]
+						.filter(Boolean)
+						.join("-")
+						.normalize("NFD")
+						.replace(/[\u0300-\u036f]/g, "")
+						.toLowerCase()
+						.replace(/[^a-z0-9-]+/g, "-"),
 					nom: c.coupe ? `${e.nom} — Coupe` : [e.nom, c.libelle].filter(Boolean).join(" "),
 					coupe: Boolean(c.coupe),
 					genre: GENRE_FFH[e.genre] ?? "",
@@ -287,6 +300,7 @@ async function analyserAdversaire({ pouleBase, poule, advId, hbiId, rencontreAVe
 			} catch (e) {
 				if (e instanceof ArretPourCeBuild) log(`  arrêt des requêtes : ${e.message}`);
 			}
+			if (joueurs === MASQUE) return { masques: true, liste: [], matchsAnalyses: 0, matchsDemandes: 0, partiel: false };
 			feuilles.push({ match: m, joueurs });
 		}
 		const cumul = cumulerButeurs(feuilles, advId);
@@ -295,7 +309,7 @@ async function analyserAdversaire({ pouleBase, poule, advId, hbiId, rencontreAVe
 		const libelles = libellesJoueurs(top, categorie.nomComplet);
 		// Seul le libellé déjà réduit est écrit : jamais le nom complet d'un·e
 		// mineur·e, même dans un fichier non publié.
-		return { ...cumul, liste: top.map((l, i) => ({ nom: libelles[i], buts: l.buts, matchs: l.matchs })) };
+		return { ...cumul, masques: false, liste: top.map((l, i) => ({ nom: libelles[i], buts: l.buts, matchs: l.matchs })) };
 	});
 	return {
 		classement: poule.classement ? ligneClassement(poule.classement, advId) : null,
