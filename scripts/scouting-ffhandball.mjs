@@ -34,6 +34,7 @@
  * les logs : ceux de GitHub Actions peuvent être publics.
  */
 import { existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { lireFrontmatter } from "./frontmatter.mjs";
 import { equipeDepuisCalendrier, extraireComposant, lireCalendrier } from "../src/lib/fdme/recuperation.mjs";
@@ -87,6 +88,10 @@ if (!slug) {
 	log("SCOUTING_SLUG absent : rien à générer.");
 	process.exit(0);
 }
+// Diagnostic sans révéler le secret (GitHub ne permet pas de le relire) :
+// longueur + début de son SHA-256, à comparer avec
+// `printf %s "<slug>" | sha256sum | cut -c1-8` -- voir README.
+log(`slug : ${slug.length} caractère(s), empreinte ${createHash("sha256").update(slug).digest("hex").slice(0, 8)}.`);
 
 /** Même instant de référence que le reste du site (src/lib/agenda.ts). */
 function maintenant() {

@@ -396,6 +396,10 @@ secret, sans authentification.
   page, aucun lien depuis le site public, rien dans `robots.txt` ni dans un
   sitemap (en ajouter un un jour : exclure `/scouting-`). Le slug est masqué
   par GitHub dans les logs ; ne jamais l'afficher dans une étape.
+- **Lien en 404 ?** Le log du build affiche `[scouting] slug : N caractère(s),
+  empreinte xxxxxxxx`. Comparer avec `printf %s "<slug>" | sha256sum | cut -c1-8`
+  (et sa longueur) : une différence veut dire que le secret enregistré n'est
+  pas celui qu'on croit (espace, majuscule, faute de frappe).
 - **En local** : `SCOUTING_SLUG=essai node scripts/scouting-ffhandball.mjs`
   puis `SCOUTING_SLUG=essai npx astro build`.
 
