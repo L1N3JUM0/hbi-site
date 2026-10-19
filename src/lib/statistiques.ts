@@ -69,13 +69,18 @@ export interface GroupeStatistiquesSaison {
 	 * pour les résultats de match (voir ResultatsEquipe.astro). */
 	libelle: string;
 	bilan: BilanEquipe;
-	joueurs: JoueurStatAffiche[];
 }
 
 export interface StatistiquesSaisonEquipe {
 	saison: string;
 	plusieursEquipes: boolean;
+	/** Bilan collectif, un par équipe du club dans la catégorie. */
 	groupes: GroupeStatistiquesSaison[];
+	/** Stats joueurs de TOUTE la catégorie sur la saison, équipes 1, 2 et
+	 * coupe confondues : un·e joueur·se passé·e d'une équipe à l'autre en
+	 * cours de saison a une seule ligne avec ses vrais totaux, plutôt que
+	 * deux lignes à additionner soi-même (demande du club, 19/10/2026). */
+	joueurs: JoueurStatAffiche[];
 }
 
 /** Slugs des équipes ayant au moins un résultat -- sert à ne proposer, dans
@@ -132,13 +137,17 @@ type JoueurAgrege = {
  * (accents/casse ignorés, voir normaliserTexte()) -- le numéro de maillot
  * n'est pas une clé stable d'un match à l'autre (changements de numéro en
  * cours de saison, notamment en jeunes), contrairement au nom. Un vrai
- * homonymat (même nom ET même prénom) au sein d'une même équipe reste un cas
+ * homonymat (même nom ET même prénom) au sein d'une même catégorie reste un cas
  * limite non résolu ici : leurs stats se cumuleraient à tort sur une seule
  * ligne -- aucun cas réel observé à ce jour dans les feuilles importées. */
 function agregerJoueurs(
 	resultats: Resultat[],
 	affichageStats: "nominatif" | "pseudonymise" | "masque",
 	detailAutorise: DetailAutorise,
+	/** Équipe du club sur chaque feuille, dans une catégorie à plusieurs
+	 * équipes : précisée après l'adversaire dans le détail match par match,
+	 * seul endroit où la fusion des équipes ferait perdre l'information. */
+	libelleEquipe: Map<Resultat, string> = new Map(),
 ): JoueurStatAffiche[] {
 	if (affichageStats === "masque") return [];
 
@@ -181,7 +190,9 @@ function agregerJoueurs(
 			// par construction, le total de saison affiché sur sa ligne.
 			a.matchs.push({
 				date: r.data.date.toISOString(),
-				adversaire: casseNomClub(r.data.adversaire),
+				adversaire: libelleEquipe.has(r)
+					? `${casseNomClub(r.data.adversaire)} (${libelleEquipe.get(r)})`
+					: casseNomClub(r.data.adversaire),
 				buts: j.buts,
 				butsEquipe,
 				sept_m: j.sept_m,
@@ -251,13 +262,15 @@ export async function getStatistiquesParSaison(
 	const { saisonEnCours, saisonsPrecedentes } = resultatsParSaison(tous);
 	const buckets = [{ saison: saisonActuelle(), resultats: saisonEnCours }, ...saisonsPrecedentes].filter((b) => b.resultats.length > 0);
 
-	return buckets.map(({ saison, resultats }) => ({
-		saison,
-		plusieursEquipes,
-		groupes: grouperResultats(resultats, ordre).map((g) => ({
-			libelle: g.libelle,
-			bilan: bilanEquipe(g.resultats),
-			joueurs: agregerJoueurs(g.resultats, affichageStats, detailAutorise),
-		})),
-	}));
+	return buckets.map(({ saison, resultats }) => {
+		const groupes = grouperResultats(resultats, ordre);
+		const libelleEquipe = new Map<Resultat, string>();
+		if (plusieursEquipes) for (const g of groupes) for (const r of g.resultats) libelleEquipe.set(r, g.libelle);
+		return {
+			saison,
+			plusieursEquipes,
+			groupes: groupes.map((g) => ({ libelle: g.libelle, bilan: bilanEquipe(g.resultats) })),
+			joueurs: agregerJoueurs(resultats, affichageStats, detailAutorise, libelleEquipe),
+		};
+	});
 }

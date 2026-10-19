@@ -61,7 +61,7 @@ const COLONNES_TABLEAU = 11;
 // Tri par colonne (même fonctionnement que /statistiques-carriere) : chaque
 // ligne porte ses valeurs de tri en data-value-*. Efficacité absente ou sous
 // le seuil de tirs : attribut omis, rangée en fin de tri dans les deux sens.
-type Joueur = Awaited<ReturnType<typeof getStatistiquesParSaison>>[number]["groupes"][number]["joueurs"][number];
+type Joueur = Awaited<ReturnType<typeof getStatistiquesParSaison>>[number]["joueurs"][number];
 const COLONNES_TRI: { key: string; titre: string; abbr?: string; valeur: (j: Joueur) => number | null }[] = [
 	{ key: "matchs", titre: "Matchs", valeur: (j) => j.matchsJoues },
 	{ key: "buts", titre: "Buts", valeur: (j) => j.buts },
@@ -151,7 +151,7 @@ const attributsTri = (j: Joueur) => ({
 									<h2>
 										{equipe.data.nom} <span class="saison-label">— {s.saison}</span>
 									</h2>
-									{s.groupes.map((groupe, gi) => (
+									{s.groupes.map((groupe) => (
 										<div class="groupe">
 											{s.plusieursEquipes && <h3>{groupe.libelle}</h3>}
 
@@ -177,80 +177,81 @@ const attributsTri = (j: Joueur) => ({
 													</dd>
 												</div>
 											</dl>
-
-											{groupe.joueurs.length > 0 && (
-												<div class="table-scroll">
-													<table class="joueurs">
-														<thead>
-															<tr>
-																<th scope="col" aria-sort="none">
-																	<button type="button" class="sort-btn" data-key="joueur" data-type="text">
-																		Joueur·se
-																		<span class="sort-indicator" aria-hidden="true" />
-																	</button>
-																</th>
-																{COLONNES_TRI.map((c) => (
-																	<th scope="col" aria-sort={c.key === "buts" ? "descending" : "none"}>
-																		<button type="button" class="sort-btn" data-key={c.key} data-type="num">
-																			{c.abbr ? <abbr title={c.abbr}>{c.titre}</abbr> : c.titre}
-																			<span class="sort-indicator" aria-hidden="true" />
-																		</button>
-																	</th>
-																))}
-															</tr>
-														</thead>
-														<tbody>
-															{groupe.joueurs.map((j, i) => {
-																const detailId = `matchs-${equipe.data.slug}-${s.saison}-${gi}-${i}`;
-																return (
-																	<>
-																		<tr class="joueur-row" {...attributsTri(j)}>
-																			<td>
-																				{j.matchs ? (
-																					<button type="button" class="nom-btn" aria-expanded="false" aria-controls={detailId}>
-																						<span class="nom">{j.label}</span>
-																					</button>
-																				) : (
-																					<span class="nom">{j.label}</span>
-																				)}
-																			</td>
-																			<td>{j.matchsJoues}</td>
-																			<td>{j.buts}</td>
-																			<td>
-																				<CellulePart buts={j.buts} butsEquipe={j.butsEquipe} />
-																			</td>
-																			<td>{j.sept_m}</td>
-																			<td>{j.tirs}</td>
-																			<td>
-																				<CelluleEfficacite buts={j.buts} tirs={j.tirs} arrets={j.arrets} seuil={SEUIL_TIRS_SAISON} />
-																			</td>
-																			<td>{j.arrets}</td>
-																			<td>{j.avertissements}</td>
-																			<td>{j.exclusions}</td>
-																			<td>{j.disqualifications}</td>
-																		</tr>
-																		{j.matchs && (
-																			<tr class="detail-row" id={detailId} hidden>
-																				<td colspan={COLONNES_TABLEAU}>
-																					<div
-																						class="match-panel"
-																						data-id={enregistrer(detailId, j.matchs)}
-																						data-nom={j.label}
-																						data-saison={s.saison}
-																						data-gardien={String(estGardien(j))}
-																					/>
-																				</td>
-																			</tr>
-																		)}
-																	</>
-																);
-															})}
-														</tbody>
-													</table>
-												</div>
-											)}
 										</div>
 									))}
+
+									{s.joueurs.length > 0 && s.plusieursEquipes && <h3 class="titre-joueurs">Joueur·se·s — toutes équipes confondues</h3>}
+									{s.joueurs.length > 0 && (
+										<div class="table-scroll">
+											<table class="joueurs">
+												<thead>
+													<tr>
+														<th scope="col" aria-sort="none">
+															<button type="button" class="sort-btn" data-key="joueur" data-type="text">
+																Joueur·se
+																<span class="sort-indicator" aria-hidden="true" />
+															</button>
+														</th>
+														{COLONNES_TRI.map((c) => (
+															<th scope="col" aria-sort={c.key === "buts" ? "descending" : "none"}>
+																<button type="button" class="sort-btn" data-key={c.key} data-type="num">
+																	{c.abbr ? <abbr title={c.abbr}>{c.titre}</abbr> : c.titre}
+																	<span class="sort-indicator" aria-hidden="true" />
+																</button>
+															</th>
+														))}
+													</tr>
+												</thead>
+												<tbody>
+													{s.joueurs.map((j, i) => {
+														const detailId = `matchs-${equipe.data.slug}-${s.saison}-${i}`;
+														return (
+															<>
+																<tr class="joueur-row" {...attributsTri(j)}>
+																	<td>
+																		{j.matchs ? (
+																			<button type="button" class="nom-btn" aria-expanded="false" aria-controls={detailId}>
+																				<span class="nom">{j.label}</span>
+																			</button>
+																		) : (
+																			<span class="nom">{j.label}</span>
+																		)}
+																	</td>
+																	<td>{j.matchsJoues}</td>
+																	<td>{j.buts}</td>
+																	<td>
+																		<CellulePart buts={j.buts} butsEquipe={j.butsEquipe} />
+																	</td>
+																	<td>{j.sept_m}</td>
+																	<td>{j.tirs}</td>
+																	<td>
+																		<CelluleEfficacite buts={j.buts} tirs={j.tirs} arrets={j.arrets} seuil={SEUIL_TIRS_SAISON} />
+																	</td>
+																	<td>{j.arrets}</td>
+																	<td>{j.avertissements}</td>
+																	<td>{j.exclusions}</td>
+																	<td>{j.disqualifications}</td>
+																</tr>
+																{j.matchs && (
+																	<tr class="detail-row" id={detailId} hidden>
+																		<td colspan={COLONNES_TABLEAU}>
+																			<div
+																				class="match-panel"
+																				data-id={enregistrer(detailId, j.matchs)}
+																				data-nom={j.label}
+																				data-saison={s.saison}
+																				data-gardien={String(estGardien(j))}
+																			/>
+																		</td>
+																	</tr>
+																)}
+															</>
+														);
+													})}
+												</tbody>
+											</table>
+										</div>
+									)}
 								</section>
 							)),
 						)}
@@ -630,7 +631,8 @@ const attributsTri = (j: Joueur) => ({
 	.groupe {
 		margin-bottom: 1.5rem;
 	}
-	.groupe h3 {
+	.groupe h3,
+	.titre-joueurs {
 		color: rgba(255, 255, 255, 0.75);
 		font-size: 0.9rem;
 		text-transform: uppercase;
