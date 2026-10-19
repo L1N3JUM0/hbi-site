@@ -44,7 +44,10 @@ export interface FicheAdversaire {
 	buteurs: {
 		/** La fédération ne publie pas les buteurs de cette catégorie (U13). */
 		masques?: boolean;
-		liste: { nom: string; buts: number; matchs: number }[];
+		/** `numero` : maillot au match le plus récent ; `part` : % des buts
+		 * de l'équipe sur les matchs où la personne figure (null si non
+		 * calculable). */
+		liste: { numero: string | null; nom: string; buts: number; part: number | null; matchs: number }[];
 		matchsAnalyses: number;
 		matchsDemandes: number;
 		partiel: boolean;

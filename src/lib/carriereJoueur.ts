@@ -1,6 +1,6 @@
 import { getCollection } from "astro:content";
 import { disambiguateDisplayNames } from "./fdme/noms.mjs";
-import { getResultatsForEquipe, resultatsParSaison, ordreGroupesEquipe, grouperResultats, aPlusieursEquipes, type Resultat } from "./resultats";
+import { getResultatsForEquipe, resultatsParSaison, ordreGroupesEquipe, grouperResultats, aPlusieursEquipes, scoreNousEux, type Resultat } from "./resultats";
 import { saisonActuelle } from "./saison";
 
 export interface EtapeCarriere {
@@ -19,6 +19,8 @@ export interface EtapeDetailCarriere {
 	equipeNom: string;
 	matchsJoues: number;
 	buts: number;
+	/** Buts de l'équipe sur les matchs joués (part des buts, voir src/lib/partButs.mjs). */
+	butsEquipe: number;
 	sept_m: number;
 	tirs: number;
 	arrets: number;
@@ -33,6 +35,8 @@ export interface JoueurCarriere {
 	label: string | null;
 	matchsJoues: number;
 	buts: number;
+	/** Buts de l'équipe sur les matchs joués (part des buts, voir src/lib/partButs.mjs). */
+	butsEquipe: number;
 	sept_m: number;
 	tirs: number;
 	arrets: number;
@@ -72,6 +76,8 @@ export interface JoueurCarriere {
 export interface TotauxSaison {
 	matchsJoues: number;
 	buts: number;
+	/** Buts de l'équipe sur les matchs joués (part des buts, voir src/lib/partButs.mjs). */
+	butsEquipe: number;
 	sept_m: number;
 	tirs: number;
 	arrets: number;
@@ -98,6 +104,8 @@ type DetailBucket = {
 	equipeSlug: string;
 	matchsJoues: number;
 	buts: number;
+	/** Buts de l'équipe sur les matchs joués (part des buts, voir src/lib/partButs.mjs). */
+	butsEquipe: number;
 	sept_m: number;
 	tirs: number;
 	arrets: number;
@@ -111,6 +119,8 @@ type Agregat = {
 	prenom: string;
 	matchsJoues: number;
 	buts: number;
+	/** Buts de l'équipe sur les matchs joués (part des buts, voir src/lib/partButs.mjs). */
+	butsEquipe: number;
 	sept_m: number;
 	tirs: number;
 	arrets: number;
@@ -164,6 +174,7 @@ function agregerCarriere(
 			prenom: "",
 			matchsJoues: 0,
 			buts: 0,
+			butsEquipe: 0,
 			sept_m: 0,
 			tirs: 0,
 			arrets: 0,
@@ -176,6 +187,7 @@ function agregerCarriere(
 	}
 
 	for (const r of tousLesResultats) {
+		const butsEquipe = scoreNousEux(r)?.nous ?? 0;
 		for (const j of r.data.statsJoueurs ?? []) {
 			if (!j.licenceHash) continue;
 			const a = parHash.get(j.licenceHash);
@@ -184,6 +196,7 @@ function agregerCarriere(
 			a.prenom = j.prenom;
 			a.matchsJoues++;
 			a.buts += j.buts;
+			a.butsEquipe += butsEquipe;
 			a.sept_m += j.sept_m;
 			a.tirs += j.tirs;
 			a.arrets += j.arrets;
@@ -209,6 +222,7 @@ function agregerCarriere(
 					equipeSlug: r.data.equipeSlug,
 					matchsJoues: 0,
 					buts: 0,
+					butsEquipe: 0,
 					sept_m: 0,
 					tirs: 0,
 					arrets: 0,
@@ -220,6 +234,7 @@ function agregerCarriere(
 			}
 			bucket.matchsJoues++;
 			bucket.buts += j.buts;
+			bucket.butsEquipe += butsEquipe;
 			bucket.sept_m += j.sept_m;
 			bucket.tirs += j.tirs;
 			bucket.arrets += j.arrets;
@@ -244,6 +259,7 @@ function agregerCarriere(
 			label,
 			matchsJoues: j.matchsJoues,
 			buts: j.buts,
+			butsEquipe: j.butsEquipe,
 			sept_m: j.sept_m,
 			tirs: j.tirs,
 			arrets: j.arrets,
@@ -270,6 +286,7 @@ function agregerCarriere(
 								equipeNom: nomEquipe.get(b.equipeSlug) ?? b.equipeSlug,
 								matchsJoues: b.matchsJoues,
 								buts: b.buts,
+								butsEquipe: b.butsEquipe,
 								sept_m: b.sept_m,
 								tirs: b.tirs,
 								arrets: b.arrets,
@@ -291,12 +308,13 @@ function indicateursSaison(
 	saisonCourante: string,
 	categorieAgeParSlug: Map<string, string | undefined>,
 ): Pick<JoueurCarriere, "saisonEnCours" | "nonVuCetteSaison" | "plusieursCategoriesCetteSaison"> {
-	const t = { matchsJoues: 0, buts: 0, sept_m: 0, tirs: 0, arrets: 0, avertissements: 0, exclusions: 0, disqualifications: 0 };
+	const t = { matchsJoues: 0, buts: 0, butsEquipe: 0, sept_m: 0, tirs: 0, arrets: 0, avertissements: 0, exclusions: 0, disqualifications: 0 };
 	const categories = new Set<string>();
 	for (const b of j.detail.values()) {
 		if (b.saison !== saisonCourante) continue;
 		t.matchsJoues += b.matchsJoues;
 		t.buts += b.buts;
+		t.butsEquipe += b.butsEquipe;
 		t.sept_m += b.sept_m;
 		t.tirs += b.tirs;
 		t.arrets += b.arrets;

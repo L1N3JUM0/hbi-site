@@ -10,6 +10,7 @@
  * forfait, null pour un match non joué).
  */
 import { formatNomPropre } from "../fdme/noms.mjs";
+import { partButs } from "../partButs.mjs";
 
 /** "27" -> 27, "FO" -> "FO", tout le reste (null, "", marque inconnue) -> null. */
 export function lireScore(valeur) {
@@ -100,7 +101,9 @@ export function ligneClassement(classement, equipeId) {
 }
 
 /**
- * Cumule les buts des joueur·se·s de `equipeId` sur les feuilles fournies.
+ * Cumule les buts des joueur·se·s de `equipeId` sur les feuilles fournies,
+ * avec leur part des buts de l'équipe (voir src/lib/partButs.mjs) sur les
+ * matchs où chacun·e figure.
  * La page fédérale omet les joueur·se·s sans numéro de licence (constaté
  * le 17/10/2026, voir le rapport d'exploration) : quand la somme des buts
  * listés ne fait pas le score, le classement est marqué `partiel`.
@@ -124,15 +127,21 @@ export function cumulerButeurs(feuilles, equipeId) {
 			const buts = Number(j.buts) || 0;
 			somme += buts;
 			const cle = `${j.nom}|${j.prenom}`;
-			const ligne = cumul.get(cle) ?? { nom: j.nom ?? "", prenom: j.prenom ?? "", buts: 0, matchs: 0 };
+			// `numero` : celui du match le plus récent (les feuilles arrivent du
+			// plus récent au plus ancien), le plus probable au prochain match.
+			const ligne = cumul.get(cle) ?? { nom: j.nom ?? "", prenom: j.prenom ?? "", numero: j.numero ? String(j.numero) : null, buts: 0, matchs: 0, butsEquipe: 0 };
 			ligne.buts += buts;
 			ligne.matchs++;
+			ligne.butsEquipe += match.butsPour;
 			cumul.set(cle, ligne);
 		}
 		if (somme !== match.butsPour) partiel = true;
 	}
 	if (analyses === 0) return null;
-	const liste = [...cumul.values()].filter((l) => l.buts > 0).sort((a, b) => b.buts - a.buts || a.nom.localeCompare(b.nom));
+	const liste = [...cumul.values()]
+		.filter((l) => l.buts > 0)
+		.map((l) => ({ ...l, part: partButs(l.buts, l.butsEquipe) }))
+		.sort((a, b) => b.buts - a.buts || a.nom.localeCompare(b.nom));
 	return { liste, matchsAnalyses: analyses, matchsDemandes: feuilles.length, partiel };
 }
 

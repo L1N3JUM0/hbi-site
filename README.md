@@ -391,7 +391,13 @@ secret, sans authentification.
   d'où la mention « partiel » quand la somme des buts ne fait pas le score.
   Nom complet en Seniors, prénom + initiale chez les jeunes (seul ce libellé
   réduit est écrit dans le JSON). En U13, la fédération masque les buteurs
-  (`hideButs`) : on respecte ce choix, la fiche l'indique.
+  (`hideButs`) : on respecte ce choix, la fiche l'indique. Chaque buteur porte
+  son numéro de maillot (celui du match le plus récent) et sa **part des
+  buts** de l'équipe.
+- **Part des buts** (scouting, /statistiques, /statistiques-carriere) : buts
+  du joueur ÷ buts de son équipe sur les seuls matchs où il figure (une
+  absence ne la fait pas baisser). Mise en avant à partir de 50 %
+  (`src/lib/partButs.mjs`).
 - **Confidentialité** : `noindex, nofollow` et `no-referrer` sur chaque
   page, aucun lien depuis le site public, rien dans `robots.txt` ni dans un
   sitemap (en ajouter un un jour : exclure `/scouting-`). Le slug est masqué

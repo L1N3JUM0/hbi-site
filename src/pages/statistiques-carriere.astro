@@ -13,6 +13,8 @@ import { detenteursDeRecord } from "../lib/records";
 import { saisonActuelle } from "../lib/saison";
 import CarteJoueur from "../components/CarteJoueur.astro";
 import CelluleEfficacite from "../components/CelluleEfficacite.astro";
+import CellulePart from "../components/CellulePart.astro";
+import { partButs, SEUIL_PART_FORTE } from "../lib/partButs.mjs";
 import { efficaciteTri, SEUIL_TIRS_CARRIERE, SEUIL_TIRS_SAISON } from "../lib/efficacite";
 import { svgBarres } from "../lib/grapheBarres";
 
@@ -51,12 +53,14 @@ const formatRatio = (r: number | null) => (r == null ? "—" : r.toFixed(1));
 // les DEUX valeurs (carrière et saison en cours) et la bascule "Saison en
 // cours / Toute la carrière" choisit laquelle afficher et trier (voir le
 // script plus bas) -- aucun recalcul côté navigateur.
-type Totaux = Pick<JoueurCarriere, "matchsJoues" | "buts" | "sept_m" | "tirs" | "arrets" | "avertissements" | "exclusions" | "disqualifications" | "ratio">;
+type Totaux = Pick<JoueurCarriere, "matchsJoues" | "buts" | "butsEquipe" | "sept_m" | "tirs" | "arrets" | "avertissements" | "exclusions" | "disqualifications" | "ratio">;
 // `principale` : chiffres montrés d'emblée sur la carte mobile ; les autres
 // passent dans sa zone "Plus de détails" (décision du 30/09/2026). Tirs et
 // efficacité y sont côte à côte : l'un ne se lit pas sans l'autre.
 // `efficacite` : cellule rendue par CelluleEfficacite, triée via
 // efficaciteTri() (seuil de tirs, voir src/lib/efficacite.ts).
+// `part` : part des buts de l'équipe, rendue par CellulePart (voir
+// src/lib/partButs.mjs).
 const COLONNES: {
 	key: string;
 	titre: string;
@@ -64,9 +68,11 @@ const COLONNES: {
 	texte?: (t: Totaux) => string;
 	principale?: boolean;
 	efficacite?: boolean;
+	part?: boolean;
 }[] = [
 	{ key: "matchs", titre: "Matchs", valeur: (t) => t.matchsJoues, principale: true },
 	{ key: "buts", titre: "Buts", valeur: (t) => t.buts, principale: true },
+	{ key: "part", titre: "Part buts", valeur: (t) => partButs(t.buts, t.butsEquipe), principale: true, part: true },
 	{ key: "ratio", titre: "Buts/match", valeur: (t) => t.ratio, texte: (t) => formatRatio(t.ratio), principale: true },
 	{ key: "sept_m", titre: "7m", valeur: (t) => t.sept_m },
 	{ key: "tirs", titre: "Tirs", valeur: (t) => t.tirs, principale: true },
@@ -81,7 +87,8 @@ const texteCellule = (c: (typeof COLONNES)[number], t: Totaux) => (c.texte ? c.t
 // toujours après un vrai 0.0 en tri décroissant. Efficacité absente ou sous
 // le seuil : attribut omis, rangé en fin de tri dans les DEUX sens (voir
 // valeurTri() dans le script).
-const valeurTri = (c: (typeof COLONNES)[number], t: Totaux, seuil: number) => (c.efficacite ? efficaciteTri(t, seuil) : (c.valeur(t) ?? -1));
+const valeurTri = (c: (typeof COLONNES)[number], t: Totaux, seuil: number) =>
+	c.efficacite ? efficaciteTri(t, seuil) : c.part ? c.valeur(t) : (c.valeur(t) ?? -1);
 const attributsTri = (j: JoueurCarriere) =>
 	Object.fromEntries(
 		COLONNES.flatMap((c) => [
@@ -228,6 +235,7 @@ const grapheButsParSaison = (saisons: { saison: string; buts: number }[], nom: s
 							Effic. : buts ÷ tirs. Classée à partir de {SEUIL_TIRS_CARRIERE} tirs sur la carrière, {SEUIL_TIRS_SAISON} sur une saison ;
 							en dessous, atténuée et rangée en fin de tri. « – » pour un·e gardien·ne, aucun tir, ou plus de buts que de tirs sur les
 							feuilles.
+							Part buts : buts du joueur ÷ buts de son équipe sur les matchs qu'il a joués ; en fuchsia à partir de {SEUIL_PART_FORTE} %.
 						</p>
 						
 						{blocs.map(({ equipe, carriere }) => {
@@ -307,6 +315,15 @@ const grapheButsParSaison = (saisons: { saison: string; buts: number }[], nom: s
 																						<CelluleEfficacite {...j.saisonEnCours} seuil={SEUIL_TIRS_SAISON} />
 																					</span>
 																				</>
+																			) : c.part ? (
+																				<>
+																					<span class="v-carriere">
+																						<CellulePart buts={j.buts} butsEquipe={j.butsEquipe} />
+																					</span>
+																					<span class="v-saison">
+																						<CellulePart buts={j.saisonEnCours.buts} butsEquipe={j.saisonEnCours.butsEquipe} />
+																					</span>
+																				</>
 																			) : (
 																				<>
 																					<span class="v-carriere">{texteCellule(c, j)}</span>
@@ -365,6 +382,7 @@ const grapheButsParSaison = (saisons: { saison: string; buts: number }[], nom: s
 																						<th scope="col">Catégorie</th>
 																						<th scope="col">Matchs</th>
 																						<th scope="col">Buts</th>
+																						<th scope="col">Part buts</th>
 																						<th scope="col">Buts/match</th>
 																						<th scope="col">7m</th>
 																						<th scope="col">Tirs</th>
@@ -382,6 +400,9 @@ const grapheButsParSaison = (saisons: { saison: string; buts: number }[], nom: s
 																							<td>{e.equipeNom}</td>
 																							<td>{e.matchsJoues}</td>
 																							<td>{e.buts}</td>
+																							<td>
+																								<CellulePart buts={e.buts} butsEquipe={e.butsEquipe} />
+																							</td>
 																							<td>{formatRatio(e.ratio)}</td>
 																							<td>{e.sept_m}</td>
 																							<td>{e.tirs}</td>

@@ -9,6 +9,7 @@ import ScoutingLayout from "../../components/scouting/ScoutingLayout.astro";
 import { chargerScouting, formatDateCourte, formatDateMatch, formatGenereLe, formatScore, segmentScouting, type CategorieScouting, type EquipeScouting } from "../../lib/scouting";
 import { casseNomClub } from "../../lib/nomsClubs";
 import { withBase } from "../../utils/links";
+import { SEUIL_PART_FORTE } from "../../lib/partButs.mjs";
 
 export function getStaticPaths() {
 	const segment = segmentScouting();
@@ -154,16 +155,26 @@ const libelleCompetition = (libelle: string) => libelle.toLowerCase().replace(/^
 					<table>
 						<thead>
 							<tr>
+								<th scope="col" class="maillot">
+									<abbr title="Numéro de maillot au dernier match">N°</abbr>
+								</th>
 								<th scope="col">Joueur·se</th>
 								<th scope="col" class="num">Buts</th>
-								<th scope="col" class="num">Matchs</th>
+								<th scope="col" class="num">
+									<abbr title="Part des buts de l'équipe, sur les matchs joués">Part</abbr>
+								</th>
+								<th scope="col" class="num">
+									<abbr title="Matchs joués">M.</abbr>
+								</th>
 							</tr>
 						</thead>
 						<tbody>
 							{fiche.buteurs.liste.map((b) => (
-								<tr>
+								<tr class:list={{ forte: b.part !== null && b.part >= SEUIL_PART_FORTE }}>
+									<td class="maillot">{b.numero ?? "–"}</td>
 									<td>{b.nom}</td>
 									<td class="num">{b.buts}</td>
+									<td class="num part">{b.part === null ? "–" : `${b.part} %`}</td>
 									<td class="num">{b.matchs}</td>
 								</tr>
 							))}
@@ -172,6 +183,8 @@ const libelleCompetition = (libelle: string) => libelle.toLowerCase().replace(/^
 					<p class="note">
 						Sur {fiche.buteurs.matchsAnalyses} feuille{fiche.buteurs.matchsAnalyses > 1 ? "s" : ""} de match
 						{fiche.buteurs.partiel && " — partiel : la fédération n'affiche pas les joueur·se·s sans licence validée, ou une feuille manque"}.
+						Part : buts du joueur ÷ buts de son équipe sur les matchs où il figure ; en rouge à partir de {SEUIL_PART_FORTE} %, à surveiller de près.
+						N° : maillot au dernier match.
 					</p>
 				</>
 			) : (
@@ -281,6 +294,19 @@ const libelleCompetition = (libelle: string) => libelle.toLowerCase().replace(/^
 	.num {
 		text-align: right;
 		font-variant-numeric: tabular-nums;
-		width: 4rem;
+		width: 3.25rem;
+	}
+	.maillot {
+		width: 2.5rem;
+		font-weight: 700;
+		font-variant-numeric: tabular-nums;
+	}
+	abbr {
+		text-decoration: none;
+	}
+	/* Joueur·se qui pèse au moins la moitié des buts de son équipe. */
+	.forte td {
+		color: var(--color-crimson);
+		font-weight: 700;
 	}
 </style>

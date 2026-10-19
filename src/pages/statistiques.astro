@@ -10,6 +10,8 @@ import { trierEquipes } from "../lib/equipes";
 import { slugsAvecResultats, getStatistiquesParSaison, type MatchJoueur } from "../lib/statistiques";
 import { withBase } from "../utils/links";
 import CelluleEfficacite from "../components/CelluleEfficacite.astro";
+import CellulePart from "../components/CellulePart.astro";
+import { partButs, SEUIL_PART_FORTE } from "../lib/partButs.mjs";
 import { efficaciteTri, estGardien, SEUIL_TIRS_SAISON } from "../lib/efficacite";
 import { categorieActuelleParHash } from "../lib/carriereJoueur";
 
@@ -54,7 +56,7 @@ const enregistrer = (id: string, matchs: MatchJoueur[]) => {
 	donneesMatchs[id] = matchs.map((m) => [jourParis.format(new Date(m.date)), m.adversaire, m.buts, m.sept_m, m.tirs, m.arrets, m.avertissements, m.exclusions]);
 	return id;
 };
-const COLONNES_TABLEAU = 10;
+const COLONNES_TABLEAU = 11;
 
 // Tri par colonne (même fonctionnement que /statistiques-carriere) : chaque
 // ligne porte ses valeurs de tri en data-value-*. Efficacité absente ou sous
@@ -63,6 +65,7 @@ type Joueur = Awaited<ReturnType<typeof getStatistiquesParSaison>>[number]["grou
 const COLONNES_TRI: { key: string; titre: string; abbr?: string; valeur: (j: Joueur) => number | null }[] = [
 	{ key: "matchs", titre: "Matchs", valeur: (j) => j.matchsJoues },
 	{ key: "buts", titre: "Buts", valeur: (j) => j.buts },
+	{ key: "part", titre: "Part", abbr: "Part des buts de l'équipe sur les matchs joués", valeur: (j) => partButs(j.buts, j.butsEquipe) },
 	{ key: "sept_m", titre: "7m", valeur: (j) => j.sept_m },
 	{ key: "tirs", titre: "Tirs", valeur: (j) => j.tirs },
 	{ key: "efficacite", titre: "Effic.", abbr: "Efficacité : buts ÷ tirs", valeur: (j) => efficaciteTri(j, SEUIL_TIRS_SAISON) },
@@ -133,7 +136,8 @@ const attributsTri = (j: Joueur) => ({
 
 						<p class="legende">
 							Cliquer sur un en-tête pour trier. Effic. : buts ÷ tirs. Sous {SEUIL_TIRS_SAISON} tirs, atténuée et rangée en fin de tri ;
-							« – » pour un·e gardien·ne, aucun tir, ou plus de buts que de tirs sur les feuilles.
+							« – » pour un·e gardien·ne, aucun tir, ou plus de buts que de tirs sur les feuilles. Part : buts du joueur ÷ buts de son
+							équipe sur les matchs qu'il a joués ; en fuchsia à partir de {SEUIL_PART_FORTE} %.
 						</p>
 
 						{blocs.map(({ equipe, saisons }) =>
@@ -212,6 +216,9 @@ const attributsTri = (j: Joueur) => ({
 																			</td>
 																			<td>{j.matchsJoues}</td>
 																			<td>{j.buts}</td>
+																			<td>
+																				<CellulePart buts={j.buts} butsEquipe={j.butsEquipe} />
+																			</td>
 																			<td>{j.sept_m}</td>
 																			<td>{j.tirs}</td>
 																			<td>

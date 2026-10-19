@@ -1,0 +1,52 @@
+---
+/**
+ * Contenu d'une cellule « Part des buts » : pourcentage des buts de
+ * l'équipe marqués par la personne sur ses matchs, puis le détail en texte
+ * secondaire (même lecture que CelluleEfficacite). À partir de la moitié des
+ * buts, pastille fuchsia : le chiffre qui fait la différence se voit d'un
+ * coup d'œil. « – » quand il serait trompeur (voir src/lib/partButs.mjs).
+ */
+import { partButs, SEUIL_PART_FORTE } from "../lib/partButs.mjs";
+
+interface Props {
+	buts: number;
+	butsEquipe: number;
+}
+const { buts, butsEquipe } = Astro.props;
+const pct = partButs(buts, butsEquipe);
+const titre = pct === null ? "Part non calculable" : `${buts} buts sur ${butsEquipe} marqués par l'équipe sur ses matchs`;
+---
+
+{
+	pct === null ? (
+		<span class="part" title={titre}>
+			–
+		</span>
+	) : (
+		<span class="part" title={titre}>
+			<span class:list={["valeur", { forte: pct >= SEUIL_PART_FORTE }]}>{pct} %</span>
+			<span class="part-detail">
+				{buts}/{butsEquipe}
+			</span>
+		</span>
+	)
+}
+
+<style>
+	.part-detail {
+		display: block;
+		font-size: 0.7rem;
+		font-weight: 400;
+		color: color-mix(in srgb, var(--color-white) 60%, transparent);
+	}
+	/* Fuchsia en fond, texte blanc : contraste AA sur le marine des pages de
+	   stats, là où un texte fuchsia seul ne le serait pas. */
+	.forte {
+		display: inline-block;
+		padding: 0 0.35rem;
+		border-radius: 0.25rem;
+		background: var(--color-crimson);
+		color: var(--color-white);
+		font-weight: 700;
+	}
+</style>

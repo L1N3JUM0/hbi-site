@@ -53,7 +53,7 @@ test("match aller vu par le HBI, jamais le match à venir", () => {
 
 test("buteurs : cumul, partiel si la somme ne fait pas le score ou si une feuille manque", () => {
 	const m = (butsPour: number) => ({ match: { butsPour } });
-	const j = (equipeId: string, nom: string, buts: string) => ({ equipeId, nom, prenom: "X", buts });
+	const j = (equipeId: string, nom: string, buts: string, numero = "7") => ({ equipeId, nom, prenom: "X", buts, numero });
 	const complet = cumulerButeurs(
 		[
 			{ ...m(5), joueurs: [j(ADV, "A", "3"), j(ADV, "B", "2"), j("autre", "C", "9")] },
@@ -61,8 +61,11 @@ test("buteurs : cumul, partiel si la somme ne fait pas le score ou si une feuill
 		],
 		ADV,
 	);
-	assert.deepEqual(complet?.liste.map((l) => [l.nom, l.buts, l.matchs]), [["B", 6, 2], ["A", 3, 2]]);
+	assert.deepEqual(complet?.liste.map((l) => [l.nom, l.buts, l.matchs, l.part]), [["B", 6, 2, 67], ["A", 3, 2, 33]]);
 	assert.equal(complet?.partiel, false);
+	// Numéro du match le plus récent (première feuille), même s'il a changé.
+	const numeros = cumulerButeurs([{ ...m(2), joueurs: [j(ADV, "A", "2", "10")] }, { ...m(1), joueurs: [j(ADV, "A", "1", "4")] }], ADV);
+	assert.equal(numeros?.liste[0].numero, "10");
 	assert.equal(cumulerButeurs([{ ...m(19), joueurs: [j(ADV, "A", "8")] }], ADV)?.partiel, true);
 	assert.equal(cumulerButeurs([{ ...m(5), joueurs: [j(ADV, "A", "5")] }, { ...m(3), joueurs: null }], ADV)?.partiel, true);
 	assert.equal(cumulerButeurs([{ ...m(3), joueurs: null }], ADV), null);

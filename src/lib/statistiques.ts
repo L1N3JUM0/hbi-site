@@ -40,6 +40,9 @@ export interface JoueurStatAffiche {
 	matchs: MatchJoueur[] | null;
 	matchsJoues: number;
 	buts: number;
+	/** Buts de l'équipe sur les matchs où la personne figure -- dénominateur
+	 * de la part des buts (voir src/lib/partButs.mjs). */
+	butsEquipe: number;
 	sept_m: number;
 	tirs: number;
 	arrets: number;
@@ -111,6 +114,7 @@ type JoueurAgrege = {
 	prenom: string;
 	matchsJoues: number;
 	buts: number;
+	butsEquipe: number;
 	sept_m: number;
 	tirs: number;
 	arrets: number;
@@ -138,6 +142,7 @@ function agregerJoueurs(
 
 	const parCle = new Map<string, JoueurAgrege>();
 	for (const r of resultats) {
+		const butsEquipe = scoreNousEux(r)?.nous ?? 0;
 		for (const j of r.data.statsJoueurs ?? []) {
 			const cle = `${normaliserTexte(j.nom)}|${normaliserTexte(j.prenom)}`;
 			let a = parCle.get(cle);
@@ -148,6 +153,7 @@ function agregerJoueurs(
 					prenom: j.prenom,
 					matchsJoues: 0,
 					buts: 0,
+					butsEquipe: 0,
 					sept_m: 0,
 					tirs: 0,
 					arrets: 0,
@@ -161,6 +167,7 @@ function agregerJoueurs(
 			}
 			a.matchsJoues++;
 			a.buts += j.buts;
+			a.butsEquipe += butsEquipe;
 			a.sept_m += j.sept_m;
 			a.tirs += j.tirs;
 			a.arrets += j.arrets;
@@ -206,6 +213,7 @@ function agregerJoueurs(
 					: null,
 			matchsJoues: j.matchsJoues,
 			buts: j.buts,
+			butsEquipe: j.butsEquipe,
 			sept_m: j.sept_m,
 			tirs: j.tirs,
 			arrets: j.arrets,

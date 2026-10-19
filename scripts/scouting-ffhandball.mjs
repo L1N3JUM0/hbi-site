@@ -314,7 +314,7 @@ async function analyserAdversaire({ pouleBase, poule, advId, hbiId, rencontreAVe
 		const libelles = libellesJoueurs(top, categorie.nomComplet);
 		// Seul le libellé déjà réduit est écrit : jamais le nom complet d'un·e
 		// mineur·e, même dans un fichier non publié.
-		return { ...cumul, masques: false, liste: top.map((l, i) => ({ nom: libelles[i], buts: l.buts, matchs: l.matchs })) };
+		return { ...cumul, masques: false, liste: top.map((l, i) => ({ numero: l.numero, nom: libelles[i], buts: l.buts, part: l.part, matchs: l.matchs })) };
 	});
 	return {
 		classement: poule.classement ? ligneClassement(poule.classement, advId) : null,
