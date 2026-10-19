@@ -21,6 +21,8 @@ export interface MatchJoueur {
 	date: string;
 	adversaire: string;
 	buts: number;
+	/** Buts de l'équipe sur ce match (part des buts, voir src/lib/partButs.mjs). */
+	butsEquipe: number;
 	sept_m: number;
 	tirs: number;
 	arrets: number;
@@ -181,6 +183,7 @@ function agregerJoueurs(
 				date: r.data.date.toISOString(),
 				adversaire: casseNomClub(r.data.adversaire),
 				buts: j.buts,
+				butsEquipe,
 				sept_m: j.sept_m,
 				tirs: j.tirs,
 				arrets: j.arrets,
