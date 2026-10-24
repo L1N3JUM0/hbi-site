@@ -6,12 +6,7 @@ slug: u13-feminines
 categorieAge: U13
 genre: feminin
 ordre: null
-calendriers:
-  - url: https://competition-calendar.ffhandball.fr/c-32699/s-3577.ics
-    repere: Handball Islois
-    libelle: ''
-    classementUrl: ''
-    statistiquesUrl: ''
+calendriers: []
 horaires: Mercredi 16h30-18h / vendredi 17h30-19h
 encadrants: Cécile et Aurore
 tarif: 190 €
