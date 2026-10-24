@@ -6,7 +6,12 @@ slug: loisirs
 categorieAge: ''
 genre: ''
 ordre: 950
-calendriers: []
+calendriers:
+  - url: https://competition-calendar.ffhandball.fr/c-33671/s-3577.ics
+    repere: Handball Islois
+    libelle: ''
+    classementUrl: ''
+    statistiquesUrl: ''
 horaires: Lundi 20h-22h30
 encadrants: David
 tarif: 160 €
