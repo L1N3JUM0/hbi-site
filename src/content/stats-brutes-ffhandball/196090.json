@@ -1,6 +1,6 @@
 {
 	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u15-masculins-inter-dep-1-2-33206/poule-196090/classements/",
-	"fetchedAt": "2026-10-24T08:33:57.407Z",
+	"fetchedAt": "2026-10-28T10:15:32.573Z",
 	"classement": [
 		{
 			"id": "10621249",
@@ -136,7 +136,7 @@
 			"butPlus": "25",
 			"butMoins": "28",
 			"diff": "-3",
-			"dernieresRencontres": "-1",
+			"dernieresRencontres": "-1;-1",
 			"equipe_libelle": "HANDBALL CLUB ORANGE",
 			"equipe_logoActif": "1",
 			"structure_logo": "2024-06-12-f09f9018-5fbb-48ab-ba11-dcc688a9aa24.png",
@@ -156,7 +156,7 @@
 			"butPlus": "19",
 			"butMoins": "22",
 			"diff": "-3",
-			"dernieresRencontres": "-1",
+			"dernieresRencontres": "-1;-1",
 			"equipe_libelle": "HANDBALL CLUB VALREAS",
 			"equipe_logoActif": "1",
 			"structure_logo": "2026-06-05-700b853c-4af0-4959-a4c0-ea4e44299bb2.png",

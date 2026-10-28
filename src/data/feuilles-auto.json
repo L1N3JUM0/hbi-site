@@ -55,11 +55,11 @@
 		},
 		"2985160": {
 			"date": "2026-10-03T12:00:00.000Z",
-			"competition": "U11 MIXTE",
+			"competition": "U11 MIXTE - BRASSAGES - BRASSAGES",
 			"adversaire": "HANDBALL CLUB ORANGE 2",
 			"equipeSlug": "u11-mixtes",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-196084/rencontre-2716925/",
-			"derniereTentative": "2026-10-24T08:33:29.654Z",
+			"derniereTentative": "2026-10-28T10:15:02.320Z",
 			"code": "WAGWDPM",
 			"statut": "attente_score"
 		},
@@ -280,6 +280,17 @@
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-masculins-32649/poule-192119/rencontre-2670118/",
 			"derniereTentative": "2026-09-28T15:23:53.579Z",
 			"code": "WAGTILZ",
+			"statut": "importee"
+		},
+		"3017860": {
+			"date": "2026-10-24T18:00:00.000Z",
+			"competition": "DIVISION 1 MASCULINS",
+			"adversaire": "AVIGNON HANDBALL",
+			"equipeSlug": "seniors-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-masculins-32649/poule-192119/rencontre-2670121/",
+			"derniereTentative": "2026-10-24T22:58:03.279Z",
+			"code": "WAGXHRC",
+			"scoreVuLe": "2026-10-24T22:58:03.279Z",
 			"statut": "importee"
 		},
 		"3017861": {
