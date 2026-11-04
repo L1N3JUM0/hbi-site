@@ -59,7 +59,7 @@
 			"adversaire": "HANDBALL CLUB ORANGE 2",
 			"equipeSlug": "u11-mixtes",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-196084/rencontre-2716925/",
-			"derniereTentative": "2026-11-03T11:31:51.790Z",
+			"derniereTentative": "2026-11-04T11:47:45.044Z",
 			"code": "WAGWDPM",
 			"statut": "attente_score"
 		},
@@ -427,6 +427,16 @@
 			"code": "WAGXELU",
 			"statut": "importee",
 			"scoreVuLe": "2026-10-18T07:53:57.256Z"
+		},
+		"3098838": {
+			"date": "2026-10-17T18:30:00.000Z",
+			"competition": "COUPE DE FRANCE CAISSE D'EPARGNE DEPARTEMENTALE MASCULINE 2026-2027 - CDF DEP MAS (1° TOUR) - 1ER TOUR",
+			"adversaire": "MALLEMORT DURANCE PROVENCE HB",
+			"equipeSlug": "seniors-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/coupe-de-france/coupe-de-france-caisse-d-epargne-departementale-masculine-2026-2027-33244/poule-196380/rencontre-2734148/",
+			"derniereTentative": "2026-11-04T11:47:45.044Z",
+			"code": "WAGXELU",
+			"statut": "importee"
 		}
 	}
 }
