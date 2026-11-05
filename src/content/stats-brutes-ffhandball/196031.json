@@ -1,6 +1,6 @@
 {
 	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u18-masculin-inter-dep-33194/poule-196031/classements/",
-	"fetchedAt": "2026-11-04T11:48:23.818Z",
+	"fetchedAt": "2026-11-05T11:46:05.140Z",
 	"classement": [
 		{
 			"id": "10621049",
@@ -96,7 +96,7 @@
 			"butPlus": "32",
 			"butMoins": "23",
 			"diff": "9",
-			"dernieresRencontres": "1",
+			"dernieresRencontres": "1;1;1",
 			"equipe_libelle": "HANDBALL ISLOIS",
 			"equipe_logoActif": "1",
 			"structure_logo": "2017-07-05-7b298681-bf53-48d4-bd2b-9b8990b059d2.jpg",
@@ -116,7 +116,7 @@
 			"butPlus": "36",
 			"butMoins": "58",
 			"diff": "-22",
-			"dernieresRencontres": "-1;-1",
+			"dernieresRencontres": "-1;-1;-1;-1",
 			"equipe_libelle": "ENT EMBRUN-BRIANÇON",
 			"equipe_logoActif": "1",
 			"structure_logo": "2020-07-26-1d13aea2-bfe2-47a8-b1a8-ba8296e8c356.jpg",
