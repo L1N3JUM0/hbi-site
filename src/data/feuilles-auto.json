@@ -59,7 +59,7 @@
 			"adversaire": "HANDBALL CLUB ORANGE 2",
 			"equipeSlug": "u11-mixtes",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-196084/rencontre-2716925/",
-			"derniereTentative": "2026-11-08T00:15:57.530Z",
+			"derniereTentative": "2026-11-08T10:58:09.743Z",
 			"code": "WAGWDPM",
 			"statut": "attente_score"
 		},
@@ -471,6 +471,16 @@
 			"code": "WAGXELU",
 			"statut": "importee",
 			"scoreVuLe": "2026-10-18T07:53:57.256Z"
+		},
+		"3076713": {
+			"date": "2026-11-08T08:30:00.000Z",
+			"competition": "U11 MIXTE - CHAMPIONNATS - EXCELLENCE",
+			"adversaire": "HANDBALL CLUB VEDENAIS",
+			"equipeSlug": "u11-mixtes",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-199194/rencontre-2750907/",
+			"derniereTentative": "2026-11-08T10:58:09.743Z",
+			"code": "WAHABIK",
+			"statut": "attente_score"
 		},
 		"3098838": {
 			"date": "2026-10-17T18:30:00.000Z",
