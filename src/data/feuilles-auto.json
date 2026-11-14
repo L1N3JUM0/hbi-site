@@ -59,7 +59,7 @@
 			"adversaire": "HANDBALL CLUB ORANGE 2",
 			"equipeSlug": "u11-mixtes",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-196084/rencontre-2716925/",
-			"derniereTentative": "2026-11-14T11:08:33.114Z",
+			"derniereTentative": "2026-11-14T20:08:20.290Z",
 			"code": "WAGWDPM",
 			"statut": "attente_score"
 		},
@@ -391,6 +391,17 @@
 			"statut": "importee",
 			"scoreVuLe": "2026-11-08T00:15:57.530Z"
 		},
+		"3042008": {
+			"date": "2026-11-14T16:00:00.000Z",
+			"competition": "U18 MASCULIN INTER DEP",
+			"adversaire": "PELIC'HAND CLUB",
+			"equipeSlug": "u18-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u18-masculin-inter-dep-33194/poule-196031/rencontre-2716471/",
+			"derniereTentative": "2026-11-14T20:08:20.290Z",
+			"code": "WAGWCXX",
+			"scoreVuLe": "2026-11-14T20:08:20.290Z",
+			"statut": "importee"
+		},
 		"3043197": {
 			"date": "2026-09-26T11:30:00.000Z",
 			"competition": "U17 FEMININES INTER DEP POULE 1",
@@ -420,6 +431,17 @@
 			"derniereTentative": "2026-11-07T23:25:13.043Z",
 			"code": "WAGWDMY",
 			"scoreVuLe": "2026-11-07T23:25:13.043Z",
+			"statut": "importee"
+		},
+		"3043209": {
+			"date": "2026-11-14T15:00:00.000Z",
+			"competition": "U17 FEMININES INTER DEP POULE 1",
+			"adversaire": "SALON HANDBALL CLUB PROVENCE",
+			"equipeSlug": "u17-feminines",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u17-feminines-inter-dep-poule-1-33205/poule-196082/rencontre-2716863/",
+			"derniereTentative": "2026-11-14T20:08:20.290Z",
+			"code": "WAHAXBG",
+			"scoreVuLe": "2026-11-14T20:08:20.290Z",
 			"statut": "importee"
 		},
 		"3043253": {
@@ -453,6 +475,16 @@
 			"code": "WAGWEAI",
 			"statut": "importee",
 			"scoreVuLe": "2026-11-10T11:59:50.822Z"
+		},
+		"3043268": {
+			"date": "2026-11-14T14:00:00.000Z",
+			"competition": "U15 MASCULINS INTER DEP 1&2",
+			"adversaire": "BOLLENE HANDBALL CLUB",
+			"equipeSlug": "u15-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u15-masculins-inter-dep-1-2-33206/poule-196090/rencontre-2717206/",
+			"derniereTentative": "2026-11-14T20:08:20.290Z",
+			"code": "WAGWEAN",
+			"statut": "attente_score"
 		},
 		"3043369": {
 			"date": "2026-09-26T16:00:00.000Z",
@@ -494,6 +526,16 @@
 			"statut": "importee",
 			"scoreVuLe": "2026-11-10T11:59:50.822Z"
 		},
+		"3043389": {
+			"date": "2026-11-14T15:00:00.000Z",
+			"competition": "U15 FEMININES INTER DEP POULE 1",
+			"adversaire": "HANDBALL CLUB VEDENAIS",
+			"equipeSlug": "u15-feminines",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u15-feminines-inter-dep-poule-1-33207/poule-196377/rencontre-2720679/",
+			"derniereTentative": "2026-11-14T20:08:20.290Z",
+			"code": "WAGYTJZ",
+			"statut": "attente_score"
+		},
 		"3044993": {
 			"date": "2026-10-17T17:30:00.000Z",
 			"competition": "COUPE DE FRANCE DEPARTEMENTALE FEMININE 2026-2027",
@@ -526,6 +568,16 @@
 			"code": "WAHABIL",
 			"statut": "importee",
 			"scoreVuLe": "2026-11-10T11:59:50.822Z"
+		},
+		"3076618": {
+			"date": "2026-11-14T15:00:00.000Z",
+			"competition": "U13 MIXTE - CHAMPIONNATS - EXCELLENCE",
+			"adversaire": "HANDBALL CLUB PERNOIS",
+			"equipeSlug": "u13-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u13-mixte-32335/poule-199177/rencontre-2750755/",
+			"derniereTentative": "2026-11-14T20:08:20.290Z",
+			"code": "WAHAVNC",
+			"statut": "attente_score"
 		},
 		"3076713": {
 			"date": "2026-11-08T08:30:00.000Z",
