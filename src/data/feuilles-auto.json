@@ -59,7 +59,7 @@
 			"adversaire": "HANDBALL CLUB ORANGE 2",
 			"equipeSlug": "u11-mixtes",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-196084/rencontre-2716925/",
-			"derniereTentative": "2026-11-15T11:42:13.335Z",
+			"derniereTentative": "2026-11-15T17:17:07.160Z",
 			"code": "WAGWDPM",
 			"statut": "attente_score"
 		},
@@ -213,6 +213,16 @@
 			"scoreVuLe": "2026-11-07T23:25:13.043Z",
 			"statut": "importee"
 		},
+		"2996935": {
+			"date": "2026-11-15T14:00:00.000Z",
+			"competition": "CHAMPIONNAT U15 EXCELLENCE MASCULIN",
+			"adversaire": "OLYMPIQUE CLUB SORGUAIS",
+			"equipeSlug": "u15-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/regional/championnat-u15-excellence-masculin-32450/poule-190653/rencontre-2635294/",
+			"derniereTentative": "2026-11-15T17:17:07.160Z",
+			"code": "WAGRINT",
+			"statut": "attente_score"
+		},
 		"3017764": {
 			"date": "2026-09-13T15:00:00.000Z",
 			"competition": "DIVISION 1 FEMININES",
@@ -263,6 +273,17 @@
 			"code": "WAGTIAU",
 			"statut": "importee",
 			"scoreVuLe": "2026-11-08T00:15:57.530Z"
+		},
+		"3017786": {
+			"date": "2026-11-15T13:00:00.000Z",
+			"competition": "DIVISION 1 FEMININES",
+			"adversaire": "AVIGNON HANDBALL",
+			"equipeSlug": "seniors-feminines",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-feminines-32648/poule-192108/rencontre-2669834/",
+			"derniereTentative": "2026-11-15T17:17:07.160Z",
+			"code": "WAGYLBW",
+			"scoreVuLe": "2026-11-15T17:17:07.160Z",
+			"statut": "importee"
 		},
 		"3017851": {
 			"date": "2026-09-13T13:00:00.000Z",
@@ -368,6 +389,27 @@
 			"code": "WAGTIMN",
 			"statut": "importee",
 			"scoreVuLe": "2026-11-10T11:59:50.822Z"
+		},
+		"3017873": {
+			"date": "2026-11-15T15:00:00.000Z",
+			"competition": "DIVISION 1 MASCULINS",
+			"adversaire": "HANDBALL CLUB ORANGE",
+			"equipeSlug": "seniors-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-masculins-32649/poule-192119/rencontre-2670137/",
+			"derniereTentative": "2026-11-15T17:17:07.160Z",
+			"code": "WAGYOOR",
+			"scoreVuLe": "2026-11-15T17:17:07.160Z",
+			"statut": "importee"
+		},
+		"3017874": {
+			"date": "2026-11-15T15:00:00.000Z",
+			"competition": "DIVISION 1 MASCULINS",
+			"adversaire": "HANDBALL CLUB VALREAS",
+			"equipeSlug": "seniors-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-masculins-32649/poule-192119/rencontre-2670138/",
+			"derniereTentative": "2026-11-15T17:17:07.160Z",
+			"code": "WAHAOHS",
+			"statut": "attente_score"
 		},
 		"3042002": {
 			"date": "2026-10-10T16:00:00.000Z",
@@ -533,9 +575,10 @@
 			"adversaire": "HANDBALL CLUB VEDENAIS",
 			"equipeSlug": "u15-feminines",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u15-feminines-inter-dep-poule-1-33207/poule-196377/rencontre-2720679/",
-			"derniereTentative": "2026-11-15T11:42:13.335Z",
+			"derniereTentative": "2026-11-15T17:17:07.160Z",
 			"code": "WAGYTJZ",
-			"statut": "attente_score"
+			"statut": "importee",
+			"scoreVuLe": "2026-11-15T17:17:07.160Z"
 		},
 		"3044993": {
 			"date": "2026-10-17T17:30:00.000Z",
@@ -576,7 +619,7 @@
 			"adversaire": "HANDBALL CLUB PERNOIS",
 			"equipeSlug": "u13-masculins",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u13-mixte-32335/poule-199177/rencontre-2750755/",
-			"derniereTentative": "2026-11-15T11:42:13.335Z",
+			"derniereTentative": "2026-11-15T17:17:07.160Z",
 			"code": "WAHAVNC",
 			"statut": "attente_score"
 		},
@@ -590,6 +633,16 @@
 			"code": "WAHABIK",
 			"statut": "importee",
 			"scoreVuLe": "2026-11-10T11:59:50.822Z"
+		},
+		"3076716": {
+			"date": "2026-11-15T11:00:00.000Z",
+			"competition": "U11 MIXTE - CHAMPIONNATS - EXCELLENCE",
+			"adversaire": "HANDBALL CLUB ORANGE 1",
+			"equipeSlug": "u11-mixtes",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-199194/rencontre-2750911/",
+			"derniereTentative": "2026-11-15T17:17:07.160Z",
+			"code": "WAGYLNV",
+			"statut": "attente_score"
 		},
 		"3076813": {
 			"date": "2026-11-08T10:30:00.000Z",
@@ -608,7 +661,7 @@
 			"adversaire": "BOLLENE HANDBALL CLUB 2",
 			"equipeSlug": "u11-mixtes",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-199196/rencontre-2751029/",
-			"derniereTentative": "2026-11-15T11:42:13.335Z",
+			"derniereTentative": "2026-11-15T17:17:07.160Z",
 			"code": "WAGYLSJ",
 			"statut": "attente_score"
 		},

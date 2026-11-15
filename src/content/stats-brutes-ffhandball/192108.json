@@ -1,6 +1,6 @@
 {
 	"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/division-1-feminines-32648/poule-192108/classements/",
-	"fetchedAt": "2026-11-15T11:42:31.768Z",
+	"fetchedAt": "2026-11-15T17:17:51.337Z",
 	"classement": [
 		{
 			"id": "10615053",
@@ -36,7 +36,7 @@
 			"butPlus": "134",
 			"butMoins": "101",
 			"diff": "33",
-			"dernieresRencontres": "1;1;1;1;1",
+			"dernieresRencontres": "1;1;-1;-1;-1",
 			"equipe_libelle": "BOLLENE HANDBALL CLUB 1",
 			"equipe_logoActif": "1",
 			"structure_logo": "2015-04-24-5122cd2a-de1c-48cc-a5a4-bd12530e8316.jpg",
@@ -56,7 +56,7 @@
 			"butPlus": "124",
 			"butMoins": "96",
 			"diff": "28",
-			"dernieresRencontres": "1;-1;1;-1;1",
+			"dernieresRencontres": "-1;1;-1;1;-1",
 			"equipe_libelle": "HANDBALL CLUB MONTEUX",
 			"equipe_logoActif": "1",
 			"structure_logo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG",
@@ -76,7 +76,7 @@
 			"butPlus": "118",
 			"butMoins": "111",
 			"diff": "7",
-			"dernieresRencontres": "-1;1;1;1;-1",
+			"dernieresRencontres": "1;1;1;-1;-1",
 			"equipe_libelle": "MAZAN-SORGUES HANDBALL (+16)",
 			"equipe_logoActif": "0",
 			"structure_logo": "2025-09-19-e78c2c9a-7f7d-402a-853b-5d174ddb9404.png",
@@ -96,7 +96,7 @@
 			"butPlus": "111",
 			"butMoins": "114",
 			"diff": "-3",
-			"dernieresRencontres": "-1;-1;-1;1;1",
+			"dernieresRencontres": "-1;-1;1;1;-1",
 			"equipe_libelle": "BOLLENE HANDBALL CLUB 2",
 			"equipe_logoActif": "1",
 			"structure_logo": "2015-04-24-5122cd2a-de1c-48cc-a5a4-bd12530e8316.jpg",
@@ -116,7 +116,7 @@
 			"butPlus": "94",
 			"butMoins": "58",
 			"diff": "36",
-			"dernieresRencontres": "-1;-1;-1;1;1",
+			"dernieresRencontres": "-1;-1;1;1;-1",
 			"equipe_libelle": "AVIGNON HANDBALL",
 			"equipe_logoActif": "1",
 			"structure_logo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png",
@@ -136,7 +136,7 @@
 			"butPlus": "100",
 			"butMoins": "93",
 			"diff": "7",
-			"dernieresRencontres": "1;-1;-1;-1;1",
+			"dernieresRencontres": "-1;-1;-1;1;-1",
 			"equipe_libelle": "HBC PLANAIS 1",
 			"equipe_logoActif": "1",
 			"structure_logo": "2026-08-01-1307c0ce-4a94-4e91-ac41-15b6c8e3282e.jpg",
@@ -156,7 +156,7 @@
 			"butPlus": "95",
 			"butMoins": "111",
 			"diff": "-16",
-			"dernieresRencontres": "-1;1;-1;-1",
+			"dernieresRencontres": "-1;1;-1;-1;-1",
 			"equipe_libelle": "HANDBALL CONCERNADE",
 			"equipe_logoActif": "1",
 			"structure_logo": "2015-08-17-3c5d5ea7-3296-42e1-a7bd-bd33284b9289.jpg",
@@ -261,9 +261,9 @@
 		},
 		{
 			"individuId": "314043",
-			"matchCount": "4",
+			"matchCount": "5",
 			"totalButs": "0",
-			"totalArrets": "60",
+			"totalArrets": "73",
 			"nom": "GARCIA",
 			"prenom": "AURORE",
 			"showEquipeLogo": "1",
@@ -272,8 +272,8 @@
 		},
 		{
 			"individuId": "314050",
-			"matchCount": "4",
-			"totalButs": "6",
+			"matchCount": "5",
+			"totalButs": "7",
 			"totalArrets": "0",
 			"nom": "SAUX",
 			"prenom": "CAROLINE",
@@ -283,7 +283,7 @@
 		},
 		{
 			"individuId": "314053",
-			"matchCount": "3",
+			"matchCount": "4",
 			"totalButs": "2",
 			"totalArrets": "0",
 			"nom": "AVY",
@@ -316,8 +316,8 @@
 		},
 		{
 			"individuId": "314184",
-			"matchCount": "2",
-			"totalButs": "4",
+			"matchCount": "3",
+			"totalButs": "5",
 			"totalArrets": "0",
 			"nom": "ROUSSEAU",
 			"prenom": "ANNE",
@@ -338,9 +338,9 @@
 		},
 		{
 			"individuId": "314236",
-			"matchCount": "3",
-			"totalButs": "18",
-			"totalArrets": "0",
+			"matchCount": "4",
+			"totalButs": "24",
+			"totalArrets": "5",
 			"nom": "DUMONT",
 			"prenom": "KORALYNE",
 			"showEquipeLogo": "1",
@@ -404,8 +404,8 @@
 		},
 		{
 			"individuId": "315459",
-			"matchCount": "3",
-			"totalButs": "18",
+			"matchCount": "4",
+			"totalButs": "24",
 			"totalArrets": "0",
 			"nom": "REYNET",
 			"prenom": "KATIA",
@@ -459,8 +459,8 @@
 		},
 		{
 			"individuId": "585693",
-			"matchCount": "4",
-			"totalButs": "21",
+			"matchCount": "5",
+			"totalButs": "26",
 			"totalArrets": "0",
 			"nom": "DUMONT",
 			"prenom": "FLORYNE",
@@ -481,8 +481,8 @@
 		},
 		{
 			"individuId": "593324",
-			"matchCount": "4",
-			"totalButs": "10",
+			"matchCount": "5",
+			"totalButs": "11",
 			"totalArrets": "0",
 			"nom": "BENOIT",
 			"prenom": "MELAINE",
@@ -590,6 +590,17 @@
 			"structureLogo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG"
 		},
 		{
+			"individuId": "968267",
+			"matchCount": "1",
+			"totalButs": "6",
+			"totalArrets": "0",
+			"nom": "VAISSIERE",
+			"prenom": "OPHELIE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "AVIGNON HANDBALL",
+			"structureLogo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png"
+		},
+		{
 			"individuId": "1156647",
 			"matchCount": "4",
 			"totalButs": "27",
@@ -643,6 +654,17 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "HANDBALL CLUB MONTEUX",
 			"structureLogo": "2015-06-30-02ba6291-ae09-4f7e-87ff-932b9279ecf4.JPG"
+		},
+		{
+			"individuId": "1215920",
+			"matchCount": "1",
+			"totalButs": "2",
+			"totalArrets": "0",
+			"nom": "DAIDOUMBEL",
+			"prenom": "ASSKANE",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "AVIGNON HANDBALL",
+			"structureLogo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png"
 		},
 		{
 			"individuId": "1347258",
@@ -712,8 +734,8 @@
 		},
 		{
 			"individuId": "1435335",
-			"matchCount": "3",
-			"totalButs": "25",
+			"matchCount": "4",
+			"totalButs": "27",
 			"totalArrets": "0",
 			"nom": "GIBERT",
 			"prenom": "ORANE",
@@ -734,8 +756,8 @@
 		},
 		{
 			"individuId": "1625030",
-			"matchCount": "2",
-			"totalButs": "13",
+			"matchCount": "3",
+			"totalButs": "16",
 			"totalArrets": "0",
 			"nom": "MONZIOLS",
 			"prenom": "CHLOE",
@@ -843,6 +865,17 @@
 			"structureLogo": "2026-08-01-1307c0ce-4a94-4e91-ac41-15b6c8e3282e.jpg"
 		},
 		{
+			"individuId": "1843395",
+			"matchCount": "1",
+			"totalButs": "3",
+			"totalArrets": "0",
+			"nom": "CHAUVET",
+			"prenom": "ANAIS",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "AVIGNON HANDBALL",
+			"structureLogo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png"
+		},
+		{
 			"individuId": "1862547",
 			"matchCount": "5",
 			"totalButs": "19",
@@ -899,8 +932,8 @@
 		},
 		{
 			"individuId": "2194177",
-			"matchCount": "4",
-			"totalButs": "31",
+			"matchCount": "5",
+			"totalButs": "40",
 			"totalArrets": "0",
 			"nom": "CAYUELA",
 			"prenom": "LAETITIA",
@@ -940,6 +973,17 @@
 			"showEquipeLogo": "1",
 			"equipeLibelle": "HANDBALL CONCERNADE",
 			"structureLogo": "2015-08-17-3c5d5ea7-3296-42e1-a7bd-bd33284b9289.jpg"
+		},
+		{
+			"individuId": "2500866",
+			"matchCount": "1",
+			"totalButs": "1",
+			"totalArrets": "0",
+			"nom": "ADJABI",
+			"prenom": "INES",
+			"showEquipeLogo": "1",
+			"equipeLibelle": "AVIGNON HANDBALL",
+			"structureLogo": "2025-09-28-a2ce05d2-5259-4b2e-a439-478db609cf47.png"
 		},
 		{
 			"individuId": "2519440",
@@ -1020,8 +1064,8 @@
 		},
 		{
 			"individuId": "2738403",
-			"matchCount": "3",
-			"totalButs": "20",
+			"matchCount": "4",
+			"totalButs": "21",
 			"totalArrets": "0",
 			"nom": "GINEYS",
 			"prenom": "LYSON",
@@ -1064,8 +1108,8 @@
 		},
 		{
 			"individuId": "2792331",
-			"matchCount": "4",
-			"totalButs": "18",
+			"matchCount": "5",
+			"totalButs": "20",
 			"totalArrets": "0",
 			"nom": "RUMAUX DEGRUGILLIERS",
 			"prenom": "FAUSTINE",
@@ -1141,7 +1185,7 @@
 		},
 		{
 			"individuId": "2999356",
-			"matchCount": "2",
+			"matchCount": "3",
 			"totalButs": "2",
 			"totalArrets": "0",
 			"nom": "BILLON-GALLAND",
@@ -1680,7 +1724,7 @@
 		},
 		{
 			"individuId": "4310579",
-			"matchCount": "3",
+			"matchCount": "4",
 			"totalButs": "1",
 			"totalArrets": "33",
 			"nom": "MILLET",
