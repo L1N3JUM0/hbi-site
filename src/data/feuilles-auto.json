@@ -59,7 +59,7 @@
 			"adversaire": "HANDBALL CLUB ORANGE 2",
 			"equipeSlug": "u11-mixtes",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-196084/rencontre-2716925/",
-			"derniereTentative": "2026-11-18T12:32:47.013Z",
+			"derniereTentative": "2026-11-19T12:23:33.023Z",
 			"code": "WAGWDPM",
 			"statut": "attente_score"
 		},
@@ -620,9 +620,10 @@
 			"adversaire": "HANDBALL CLUB PERNOIS",
 			"equipeSlug": "u13-masculins",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u13-mixte-32335/poule-199177/rencontre-2750755/",
-			"derniereTentative": "2026-11-18T12:32:47.013Z",
+			"derniereTentative": "2026-11-19T12:23:33.023Z",
 			"code": "WAHAVNC",
-			"statut": "attente_score"
+			"statut": "importee",
+			"scoreVuLe": "2026-11-19T12:23:33.023Z"
 		},
 		"3076713": {
 			"date": "2026-11-08T08:30:00.000Z",
@@ -641,7 +642,7 @@
 			"adversaire": "HANDBALL CLUB ORANGE 1",
 			"equipeSlug": "u11-mixtes",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-199194/rencontre-2750911/",
-			"derniereTentative": "2026-11-18T12:32:47.013Z",
+			"derniereTentative": "2026-11-19T12:23:33.023Z",
 			"code": "WAGYLNV",
 			"statut": "attente_score"
 		},
