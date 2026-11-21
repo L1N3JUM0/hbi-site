@@ -58,6 +58,10 @@ collections:
         label: "Contenu de la page « Le club »"
         file: "src/content/le-club/page.md"
         fields:
+          - label: "Titre de la section histoire"
+            name: "histoireTitre"
+            widget: "string"
+
           - label: "Histoire (avant la citation)"
             name: "histoireIntro"
             widget: "text"

@@ -2,14 +2,41 @@
 	<div class="wrap">
 		<h2>Notre histoire</h2>
 		<p>
-			Depuis le 8&nbsp;novembre 1977, le HBI fait vivre le handball à
-			L&rsquo;Isle-sur-la-Sorgue. Fondé par Jean&nbsp;Guillen, le club a grandi
-			saison après saison sans jamais perdre son esprit de famille&nbsp;:
-			ici, chacun trouve sa place, du baby hand aux seniors.
+			C&rsquo;est le 8&nbsp;novembre 1977 que Jean&nbsp;Guillen dépose à la
+			préfecture les premiers statuts du Handball Islois. Une belle aventure
+			sportive et humaine commence alors à L&rsquo;Isle-sur-la-Sorgue.
 		</p>
 		<p>
-			Aujourd&rsquo;hui présidé par Sonia&nbsp;Saux, le HBI reste fidèle à sa
-			devise&nbsp;: je ne perds jamais, soit je gagne, soit j&rsquo;apprends.
+			Au fil des années, le club se développe et se construit grâce à
+			l&rsquo;investissement de ses dirigeants successifs&nbsp;:
+		</p>
+		<ul class="dirigeants" aria-label="Dirigeants successifs du club">
+			<li>Jean Guillen</li>
+			<li>Alain Perron</li>
+			<li>Jean Vilbois</li>
+			<li>Michel Le Coq</li>
+			<li>Brigitte Causan</li>
+			<li>Françoise Zamyslewski</li>
+			<li>Patrick De Michele</li>
+			<li>Françoise De Michele</li>
+		</ul>
+		<p>
+			Depuis la saison 2015-2016, Sonia&nbsp;Saux assure la présidence du club
+			et poursuit cette aventure avec l&rsquo;ensemble des joueurs, dirigeants,
+			éducateurs, bénévoles et familles.
+		</p>
+		<p>
+			Aujourd&rsquo;hui, le Handball Islois continue de faire vivre sa passion
+			et de transmettre son esprit familial, dans le respect de ses
+			valeurs&nbsp;: solidarité, respect et convivialité.
+		</p>
+		<p>
+			Depuis 1977, des générations se sont succédé, des souvenirs se sont créés
+			et une même passion continue de nous rassembler.
+		</p>
+		<p class="accueil">
+			Le Handball Islois, une histoire qui s&rsquo;écrit depuis près de
+			50&nbsp;ans et qui continue de s&rsquo;écrire avec vous&nbsp;!
 		</p>
 	</div>
 </section>
@@ -48,5 +75,29 @@
 	}
 	p:last-child {
 		margin-bottom: 0;
+	}
+	/* Liste de noms en pastilles : se lit comme une "feuille de match" des présidents. */
+	.dirigeants {
+		list-style: none;
+		margin: 0 0 1.25rem;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.5rem;
+	}
+	.dirigeants li {
+		background: var(--color-navy-deep);
+		color: var(--color-white);
+		font-weight: 700;
+		font-size: 1rem;
+		padding: 0.45rem 0.9rem;
+		border-radius: 999px;
+	}
+	.accueil {
+		font-weight: 800;
+		color: var(--color-blue);
+		font-size: 1.15rem;
+		margin-top: 1.5rem;
 	}
 </style>

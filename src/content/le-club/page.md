@@ -1,25 +1,22 @@
 ---
+histoireTitre: Une histoire, une passion, des valeurs !
 histoireIntro: |-
-  Le Handball Islois voit le jour le 8 novembre 1977, fondé
-  par Jean Guillen. Plus de 45 ans plus tard, le club n’a
-  jamais dévié de son projet d’origine : faire du handball un
-  sport accessible à L’Isle-sur-la-Sorgue, du premier
-  entraînement de baby hand jusqu’aux seniors, sans jamais
-  perdre son esprit de famille.
+  Depuis le 8 novembre 1977, le Handball Islois fait vivre sa passion du handball au cœur de L’Isle-sur-la-Sorgue.
 
-  Depuis 2015-2016, c’est Sonia Saux qui préside le club et
-  porte cette histoire au quotidien, avec une équipe de bénévoles et
-  d’éducateurs attachée à trois valeurs : la solidarité, le
-  respect et la convivialité. Elles infusent chaque entraînement, chaque
-  match et chaque moment partagé au bord du terrain.
+  Né de la volonté de passionnés, notre club a traversé les générations en conservant ce qui fait sa force et son identité : la solidarité, le respect, la convivialité et le plaisir de partager une même passion.
 
-  Ces valeurs se résument dans la devise du club, répétée aux jeunes
-  comme aux plus expérimentés :
+  Bien plus qu’un club sportif, le Handball Islois est avant tout une grande famille. Un lieu où chacun trouve sa place, où les jeunes grandissent et s’épanouissent, où les équipes se construisent et où les bénévoles donnent de leur temps et de leur énergie pour faire vivre cette belle aventure collective.
 devise: 'Je ne perds jamais : soit je gagne, soit j’apprends.'
 histoireConclusion: |-
-  Une philosophie qui pousse à progresser sans jamais craindre l’échec,
-  et qui fait du HBI un club où l’on vient autant pour la
-  compétition que pour le plaisir de jouer ensemble.
+  Des premiers pas sur le terrain aux compétitions, des moments de victoire aux défis du quotidien, nous partageons bien plus que des matchs : nous transmettons des valeurs, créons des liens et faisons vivre un véritable esprit de club.
+
+  Notre ambition est de continuer à faire grandir le Handball Islois, de former les générations de demain, de développer la pratique du handball et de préserver cette identité qui nous rassemble depuis près de 50 ans.
+
+  Joueurs, entraîneurs, dirigeants, bénévoles, parents, supporters et partenaires : chacun contribue à écrire une nouvelle page de notre histoire.
+
+  Parce qu’un club ne se construit pas uniquement sur un terrain, mais grâce à toutes celles et ceux qui le font vivre.
+
+  Bienvenue au Handball Islois, là où la passion du handball se partage et où l’esprit d’équipe prend tout son sens !
 parrainNom: Hugo Brouzet
 parrainPhoto: ../../assets/hugo-brouzet-stage.jpg
 parrainPhotoAlt: Hugo Brouzet lors d'un stage avec les jeunes du HBI

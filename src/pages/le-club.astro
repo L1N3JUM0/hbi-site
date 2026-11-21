@@ -39,10 +39,12 @@ const telephoneHref = `tel:${data.telephone.replace(/\s+/g, "")}`;
 
 		<section class="histoire">
 			<div class="wrap">
-				<h2>Notre histoire</h2>
+				<h2>{data.histoireTitre}</h2>
 				{histoireIntroParagraphes.map((paragraphe) => <p>{paragraphe}</p>)}
 				<p class="devise">« {data.devise} »</p>
-				{histoireConclusionParagraphes.map((paragraphe) => <p>{paragraphe}</p>)}
+				{histoireConclusionParagraphes.map((paragraphe, i) => (
+					<p class={i === histoireConclusionParagraphes.length - 1 ? "accueil" : undefined}>{paragraphe}</p>
+				))}
 			</div>
 		</section>
 
@@ -169,6 +171,14 @@ const telephoneHref = `tel:${data.telephone.replace(/\s+/g, "")}`;
 		font-style: italic;
 		color: var(--color-blue);
 		font-size: 1.15rem;
+	}
+
+	/* Phrase d'accueil finale de la présidente : mise en avant sans changer de ton. */
+	.histoire .accueil {
+		font-weight: 800;
+		color: var(--color-blue);
+		font-size: 1.15rem;
+		margin-top: 1.75rem;
 	}
 
 	.parrain {

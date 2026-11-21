@@ -338,6 +338,8 @@ const leClub = defineCollection({
 	loader: glob({ pattern: "*.md", base: "./src/content/le-club" }),
 	schema: ({ image }) =>
 		z.object({
+			/** Titre de la section histoire. */
+			histoireTitre: z.string().default("Notre histoire"),
 			/** Paragraphes avant la devise (séparés par une ligne vide). */
 			histoireIntro: z.string(),
 			/** Citation mise en avant, affichée entre guillemets. */
