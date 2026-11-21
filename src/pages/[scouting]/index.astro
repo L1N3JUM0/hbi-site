@@ -3,8 +3,10 @@
  * Index du scouting coachs : le prochain adversaire de championnat de
  * chaque équipe Seniors / U18 / U17 / U15 / U13. Chemin secret /scouting-{SCOUTING_SLUG}/
  * (secret GitHub Actions) ; sans ce secret, aucune page n'est générée.
- * Jamais liée depuis une page publique, absente de tout sitemap et de
- * robots.txt (le citer révélerait le chemin).
+ * Absente de tout sitemap et de robots.txt (le citer révélerait le chemin).
+ * Depuis /equipes, une petite icône « jumelles » mène à la fiche du prochain
+ * adversaire (choix du club : le chemin est donc lisible dans le HTML public ;
+ * la page reste noindex/nofollow/no-referrer).
  */
 import ScoutingLayout from "../../components/scouting/ScoutingLayout.astro";
 import { chargerScouting, formatDateMatch, formatGenereLe, segmentScouting } from "../../lib/scouting";

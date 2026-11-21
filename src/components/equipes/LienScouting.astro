@@ -1,0 +1,46 @@
+---
+/**
+ * Petite icône « jumelles » vers la fiche scouting du prochain adversaire.
+ * Discrète : couleur atténuée, pleine opacité au survol/focus. La cible
+ * tactile fait 44 px mais déborde par des marges négatives pour ne pas
+ * grossir la ligne qui la porte.
+ */
+import { withBase } from "../../utils/links";
+
+interface Props {
+	/** Chemin sans `base`, voir cheminScoutingPour(). */
+	chemin: string;
+	adversaire: string;
+}
+const { chemin, adversaire } = Astro.props;
+---
+
+<a class="scout" href={withBase(chemin)} rel="nofollow noreferrer" aria-label={`Fiche scouting : ${adversaire}`} title="Fiche scouting">
+	<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+		<circle cx="6" cy="16" r="3.5"></circle>
+		<circle cx="18" cy="16" r="3.5"></circle>
+		<path d="M9.5 16V8.5h5V16"></path>
+		<path d="M6 12.5V6h3.5M18 12.5V6h-3.5"></path>
+	</svg>
+</a>
+
+<style>
+	.scout {
+		flex-shrink: 0;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		margin: -0.75rem -0.5rem -0.75rem -0.6rem;
+		color: color-mix(in srgb, var(--color-white) 55%, transparent);
+	}
+	.scout:hover {
+		color: var(--color-white);
+	}
+	.scout:focus-visible {
+		color: var(--color-white);
+		outline: 2px solid var(--color-white);
+		outline-offset: -2px;
+	}
+</style>

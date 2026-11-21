@@ -398,9 +398,14 @@ secret, sans authentification.
   du joueur ÷ buts de son équipe sur les seuls matchs où il figure (une
   absence ne la fait pas baisser). Mise en avant à partir de 50 %
   (`src/lib/partButs.mjs`).
+- **Accès depuis /equipes** : une icône « jumelles » discrète, à côté de
+  l'adversaire du prochain match (résumé et détail de la fiche équipe), mène
+  à sa fiche quand elle est à jour (`cheminScoutingPour`, src/lib/scouting.ts).
+  Choix du club : le lien est dans le HTML public, donc le chemin secret n'est
+  plus vraiment secret (les fiches citent des joueur·se·s adverses, dont des
+  mineur·e·s). Pour revenir en arrière, retirer `LienScouting` de FicheEquipe.
 - **Confidentialité** : `noindex, nofollow` et `no-referrer` sur chaque
-  page, aucun lien depuis le site public, rien dans `robots.txt` ni dans un
-  sitemap (en ajouter un un jour : exclure `/scouting-`). Le slug est masqué
+  page, rien dans `robots.txt` ni dans un sitemap (en ajouter un un jour : exclure `/scouting-`). Le slug est masqué
   par GitHub dans les logs ; ne jamais l'afficher dans une étape.
 - **Lien en 404 ?** Le log du build affiche `[scouting] slug : N caractère(s),
   empreinte xxxxxxxx`. Comparer avec `printf %s "<slug>" | sha256sum | cut -c1-8`

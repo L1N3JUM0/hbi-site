@@ -129,3 +129,37 @@ export function formatScore(m: MatchJoue): string {
 	if (m.forfait) return m.resultat === "V" ? "Victoire par forfait" : "Forfait";
 	return `${m.butsPour} – ${m.butsContre}`;
 }
+
+const sansAccents = (texte: string) =>
+	texte
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.toLowerCase()
+		.replace(/[^a-z0-9]+/g, " ")
+		.trim();
+
+/** Chemin (sans `base`) de la fiche scouting du prochain match affiché sur
+ * /equipes, ou null. Même construction d'identifiant que
+ * scripts/scouting-ffhandball.mjs (equipesDeCategorie). On compare aussi
+ * l'adversaire : le JSON date du dernier build du script, il ne doit pas
+ * envoyer vers la fiche d'un adversaire déjà joué. */
+export function cheminScoutingPour(match: { equipeSlugs: string[]; equipeLibelle?: string; coupeDeFrance: boolean; opponent: string | null; isDerby: boolean }): string | null {
+	const segment = segmentScouting();
+	if (!segment || match.isDerby || !match.opponent || match.equipeSlugs.length !== 1) return null;
+	const id = (match.coupeDeFrance ? [match.equipeSlugs[0], "coupe"] : [match.equipeSlugs[0], match.equipeLibelle])
+		.filter(Boolean)
+		.join("-")
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.toLowerCase()
+		.replace(/[^a-z0-9-]+/g, "-");
+	const trouve = chargerScoutingMemo().flatMap((c) => c.matchs).find((e) => e.id === id && e.fiche && e.match);
+	if (!trouve?.match || sansAccents(trouve.match.adversaire) !== sansAccents(match.opponent)) return null;
+	return `/${segment}/${id}/`;
+}
+
+let memo: CategorieScouting[] | null = null;
+/** Lu une seule fois par build : /equipes l'appelle pour chaque fiche. */
+function chargerScoutingMemo(): CategorieScouting[] {
+	return (memo ??= chargerScouting());
+}

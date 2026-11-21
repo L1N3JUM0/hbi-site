@@ -4,11 +4,13 @@ import type { CollectionEntry } from "astro:content";
 import AjouterAgendaButton from "../AjouterAgendaButton.astro";
 import DrapeauTricolore from "../DrapeauTricolore.astro";
 import PhotoCarousel from "../PhotoCarousel.astro";
+import LienScouting from "./LienScouting.astro";
 import ResultatsEquipe from "../resultats/ResultatsEquipe.astro";
 import { formatMatchQuand, type AgendaMatch, type AgendaTeamConfig } from "../../lib/agenda";
 import { formatDateHeureCourte, formatHeureCourte, formatJourLong, grouperParJour, publicEquipe } from "../../lib/ficheEquipe";
 import { formatDateCourte, issueDuMatch, scoreNousEux, type Resultat } from "../../lib/resultats";
 import { casseNomClub } from "../../lib/nomsClubs";
+import { cheminScoutingPour } from "../../lib/scouting";
 import { saisonActuelle } from "../../lib/saison";
 import { withBase } from "../../utils/links";
 
@@ -44,6 +46,8 @@ const aCalendrier = calendriers.length > 0;
 const plusieursEquipes = calendriers.filter((c) => !c.coupe).length > 1;
 const prochain = matchs.find((m) => !m.reporte || m.reporte.nouvelleDate);
 const { jours, sansDate } = grouperParJour(matchs);
+/** Fiche scouting du seul prochain match (null sans SCOUTING_SLUG ou sans fiche à jour). */
+const cheminScouting = prochain ? cheminScoutingPour(prochain) : null;
 const publicVise = publicEquipe(equipe);
 
 /** Lu seulement par les lecteurs d'écran : à l'écran, le score "nous – eux"
@@ -91,6 +95,7 @@ const historique = aDesResultats || avecStats;
 								{prochain.coupeDeFrance && <><DrapeauTricolore /> </>}
 								{formatDateHeureCourte(prochain.start)} · {contre(prochain)}
 							</span>
+							{cheminScouting && <LienScouting chemin={cheminScouting} adversaire={casseNomClub(prochain.opponent)} />}
 						</span>
 					</>
 				) : (
@@ -153,6 +158,7 @@ const historique = aDesResultats || avecStats;
 												{m.coupeDeFrance && <><DrapeauTricolore /> </>}
 												{contre(m)}
 											</span>
+											{cheminScouting && m === prochain && <LienScouting chemin={cheminScouting} adversaire={casseNomClub(m.opponent)} />}
 										</li>
 									))}
 								</ul>
