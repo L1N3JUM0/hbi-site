@@ -24,7 +24,7 @@ const merciUrl = `${Astro.site?.origin ?? ""}${withBase("/merci")}`;
 		<title>Rejoindre le club — Handball Islois</title>
 		<meta
 			name="description"
-			content="Viens essayer le handball islois gratuitement : infos pratiques, aides possibles, et formulaire de pré-inscription."
+			content="Viens essayer le handball islois gratuitement : infos pratiques, aide Pass’Sport et formulaire de pré-inscription."
 		/>
 	</head>
 	<body>
@@ -61,25 +61,20 @@ const merciUrl = `${Astro.site?.origin ?? ""}${withBase("/merci")}`;
 
 		<section class="aides">
 			<div class="wrap">
-				<h2>Des aides pour financer la licence</h2>
+				<h2>Une aide pour financer la licence</h2>
 				<p>
-					Plusieurs dispositifs peuvent réduire le coût de l&rsquo;adhésion
-					selon votre situation. Les montants et conditions changent chaque
-					année&nbsp;: vérifiez votre éligibilité directement sur les sites
-					officiels.
+					Le Pass&rsquo;Sport peut réduire le coût de l&rsquo;adhésion selon
+					votre situation. Son montant et ses conditions changent chaque
+					année&nbsp;: vérifiez votre éligibilité directement sur le site
+					officiel.
 				</p>
-				<div class="aides-grid">
-					<a class="aide-card" href="https://www.pass.sports.gouv.fr/" target="_blank" rel="noopener noreferrer">
+				<a class="aide-card" href="https://www.pass.sports.gouv.fr/" target="_blank" rel="noopener noreferrer">
+					<span class="aide-text">
 						<span class="aide-name">Pass&rsquo;Sport</span>
 						<span class="aide-desc">Aide de l&rsquo;État pour les jeunes et certains publics éligibles.</span>
-						<span class="aide-link">Vérifier son éligibilité →</span>
-					</a>
-					<a class="aide-card" href="https://www.ancv.com/le-coupon-sport" target="_blank" rel="noopener noreferrer">
-						<span class="aide-name">Coupons Sport ANCV</span>
-						<span class="aide-desc">Dispositif de l&rsquo;Agence Nationale des Chèques-Vacances.</span>
-						<span class="aide-link">En savoir plus →</span>
-					</a>
-				</div>
+					</span>
+					<span class="aide-link">Vérifier son éligibilité →</span>
+				</a>
 			</div>
 		</section>
 
@@ -227,35 +222,42 @@ const merciUrl = `${Astro.site?.origin ?? ""}${withBase("/merci")}`;
 		line-height: 1.6;
 		margin: 0 0 1.5rem;
 	}
-	.aides-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-		gap: 1rem;
-	}
+	/* Une seule aide affichée : carte pleine largeur, texte à gauche et lien
+	   à droite, empilés sur mobile (une grille d'une seule carte paraissait
+	   vide). */
 	.aide-card {
 		display: flex;
-		flex-direction: column;
-		gap: 0.4rem;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem 1.5rem;
 		background: var(--color-navy-deep);
-		border-top: 3px solid var(--color-crimson);
-		padding: 1.25rem 1.4rem;
+		border-left: 4px solid var(--color-crimson);
+		padding: 1.25rem 1.5rem;
 		text-decoration: none;
+		min-height: 44px;
+	}
+	.aide-text {
+		display: flex;
+		flex-direction: column;
+		gap: 0.3rem;
+		flex: 1 1 260px;
 	}
 	.aide-name {
 		color: var(--color-white);
 		font-weight: 800;
-		font-size: 1.05rem;
+		font-size: 1.15rem;
 	}
 	.aide-desc {
-		color: rgba(255, 255, 255, 0.75);
-		font-size: 0.9rem;
-		line-height: 1.4;
+		color: rgba(255, 255, 255, 0.8);
+		font-size: 1rem;
+		line-height: 1.45;
 	}
 	.aide-link {
 		color: var(--color-white);
 		font-weight: 700;
-		font-size: 0.9rem;
-		margin-top: 0.3rem;
+		font-size: 1rem;
+		white-space: nowrap;
 	}
 	.aide-card:hover .aide-link {
 		color: var(--color-crimson);
