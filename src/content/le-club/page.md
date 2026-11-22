@@ -41,4 +41,5 @@ telephone: 06 26 62 15 44
 email: 6384006@sud.ffhandball.net
 instagramUrl: https://www.instagram.com/handball.islois/
 facebookUrl: https://www.facebook.com/handballislois84
+tiktokUrl: https://www.tiktok.com/@hbi84800
 ---

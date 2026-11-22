@@ -32,7 +32,8 @@ Priorités : 1) image/notoriété, 2) infos pratiques, 3) recrutement,
   arrangement inter-clubs temporaire pour la seule saison en cours,
   concernant certains créneaux U15/U17 féminines. Ne pas l'indiquer sur le
   site sauf mention contextuelle explicite si le club le demande.
-- Réseaux : Facebook "Handball Islois", Instagram @handball_islois
+- Réseaux : Facebook "Handball Islois", Instagram @handball.islois
+  (point, pas underscore), TikTok @hbi84800
 - Contact : 06 26 62 15 44 / 6384006@sud.ffhandball.net
 - Domaine handballislois.fr : probablement non acheté/activé par le club.
   Ne pas le référencer comme site actuel sans confirmation.

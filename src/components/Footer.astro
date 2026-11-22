@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import logoSrc from "../assets/logo-transparent-blanc.png";
+import SocialIcon from "./SocialIcon.astro";
 
 const year = new Date().getFullYear();
 ---
@@ -29,20 +30,20 @@ const year = new Date().getFullYear();
 				<p class="col-label">Réseaux</p>
 				<p>
 					<a class="social-link" href="https://www.facebook.com/handballislois84" target="_blank" rel="noopener noreferrer">
-						<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
-							<path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.2-1.5 1.6-1.5h1.6V3.7c-.3 0-1.3-.1-2.5-.1-2.4 0-4.1 1.5-4.1 4.2v2.1H7.4v3.1h2.7v8h3.4z" />
-						</svg>
+						<SocialIcon name="facebook" />
 						<span>Facebook&nbsp;: Handball Islois</span>
 					</a>
 				</p>
 				<p>
 					<a class="social-link" href="https://www.instagram.com/handball.islois/" target="_blank" rel="noopener noreferrer">
-						<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-							<rect x="3" y="3" width="18" height="18" rx="5" />
-							<circle cx="12" cy="12" r="4" />
-							<circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-						</svg>
-						<span>Instagram&nbsp;: @handball_islois</span>
+						<SocialIcon name="instagram" />
+						<span>Instagram&nbsp;: @handball.islois</span>
+					</a>
+				</p>
+				<p>
+					<a class="social-link" href="https://www.tiktok.com/@hbi84800" target="_blank" rel="noopener noreferrer">
+						<SocialIcon name="tiktok" />
+						<span>TikTok&nbsp;: @hbi84800</span>
 					</a>
 				</p>
 			</div>

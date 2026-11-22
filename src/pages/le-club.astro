@@ -6,6 +6,7 @@ import Footer from "../components/Footer.astro";
 import { Image } from "astro:assets";
 import { getCollection, getEntry } from "astro:content";
 import Favicon from "../components/Favicon.astro";
+import SocialIcon from "../components/SocialIcon.astro";
 
 const page = await getEntry("leClub", "page");
 const { data } = page!;
@@ -104,10 +105,22 @@ const telephoneHref = `tel:${data.telephone.replace(/\s+/g, "")}`;
 					<div class="card">
 						<h3>Réseaux</h3>
 						<p>
-							<a href={data.instagramUrl} target="_blank" rel="noopener noreferrer">Instagram&nbsp;: @handball_islois</a>
+							<a class="social-link" href={data.instagramUrl} target="_blank" rel="noopener noreferrer">
+								<SocialIcon name="instagram" />
+								<span>Instagram&nbsp;: @handball.islois</span>
+							</a>
 						</p>
 						<p>
-							<a href={data.facebookUrl} target="_blank" rel="noopener noreferrer">Facebook&nbsp;: Handball Islois</a>
+							<a class="social-link" href={data.facebookUrl} target="_blank" rel="noopener noreferrer">
+								<SocialIcon name="facebook" />
+								<span>Facebook&nbsp;: Handball Islois</span>
+							</a>
+						</p>
+						<p>
+							<a class="social-link" href={data.tiktokUrl} target="_blank" rel="noopener noreferrer">
+								<SocialIcon name="tiktok" />
+								<span>TikTok&nbsp;: @hbi84800</span>
+							</a>
 						</p>
 					</div>
 				</div>
@@ -330,6 +343,22 @@ const telephoneHref = `tel:${data.telephone.replace(/\s+/g, "")}`;
 	}
 	.card a:hover {
 		color: var(--color-crimson);
+	}
+	/* Icônes discrètes : légèrement atténuées, pleine opacité au survol. */
+	.social-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		min-height: 44px;
+	}
+	.social-link :global(svg) {
+		flex-shrink: 0;
+		opacity: 0.7;
+		transition: opacity 0.15s;
+	}
+	.social-link:hover :global(svg),
+	.social-link:focus-visible :global(svg) {
+		opacity: 1;
 	}
 
 	@media (max-width: 640px) {
