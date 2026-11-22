@@ -59,7 +59,7 @@
 			"adversaire": "HANDBALL CLUB ORANGE 2",
 			"equipeSlug": "u11-mixtes",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-196084/rencontre-2716925/",
-			"derniereTentative": "2026-11-21T14:25:23.181Z",
+			"derniereTentative": "2026-11-22T01:01:34.991Z",
 			"code": "WAGWDPM",
 			"statut": "attente_score"
 		},
@@ -642,9 +642,21 @@
 			"adversaire": "HANDBALL CLUB ORANGE 1",
 			"equipeSlug": "u11-mixtes",
 			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-199194/rencontre-2750911/",
-			"derniereTentative": "2026-11-21T14:25:23.181Z",
+			"derniereTentative": "2026-11-22T01:01:34.991Z",
 			"code": "WAGYLNV",
-			"statut": "attente_score"
+			"statut": "importee",
+			"scoreVuLe": "2026-11-22T01:01:34.991Z"
+		},
+		"3076722": {
+			"date": "2026-11-21T15:00:00.000Z",
+			"competition": "U11 MIXTE - CHAMPIONNATS - EXCELLENCE",
+			"adversaire": "BOLLENE HANDBALL CLUB 1",
+			"equipeSlug": "u11-mixtes",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/departemental/u11-mixte-32336/poule-199194/rencontre-2750918/",
+			"derniereTentative": "2026-11-22T01:01:34.991Z",
+			"code": "WAGYLOC",
+			"scoreVuLe": "2026-11-22T01:01:34.991Z",
+			"statut": "importee"
 		},
 		"3076813": {
 			"date": "2026-11-08T10:30:00.000Z",
@@ -667,6 +679,27 @@
 			"code": "WAGYLSJ",
 			"statut": "importee",
 			"scoreVuLe": "2026-11-15T23:40:34.435Z"
+		},
+		"3077455": {
+			"date": "2026-11-21T18:30:00.000Z",
+			"competition": "COUPE DE FRANCE CAISSE D'EPARGNE DEPARTEMENTALE FEMININE 2026-2027 - CDF DEP FEM (2° TOUR) - 2° TOUR",
+			"adversaire": "SAINT MITRE HANDBALL 1",
+			"equipeSlug": "seniors-feminines",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/coupe-de-france/coupe-de-france-caisse-d-epargne-departementale-feminine-2026-2027-33243/poule-199600/rencontre-2766888/",
+			"derniereTentative": "2026-11-22T01:01:34.991Z",
+			"code": "WAGZKNV",
+			"scoreVuLe": "2026-11-22T01:01:34.991Z",
+			"statut": "importee"
+		},
+		"3094281": {
+			"date": "2026-11-21T19:00:00.000Z",
+			"competition": "COUPE DE FRANCE CAISSE D'EPARGNE DEPARTEMENTALE MASCULINE 2026-2027 - CDF DEP MAS (2° TOUR) - 2° TOUR",
+			"adversaire": "BEAUCAIRE UHT 1",
+			"equipeSlug": "seniors-masculins",
+			"url": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/coupe-de-france/coupe-de-france-caisse-d-epargne-departementale-masculine-2026-2027-33244/poule-199601/rencontre-2767062/",
+			"derniereTentative": "2026-11-22T01:01:34.991Z",
+			"code": "WAGZKUN",
+			"statut": "attente_score"
 		},
 		"3096237": {
 			"statut": "ignoree",
