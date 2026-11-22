@@ -121,6 +121,10 @@ collections:
             name: "facebookUrl"
             widget: "string"
 
+          - label: "Lien TikTok"
+            name: "tiktokUrl"
+            widget: "string"
+
   - name: "histoireClub"
     label: "Moments marquants & figures du club"
     label_singular: "Moment ou figure"

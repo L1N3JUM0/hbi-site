@@ -357,6 +357,7 @@ const leClub = defineCollection({
 			email: z.string(),
 			instagramUrl: z.string().url(),
 			facebookUrl: z.string().url(),
+			tiktokUrl: z.string().url().default("https://www.tiktok.com/@hbi84800"),
 		}),
 });
 
